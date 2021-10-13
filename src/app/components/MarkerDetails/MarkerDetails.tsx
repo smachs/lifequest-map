@@ -13,6 +13,7 @@ import HideMarkerInput from './HideMarkerInput';
 import { useModal } from '../../contexts/ModalContext';
 import UploadScreenshot from '../AddResources/UploadScreenshot';
 import { useUser } from '../../contexts/UserContext';
+import Credit from './Credit';
 
 type MarkerDetailsProps = {
   marker: Marker;
@@ -124,6 +125,7 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
         {marker.description && <Markdown>{marker.description}</Markdown>}
         {marker.position && <p>[{marker.position.join(', ')}]</p>}
         <small>Added {toTimeAgo(new Date(marker.createdAt))}</small>
+        {marker.username && <Credit username={marker.username} />}
       </aside>
     </section>
   );

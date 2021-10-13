@@ -18,6 +18,7 @@ export type Marker = {
   description?: string;
   screenshotFilename?: string;
   createdAt: string;
+  username?: string;
   _id: string;
 };
 
