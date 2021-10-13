@@ -34,11 +34,10 @@ export async function sendToDiscord({
   user?: User;
 }): Promise<void> {
   if (comment && marker) {
-    const position = marker.position
-      ? marker.position.map((position) => position.value).join(', ')
-      : 'unknown';
+    const position = marker.position ? marker.position.join(', ') : 'unknown';
+    console.log(marker.position, position);
     await postToDiscord(
-      `✍ ${comment.username} added a comment for ${marker.type} at [${position}]: ${comment.message}`
+      `✍ ${comment.username} added a comment for ${marker.type} at [${position}]:\n${comment.message}`
     );
     return;
   }
