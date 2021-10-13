@@ -3,6 +3,14 @@ import { useEffect, useState } from 'react';
 import { usePosition } from '../../contexts/PositionContext';
 import { LeafIcon } from './useLayerGroups';
 
+const divElement = leaflet.DomUtil.create('div', 'leaflet-player-position');
+const CoordinatesControl = leaflet.Control.extend({
+  onAdd() {
+    return divElement;
+  },
+});
+export const coordinates = new CoordinatesControl({ position: 'bottomright' });
+
 function usePlayerPosition({
   leafletMap,
 }: {
@@ -39,6 +47,8 @@ function usePlayerPosition({
         /\srotate.+/g,
         ''
       )} rotate(${-theta - 90}deg)`;
+
+      divElement.innerHTML = `<span>[${position[1]}, ${position[0]}]</span>`;
     }
 
     if (following) {

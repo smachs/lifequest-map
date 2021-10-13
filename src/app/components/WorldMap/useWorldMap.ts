@@ -3,6 +3,7 @@ import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useRouter } from '../Router/Router';
 import { useMarkers } from '../../contexts/MarkersContext';
+import { coordinates as playerCoordinates } from './usePlayerPosition';
 const { VITE_API_ENDPOINT } = import.meta.env;
 
 function toThreeDigits(number: number): string {
@@ -91,18 +92,25 @@ function useWorldMap({ selectMode }: UseWorldMapProps): {
         2
       )}, ${event.latlng.lat.toFixed(2)}]</span>`;
     }
+    function handleMouseOut() {
+      divElement.innerHTML = ``;
+    }
 
     const CoordinatesControl = leaflet.Control.extend({
       onAdd(map: leaflet.Map) {
         map.on('mousemove', handleMouseMove);
+        map.on('mouseout', handleMouseOut);
         return divElement;
       },
       onRemove(map: leaflet.Map) {
         map.off('mousemove', handleMouseMove);
+        map.off('mouseout', handleMouseOut);
       },
     });
 
     const coordinates = new CoordinatesControl({ position: 'bottomright' });
+    playerCoordinates.addTo(map);
+
     coordinates.addTo(map);
 
     const worldTiles = new WorldTiles();
