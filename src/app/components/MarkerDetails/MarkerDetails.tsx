@@ -59,7 +59,7 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
   return (
     <section className={styles.container}>
       <header className={styles.header}>
-        <img src={filterItem?.iconUrl} alt="" width={64} height={64} />
+        <img className={styles.icon} src={filterItem?.iconUrl} alt="" />
         <h2>
           {marker.name
             ? `${marker.name} (${filterItem?.title})`
