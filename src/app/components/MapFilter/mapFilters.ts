@@ -610,7 +610,6 @@ export const mapFiltersCategories: MapFiltersCategory[] = [
       (mapFilter) => mapFilter.category === 'skinning'
     ),
   },
-
   {
     value: 'lore',
     title: i18n('Lore'),
