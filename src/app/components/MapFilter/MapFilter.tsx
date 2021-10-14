@@ -17,6 +17,9 @@ import User from '../User/User';
 import NearByIcon from '../icons/NearByIcon';
 import PlayerIcon from '../icons/PlayerIcon';
 import { useUser } from '../../contexts/UserContext';
+import CompassIcon from '../icons/CompassIcon';
+import useMinimap from '../Minimap/useMinimap';
+import MinimapSetup from '../Minimap/MinimapSetup';
 
 type View = 'markers' | 'areas' | 'nearBy';
 
@@ -26,6 +29,7 @@ function MapFilter(): JSX.Element {
   const { url, search } = useRouter();
   const { following, toggleFollowing } = usePosition();
   const user = useUser();
+  const [showMinimap, setShowMinimap] = useMinimap();
 
   function handleViewClick(view: View) {
     setIsOpen(true);
@@ -109,6 +113,26 @@ function MapFilter(): JSX.Element {
           )}
         >
           <PlayerIcon />
+        </button>
+        <button
+          data-tooltip="Show minimap"
+          data-tooltip-position="right"
+          onClick={() => {
+            if (!showMinimap) {
+              addModal({
+                title: 'Setup minimap',
+                children: <MinimapSetup />,
+              });
+            }
+            setShowMinimap(!showMinimap);
+          }}
+          className={classNames(
+            styles.nav__button,
+            styles.nav__border,
+            showMinimap && styles.nav__active
+          )}
+        >
+          <CompassIcon />
         </button>
         <button
           data-tooltip="Show/Hide menu"

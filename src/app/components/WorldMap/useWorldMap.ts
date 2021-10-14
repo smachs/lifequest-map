@@ -42,8 +42,16 @@ const WorldTiles = leaflet.TileLayer.extend({
 
 type UseWorldMapProps = {
   selectMode: boolean;
+  hideControls?: boolean;
+  initialZoom?: number;
+  alwaysFollowing?: boolean;
 };
-function useWorldMap({ selectMode }: UseWorldMapProps): {
+function useWorldMap({
+  hideControls,
+  selectMode,
+  initialZoom,
+  alwaysFollowing,
+}: UseWorldMapProps): {
   elementRef: React.MutableRefObject<HTMLDivElement | null>;
   leafletMap: leaflet.Map | null;
 } {
@@ -64,6 +72,7 @@ function useWorldMap({ selectMode }: UseWorldMapProps): {
       crs: worldCRS,
       maxZoom: 6,
       minZoom: 0,
+      zoom: initialZoom,
       attributionControl: false,
       zoomControl: false,
       maxBounds: leaflet.latLngBounds([-10000, -7000], [20000, 25000]),
@@ -77,6 +86,9 @@ function useWorldMap({ selectMode }: UseWorldMapProps): {
       map.setView([+lat, +lng], +zoom);
     } else {
       map.fitBounds(bounds);
+      if (initialZoom) {
+        map.setZoom(initialZoom);
+      }
       const center = map.getCenter();
       search({
         x: center.lng.toString(),
@@ -84,35 +96,36 @@ function useWorldMap({ selectMode }: UseWorldMapProps): {
         zoom: map.getZoom().toString(),
       });
     }
-    leaflet.control.zoom({ position: 'topright' }).addTo(map);
+    if (!hideControls) {
+      leaflet.control.zoom({ position: 'topright' }).addTo(map);
 
-    const divElement = leaflet.DomUtil.create('div', 'leaflet-position');
-    function handleMouseMove(event: leaflet.LeafletMouseEvent) {
-      divElement.innerHTML = `<span>[${event.latlng.lng.toFixed(
-        2
-      )}, ${event.latlng.lat.toFixed(2)}]</span>`;
+      const divElement = leaflet.DomUtil.create('div', 'leaflet-position');
+      const handleMouseMove = (event: leaflet.LeafletMouseEvent) => {
+        divElement.innerHTML = `<span>[${event.latlng.lng.toFixed(
+          2
+        )}, ${event.latlng.lat.toFixed(2)}]</span>`;
+      };
+      const handleMouseOut = () => {
+        divElement.innerHTML = ``;
+      };
+
+      const CoordinatesControl = leaflet.Control.extend({
+        onAdd(map: leaflet.Map) {
+          map.on('mousemove', handleMouseMove);
+          map.on('mouseout', handleMouseOut);
+          return divElement;
+        },
+        onRemove(map: leaflet.Map) {
+          map.off('mousemove', handleMouseMove);
+          map.off('mouseout', handleMouseOut);
+        },
+      });
+
+      const coordinates = new CoordinatesControl({ position: 'bottomright' });
+      playerCoordinates.addTo(map);
+
+      coordinates.addTo(map);
     }
-    function handleMouseOut() {
-      divElement.innerHTML = ``;
-    }
-
-    const CoordinatesControl = leaflet.Control.extend({
-      onAdd(map: leaflet.Map) {
-        map.on('mousemove', handleMouseMove);
-        map.on('mouseout', handleMouseOut);
-        return divElement;
-      },
-      onRemove(map: leaflet.Map) {
-        map.off('mousemove', handleMouseMove);
-        map.off('mouseout', handleMouseOut);
-      },
-    });
-
-    const coordinates = new CoordinatesControl({ position: 'bottomright' });
-    playerCoordinates.addTo(map);
-
-    coordinates.addTo(map);
-
     const worldTiles = new WorldTiles();
     worldTiles.addTo(map);
 
@@ -132,13 +145,13 @@ function useWorldMap({ selectMode }: UseWorldMapProps): {
     const { markers } = useMarkers();
 
     useEffect(() => {
-      if (leafletMap && leafletMap.getPane('mapPane') && x && y) {
+      if (leafletMap && x && y && !alwaysFollowing) {
         const center = leafletMap.getCenter();
         if (Math.abs(center.lat - y) > 0.5 || Math.abs(center.lng - x) > 0.5) {
-          leafletMap.setView([y, x]);
+          leafletMap.panTo([y, x]);
         }
       }
-    }, [leafletMap, x, y]);
+    }, [leafletMap, alwaysFollowing, x, y]);
 
     useEffect(() => {
       if (leafletMap && url.pathname) {
@@ -147,12 +160,9 @@ function useWorldMap({ selectMode }: UseWorldMapProps): {
         );
         if (marker) {
           if (marker.position) {
-            leafletMap.setView([marker.position[1], marker.position[0]]);
+            leafletMap.panTo([marker.position[1], marker.position[0]]);
           } else if (marker.positions) {
-            leafletMap.setView([
-              marker.positions[0][1],
-              marker.positions[0][0],
-            ]);
+            leafletMap.panTo([marker.positions[0][1], marker.positions[0][0]]);
           }
         }
       }

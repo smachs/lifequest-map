@@ -25,6 +25,7 @@ export default defineConfig({
     outDir: resolve(__dirname, 'dist/overwolf'),
     rollupOptions: {
       input: {
+        minimap: resolve(__dirname, 'src/app/minimap.html'),
         background: resolve(__dirname, 'src/app/background.html'),
         index: resolve(__dirname, 'src/app/index.html'),
       },

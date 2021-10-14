@@ -1,6 +1,7 @@
 import { isNewWorldRunning, NEW_WORLD_CLASS_ID } from './utils/games';
 import { SHOW_HIDE_APP } from './utils/hotkeys';
 import { waitForOverwolf } from './utils/overwolf';
+import { getJSONItem } from './utils/storage';
 import {
   closeMainWindow,
   closeWindow,
@@ -17,6 +18,9 @@ async function openApp() {
   if (newWorldIsRunning) {
     const preferedWindowName = await getPreferedWindowName();
     restoreWindow(preferedWindowName);
+    if (getJSONItem('showMinimap')) {
+      restoreWindow(WINDOWS.MINIMAP);
+    }
   } else {
     restoreWindow(WINDOWS.DESKTOP);
   }
@@ -48,6 +52,9 @@ overwolf.games.onGameInfoUpdated.addListener(async (event) => {
       } else {
         restoreWindow(WINDOWS.DESKTOP);
         closeWindow(WINDOWS.OVERLAY);
+      }
+      if (getJSONItem('showMinimap')) {
+        restoreWindow(WINDOWS.MINIMAP);
       }
     } else {
       closeMainWindow();

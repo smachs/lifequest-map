@@ -7,12 +7,23 @@ import { useRouter } from '../Router/Router';
 import { useModal } from '../../contexts/ModalContext';
 import MarkerDetails from '../MarkerDetails/MarkerDetails';
 import usePlayerPosition from './usePlayerPosition';
+import { classNames } from '../../utils/styles';
 
 type WorldMapProps = {
   markers: Marker[];
+  hideControls?: boolean;
+  initialZoom?: number;
+  alwaysFollowing?: boolean;
+  className?: string;
 };
 
-function WorldMap({ markers }: WorldMapProps): JSX.Element {
+function WorldMap({
+  className,
+  markers,
+  hideControls,
+  initialZoom,
+  alwaysFollowing,
+}: WorldMapProps): JSX.Element {
   const { url } = useRouter();
   const { addModal } = useModal();
   const searchParam = url.searchParams.get('mapFilters');
@@ -21,7 +32,12 @@ function WorldMap({ markers }: WorldMapProps): JSX.Element {
     [searchParam]
   );
 
-  const { leafletMap, elementRef } = useWorldMap({ selectMode: false });
+  const { leafletMap, elementRef } = useWorldMap({
+    selectMode: false,
+    hideControls,
+    initialZoom,
+    alwaysFollowing,
+  });
   useLayerGroups({
     markers,
     leafletMap,
@@ -32,9 +48,9 @@ function WorldMap({ markers }: WorldMapProps): JSX.Element {
       });
     },
   });
-  usePlayerPosition({ leafletMap });
+  usePlayerPosition({ leafletMap, alwaysFollowing });
 
-  return <div className={styles.map} ref={elementRef} />;
+  return <div className={classNames(styles.map, className)} ref={elementRef} />;
 }
 
 export default WorldMap;

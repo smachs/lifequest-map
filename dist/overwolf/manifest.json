@@ -36,8 +36,8 @@
           "height": 720
         },
         "min_size": {
-          "width": 676,
-          "height": 500
+          "width": 860,
+          "height": 600
         },
         "allow_local_file_access": true,
         "popup_blocker": true,
@@ -60,13 +60,34 @@
           "height": 720
         },
         "min_size": {
-          "width": 676,
-          "height": 500
+          "width": 860,
+          "height": 600
         },
         "allow_local_file_access": true,
         "popup_blocker": true,
         "mute": true,
         "keep_window_location": true
+      },
+      "minimap": {
+        "file": "minimap.html",
+        "debug_url": "http://localhost:3000/minimap.html",
+        "desktop_only": false,
+        "in_game_only": true,
+        "style": "inputPassThrough",
+        "resizable": false,
+        "transparent": true,
+        "override_on_update": true,
+        "size": {
+          "width": 260,
+          "height": 260
+        },
+        "start_position": {
+          "top": 50,
+          "left": 50
+        },
+        "allow_local_file_access": true,
+        "popup_blocker": true,
+        "mute": true
       }
     },
     "game_targeting": {
@@ -86,6 +107,11 @@
         "title": "Show/Hide App",
         "action-type": "custom",
         "default": "F4"
+      },
+      "setup_minimap": {
+        "title": "Setup Minimap",
+        "action-type": "custom",
+        "default": "F5"
       }
     },
     "protocol_override_domains": {

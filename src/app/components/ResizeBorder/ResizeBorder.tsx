@@ -1,8 +1,10 @@
 import styles from './ResizeBorder.module.css';
 import { dragResize } from '../../utils/windows';
+import type { MouseEvent } from 'react';
 
 function onDragResize(edge: overwolf.windows.enums.WindowDragEdge) {
-  return () => {
+  return (event: MouseEvent) => {
+    event.stopPropagation();
     dragResize(edge);
   };
 }
