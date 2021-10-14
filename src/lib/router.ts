@@ -137,6 +137,16 @@ router.post('/markers', async (req, res, next) => {
       res.status(409).send('Marker already exists');
       return;
     }
+    if (marker.position) {
+      const nearByMarker = await getMarkersCollection().findOne({
+        type: marker.type,
+        position: { $near: marker.position, $maxDistance: 2 },
+      });
+      if (nearByMarker) {
+        res.status(409).send('A similar marker is too near');
+        return;
+      }
+    }
 
     const inserted = await getMarkersCollection().insertOne(marker);
     if (!inserted.acknowledged) {

@@ -3,6 +3,14 @@ import { useEffect, useState } from 'react';
 import { usePosition } from '../../contexts/PositionContext';
 import { LeafIcon } from './useLayerGroups';
 
+const divElement = leaflet.DomUtil.create('div', 'leaflet-player-position');
+const CoordinatesControl = leaflet.Control.extend({
+  onAdd() {
+    return divElement;
+  },
+});
+export const coordinates = new CoordinatesControl({ position: 'bottomright' });
+
 function usePlayerPosition({
   leafletMap,
   alwaysFollowing,
@@ -28,8 +36,28 @@ function usePlayerPosition({
     if (!marker || !position || !leafletMap) {
       return;
     }
+    const oldLatLng = marker.getLatLng();
     marker.setLatLng(position);
     if (isFollowing) {
+      const playerImage = marker.getElement();
+      if (playerImage) {
+        const theta =
+          (Math.atan2(
+            oldLatLng.lat - position[0],
+            oldLatLng.lng - position[1]
+          ) *
+            180) /
+          Math.PI;
+
+        playerImage.style.transformOrigin = 'center';
+        playerImage.style.transform = `${playerImage.style.transform.replace(
+          /\srotate.+/g,
+          ''
+        )} rotate(${-theta - 90}deg)`;
+
+        divElement.innerHTML = `<span>[${position[1]}, ${position[0]}]</span>`;
+      }
+
       leafletMap.setView([position[0], position[1]]);
     }
   }, [marker, leafletMap, position, isFollowing]);

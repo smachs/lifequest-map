@@ -32,8 +32,9 @@ export function PositionProvider({
     if (!newWorldIsRunning) {
       return;
     }
-    let handler = setTimeout(updatePosition, 500);
+    let handler = setTimeout(updatePosition, 1);
     let active = true;
+    let lastPosition = [0, 0];
     async function updatePosition() {
       try {
         const gameInfo = await getGameInfo();
@@ -41,13 +42,20 @@ export function PositionProvider({
         if (locationJSON) {
           const location = JSON.parse(locationJSON);
           const position: [number, number] = [location.y, location.x];
-          setPosition(position);
+          if (
+            position &&
+            lastPosition[0] !== position[0] &&
+            lastPosition[1] !== position[1]
+          ) {
+            lastPosition = position;
+            setPosition(position);
+          }
         }
       } catch (error) {
         console.error(error);
       } finally {
         if (active) {
-          handler = setTimeout(updatePosition, 500);
+          handler = setTimeout(updatePosition, 1);
         }
       }
     }
