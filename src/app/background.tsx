@@ -1,5 +1,5 @@
 import { isNewWorldRunning, NEW_WORLD_CLASS_ID } from './utils/games';
-import { SETUP_MINIMAP, SHOW_HIDE_APP } from './utils/hotkeys';
+import { SHOW_HIDE_APP } from './utils/hotkeys';
 import { waitForOverwolf } from './utils/overwolf';
 import { getJSONItem } from './utils/storage';
 import {
