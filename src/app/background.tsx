@@ -22,11 +22,6 @@ async function openApp() {
   }
 }
 waitForOverwolf().then(openApp);
-overwolf.windows.obtainDeclaredWindow(
-  WINDOWS.MINIMAP,
-  { useDefaultSizeAndLocation: true },
-  () => restoreWindow(WINDOWS.MINIMAP)
-);
 
 async function handleHotkeyPressed(
   event: overwolf.settings.hotkeys.OnPressedEvent
