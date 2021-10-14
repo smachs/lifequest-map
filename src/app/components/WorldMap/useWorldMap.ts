@@ -44,11 +44,13 @@ type UseWorldMapProps = {
   selectMode: boolean;
   hideControls?: boolean;
   initialZoom?: number;
+  alwaysFollowing?: boolean;
 };
 function useWorldMap({
   hideControls,
   selectMode,
   initialZoom,
+  alwaysFollowing,
 }: UseWorldMapProps): {
   elementRef: React.MutableRefObject<HTMLDivElement | null>;
   leafletMap: leaflet.Map | null;
@@ -143,13 +145,13 @@ function useWorldMap({
     const { markers } = useMarkers();
 
     useEffect(() => {
-      if (leafletMap && leafletMap.getPane('mapPane') && x && y) {
+      if (leafletMap && x && y && !alwaysFollowing) {
         const center = leafletMap.getCenter();
         if (Math.abs(center.lat - y) > 0.5 || Math.abs(center.lng - x) > 0.5) {
           leafletMap.panTo([y, x]);
         }
       }
-    }, [leafletMap, x, y]);
+    }, [leafletMap, alwaysFollowing, x, y]);
 
     useEffect(() => {
       if (leafletMap && url.pathname) {

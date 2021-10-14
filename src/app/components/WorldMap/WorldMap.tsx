@@ -36,6 +36,7 @@ function WorldMap({
     selectMode: false,
     hideControls,
     initialZoom,
+    alwaysFollowing,
   });
   useLayerGroups({
     markers,

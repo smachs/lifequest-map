@@ -27,6 +27,23 @@ export function RouterProvider({
 
   useEffect(() => {
     if (!readonly) {
+      return;
+    }
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== 'url' || !event.newValue) {
+        return;
+      }
+      setURL(new URL(event.newValue));
+    };
+    window.addEventListener('storage', handleStorage, false);
+
+    return () => {
+      window.removeEventListener('storage', handleStorage);
+    };
+  }, [readonly]);
+
+  useEffect(() => {
+    if (!readonly) {
       localStorage.setItem('url', url.toString());
     }
     history.replaceState({}, '', url);
