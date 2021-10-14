@@ -30,7 +30,7 @@ function Minimap(): JSX.Element {
   const [showSetup, setShowSetup] = useState(false);
   const [minimapOpacity, setMinimapOpacity] = usePersistentState(
     'minimapOpacity',
-    0.8
+    80
   );
   const [minimapBorderRadius, setMinimapBorderRadius] = usePersistentState(
     'minimapBorderRadius',
