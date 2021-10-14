@@ -60,6 +60,12 @@ function useWorldMap({
   const { url, search, go } = useRouter();
 
   useEffect(() => {
+    if (leafletMap && initialZoom) {
+      leafletMap.setZoom(initialZoom);
+    }
+  }, [leafletMap, initialZoom]);
+
+  useEffect(() => {
     const mapElement = elementRef.current;
     if (!mapElement) {
       return;
@@ -83,7 +89,7 @@ function useWorldMap({
     const lng = url.searchParams.get('x');
     const zoom = url.searchParams.get('zoom');
     if (lat !== null && lng !== null && zoom !== null) {
-      map.setView([+lat, +lng], +zoom);
+      map.setView([+lat, +lng], initialZoom || +zoom);
     } else {
       map.fitBounds(bounds);
       if (initialZoom) {

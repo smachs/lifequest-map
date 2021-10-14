@@ -36,6 +36,7 @@ function Minimap(): JSX.Element {
     'minimapBorderRadius',
     50
   );
+  const [minimapZoom, setMinimapZoom] = usePersistentState('minimapZoom', 2);
 
   useEffect(() => {
     if (showSetup) {
@@ -81,12 +82,22 @@ function Minimap(): JSX.Element {
           markers={markers}
           hideControls
           alwaysFollowing
-          initialZoom={2}
+          initialZoom={minimapZoom}
           className={styles.noMouseEvents}
         />
       </div>
       {showSetup && (
         <div className={styles.toolbar}>
+          <label>
+            Zoom
+            <input
+              type="range"
+              value={minimapZoom}
+              min={0}
+              max={6}
+              onChange={(event) => setMinimapZoom(+event.target.value)}
+            />
+          </label>
           <label>
             Border
             <input
