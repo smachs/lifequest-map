@@ -6,7 +6,9 @@ export function getMarkersCollection(): Collection<Marker> {
   return getCollection<Marker>('markers');
 }
 
-export function ensureMarkersIndexes(): Promise<[string[], string[]]> {
+export function ensureMarkersIndexes(): Promise<
+  [string[], string[], string[]]
+> {
   return Promise.all([
     getMarkersCollection().createIndexes(
       [{ key: { type: 1, position: 1, positions: 1 } }],
@@ -15,6 +17,9 @@ export function ensureMarkersIndexes(): Promise<[string[], string[]]> {
       }
     ),
     getMarkersCollection().createIndexes([{ key: { createdAt: -1 } }]),
+    getMarkersCollection().createIndexes([
+      { key: { position: '2d' }, min: 0, max: 14336 },
+    ]),
   ]);
 }
 
