@@ -62,7 +62,7 @@ function usePlayerPosition({
       leafletMap.panTo([position[0], position[1]], {
         animate: true,
         easeLinearity: 1,
-        duration: 3.6,
+        duration: 2.6,
         noMoveStart: true,
       });
     }

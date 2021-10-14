@@ -36,8 +36,8 @@
           "height": 720
         },
         "min_size": {
-          "width": 676,
-          "height": 500
+          "width": 860,
+          "height": 600
         },
         "allow_local_file_access": true,
         "popup_blocker": true,
@@ -60,8 +60,8 @@
           "height": 720
         },
         "min_size": {
-          "width": 676,
-          "height": 500
+          "width": 860,
+          "height": 600
         },
         "allow_local_file_access": true,
         "popup_blocker": true,
@@ -73,9 +73,7 @@
         "debug_url": "http://localhost:3000/minimap.html",
         "desktop_only": false,
         "in_game_only": true,
-        "clickthrough": true,
-        "focus_game_takeover": "ReleaseOnHidden",
-        "focus_game_takeover_release_hotkey": "show_hide_app",
+        "style": "inputPassThrough",
         "resizable": false,
         "transparent": true,
         "override_on_update": true,
@@ -109,6 +107,11 @@
         "title": "Show/Hide App",
         "action-type": "custom",
         "default": "F4"
+      },
+      "setup_minimap": {
+        "title": "Setup Minimap",
+        "action-type": "custom",
+        "default": "F5"
       }
     },
     "protocol_override_domains": {

@@ -7,15 +7,18 @@ import { useRouter } from '../Router/Router';
 import { useModal } from '../../contexts/ModalContext';
 import MarkerDetails from '../MarkerDetails/MarkerDetails';
 import usePlayerPosition from './usePlayerPosition';
+import { classNames } from '../../utils/styles';
 
 type WorldMapProps = {
   markers: Marker[];
   hideControls?: boolean;
   initialZoom?: number;
   alwaysFollowing?: boolean;
+  className?: string;
 };
 
 function WorldMap({
+  className,
   markers,
   hideControls,
   initialZoom,
@@ -46,7 +49,7 @@ function WorldMap({
   });
   usePlayerPosition({ leafletMap, alwaysFollowing });
 
-  return <div className={styles.map} ref={elementRef} />;
+  return <div className={classNames(styles.map, className)} ref={elementRef} />;
 }
 
 export default WorldMap;

@@ -76,7 +76,10 @@ export async function getPreferedWindowName(): Promise<string> {
   return secondScreen ? WINDOWS.DESKTOP : WINDOWS.OVERLAY;
 }
 
-export async function restoreWindow(windowName: string): Promise<string> {
+export async function restoreWindow(
+  windowName: string,
+  preventCenter?: boolean
+): Promise<string> {
   const declaredWindow = await obtainDeclaredWindow(windowName);
 
   return new Promise((resolve, reject) => {
@@ -91,13 +94,16 @@ export async function restoreWindow(windowName: string): Promise<string> {
           overwolf.windows.bringToFront(windowName, resolve)
         );
 
-        const alreadyCentered = getJSONItem<boolean>(`centered-${windowName}`);
-        if (!alreadyCentered) {
-          const primaryDisplay = declaredWindow.name === WINDOWS.OVERLAY;
-          await centerWindow(windowName, primaryDisplay);
-          setJSONItem(`centered-${declaredWindow.name}`, true);
+        if (!preventCenter) {
+          const alreadyCentered = getJSONItem<boolean>(
+            `centered-${windowName}`
+          );
+          if (!alreadyCentered) {
+            const primaryDisplay = declaredWindow.name === WINDOWS.OVERLAY;
+            await centerWindow(windowName, primaryDisplay);
+            setJSONItem(`centered-${declaredWindow.name}`, true);
+          }
         }
-
         resolve(result.window_id!); // window_id is always a string if success
       } else {
         reject(result.error);
@@ -169,8 +175,11 @@ export async function centerWindow(
 }
 
 export async function dragResize(
-  edge: overwolf.windows.enums.WindowDragEdge
+  edge: overwolf.windows.enums.WindowDragEdge,
+  callback?: overwolf.CallbackFunction<overwolf.windows.DragResizeResult>
 ): Promise<void> {
   const currentWindow = await getCurrentWindow();
-  overwolf.windows.dragResize(currentWindow.id, edge);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  overwolf.windows.dragResize(currentWindow.id, edge, null, callback);
 }

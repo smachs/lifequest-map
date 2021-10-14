@@ -15,7 +15,7 @@ function useMinimap(): [
 
   useEffect(() => {
     if (newWorldIsRunning && showMinimap) {
-      restoreWindow(WINDOWS.MINIMAP);
+      restoreWindow(WINDOWS.MINIMAP, true);
     } else {
       closeWindow(WINDOWS.MINIMAP);
     }
