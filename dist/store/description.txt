@@ -5,6 +5,7 @@ Get all the locations, farming spots, resources, lore documents, chests, mobs an
 ## Features
 
 - Live Tracking of your In-Game position
+- Minimap
 - Check markers as done (like lore documents)
 - Automatic detection of your In-Game character
 - Auto start with New World
