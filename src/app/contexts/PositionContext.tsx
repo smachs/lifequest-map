@@ -32,9 +32,14 @@ export function PositionProvider({
     if (!newWorldIsRunning) {
       return;
     }
-    let handler = setTimeout(updatePosition, 1);
+
+    overwolf.games.events.setRequiredFeatures(['game_info'], () => undefined);
+
+    let handler = setTimeout(updatePosition, 10);
     let active = true;
+
     let lastPosition = [0, 0];
+    let hasError = false;
     async function updatePosition() {
       try {
         const gameInfo = await getGameInfo();
@@ -49,13 +54,17 @@ export function PositionProvider({
           ) {
             lastPosition = position;
             setPosition(position);
+            hasError = false;
           }
         }
       } catch (error) {
-        console.error(error);
+        if (!hasError) {
+          console.error(error);
+          hasError = true;
+        }
       } finally {
         if (active) {
-          handler = setTimeout(updatePosition, 1);
+          handler = setTimeout(updatePosition, 10);
         }
       }
     }
