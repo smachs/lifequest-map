@@ -146,7 +146,7 @@ function useWorldMap({
       if (leafletMap && leafletMap.getPane('mapPane') && x && y) {
         const center = leafletMap.getCenter();
         if (Math.abs(center.lat - y) > 0.5 || Math.abs(center.lng - x) > 0.5) {
-          leafletMap.setView([y, x]);
+          leafletMap.panTo([y, x]);
         }
       }
     }, [leafletMap, x, y]);
@@ -158,12 +158,9 @@ function useWorldMap({
         );
         if (marker) {
           if (marker.position) {
-            leafletMap.setView([marker.position[1], marker.position[0]]);
+            leafletMap.panTo([marker.position[1], marker.position[0]]);
           } else if (marker.positions) {
-            leafletMap.setView([
-              marker.positions[0][1],
-              marker.positions[0][0],
-            ]);
+            leafletMap.panTo([marker.positions[0][1], marker.positions[0][0]]);
           }
         }
       }
