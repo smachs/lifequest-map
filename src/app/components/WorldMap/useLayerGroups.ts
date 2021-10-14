@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import leaflet from 'leaflet';
 import { mapFilters } from '../MapFilter/mapFilters';
 import 'leaflet.markercluster';
@@ -36,12 +36,22 @@ function useLayerGroups({
   }>({});
 
   const hiddenMarkerIds = user?.hiddenMarkerIds || [];
-  const visibleMarkers = filters.includes('hidden')
-    ? markers
-    : markers.filter((marker) => !hiddenMarkerIds.includes(marker._id));
+  const visibleMarkers = useMemo(
+    () =>
+      filters.includes('hidden')
+        ? markers.filter((marker) =>
+            filters.some((filter) => filter === marker.type)
+          )
+        : markers.filter(
+            (marker) =>
+              filters.some((filter) => filter === marker.type) &&
+              !hiddenMarkerIds.includes(marker._id)
+          ),
+    [filters, markers, hiddenMarkerIds]
+  );
 
   useEffect(() => {
-    if (!leafletMap || !leafletMap.getPane('mapPane') || !markers.length) {
+    if (!leafletMap || !filters.length || !visibleMarkers.length) {
       return;
     }
 
@@ -62,9 +72,7 @@ function useLayerGroups({
         return;
       }
       const markersOfType = visibleMarkers.filter(
-        (marker) =>
-          marker.type === mapFilter.type &&
-          (!hiddenMarkerIds.includes(marker._id) || filters.includes('hidden'))
+        (marker) => marker.type === mapFilter.type
       );
 
       const existingLayerGroup = layerGroupByFilterRef.current[mapFilter.type];
@@ -83,6 +91,9 @@ function useLayerGroups({
       const layerGroup = leaflet.markerClusterGroup({
         iconCreateFunction: () => icon,
         disableClusteringAtZoom: mapFilter.isArea ? 0 : 5,
+        maxClusterRadius: 50,
+        removeOutsideVisibleBounds: true,
+        chunkedLoading: true,
       });
 
       layerGroup
