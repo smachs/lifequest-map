@@ -58,8 +58,10 @@ export function RouterProvider({
     if (fullHref.startsWith('/')) {
       fullHref = url.origin + fullHref;
     }
-    setURL(new URL(fullHref));
-    history.pushState({}, '', fullHref);
+    if (fullHref !== location.href) {
+      setURL(new URL(fullHref));
+      history.pushState({}, '', fullHref);
+    }
   }
 
   function search(params: { [key: string]: string }): void {
