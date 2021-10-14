@@ -112,6 +112,11 @@
         "title": "Setup Minimap",
         "action-type": "custom",
         "default": "F5"
+      },
+      "show_hide_minimap": {
+        "title": "Show/Hide Minimap",
+        "action-type": "custom",
+        "default": "F6"
       }
     },
     "protocol_override_domains": {

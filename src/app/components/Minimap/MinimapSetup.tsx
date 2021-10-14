@@ -1,9 +1,14 @@
-import { SETUP_MINIMAP, useHotkeyBinding } from '../../utils/hotkeys';
+import {
+  SETUP_MINIMAP,
+  SHOW_HIDE_MINIMAP,
+  useHotkeyBinding,
+} from '../../utils/hotkeys';
 import styles from './MinimapSetup.module.css';
 import videoSrc from './minimap-setup.mp4';
 
 function MinimapSetup(): JSX.Element {
-  const hotkeyBinding = useHotkeyBinding(SETUP_MINIMAP);
+  const setupHotkeyBinding = useHotkeyBinding(SETUP_MINIMAP);
+  const showHideHotkeyBinding = useHotkeyBinding(SHOW_HIDE_MINIMAP);
 
   return (
     <section className={styles.container}>
@@ -13,7 +18,10 @@ function MinimapSetup(): JSX.Element {
         it.
         <br />
         You can style, pan and rescale it by pressing{' '}
-        <span className={styles.hotkey}>{hotkeyBinding}</span> in-game.
+        <span className={styles.hotkey}>{setupHotkeyBinding}</span> in-game.
+        <br />
+        Use <span className={styles.hotkey}>{showHideHotkeyBinding}</span> to
+        hide/show the minimap, which takes a few seconds to start.
         <br />
         You have to be in a New World menu (press ESC) to gain control of the
         mouse cursor!
