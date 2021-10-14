@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useIsNewWorldRunning } from '../../utils/games';
 import { usePersistentState } from '../../utils/storage';
 import { closeWindow, restoreWindow, WINDOWS } from '../../utils/windows';
 
@@ -10,14 +11,15 @@ function useMinimap(): [
     'showMinimap',
     false
   );
+  const newWorldIsRunning = useIsNewWorldRunning();
 
   useEffect(() => {
-    if (showMinimap) {
+    if (newWorldIsRunning && showMinimap) {
       restoreWindow(WINDOWS.MINIMAP);
     } else {
       closeWindow(WINDOWS.MINIMAP);
     }
-  }, [showMinimap]);
+  }, [newWorldIsRunning, showMinimap]);
 
   return [showMinimap, setShowMinimap];
 }

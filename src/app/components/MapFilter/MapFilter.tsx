@@ -19,6 +19,7 @@ import PlayerIcon from '../icons/PlayerIcon';
 import { useUser } from '../../contexts/UserContext';
 import CompassIcon from '../icons/CompassIcon';
 import useMinimap from '../Minimap/useMinimap';
+import MinimapSetup from '../Minimap/MinimapSetup';
 
 type View = 'markers' | 'areas' | 'nearBy';
 
@@ -117,6 +118,12 @@ function MapFilter(): JSX.Element {
           data-tooltip="Show minimap"
           data-tooltip-position="right"
           onClick={() => {
+            if (!showMinimap) {
+              addModal({
+                title: 'Setup minimap',
+                children: <MinimapSetup />,
+              });
+            }
             setShowMinimap(!showMinimap);
           }}
           className={classNames(
