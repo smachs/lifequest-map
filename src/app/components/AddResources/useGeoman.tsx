@@ -67,7 +67,6 @@ function useGeoman({
       leafletMap.pm.enableDraw('Polygon');
 
       leafletMap.on('pm:create', (event) => {
-        console.log(event);
         if (event.shape === 'Polygon') {
           const latLngs = (
             event.layer as Polyline
