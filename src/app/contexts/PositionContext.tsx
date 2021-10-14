@@ -45,7 +45,15 @@ export function PositionProvider({
         const gameInfo = await getGameInfo();
         const locationJSON = gameInfo?.game_info?.location;
         if (locationJSON) {
-          const location = JSON.parse(locationJSON);
+          let location = null;
+          try {
+            location = JSON.parse(locationJSON);
+          } catch (error) {
+            location = {
+              x: locationJSON.match(/position.x,(\d+)/)[1],
+              y: locationJSON.match(/position.y,(\d+)/)[1],
+            };
+          }
           const position: [number, number] = [location.y, location.x];
           if (
             position &&
