@@ -17,9 +17,10 @@ export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
     },
   });
 
-const icons: {
-  [key: string]: leaflet.Icon<leaflet.IconOptions>;
+const allLayers: {
+  [id: string]: leaflet.Layer;
 } = {};
+
 function useLayerGroups({
   leafletMap,
   onMarkerClick,
@@ -30,71 +31,33 @@ function useLayerGroups({
   const { visibleMarkers } = useMarkers();
   const [filters] = useFilters();
 
-  const layerGroupByFilterRef = useRef<{
-    [filterType: string]: leaflet.LayerGroup;
-  }>({});
-
   useEffect(() => {
     if (!leafletMap) {
       return;
     }
 
-    Object.entries(layerGroupByFilterRef.current).forEach(
-      ([filterType, layerGroup]) => {
-        leafletMap.removeLayer(layerGroup);
-        delete layerGroupByFilterRef.current[filterType];
-      }
-    );
-
-    const layerGroups = layerGroupByFilterRef.current;
+    const removableMarkers = Object.keys(allLayers);
 
     for (let i = 0; i < visibleMarkers.length; i++) {
       const marker = visibleMarkers[i];
+      if (allLayers[marker._id]) {
+        const index = removableMarkers.indexOf(marker._id);
+        if (index > -1) {
+          removableMarkers.splice(index, 1);
+        }
+        continue;
+      }
       const mapFilter = mapFilters.find(
         (mapFilter) => mapFilter.type === marker.type
       );
       if (!mapFilter) {
-        return;
+        continue;
       }
-
-      if (!icons[mapFilter.iconUrl]) {
-        icons[mapFilter.iconUrl] = new LeafIcon({ iconUrl: mapFilter.iconUrl });
-        icons[
-          mapFilter.iconUrl
-        ].options.className = `leaflet-marker-${mapFilter.category}`;
-      }
-      const icon = icons[mapFilter.iconUrl];
-
-      if (!layerGroups[marker.type]) {
-        layerGroups[marker.type] = leaflet.markerClusterGroup({
-          iconCreateFunction: () => icon,
-          disableClusteringAtZoom: 0,
-          maxClusterRadius: 30,
-          removeOutsideVisibleBounds: true,
-          chunkedLoading: true,
-        });
-
-        layerGroups[marker.type]
-          .on('clustermouseover', (event) => {
-            event.propagatedFrom
-              .bindTooltip(
-                `${event.propagatedFrom.getChildCount()} ${mapFilter.title}`,
-                {
-                  direction: 'top',
-                  sticky: true,
-                }
-              )
-              .openTooltip();
-          })
-          .on('clustermouseout', (event) => {
-            event.propagatedFrom.unbindTooltip();
-          });
-        layerGroups[marker.type].addTo(leafletMap);
-      }
-      const layerGroup = layerGroups[marker.type];
 
       if (marker.position) {
         const mapMarker = leaflet
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           .canvasMarker([marker.position[1], marker.position[0]], {
             radius: 16,
             img: {
@@ -112,8 +75,10 @@ function useLayerGroups({
             onMarkerClick(marker);
           });
         }
-        layerGroup.addLayer(mapMarker);
+        allLayers[marker._id] = mapMarker;
       } else if (marker.positions) {
+        const layerGroup = new leaflet.LayerGroup();
+
         const polygon = leaflet.polygon(
           marker.positions.map((position) => [position[1], position[0]])
         );
@@ -140,13 +105,23 @@ function useLayerGroups({
           }
         });
         layerGroup.addLayer(textMarker);
+        allLayers[marker._id] = layerGroup;
         if (onMarkerClick) {
           polygon.on('click', () => {
             onMarkerClick(marker);
           });
         }
       }
+      allLayers[marker._id].addTo(leafletMap);
     }
+
+    removableMarkers.forEach((markerId) => {
+      const layer = allLayers[markerId];
+      if (layer) {
+        layer.removeFrom(leafletMap);
+        delete allLayers[markerId];
+      }
+    });
   }, [leafletMap, filters, visibleMarkers]);
 }
 

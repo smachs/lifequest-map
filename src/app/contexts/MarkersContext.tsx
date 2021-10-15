@@ -52,9 +52,13 @@ export function MarkersProvider({
 
   const refresh = useCallback(() => {
     if (!readonly) {
-      fetchJSON<Marker[]>('/api/markers').then(setMarkers);
+      fetchJSON<Marker[]>('/api/markers').then((newMarkers) => {
+        if (newMarkers.length !== markers.length) {
+          setMarkers(newMarkers);
+        }
+      });
     }
-  }, [readonly]);
+  }, [readonly, markers]);
 
   useEffect(() => {
     refresh();

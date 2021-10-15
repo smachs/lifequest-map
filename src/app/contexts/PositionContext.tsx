@@ -50,8 +50,8 @@ export function PositionProvider({
             location = JSON.parse(locationJSON);
           } catch (error) {
             location = {
-              x: locationJSON.match(/position.x,(\d+.\d+)/)[1],
-              y: locationJSON.match(/position.y,(\d+.\d+)/)[1],
+              x: +locationJSON.match(/position.x,(\d+.\d+)/)[1],
+              y: +locationJSON.match(/position.y,(\d+.\d+)/)[1],
             };
           }
           const position: [number, number] = [location.y, location.x];
