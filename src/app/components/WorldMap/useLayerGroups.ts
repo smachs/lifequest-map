@@ -7,6 +7,7 @@ import { getTooltipContent } from './tooltips';
 import { classNames } from '../../utils/styles';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { useFilters } from '../../contexts/FiltersContext';
+import 'leaflet-canvas-markers';
 
 export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
   leaflet.Icon.extend({
@@ -67,7 +68,7 @@ function useLayerGroups({
       if (!layerGroups[marker.type]) {
         layerGroups[marker.type] = leaflet.markerClusterGroup({
           iconCreateFunction: () => icon,
-          disableClusteringAtZoom: marker.positions ? 0 : 5,
+          disableClusteringAtZoom: 0,
           maxClusterRadius: 30,
           removeOutsideVisibleBounds: true,
           chunkedLoading: true,
@@ -94,8 +95,13 @@ function useLayerGroups({
 
       if (marker.position) {
         const mapMarker = leaflet
-          .marker([marker.position[1], marker.position[0]], {
-            icon,
+          .canvasMarker([marker.position[1], marker.position[0]], {
+            radius: 16,
+            img: {
+              url: mapFilter.iconUrl,
+              size: [32, 32],
+              rotate: 0,
+            },
             pmIgnore: true,
           })
           .bindTooltip(getTooltipContent(marker, mapFilter), {

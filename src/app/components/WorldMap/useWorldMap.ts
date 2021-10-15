@@ -71,6 +71,7 @@ function useWorldMap({
     const northEast = leaflet.latLng(10000, 14336);
     const bounds = leaflet.latLngBounds(southWest, northEast);
     const map = leaflet.map(mapElement, {
+      preferCanvas: true,
       crs: worldCRS,
       maxZoom: 6,
       minZoom: 0,
