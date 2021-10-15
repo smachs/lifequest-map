@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { useMarkers } from '../../contexts/MarkersContext';
-import { useRouter } from '../Router/Router';
 import useGeoman from './useGeoman';
 import useLayerGroups from '../WorldMap/useLayerGroups';
 import useWorldMap from '../WorldMap/useWorldMap';
 import styles from './SelectPosition.module.css';
 import type { FilterItem } from '../MapFilter/mapFilters';
 import type { Details } from './AddResources';
+import { getJSONItem } from '../../utils/storage';
 
 type SelectPositionType = {
   details: Details;
@@ -20,13 +19,18 @@ function SelectPosition({
   onSelectPosition,
   onSelectPositions,
 }: SelectPositionType): JSX.Element {
-  const { markers } = useMarkers();
-  const router = useRouter();
-  const [x, setX] = useState(+(router.url.searchParams.get('x') || 0));
-  const [y, setY] = useState(+(router.url.searchParams.get('y') || 0));
-  const [z, setZ] = useState(0);
+  const mapPosition = getJSONItem<{
+    y: number;
+    x: number;
+    zoom: number;
+  }>('mapPosition');
+
+  const [x, setX] = useState(mapPosition?.x || 8000);
+  const [y, setY] = useState(mapPosition?.y || 8000);
+  const [z, setZ] = useState(mapPosition?.zoom || 8000);
   const [positions, setPositions] = useState<[number, number][]>([]);
   const { leafletMap, elementRef } = useWorldMap({ selectMode: true });
+
   useGeoman({
     details,
     leafletMap,
@@ -43,8 +47,6 @@ function SelectPosition({
     },
   });
   useLayerGroups({
-    markers,
-    filters: [filter.type],
     leafletMap,
   });
 

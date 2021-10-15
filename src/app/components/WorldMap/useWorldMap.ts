@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useRouter } from '../Router/Router';
-import { useMarkers } from '../../contexts/MarkersContext';
 import { coordinates as playerCoordinates } from './usePlayerPosition';
+import { getJSONItem, setJSONItem } from '../../utils/storage';
 const { VITE_API_ENDPOINT } = import.meta.env;
 
 function toThreeDigits(number: number): string {
@@ -44,20 +43,17 @@ type UseWorldMapProps = {
   selectMode: boolean;
   hideControls?: boolean;
   initialZoom?: number;
-  alwaysFollowing?: boolean;
 };
 function useWorldMap({
   hideControls,
   selectMode,
   initialZoom,
-  alwaysFollowing,
 }: UseWorldMapProps): {
   elementRef: React.MutableRefObject<HTMLDivElement | null>;
   leafletMap: leaflet.Map | null;
 } {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const [leafletMap, setLeafletMap] = useState<leaflet.Map | null>(null);
-  const { url, search, go } = useRouter();
 
   useEffect(() => {
     if (leafletMap && initialZoom) {
@@ -75,6 +71,7 @@ function useWorldMap({
     const northEast = leaflet.latLng(10000, 14336);
     const bounds = leaflet.latLngBounds(southWest, northEast);
     const map = leaflet.map(mapElement, {
+      preferCanvas: true,
       crs: worldCRS,
       maxZoom: 6,
       minZoom: 0,
@@ -85,21 +82,27 @@ function useWorldMap({
     });
     setLeafletMap(map);
 
-    const lat = url.searchParams.get('y');
-    const lng = url.searchParams.get('x');
-    const zoom = url.searchParams.get('zoom');
-    if (lat !== null && lng !== null && zoom !== null) {
-      map.setView([+lat, +lng], initialZoom || +zoom);
+    const mapPosition = getJSONItem<{
+      y: number;
+      x: number;
+      zoom: number;
+    }>('mapPosition');
+
+    if (mapPosition) {
+      map.setView(
+        [mapPosition.y, mapPosition.x],
+        initialZoom || mapPosition.zoom
+      );
     } else {
       map.fitBounds(bounds);
       if (initialZoom) {
         map.setZoom(initialZoom);
       }
       const center = map.getCenter();
-      search({
-        x: center.lng.toString(),
-        y: center.lat.toString(),
-        zoom: map.getZoom().toString(),
+      setJSONItem('mapPosition', {
+        x: center.lng,
+        y: center.lat,
+        zoom: map.getZoom(),
       });
     }
     if (!hideControls) {
@@ -135,10 +138,6 @@ function useWorldMap({
     const worldTiles = new WorldTiles();
     worldTiles.addTo(map);
 
-    map.on('click', () => {
-      go('/', true);
-    });
-
     return () => {
       setLeafletMap(null);
       map.remove();
@@ -146,45 +145,16 @@ function useWorldMap({
   }, [elementRef]);
 
   if (!selectMode) {
-    const x = +(url.searchParams.get('x') || 0);
-    const y = +(url.searchParams.get('y') || 0);
-    const { markers } = useMarkers();
-
-    useEffect(() => {
-      if (leafletMap && x && y && !alwaysFollowing) {
-        const center = leafletMap.getCenter();
-        if (Math.abs(center.lat - y) > 0.5 || Math.abs(center.lng - x) > 0.5) {
-          leafletMap.panTo([y, x]);
-        }
-      }
-    }, [leafletMap, alwaysFollowing, x, y]);
-
-    useEffect(() => {
-      if (leafletMap && url.pathname) {
-        const marker = markers.find(
-          (marker) => marker._id === url.pathname.slice(1)
-        );
-        if (marker) {
-          if (marker.position) {
-            leafletMap.panTo([marker.position[1], marker.position[0]]);
-          } else if (marker.positions) {
-            leafletMap.panTo([marker.positions[0][1], marker.positions[0][0]]);
-          }
-        }
-      }
-    }, [leafletMap, url.pathname, markers]);
-
     useEffect(() => {
       if (!leafletMap) {
         return;
       }
       const handleMoveEnd = () => {
         const center = leafletMap.getCenter();
-
-        search({
-          x: center.lng.toString(),
-          y: center.lat.toString(),
-          zoom: leafletMap.getZoom().toString(),
+        setJSONItem('mapPosition', {
+          x: center.lng,
+          y: center.lat,
+          zoom: leafletMap.getZoom(),
         });
       };
       leafletMap.on('moveend', handleMoveEnd);
@@ -192,7 +162,7 @@ function useWorldMap({
       return () => {
         leafletMap.off('moveend', handleMoveEnd);
       };
-    }, [leafletMap, search]);
+    }, [leafletMap]);
   }
 
   return { elementRef, leafletMap };
