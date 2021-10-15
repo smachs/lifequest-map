@@ -723,11 +723,6 @@ export const mapFiltersCategories: MapFiltersCategory[] = [
     filters: mapFilters.filter((mapFilter) => mapFilter.category === 'npc'),
   },
   {
-    value: 'npc',
-    title: i18n('NPC'),
-    filters: mapFilters.filter((mapFilter) => mapFilter.category === 'npc'),
-  },
-  {
     value: 'service',
     title: i18n('Services'),
     filters: mapFilters.filter((mapFilter) => mapFilter.category === 'service'),

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { createContext, useEffect, useState, useContext } from 'react';
 import { usePersistentState } from '../utils/storage';
 import { getGameInfo, useIsNewWorldRunning } from '../utils/games';
+import { useSetUser } from './UserContext';
 
 type PositionContextProps = {
   position: [number, number] | null;
@@ -27,6 +28,7 @@ export function PositionProvider({
     true
   );
   const newWorldIsRunning = useIsNewWorldRunning();
+  const setUsername = useSetUser();
 
   useEffect(() => {
     if (!newWorldIsRunning) {
@@ -40,20 +42,18 @@ export function PositionProvider({
 
     let lastPosition = [0, 0];
     let hasError = false;
+    let lastPlayerName = '';
     async function updatePosition() {
       try {
         const gameInfo = await getGameInfo();
-        const locationJSON = gameInfo?.game_info?.location;
-        if (locationJSON) {
-          let location = null;
-          try {
-            location = JSON.parse(locationJSON);
-          } catch (error) {
-            location = {
-              x: +locationJSON.match(/position.x,(\d+.\d+)/)[1],
-              y: +locationJSON.match(/position.y,(\d+.\d+)/)[1],
-            };
-          }
+        const { player_name, location: locationList } =
+          gameInfo?.game_info || {};
+        if (locationList) {
+          const location = {
+            x: +locationList.match(/position.x,(\d+.\d+)/)[1],
+            y: +locationList.match(/position.y,(\d+.\d+)/)[1],
+          };
+
           const position: [number, number] = [location.y, location.x];
           if (
             position &&
@@ -64,6 +64,10 @@ export function PositionProvider({
             setPosition(position);
             hasError = false;
           }
+        }
+        if (player_name && player_name !== lastPlayerName) {
+          lastPlayerName = player_name;
+          setUsername(player_name);
         }
       } catch (error) {
         if (!hasError) {

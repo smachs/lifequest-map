@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { createContext, useEffect, useState, useContext } from 'react';
 import { fetchJSON } from '../utils/api';
-import { addGameLogListener, removeGameLogListener } from '../utils/extensions';
 import { usePersistentState } from '../utils/storage';
 
 export type User = {
@@ -11,10 +10,12 @@ export type User = {
 };
 type UserContextValue = {
   user: User | null;
+  setUsername: (name: string) => void;
   refresh: () => void;
 };
 const UserContext = createContext<UserContextValue>({
   user: null,
+  setUsername: () => undefined,
   refresh: () => undefined,
 });
 
@@ -29,7 +30,7 @@ export function UserProvider({ children }: UserProviderProps): JSX.Element {
     null
   );
 
-  async function loadUser(): Promise<void> {
+  const refresh = async (): Promise<void> => {
     try {
       if (!username) {
         return;
@@ -47,22 +48,16 @@ export function UserProvider({ children }: UserProviderProps): JSX.Element {
     } catch (error) {
       console.error(error);
     }
-  }
-  useEffect(() => {
-    addGameLogListener({
-      onPlayerNameChange: setUsername,
-    });
-    return () => {
-      removeGameLogListener();
-    };
-  }, []);
+  };
 
   useEffect(() => {
-    loadUser();
+    if (username) {
+      refresh();
+    }
   }, [username]);
 
   return (
-    <UserContext.Provider value={{ user, refresh: loadUser }}>
+    <UserContext.Provider value={{ user, setUsername, refresh }}>
       {children}
     </UserContext.Provider>
   );
@@ -70,6 +65,10 @@ export function UserProvider({ children }: UserProviderProps): JSX.Element {
 
 export function useUser(): User | null {
   return useContext(UserContext).user;
+}
+
+export function useSetUser(): (name: string) => void {
+  return useContext(UserContext).setUsername;
 }
 
 export function useRefreshUser(): () => void {
