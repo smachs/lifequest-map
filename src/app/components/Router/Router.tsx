@@ -26,21 +26,16 @@ export function RouterProvider({
   );
 
   useEffect(() => {
-    if (!readonly) {
-      return;
-    }
-    const handleStorage = (event: StorageEvent) => {
-      if (event.key !== 'url' || !event.newValue) {
-        return;
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        go('/', true);
       }
-      setURL(new URL(event.newValue));
-    };
-    window.addEventListener('storage', handleStorage, false);
-
+    }
+    window.addEventListener('keydown', handleKeyDown);
     return () => {
-      window.removeEventListener('storage', handleStorage);
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [readonly]);
+  }, []);
 
   useEffect(() => {
     if (!readonly) {

@@ -8,19 +8,22 @@ import { UserProvider } from './contexts/UserContext';
 import { ModalProvider } from './contexts/ModalContext';
 import { MarkersProvider } from './contexts/MarkersContext';
 import { PositionProvider } from './contexts/PositionContext';
+import { FiltersProvider } from './contexts/FiltersContext';
 
 waitForOverwolf().then(() => {
   ReactDOM.render(
     <StrictMode>
       <RouterProvider>
         <UserProvider>
-          <MarkersProvider>
-            <ModalProvider>
-              <PositionProvider>
-                <App />
-              </PositionProvider>
-            </ModalProvider>
-          </MarkersProvider>
+          <FiltersProvider>
+            <MarkersProvider>
+              <ModalProvider>
+                <PositionProvider>
+                  <App />
+                </PositionProvider>
+              </ModalProvider>
+            </MarkersProvider>
+          </FiltersProvider>
         </UserProvider>
       </RouterProvider>
     </StrictMode>,

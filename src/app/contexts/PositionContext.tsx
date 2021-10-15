@@ -35,7 +35,7 @@ export function PositionProvider({
 
     overwolf.games.events.setRequiredFeatures(['game_info'], () => undefined);
 
-    let handler = setTimeout(updatePosition, 10);
+    let handler = setTimeout(updatePosition, 20);
     let active = true;
 
     let lastPosition = [0, 0];
@@ -50,8 +50,8 @@ export function PositionProvider({
             location = JSON.parse(locationJSON);
           } catch (error) {
             location = {
-              x: locationJSON.match(/position.x,(\d+)/)[1],
-              y: locationJSON.match(/position.y,(\d+)/)[1],
+              x: locationJSON.match(/position.x,(\d+.\d+)/)[1],
+              y: locationJSON.match(/position.y,(\d+.\d+)/)[1],
             };
           }
           const position: [number, number] = [location.y, location.x];
@@ -72,7 +72,7 @@ export function PositionProvider({
         }
       } finally {
         if (active) {
-          handler = setTimeout(updatePosition, 10);
+          handler = setTimeout(updatePosition, 20);
         }
       }
     }

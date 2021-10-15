@@ -1,19 +1,12 @@
 import styles from './MarkersView.module.css';
 import { mapFilters, mapFiltersCategories } from './mapFilters';
-import { useRouter, useURL } from '../Router/Router';
-import { useMemo } from 'react';
 import MarkerSection from './MarkerSection';
 import Checkbox from './Checkbox';
+import { useFilters } from '../../contexts/FiltersContext';
 
 function MarkersView(): JSX.Element {
-  const router = useRouter();
-  const url = useURL();
+  const [filters, setFilters] = useFilters();
 
-  const searchParam = url.searchParams.get('mapFilters');
-  const filters = useMemo(
-    () => (searchParam?.length ? searchParam.split(',') : []),
-    [searchParam]
-  );
   function handleToggle(filterTypes: string[], checked: boolean) {
     const newFilters = [...filters];
     if (checked) {
@@ -26,9 +19,7 @@ function MarkersView(): JSX.Element {
         }
       });
     }
-    router.search({
-      mapFilters: newFilters.join(','),
-    });
+    setFilters(newFilters);
   }
 
   return (
@@ -37,9 +28,7 @@ function MarkersView(): JSX.Element {
         <button
           className={styles.action}
           onClick={() => {
-            router.search({
-              mapFilters: mapFilters.map((filter) => filter.type).join(','),
-            });
+            setFilters(mapFilters.map((filter) => filter.type));
           }}
         >
           Show all
@@ -47,9 +36,7 @@ function MarkersView(): JSX.Element {
         <button
           className={styles.action}
           onClick={() => {
-            router.search({
-              mapFilters: '',
-            });
+            setFilters([]);
           }}
         >
           Hide all

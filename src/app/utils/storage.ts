@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export function getJSONItem<T>(key: string, defaultValue?: T): T | undefined {
   try {
@@ -41,6 +41,27 @@ export function usePersistentState<T>(
       console.error(e);
     }
   }
+
+  useEffect(() => {
+    const handleStorage = (event: StorageEvent) => {
+      try {
+        if (event.key !== key) {
+          return;
+        }
+        if (event.newValue) {
+          const item = JSON.parse(event.newValue);
+          setValue(item);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    window.addEventListener('storage', handleStorage, false);
+
+    return () => {
+      window.removeEventListener('storage', handleStorage);
+    };
+  }, []);
 
   return [state, setValue];
 }
