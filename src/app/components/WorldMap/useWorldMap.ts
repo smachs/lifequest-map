@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import 'tilelayer-canvas';
 import { coordinates as playerCoordinates } from './usePlayerPosition';
 import { getJSONItem, setJSONItem } from '../../utils/storage';
 const { VITE_API_ENDPOINT } = import.meta.env;
@@ -19,7 +20,9 @@ const worldCRS = leaflet.extend({}, leaflet.CRS.Simple, {
   transformation: new leaflet.Transformation(1 / 16, 0, -1 / 16, 0),
 });
 
-const WorldTiles = leaflet.TileLayer.extend({
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const WorldTiles = leaflet.TileLayer.Canvas.extend({
   getTileUrl(coords: { x: number; y: number; z: number }) {
     const zoom = 8 - coords.z - 1;
     const multiplicators = [1, 2, 4, 8, 16, 32, 64];

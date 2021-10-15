@@ -59,6 +59,7 @@ function usePlayerPosition({
     }
 
     if (isFollowing) {
+      leafletMap.stop();
       leafletMap.panTo([position[0], position[1]], {
         animate: true,
         easeLinearity: 1,
