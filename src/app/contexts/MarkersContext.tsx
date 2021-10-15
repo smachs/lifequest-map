@@ -1,12 +1,6 @@
 import type { ReactNode } from 'react';
 import { useMemo } from 'react';
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { createContext, useCallback, useContext, useEffect } from 'react';
 import { fetchJSON } from '../utils/api';
 import { usePersistentState } from '../utils/storage';
 import { useFilters } from './FiltersContext';

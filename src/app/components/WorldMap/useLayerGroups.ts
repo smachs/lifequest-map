@@ -1,7 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import leaflet from 'leaflet';
 import { mapFilters } from '../MapFilter/mapFilters';
-import 'leaflet.markercluster';
 import type { Marker } from '../../contexts/MarkersContext';
 import { getTooltipContent } from './tooltips';
 import { classNames } from '../../utils/styles';
