@@ -6,7 +6,7 @@ import { getTooltipContent } from './tooltips';
 import { classNames } from '../../utils/styles';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { useFilters } from '../../contexts/FiltersContext';
-import 'leaflet-canvas-markers';
+import CanvasMarker from './CanvasMarker';
 
 export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
   leaflet.Icon.extend({
@@ -17,7 +17,10 @@ export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
   });
 
 const allLayers: {
-  [id: string]: leaflet.Layer;
+  [id: string]: {
+    layer: leaflet.Layer;
+    hasComments: boolean;
+  };
 } = {};
 
 function useLayerGroups({
@@ -44,7 +47,12 @@ function useLayerGroups({
         if (index > -1) {
           removableMarkers.splice(index, 1);
         }
-        continue;
+        if (allLayers[marker._id].hasComments !== Boolean(marker.comments)) {
+          allLayers[marker._id].layer.removeFrom(leafletMap);
+          delete allLayers[marker._id];
+        } else {
+          continue;
+        }
       }
       const mapFilter = mapFilters.find(
         (mapFilter) => mapFilter.type === marker.type
@@ -54,27 +62,29 @@ function useLayerGroups({
       }
 
       if (marker.position) {
-        const mapMarker = leaflet
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          .canvasMarker([marker.position[1], marker.position[0]], {
+        const mapMarker = new CanvasMarker(
+          [marker.position[1], marker.position[0]],
+          {
             radius: 16,
-            img: {
-              url: mapFilter.iconUrl,
-              size: [32, 32],
-              rotate: 0,
+            image: {
+              src: mapFilter.iconUrl,
+              size: [40, 40],
+              comments: marker.comments,
             },
             pmIgnore: true,
-          })
-          .bindTooltip(getTooltipContent(marker, mapFilter), {
-            direction: 'top',
-          });
+          }
+        ).bindTooltip(getTooltipContent(marker, mapFilter), {
+          direction: 'top',
+        });
         if (onMarkerClick) {
           mapMarker.on('click', () => {
             onMarkerClick(marker);
           });
         }
-        allLayers[marker._id] = mapMarker;
+        allLayers[marker._id] = {
+          layer: mapMarker,
+          hasComments: Boolean(marker.comments),
+        };
       } else if (marker.positions) {
         const layerGroup = new leaflet.LayerGroup();
 
@@ -104,20 +114,23 @@ function useLayerGroups({
           }
         });
         layerGroup.addLayer(textMarker);
-        allLayers[marker._id] = layerGroup;
+        allLayers[marker._id] = {
+          layer: layerGroup,
+          hasComments: Boolean(marker.comments),
+        };
         if (onMarkerClick) {
           polygon.on('click', () => {
             onMarkerClick(marker);
           });
         }
       }
-      allLayers[marker._id].addTo(leafletMap);
+      allLayers[marker._id].layer.addTo(leafletMap);
     }
 
     removableMarkers.forEach((markerId) => {
-      const layer = allLayers[markerId];
-      if (layer) {
-        layer.removeFrom(leafletMap);
+      const layerCache = allLayers[markerId];
+      if (layerCache) {
+        layerCache.layer.removeFrom(leafletMap);
         delete allLayers[markerId];
       }
     });

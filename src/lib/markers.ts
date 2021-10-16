@@ -73,6 +73,9 @@ export function ensureMarkersSchema(): Promise<Document> {
           screenshotFilename: {
             bsonType: 'string',
           },
+          comments: {
+            bsonType: 'int',
+          },
           createdAt: {
             bsonType: 'date',
           },

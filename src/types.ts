@@ -10,6 +10,7 @@ export type Marker = {
   levelRange?: [number, number];
   username: string;
   screenshotFilename?: string;
+  comments?: number;
   createdAt: Date;
 };
 
@@ -24,4 +25,5 @@ export type User = {
   username: string;
   hiddenMarkerIds: ObjectId[];
   createdAt: Date;
+  isModerator?: boolean;
 };
