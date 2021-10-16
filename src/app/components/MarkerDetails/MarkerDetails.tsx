@@ -31,29 +31,43 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
   async function handleUploadScreenshot(
     screenshotFilename?: string | undefined
   ) {
-    closeLatestModal();
-    if (!screenshotFilename) {
-      return;
+    try {
+      closeLatestModal();
+      if (!screenshotFilename) {
+        return;
+      }
+      await fetchJSON(`/api/markers/${marker._id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          screenshotFilename,
+        }),
+      });
+      marker.screenshotFilename = screenshotFilename;
+      refreshMarkers();
+    } catch (error) {
+      console.error(error);
     }
-    await fetchJSON(`/api/markers/${marker._id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        screenshotFilename,
-      }),
-    });
-    marker.screenshotFilename = screenshotFilename;
-    refreshMarkers();
   }
 
-  async function handleDelete() {
-    await fetchJSON(`/api/markers/${marker._id}`, {
-      method: 'DELETE',
-    });
-    refreshMarkers();
-    closeLatestModal();
+  async function handleDelete(userId: string) {
+    try {
+      await fetchJSON(`/api/markers/${marker._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+        }),
+      });
+      refreshMarkers();
+      closeLatestModal();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
@@ -86,8 +100,11 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
       <aside className={styles.more}>
         <h3>Actions</h3>
         <HideMarkerInput markerId={marker._id} />
-        {user?.username === 'loltrophyhunter' && (
-          <button className={styles.button} onClick={handleDelete}>
+        {user?.isModerator && (
+          <button
+            className={styles.button}
+            onClick={() => handleDelete(user._id)}
+          >
             💀 Remove invalid marker 💀
           </button>
         )}

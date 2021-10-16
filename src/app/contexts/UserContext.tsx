@@ -4,9 +4,11 @@ import { fetchJSON } from '../utils/api';
 import { usePersistentState } from '../utils/storage';
 
 export type User = {
+  _id: string;
   username: string;
   hiddenMarkerIds: string[];
   createdAt: Date;
+  isModerator?: boolean;
 };
 type UserContextValue = {
   user: User | null;

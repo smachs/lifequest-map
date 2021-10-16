@@ -26,12 +26,20 @@ router.get('/markers', async (_req, res, next) => {
 router.delete('/markers/:markerId', async (req, res, next) => {
   try {
     const { markerId } = req.params;
+    const { userId } = req.body;
 
-    if (!ObjectId.isValid(markerId)) {
+    if (!ObjectId.isValid(markerId) || !ObjectId.isValid(userId)) {
       res.status(400).send('Invalid payload');
       return;
     }
-
+    const user = await getUsersCollection().findOne({
+      _id: new ObjectId(userId),
+      isModerator: true,
+    });
+    if (!user) {
+      res.status(401).send('No access');
+      return;
+    }
     const result = await getMarkersCollection().deleteOne({
       _id: new ObjectId(markerId),
     });
@@ -39,6 +47,9 @@ router.delete('/markers/:markerId', async (req, res, next) => {
       res.status(404).end(`No marker found for id ${markerId}`);
       return;
     }
+    await getCommentsCollection().deleteMany({
+      markerId: new ObjectId(markerId),
+    });
     res.status(200).json({});
   } catch (error) {
     next(error);
@@ -210,7 +221,6 @@ router.post('/markers/:markerId/comments', async (req, res, next) => {
       res.status(500).send('Error inserting comment');
       return;
     }
-    res.status(200).json(comment);
 
     await getMarkersCollection().updateOne(
       { _id: new ObjectId(markerId) },
@@ -223,6 +233,7 @@ router.post('/markers/:markerId/comments', async (req, res, next) => {
       }
     );
 
+    res.status(200).json(comment);
     sendToDiscord({ comment, marker });
   } catch (error) {
     next(error);

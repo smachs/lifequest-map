@@ -25,4 +25,5 @@ export type User = {
   username: string;
   hiddenMarkerIds: ObjectId[];
   createdAt: Date;
+  isModerator?: boolean;
 };

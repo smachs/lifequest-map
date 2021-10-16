@@ -32,6 +32,9 @@ export function ensureUsersSchema(): Promise<Document> {
               bsonType: 'objectId',
             },
           },
+          isModerator: {
+            bsonType: 'boolean',
+          },
           createdAt: {
             bsonType: 'date',
           },

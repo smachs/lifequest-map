@@ -1,5 +1,6 @@
 import type { FormEvent, KeyboardEvent } from 'react';
 import { useState } from 'react';
+import { useMarkers } from '../../contexts/MarkersContext';
 import { useUser } from '../../contexts/UserContext';
 import { fetchJSON } from '../../utils/api';
 import styles from './AddComment.module.css';
@@ -12,6 +13,7 @@ type AddCommentProps = {
 function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
   const user = useUser();
   const [message, setMessage] = useState('');
+  const { refresh: refreshMarkers } = useMarkers();
 
   async function handleSubmit(event?: FormEvent) {
     if (event) {
@@ -24,18 +26,23 @@ function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
       return;
     }
 
-    await fetchJSON(`/api/markers/${markerId}/comments`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: user.username,
-        message: message,
-      }),
-    });
-    onAdd();
-    setMessage('');
+    try {
+      await fetchJSON(`/api/markers/${markerId}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: user.username,
+          message: message,
+        }),
+      });
+      onAdd();
+      setMessage('');
+      refreshMarkers();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   function handleKeyPress(event: KeyboardEvent<HTMLTextAreaElement>) {
