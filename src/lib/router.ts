@@ -212,6 +212,17 @@ router.post('/markers/:markerId/comments', async (req, res, next) => {
     }
     res.status(200).json(comment);
 
+    await getMarkersCollection().updateOne(
+      { _id: new ObjectId(markerId) },
+      {
+        $set: {
+          comments: await getCommentsCollection()
+            .find({ markerId: new ObjectId(markerId) })
+            .count(),
+        },
+      }
+    );
+
     sendToDiscord({ comment, marker });
   } catch (error) {
     next(error);

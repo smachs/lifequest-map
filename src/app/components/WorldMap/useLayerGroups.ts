@@ -6,7 +6,7 @@ import { getTooltipContent } from './tooltips';
 import { classNames } from '../../utils/styles';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { useFilters } from '../../contexts/FiltersContext';
-import 'leaflet-canvas-markers';
+import CanvasMarker from './CanvasMarker';
 
 export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
   leaflet.Icon.extend({
@@ -54,21 +54,20 @@ function useLayerGroups({
       }
 
       if (marker.position) {
-        const mapMarker = leaflet
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          .canvasMarker([marker.position[1], marker.position[0]], {
+        const mapMarker = new CanvasMarker(
+          [marker.position[1], marker.position[0]],
+          {
             radius: 16,
-            img: {
-              url: mapFilter.iconUrl,
-              size: [32, 32],
-              rotate: 0,
+            image: {
+              src: mapFilter.iconUrl,
+              size: [40, 40],
+              comments: marker.comments,
             },
             pmIgnore: true,
-          })
-          .bindTooltip(getTooltipContent(marker, mapFilter), {
-            direction: 'top',
-          });
+          }
+        ).bindTooltip(getTooltipContent(marker, mapFilter), {
+          direction: 'top',
+        });
         if (onMarkerClick) {
           mapMarker.on('click', () => {
             onMarkerClick(marker);

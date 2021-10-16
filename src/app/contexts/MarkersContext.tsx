@@ -17,6 +17,7 @@ export type Marker = {
   screenshotFilename?: string;
   createdAt: string;
   username?: string;
+  comments?: number;
   _id: string;
 };
 
@@ -47,9 +48,7 @@ export function MarkersProvider({
   const refresh = useCallback(() => {
     if (!readonly) {
       fetchJSON<Marker[]>('/api/markers').then((newMarkers) => {
-        if (newMarkers.length !== markers.length) {
-          setMarkers(newMarkers);
-        }
+        setMarkers(newMarkers);
       });
     }
   }, [readonly, markers]);

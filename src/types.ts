@@ -10,6 +10,7 @@ export type Marker = {
   levelRange?: [number, number];
   username: string;
   screenshotFilename?: string;
+  comments?: number;
   createdAt: Date;
 };
 
