@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useModal } from '../../contexts/ModalContext';
 import { classNames } from '../../utils/styles';
 import { useRouter } from '../Router/Router';
@@ -20,12 +19,16 @@ import { useUser } from '../../contexts/UserContext';
 import CompassIcon from '../icons/CompassIcon';
 import useMinimap from '../Minimap/useMinimap';
 import MinimapSetup from '../Minimap/MinimapSetup';
+import usePersistentState from '../../utils/usePersistentState';
 
 type View = 'markers' | 'areas' | 'nearBy';
 
 function MapFilter(): JSX.Element {
   const { addModal } = useModal();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = usePersistentState(
+    'aeternum-map-client.sidebar-state',
+    true
+  );
   const { url, search } = useRouter();
   const { following, toggleFollowing } = usePosition();
   const user = useUser();
