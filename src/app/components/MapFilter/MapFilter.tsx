@@ -21,8 +21,9 @@ import useMinimap from '../Minimap/useMinimap';
 import MinimapSetup from '../Minimap/MinimapSetup';
 import usePersistentState from '../../utils/usePersistentState';
 import SettingsIcon from '../icons/SettingsIcon';
+import Settings from '../Settings/Settings';
 
-type View = 'markers' | 'areas' | 'nearBy';
+type View = 'markers' | 'settings' | 'areas' | 'nearBy';
 
 function MapFilter(): JSX.Element {
   const { addModal } = useModal();
@@ -48,6 +49,7 @@ function MapFilter(): JSX.Element {
       <div className={styles.content}>
         <User />
         {view === 'markers' && <MarkersView />}
+        {view === 'settings' && <Settings />}
         {view === 'areas' && <AreasView />}
         {view === 'nearBy' && <NearBy />}
         <Ads active={isOpen} />
@@ -78,6 +80,17 @@ function MapFilter(): JSX.Element {
           onClick={() => handleViewClick('markers')}
         >
           <MarkerIcon />
+        </button>
+        <button
+          data-tooltip="Show/Hide settings"
+          data-tooltip-position="right"
+          className={classNames(
+            styles.nav__button,
+            view === 'settings' && styles.nav__active
+          )}
+          onClick={() => handleViewClick('settings')}
+        >
+          <SettingsIcon />
         </button>
         <button
           data-tooltip="Areas (Coming Soon)"
@@ -138,13 +151,7 @@ function MapFilter(): JSX.Element {
         >
           <CompassIcon />
         </button>
-        <button
-          data-tooltip="Show/Hide settings"
-          data-tooltip-position="right"
-          className={classNames(styles.nav__button, styles.nav__border)}
-        >
-          <SettingsIcon />
-        </button>
+
         <button
           data-tooltip="Show/Hide menu"
           data-tooltip-position="right"
