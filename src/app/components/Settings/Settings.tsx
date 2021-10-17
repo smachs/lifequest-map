@@ -1,12 +1,13 @@
-import { usePersistentState } from '../../utils/storage';
+import { useSettings } from '../../contexts/SettingsContext';
 import styles from './Settings.module.css';
 
 function Settings(): JSX.Element {
-  const [markerSize, setMarkerSize] = usePersistentState('markerSize', 40);
-  const [markerBackground, setMarkerBackground] = usePersistentState(
-    'markerBackground',
-    false
-  );
+  const {
+    markerSize,
+    setMarkerSize,
+    markerShowBackground,
+    setMarkerShowBackground,
+  } = useSettings();
 
   return (
     <div className={styles.container}>
@@ -19,15 +20,15 @@ function Settings(): JSX.Element {
           value={markerSize}
           onChange={(event) => setMarkerSize(+event.target.value)}
           min={10}
-          max={100}
+          max={80}
         />
       </label>
       <label className={styles.label}>
         Show background
         <input
           type="checkbox"
-          checked={markerBackground}
-          onChange={(event) => setMarkerBackground(event.target.checked)}
+          checked={markerShowBackground}
+          onChange={(event) => setMarkerShowBackground(event.target.checked)}
         />
       </label>
     </div>

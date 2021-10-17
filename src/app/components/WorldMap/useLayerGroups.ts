@@ -7,6 +7,7 @@ import { classNames } from '../../utils/styles';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { useFilters } from '../../contexts/FiltersContext';
 import CanvasMarker from './CanvasMarker';
+import { useSettings } from '../../contexts/SettingsContext';
 
 export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
   leaflet.Icon.extend({
@@ -18,7 +19,7 @@ export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
 
 const allLayers: {
   [id: string]: {
-    layer: leaflet.Layer;
+    layer: CanvasMarker | leaflet.LayerGroup;
     hasComments: boolean;
   };
 } = {};
@@ -32,6 +33,40 @@ function useLayerGroups({
 }): void {
   const { visibleMarkers } = useMarkers();
   const [filters] = useFilters();
+  const { markerSize, markerShowBackground } = useSettings();
+
+  useEffect(() => {
+    const handle = setTimeout(() => {
+      const allMarkers = Object.values(allLayers);
+      if (allMarkers.length === 0 || !leafletMap) {
+        return;
+      }
+      let clearedCanvas = false;
+      allMarkers.forEach(({ layer }) => {
+        if (layer instanceof CanvasMarker) {
+          if (!clearedCanvas) {
+            clearedCanvas = true;
+            const renderer = leafletMap.getRenderer(layer);
+
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const canvas: HTMLCanvasElement = renderer._container;
+            const context = canvas.getContext('2d');
+            if (!context) {
+              return;
+            }
+            context.clearRect(0, 0, canvas.width, canvas.height);
+          }
+          layer.options.image.size = [markerSize, markerSize];
+          layer._updatePath();
+        }
+      });
+    }, 200);
+
+    return () => {
+      clearTimeout(handle);
+    };
+  }, [leafletMap, markerSize, markerShowBackground]);
 
   useEffect(() => {
     if (!leafletMap) {
@@ -69,7 +104,7 @@ function useLayerGroups({
               radius: 16,
               image: {
                 src: mapFilter.iconUrl,
-                size: [40, 40],
+                size: [markerSize, markerSize],
                 comments: marker.comments,
               },
               pmIgnore: true,
