@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import leaflet from 'leaflet';
-import { mapFilters } from '../MapFilter/mapFilters';
+import { mapFilters, mapFiltersCategories } from '../MapFilter/mapFilters';
 import type { Marker } from '../../contexts/MarkersContext';
 import { getTooltipContent } from './tooltips';
 import { classNames } from '../../utils/styles';
@@ -50,14 +50,10 @@ function useLayerGroups({
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            const canvas: HTMLCanvasElement = renderer._container;
-            const context = canvas.getContext('2d');
-            if (!context) {
-              return;
-            }
-            context.clearRect(0, 0, canvas.width, canvas.height);
+            renderer._clear();
           }
           layer.options.image.size = [markerSize, markerSize];
+          layer.options.image.showBackground = markerShowBackground;
           layer._updatePath();
         }
       });
@@ -98,12 +94,20 @@ function useLayerGroups({
         }
 
         if (marker.position) {
+          const filterCategory = mapFiltersCategories.find(
+            (filterCategory) => filterCategory.value === mapFilter.category
+          );
+          if (!filterCategory) {
+            continue;
+          }
           const mapMarker = new CanvasMarker(
             [marker.position[1], marker.position[0]],
             {
               radius: 16,
               image: {
                 src: mapFilter.iconUrl,
+                showBackground: markerShowBackground,
+                borderColor: filterCategory.borderColor,
                 size: [markerSize, markerSize],
                 comments: marker.comments,
               },

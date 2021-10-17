@@ -10,9 +10,9 @@ type SettingsContextValue = {
   setMarkerShowBackground: (markerShowBackground: boolean) => void;
 };
 const SettingsContext = createContext<SettingsContextValue>({
-  markerSize: 40,
+  markerSize: 30,
   setMarkerSize: () => undefined,
-  markerShowBackground: false,
+  markerShowBackground: true,
   setMarkerShowBackground: () => undefined,
 });
 
@@ -22,10 +22,10 @@ type SettingsProviderProps = {
 export function SettingsProvider({
   children,
 }: SettingsProviderProps): JSX.Element {
-  const [markerSize, setMarkerSize] = usePersistentState('markerSize', 40);
+  const [markerSize, setMarkerSize] = usePersistentState('markerSize', 30);
   const [markerShowBackground, setMarkerShowBackground] = usePersistentState(
     'markerShowBackground',
-    false
+    true
   );
 
   return (

@@ -653,6 +653,7 @@ export type MapFiltersCategory = {
   value: string;
   title: string;
   filters: FilterItem[];
+  borderColor?: string;
 };
 
 export const mapFiltersCategories: MapFiltersCategory[] = [
@@ -667,31 +668,37 @@ export const mapFiltersCategories: MapFiltersCategory[] = [
     value: 'chests',
     title: i18n('Chests'),
     filters: mapFilters.filter((mapFilter) => mapFilter.category === 'chests'),
+    borderColor: 'rgba(200, 200, 200, 0.7)',
   },
   {
     value: 'enemies',
     title: i18n('Enemies'),
     filters: mapFilters.filter((mapFilter) => mapFilter.category === 'enemies'),
+    borderColor: 'rgba(220, 20, 60, 0.7)',
   },
   {
     value: 'farming',
     title: i18n('Farming'),
     filters: mapFilters.filter((mapFilter) => mapFilter.category === 'farming'),
+    borderColor: 'rgba(34, 139, 34, 0.7)',
   },
   {
     value: 'fishing',
     title: i18n('Fishing'),
     filters: mapFilters.filter((mapFilter) => mapFilter.category === 'fishing'),
+    borderColor: 'rgba(30, 144, 255, 0.7)',
   },
   {
     value: 'logging',
     title: i18n('Logging'),
     filters: mapFilters.filter((mapFilter) => mapFilter.category === 'logging'),
+    borderColor: 'rgba(85, 107, 47, 0.7)',
   },
   {
     value: 'mining',
     title: i18n('Mining'),
     filters: mapFilters.filter((mapFilter) => mapFilter.category === 'mining'),
+    borderColor: 'rgba(255, 235, 205, 0.7)',
   },
   {
     value: 'skinning',
@@ -699,11 +706,13 @@ export const mapFiltersCategories: MapFiltersCategory[] = [
     filters: mapFilters.filter(
       (mapFilter) => mapFilter.category === 'skinning'
     ),
+    borderColor: 'rgba(205, 133, 63, 0.7)',
   },
   {
     value: 'lore',
     title: i18n('Lore'),
     filters: mapFilters.filter((mapFilter) => mapFilter.category === 'lore'),
+    borderColor: 'rgba(65, 105, 225, 0.7)',
   },
   {
     value: 'essences',
@@ -711,25 +720,30 @@ export const mapFiltersCategories: MapFiltersCategory[] = [
     filters: mapFilters.filter(
       (mapFilter) => mapFilter.category === 'essences'
     ),
+    borderColor: 'rgba(75, 0, 130, 0.7)',
   },
   {
     value: 'pigment',
     title: i18n('Pigments'),
     filters: mapFilters.filter((mapFilter) => mapFilter.category === 'pigment'),
+    borderColor: 'rgba(250, 128, 114, 0.7)',
   },
   {
     value: 'npc',
     title: i18n('NPC'),
     filters: mapFilters.filter((mapFilter) => mapFilter.category === 'npc'),
+    borderColor: 'rgba(255, 255, 255, 0.7)',
   },
   {
     value: 'service',
     title: i18n('Services'),
     filters: mapFilters.filter((mapFilter) => mapFilter.category === 'service'),
+    borderColor: 'rgba(112, 128, 144, 0.7)',
   },
   {
     value: 'other',
     title: i18n('Other'),
     filters: mapFilters.filter((mapFilter) => mapFilter.category === 'other'),
+    borderColor: 'rgba(80, 80, 80, 0.7)',
   },
 ];
