@@ -20,6 +20,7 @@ import CompassIcon from '../icons/CompassIcon';
 import useMinimap from '../Minimap/useMinimap';
 import MinimapSetup from '../Minimap/MinimapSetup';
 import usePersistentState from '../../utils/usePersistentState';
+import SettingsIcon from '../icons/SettingsIcon';
 
 type View = 'markers' | 'areas' | 'nearBy';
 
@@ -136,6 +137,13 @@ function MapFilter(): JSX.Element {
           )}
         >
           <CompassIcon />
+        </button>
+        <button
+          data-tooltip="Show/Hide settings"
+          data-tooltip-position="right"
+          className={classNames(styles.nav__button, styles.nav__border)}
+        >
+          <SettingsIcon />
         </button>
         <button
           data-tooltip="Show/Hide menu"
