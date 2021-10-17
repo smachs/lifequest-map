@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import leaflet from 'leaflet';
-import { mapFilters } from '../MapFilter/mapFilters';
+import { mapFilters, mapFiltersCategories } from '../MapFilter/mapFilters';
 import type { Marker } from '../../contexts/MarkersContext';
 import { getTooltipContent } from './tooltips';
 import { classNames } from '../../utils/styles';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { useFilters } from '../../contexts/FiltersContext';
 import CanvasMarker from './CanvasMarker';
+import { useSettings } from '../../contexts/SettingsContext';
 
 export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
   leaflet.Icon.extend({
@@ -18,7 +19,7 @@ export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
 
 const allLayers: {
   [id: string]: {
-    layer: leaflet.Layer;
+    layer: CanvasMarker | leaflet.LayerGroup;
     hasComments: boolean;
   };
 } = {};
@@ -32,6 +33,36 @@ function useLayerGroups({
 }): void {
   const { visibleMarkers } = useMarkers();
   const [filters] = useFilters();
+  const { markerSize, markerShowBackground } = useSettings();
+
+  useEffect(() => {
+    const handle = setTimeout(() => {
+      const allMarkers = Object.values(allLayers);
+      if (allMarkers.length === 0 || !leafletMap) {
+        return;
+      }
+      let clearedCanvas = false;
+      allMarkers.forEach(({ layer }) => {
+        if (layer instanceof CanvasMarker) {
+          if (!clearedCanvas) {
+            clearedCanvas = true;
+            const renderer = leafletMap.getRenderer(layer);
+
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            renderer._clear();
+          }
+          layer.options.image.size = [markerSize, markerSize];
+          layer.options.image.showBackground = markerShowBackground;
+          layer._updatePath();
+        }
+      });
+    }, 200);
+
+    return () => {
+      clearTimeout(handle);
+    };
+  }, [leafletMap, markerSize, markerShowBackground]);
 
   useEffect(() => {
     if (!leafletMap) {
@@ -63,13 +94,21 @@ function useLayerGroups({
         }
 
         if (marker.position) {
+          const filterCategory = mapFiltersCategories.find(
+            (filterCategory) => filterCategory.value === mapFilter.category
+          );
+          if (!filterCategory) {
+            continue;
+          }
           const mapMarker = new CanvasMarker(
             [marker.position[1], marker.position[0]],
             {
               radius: 16,
               image: {
                 src: mapFilter.iconUrl,
-                size: [40, 40],
+                showBackground: markerShowBackground,
+                borderColor: filterCategory.borderColor,
+                size: [markerSize, markerSize],
                 comments: marker.comments,
               },
               pmIgnore: true,

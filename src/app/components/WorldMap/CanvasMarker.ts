@@ -3,6 +3,8 @@ import leaflet from 'leaflet';
 type CanvasMarkerOptions = {
   image: {
     size: [number, number];
+    showBackground: boolean;
+    borderColor?: string;
     src?: string;
     element?: HTMLImageElement;
     comments?: number;
@@ -51,7 +53,28 @@ leaflet.Canvas.include({
     const ctx: CanvasRenderingContext2D = this._ctx;
     const dx = p.x - image.size[0] / 2;
     const dy = p.y - image.size[1] / 2;
+
+    if (image.showBackground) {
+      ctx.beginPath();
+      ctx.arc(
+        dx + image.size[0] / 2,
+        dy + image.size[1] / 2,
+        image.size[0] / 2,
+        0,
+        Math.PI * 2,
+        true
+      ); // Outer circle
+      ctx.fillStyle = 'rgba(30, 30, 30, 0.7)';
+      ctx.fill();
+      if (image.borderColor) {
+        ctx.strokeStyle = image.borderColor;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+    }
+
     ctx.drawImage(image.element, dx, dy, image.size[0], image.size[1]);
+
     if (image.comments) {
       ctx.beginPath();
       ctx.arc(
