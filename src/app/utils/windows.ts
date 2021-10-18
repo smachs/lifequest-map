@@ -68,7 +68,10 @@ export async function closeMainWindow(): Promise<void> {
 }
 
 export async function getPreferedWindowName(): Promise<string> {
-  const preferedWindowName = getJSONItem<string>('preferedWindowName');
+  const preferedWindowName = getJSONItem<string | undefined>(
+    'preferedWindowName',
+    undefined
+  );
   if (preferedWindowName) {
     return preferedWindowName;
   }
@@ -96,7 +99,8 @@ export async function restoreWindow(
 
         if (!preventCenter) {
           const alreadyCentered = getJSONItem<boolean>(
-            `centered-${windowName}`
+            `centered-${windowName}`,
+            false
           );
           if (!alreadyCentered) {
             const primaryDisplay = declaredWindow.name === WINDOWS.OVERLAY;
@@ -123,8 +127,10 @@ export function toggleWindow(windowName: string): void {
 }
 
 export async function togglePreferedWindow(): Promise<void> {
-  const preferedWindowName =
-    getJSONItem<string>('preferedWindowName') || WINDOWS.DESKTOP;
+  const preferedWindowName = getJSONItem<string>(
+    'preferedWindowName',
+    WINDOWS.DESKTOP
+  );
   setJSONItem(
     'preferedWindowName',
     preferedWindowName === WINDOWS.DESKTOP ? WINDOWS.OVERLAY : WINDOWS.DESKTOP

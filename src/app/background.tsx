@@ -18,7 +18,7 @@ async function openApp() {
   if (newWorldIsRunning) {
     const preferedWindowName = await getPreferedWindowName();
     restoreWindow(preferedWindowName);
-    if (getJSONItem('showMinimap')) {
+    if (getJSONItem('showMinimap', false)) {
       restoreWindow(WINDOWS.MINIMAP);
     }
   } else {
@@ -53,7 +53,7 @@ overwolf.games.onGameInfoUpdated.addListener(async (event) => {
         restoreWindow(WINDOWS.DESKTOP);
         closeWindow(WINDOWS.OVERLAY);
       }
-      if (getJSONItem('showMinimap')) {
+      if (getJSONItem('showMinimap', false)) {
         restoreWindow(WINDOWS.MINIMAP);
       }
     } else {

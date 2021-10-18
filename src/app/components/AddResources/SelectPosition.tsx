@@ -19,11 +19,14 @@ function SelectPosition({
   onSelectPosition,
   onSelectPositions,
 }: SelectPositionType): JSX.Element {
-  const mapPosition = getJSONItem<{
-    y: number;
-    x: number;
-    zoom: number;
-  }>('mapPosition');
+  const mapPosition = getJSONItem<
+    | {
+        y: number;
+        x: number;
+        zoom: number;
+      }
+    | undefined
+  >('mapPosition', undefined);
 
   const [x, setX] = useState(mapPosition?.x || 8000);
   const [y, setY] = useState(mapPosition?.y || 8000);

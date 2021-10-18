@@ -85,11 +85,14 @@ function useWorldMap({
     });
     setLeafletMap(map);
 
-    const mapPosition = getJSONItem<{
-      y: number;
-      x: number;
-      zoom: number;
-    }>('mapPosition');
+    const mapPosition = getJSONItem<
+      | {
+          y: number;
+          x: number;
+          zoom: number;
+        }
+      | undefined
+    >('mapPosition', undefined);
 
     if (mapPosition) {
       map.setView(
