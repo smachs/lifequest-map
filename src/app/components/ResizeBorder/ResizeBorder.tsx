@@ -1,6 +1,7 @@
 import styles from './ResizeBorder.module.css';
-import { dragResize } from '../../utils/windows';
+import { dragResize, getCurrentWindow } from '../../utils/windows';
 import type { MouseEvent } from 'react';
+import { useEffect, useState } from 'react';
 
 function onDragResize(edge: overwolf.windows.enums.WindowDragEdge) {
   return (event: MouseEvent) => {
@@ -9,7 +10,40 @@ function onDragResize(edge: overwolf.windows.enums.WindowDragEdge) {
   };
 }
 
+function useIsMaximizedWindow(): boolean {
+  const [isMaximized, setIsMaximized] = useState(false);
+
+  useEffect(() => {
+    async function handleWindowStateChanged(
+      state: overwolf.windows.WindowStateChangedEvent
+    ) {
+      const currentWindow = await getCurrentWindow();
+      if (currentWindow.id !== state.window_id) {
+        return;
+      }
+      if (state.window_previous_state_ex !== state.window_state_ex) {
+        setIsMaximized(state.window_state_ex === 'maximized');
+      }
+    }
+
+    getCurrentWindow().then(
+      (currentWindow) => currentWindow.stateEx === 'maximized'
+    );
+
+    overwolf.windows.onStateChanged.addListener(handleWindowStateChanged);
+    return () => {
+      overwolf.windows.onStateChanged.removeListener(handleWindowStateChanged);
+    };
+  }, []);
+
+  return isMaximized;
+}
+
 function ResizeBorder(): JSX.Element {
+  const isMaximizedWindow = useIsMaximizedWindow();
+  if (isMaximizedWindow) {
+    return <></>;
+  }
   return (
     <>
       <div
