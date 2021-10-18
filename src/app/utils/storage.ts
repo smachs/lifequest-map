@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
-export function getJSONItem<T>(key: string, defaultValue?: T): T | undefined {
+export function getJSONItem<T>(key: string, defaultValue: T): T {
   try {
     const item = localStorage.getItem(key);
-    return item ? JSON.parse(item) : defaultValue;
+    return item !== null ? JSON.parse(item) : defaultValue;
   } catch (e) {
     console.error(e);
     return defaultValue;
@@ -22,14 +22,9 @@ export function usePersistentState<T>(
   key: string,
   initialValue: T
 ): [T, (value: T | ((value: T) => T)) => void] {
-  const [state, setState] = useState<T>(() => {
-    try {
-      return getJSONItem(key) || initialValue;
-    } catch (e) {
-      console.error(e);
-      return initialValue;
-    }
-  });
+  const [state, setState] = useState<T>(() =>
+    getJSONItem<T>(key, initialValue)
+  );
 
   function setValue(value: T | ((value: T) => T)) {
     try {
