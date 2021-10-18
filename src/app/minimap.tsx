@@ -13,6 +13,7 @@ import { dragMoveWindow, dragResize, WINDOWS } from './utils/windows';
 import { SETUP_MINIMAP } from './utils/hotkeys';
 import { usePersistentState } from './utils/storage';
 import { FiltersProvider } from './contexts/FiltersContext';
+import { SettingsProvider } from './contexts/SettingsContext';
 
 function onDragResize(edge: overwolf.windows.enums.WindowDragEdge) {
   return (event: MouseEvent) => {
@@ -150,15 +151,17 @@ waitForOverwolf().then(() => {
   ReactDOM.render(
     <StrictMode>
       <RouterProvider readonly>
-        <UserProvider>
-          <FiltersProvider>
-            <MarkersProvider readonly>
-              <PositionProvider>
-                <Minimap />
-              </PositionProvider>
-            </MarkersProvider>
-          </FiltersProvider>
-        </UserProvider>
+        <SettingsProvider>
+          <UserProvider>
+            <FiltersProvider>
+              <MarkersProvider readonly>
+                <PositionProvider>
+                  <Minimap />
+                </PositionProvider>
+              </MarkersProvider>
+            </FiltersProvider>
+          </UserProvider>
+        </SettingsProvider>
       </RouterProvider>
     </StrictMode>,
     document.querySelector('#root')
