@@ -47,6 +47,7 @@ type UseWorldMapProps = {
   hideControls?: boolean;
   initialZoom?: number;
 };
+export let latestLeafletMap: leaflet.Map | null = null;
 function useWorldMap({
   hideControls,
   selectMode,
@@ -83,6 +84,7 @@ function useWorldMap({
       zoomControl: false,
       maxBounds: leaflet.latLngBounds([-10000, -7000], [20000, 25000]),
     });
+    latestLeafletMap = map;
     setLeafletMap(map);
 
     const mapPosition = getJSONItem<

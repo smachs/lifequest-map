@@ -22,6 +22,8 @@ import MinimapSetup from '../Minimap/MinimapSetup';
 import usePersistentState from '../../utils/usePersistentState';
 import SettingsIcon from '../icons/SettingsIcon';
 import Settings from '../Settings/Settings';
+import { useEffect } from 'react';
+import { latestLeafletMap } from '../WorldMap/useWorldMap';
 
 type View = 'markers' | 'settings' | 'areas' | 'nearBy';
 
@@ -35,6 +37,12 @@ function MapFilter(): JSX.Element {
   const { following, toggleFollowing } = usePosition();
   const user = useUser();
   const [showMinimap, setShowMinimap] = useMinimap();
+
+  useEffect(() => {
+    setTimeout(() => {
+      latestLeafletMap?.invalidateSize({ pan: false });
+    }, 300);
+  }, [isOpen]);
 
   function handleViewClick(view: View) {
     setIsOpen(true);
