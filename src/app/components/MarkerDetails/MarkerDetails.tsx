@@ -85,9 +85,15 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
           {comments?.map((comment) => (
             <Comment
               key={comment._id}
+              id={comment._id}
+              userId={user?._id}
               username={comment.username}
               message={comment.message}
               createdAt={comment.createdAt}
+              removable={Boolean(
+                user && (user.isModerator || user.username === comment.username)
+              )}
+              onRemove={() => refresh().then(refreshMarkers)}
             />
           ))}
           {!loading && comments?.length === 0 && (

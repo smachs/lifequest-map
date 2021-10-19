@@ -208,6 +208,53 @@ router.get('/markers/:markerId/comments', async (req, res) => {
   res.status(200).json(comments);
 });
 
+router.delete('/comments/:commentId', async (req, res) => {
+  const { commentId } = req.params;
+  const { userId } = req.body;
+
+  if (!ObjectId.isValid(commentId) || !ObjectId.isValid(userId)) {
+    res.status(400).send('Invalid payload');
+    return;
+  }
+  const user = await getUsersCollection().findOne({
+    _id: new ObjectId(userId),
+  });
+  if (!user) {
+    res.status(401).send('No access');
+    return;
+  }
+  const query: Filter<Comment> = {
+    _id: new ObjectId(commentId),
+  };
+  if (!user.isModerator) {
+    query.username = user.username;
+  }
+  const comment = await getCommentsCollection().findOne(query);
+  if (!comment) {
+    res.status(404).end(`No comment found ${commentId}`);
+    return;
+  }
+
+  const result = await getCommentsCollection().deleteOne(query);
+  if (!result.deletedCount) {
+    res.status(404).end(`No comment found ${commentId}`);
+    return;
+  }
+
+  await getMarkersCollection().updateOne(
+    { _id: new ObjectId(comment.markerId) },
+    {
+      $set: {
+        comments: await getCommentsCollection()
+          .find({ markerId: new ObjectId(comment.markerId) })
+          .count(),
+      },
+    }
+  );
+
+  res.status(200).json({});
+});
+
 router.post('/markers/:markerId/comments', async (req, res, next) => {
   try {
     const { markerId } = req.params;

@@ -12,14 +12,14 @@ export type Comment = {
 function useComments(markerId: string): {
   comments: Comment[] | null;
   loading: boolean;
-  refresh: () => void;
+  refresh: () => Promise<void>;
 } {
   const [comments, setComments] = useState<Comment[] | null>(null);
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(() => {
     setLoading(true);
-    fetchJSON<Comment[]>(`/api/markers/${markerId}/comments`)
+    return fetchJSON<Comment[]>(`/api/markers/${markerId}/comments`)
       .then((comments) =>
         comments.map((comment: Comment) => ({
           ...comment,
