@@ -14,6 +14,7 @@ import { SETUP_MINIMAP } from './utils/hotkeys';
 import { usePersistentState } from './utils/storage';
 import { FiltersProvider } from './contexts/FiltersContext';
 import { SettingsProvider } from './contexts/SettingsContext';
+import { classNames } from './utils/styles';
 
 function onDragResize(edge: overwolf.windows.enums.WindowDragEdge) {
   return (event: MouseEvent) => {
@@ -38,6 +39,23 @@ function Minimap(): JSX.Element {
     50
   );
   const [minimapZoom, setMinimapZoom] = usePersistentState('minimapZoom', 2);
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    if (!isHovering) {
+      return;
+    }
+    const handleKeyDown = (event: overwolf.games.inputTracking.KeyEvent) => {
+      // ESC
+      if (event.key === '27') {
+        setIsHovering(false);
+      }
+    };
+    overwolf.games.inputTracking.onKeyDown.addListener(handleKeyDown);
+    return () => {
+      overwolf.games.inputTracking.onKeyDown.removeListener(handleKeyDown);
+    };
+  }, [isHovering]);
 
   useEffect(() => {
     if (showSetup) {
@@ -72,9 +90,12 @@ function Minimap(): JSX.Element {
   return (
     <>
       <div
-        className={styles.container}
+        onMouseMove={() => setIsHovering(true)}
+        className={classNames(
+          styles.container,
+          !showSetup && isHovering && styles.hideOnHover
+        )}
         style={{
-          pointerEvents: showSetup ? 'initial' : 'none',
           opacity: minimapOpacity / 100,
           borderRadius: `${minimapBorderRadius}%`,
         }}
@@ -113,7 +134,7 @@ function Minimap(): JSX.Element {
             <input
               type="range"
               value={minimapOpacity}
-              min={0}
+              min={20}
               max={100}
               onChange={(event) => setMinimapOpacity(+event.target.value)}
             />
