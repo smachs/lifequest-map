@@ -100,7 +100,7 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
       <aside className={styles.more}>
         <h3>Actions</h3>
         <HideMarkerInput markerId={marker._id} />
-        {user?.isModerator && (
+        {user && (user.isModerator || user.username === marker.username) && (
           <button
             className={styles.button}
             onClick={() => handleDelete(user._id)}

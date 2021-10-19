@@ -1,4 +1,5 @@
 import express from 'express';
+import type { Filter } from 'mongodb';
 import { Double, ObjectId } from 'mongodb';
 import type { Comment, Marker } from '../types';
 import { getCommentsCollection } from './comments';
@@ -34,15 +35,25 @@ router.delete('/markers/:markerId', async (req, res, next) => {
     }
     const user = await getUsersCollection().findOne({
       _id: new ObjectId(userId),
-      isModerator: true,
     });
     if (!user) {
       res.status(401).send('No access');
       return;
     }
-    const result = await getMarkersCollection().deleteOne({
+    const query: Filter<Marker> = {
       _id: new ObjectId(markerId),
-    });
+    };
+    if (!user.isModerator) {
+      query.username = user.username;
+    }
+    const markerCollection = getMarkersCollection();
+    const marker = await markerCollection.findOne(query);
+    if (!marker) {
+      res.status(404).end(`No marker found for id ${markerId}`);
+      return;
+    }
+
+    const result = await markerCollection.deleteOne(query);
     if (!result.deletedCount) {
       res.status(404).end(`No marker found for id ${markerId}`);
       return;
@@ -50,6 +61,15 @@ router.delete('/markers/:markerId', async (req, res, next) => {
     await getCommentsCollection().deleteMany({
       markerId: new ObjectId(markerId),
     });
+    if (marker.screenshotFilename) {
+      await fs
+        .rm(`${process.env.SCREENSHOTS_PATH}/${marker.screenshotFilename}`)
+        .catch(() =>
+          console.warn(
+            `Could not remove screenshot ${marker.screenshotFilename}`
+          )
+        );
+    }
     res.status(200).json({});
   } catch (error) {
     next(error);
