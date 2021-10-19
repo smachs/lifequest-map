@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import leaflet from 'leaflet';
 import { mapFilters, mapFiltersCategories } from '../MapFilter/mapFilters';
 import type { Marker } from '../../contexts/MarkersContext';
@@ -17,13 +17,6 @@ export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
     },
   });
 
-const allLayers: {
-  [id: string]: {
-    layer: CanvasMarker | leaflet.LayerGroup;
-    hasComments: boolean;
-  };
-} = {};
-
 function useLayerGroups({
   leafletMap,
   onMarkerClick,
@@ -34,9 +27,16 @@ function useLayerGroups({
   const { visibleMarkers } = useMarkers();
   const [filters] = useFilters();
   const { markerSize, markerShowBackground } = useSettings();
+  const allLayersRef = useRef<{
+    [id: string]: {
+      layer: CanvasMarker | leaflet.LayerGroup;
+      hasComments: boolean;
+    };
+  }>({});
 
   useEffect(() => {
     const handle = setTimeout(() => {
+      const allLayers = allLayersRef.current;
       const allMarkers = Object.values(allLayers);
       if (allMarkers.length === 0 || !leafletMap) {
         return;
@@ -69,6 +69,7 @@ function useLayerGroups({
       return;
     }
 
+    const allLayers = allLayersRef.current;
     const removableMarkers = Object.keys(allLayers);
 
     for (let i = 0; i < visibleMarkers.length; i++) {

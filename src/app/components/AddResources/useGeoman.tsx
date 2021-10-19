@@ -78,7 +78,6 @@ function useGeoman({
           onDraw(positions);
         }
       });
-      1;
     }
     markerRef.current.on('pm:dragstart', () => {
       setDragging(true);

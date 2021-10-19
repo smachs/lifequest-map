@@ -1,0 +1,15 @@
+.action {
+  background: none;
+  text-transform: uppercase;
+  color: var(--color-text);
+  padding: 0.5em 0.5em 0.25em 0.5em;
+  font-size: 0.8em;
+}
+
+.action:hover {
+  text-decoration: underline;
+}
+
+.action:active {
+  color: var(--color-primary);
+}

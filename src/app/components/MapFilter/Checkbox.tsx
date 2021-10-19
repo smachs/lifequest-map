@@ -3,7 +3,7 @@ import { useMarkers } from '../../contexts/MarkersContext';
 import { classNames } from '../../utils/styles';
 import styles from './Checkbox.module.css';
 
-type CheckboxProps = {
+export type CheckboxProps = {
   imgSrc?: string;
   title: string;
   checked: boolean;
