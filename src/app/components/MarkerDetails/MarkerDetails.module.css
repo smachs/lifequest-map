@@ -38,6 +38,7 @@
   display: grid;
   grid-template-rows: 1fr auto;
 }
+
 .comments {
   overflow: auto;
   display: flex;

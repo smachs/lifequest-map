@@ -120,6 +120,7 @@ svg {
   99% {
     visibility: hidden;
   }
+
   100% {
     visibility: visible;
   }

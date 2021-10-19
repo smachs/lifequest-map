@@ -19,6 +19,7 @@
   color: var(--color-primary);
   background: var(--color-three);
 }
+
 .form input[type='submit']:hover {
   background: var(--color-shade-three);
 }

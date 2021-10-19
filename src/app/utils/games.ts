@@ -47,6 +47,7 @@ export function useIsNewWorldRunning(): boolean {
     : false;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getGameInfo(): Promise<any> {
   return new Promise((resolve, reject) => {
     overwolf.games.events.getInfo((info) => {
