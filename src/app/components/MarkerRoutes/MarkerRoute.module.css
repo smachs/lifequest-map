@@ -1,0 +1,21 @@
+.container {
+  display: grid;
+  padding: 0.25em 0.5em;
+  text-transform: uppercase;
+  grid-template-columns: repeat(4, 1fr);
+  transition: 0.2s background-color ease-in;
+}
+
+.container:hover {
+  cursor: pointer;
+  background-color: var(--color-shade-three);
+}
+
+.container h4 {
+  grid-column: 1 / 5;
+}
+
+.selected {
+  color: var(--color-primary);
+  background-color: var(--color-shade-two);
+}

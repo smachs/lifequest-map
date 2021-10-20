@@ -25,7 +25,7 @@ function useLayerGroups({
   leafletMap: leaflet.Map | null;
   onMarkerClick?: (marker: Marker) => void;
 }): void {
-  const { visibleMarkers } = useMarkers();
+  const { visibleMarkers, markerRoutes } = useMarkers();
   const [filters] = useFilters();
   const { markerSize, markerShowBackground } = useSettings();
   const allLayersRef = useRef<{
@@ -34,8 +34,13 @@ function useLayerGroups({
       hasComments: boolean;
     };
   }>({});
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     const handle = setTimeout(() => {
       const allLayers = allLayersRef.current;
       const allMarkers = Object.values(allLayers);
@@ -63,7 +68,7 @@ function useLayerGroups({
     return () => {
       clearTimeout(handle);
     };
-  }, [leafletMap, markerSize, markerShowBackground]);
+  }, [markerSize, markerShowBackground]);
 
   useEffect(() => {
     if (!leafletMap) {
@@ -184,6 +189,25 @@ function useLayerGroups({
       }
     });
   }, [leafletMap, filters, visibleMarkers]);
+
+  useEffect(() => {
+    if (!leafletMap) {
+      return;
+    }
+
+    const layerGroup = new leaflet.LayerGroup();
+
+    for (let i = 0; i < markerRoutes.length; i++) {
+      const markerRoute = markerRoutes[i];
+      const line = leaflet.polyline(markerRoute.positions);
+      line.addTo(layerGroup);
+    }
+    layerGroup.addTo(leafletMap);
+
+    return () => {
+      layerGroup.remove();
+    };
+  }, [leafletMap, markerRoutes]);
 }
 
 export default useLayerGroups;

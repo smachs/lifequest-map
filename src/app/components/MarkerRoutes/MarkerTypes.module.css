@@ -1,0 +1,10 @@
+.marker {
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-text);
+}
+
+.marker img {
+  height: 100%;
+}

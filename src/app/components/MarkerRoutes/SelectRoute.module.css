@@ -14,13 +14,3 @@
   background: var(--color-shade-two);
   color: var(--color-primary);
 }
-
-.marker {
-  height: 2rem;
-  display: inline-flex;
-  align-items: center;
-}
-
-.marker img {
-  height: 100%;
-}

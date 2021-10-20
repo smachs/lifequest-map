@@ -10,6 +10,7 @@ import multer from 'multer';
 import sharp from 'sharp';
 import fs from 'fs/promises';
 import { sendToDiscord } from './discord';
+import { getMarkerRoutesCollection } from './markerRoutes';
 
 const screenshotsUpload = multer({ dest: process.env.SCREENSHOTS_PATH });
 
@@ -405,5 +406,30 @@ router.post(
     }
   }
 );
+
+router.post('/marker-routes', async (req, res, next) => {
+  try {
+    const { name, positions, markersByType } = req.body;
+
+    await getMarkerRoutesCollection().insertOne({
+      name,
+      positions,
+      markersByType,
+    });
+
+    res.status(200).json({});
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/marker-routes', async (_req, res, next) => {
+  try {
+    const markerRoutes = await getMarkerRoutesCollection().find({}).toArray();
+    res.status(200).json(markerRoutes);
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default router;

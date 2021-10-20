@@ -7,25 +7,29 @@ import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 import type { Polyline } from 'leaflet';
 import type leaflet from 'leaflet';
-import { mapFilters } from '../MapFilter/mapFilters';
+import MarkerTypes from './MarkerTypes';
+import { fetchJSON } from '../../utils/api';
+import { useModal } from '../../contexts/ModalContext';
 
-type SelectRouteType = {
-  onSelectRoute: (positions: [number, number][]) => void;
+type SelectRouteProps = {
+  onAdd: () => void;
 };
 type MarkerBase = { _id: string; type: string };
-function SelectRoute({ onSelectRoute }: SelectRouteType): JSX.Element {
+function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
+  const { closeLatestModal } = useModal();
   const [positions, setPositions] = useState<[number, number][]>([]);
   const { leafletMap, elementRef } = useWorldMap({ selectMode: true });
   const [markersByType, setMarkersByType] = useState<{
     [type: string]: number;
   }>({});
+  const [name, setName] = useState('');
 
   useLayerGroups({
     leafletMap,
   });
 
   useEffect(() => {
-    if (!leafletMap || !leafletMap.getPane('markerPane')) {
+    if (!leafletMap) {
       return;
     }
 
@@ -51,10 +55,10 @@ function SelectRoute({ onSelectRoute }: SelectRouteType): JSX.Element {
         const latLngs = (
           event.layer as Polyline
         ).getLatLngs() as leaflet.LatLng[];
-        const positions = latLngs.map((latLng) => [
-          +latLng.lng.toFixed(2),
-          +latLng.lat.toFixed(2),
-        ]) as [number, number][];
+        const positions = latLngs.map((latLng) => [latLng.lat, latLng.lng]) as [
+          number,
+          number
+        ][];
         setPositions(positions);
       }
     });
@@ -89,6 +93,8 @@ function SelectRoute({ onSelectRoute }: SelectRouteType): JSX.Element {
         console.log(event);
       });
       workingLayer.on('pm:snap', (event) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         const imageOptions = event.layerInteractedWith?.options?.image;
         if (!imageOptions) {
           return;
@@ -116,25 +122,35 @@ function SelectRoute({ onSelectRoute }: SelectRouteType): JSX.Element {
   }, [leafletMap]);
 
   function handleSave() {
-    onSelectRoute(positions);
+    fetchJSON('/api/marker-routes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name,
+        positions,
+        markersByType,
+      }),
+    })
+      .then(onAdd)
+      .then(closeLatestModal);
   }
 
   return (
     <div className={styles.container}>
       <aside>
-        {Object.keys(markersByType).length === 0 && 'No markers selected'}
-        {Object.keys(markersByType).map((markerType) => (
-          <span key={markerType} className={styles.marker}>
-            <img
-              src={
-                mapFilters.find((mapFilter) => mapFilter.type === markerType)
-                  ?.iconUrl
-              }
-              alt={markerType}
-            />
-            : {markersByType[markerType]}
-          </span>
-        ))}
+        <MarkerTypes markersByType={markersByType} />
+        <label>
+          Name
+          <input
+            onChange={(event) => setName(event.target.value)}
+            value={name || ''}
+            placeholder="Enter name"
+            required
+            autoFocus
+          />
+        </label>
       </aside>
       <div className={styles.map} ref={elementRef} />
       <button className={styles.save} onClick={handleSave}>
