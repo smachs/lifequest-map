@@ -1,6 +1,6 @@
 .container {
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto 1fr auto;
   row-gap: 0.5em;
   height: 100%;
 }
@@ -13,4 +13,14 @@
   padding: 1em;
   background: var(--color-shade-two);
   color: var(--color-primary);
+}
+
+.marker {
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.marker img {
+  height: 100%;
 }

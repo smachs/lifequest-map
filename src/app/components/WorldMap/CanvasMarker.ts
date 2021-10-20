@@ -4,6 +4,8 @@ type CanvasMarkerOptions = {
   image: {
     size: [number, number];
     showBackground: boolean;
+    markerId: string;
+    type: string;
     borderColor?: string;
     src?: string;
     element?: HTMLImageElement;

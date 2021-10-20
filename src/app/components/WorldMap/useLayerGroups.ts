@@ -106,13 +106,15 @@ function useLayerGroups({
             {
               radius: 16,
               image: {
+                markerId: marker._id,
+                type: marker.type,
                 src: mapFilter.iconUrl,
                 showBackground: markerShowBackground,
                 borderColor: filterCategory.borderColor,
                 size: [markerSize, markerSize],
                 comments: marker.comments,
               },
-              pmIgnore: true,
+              // pmIgnore: true,
             }
           ).bindTooltip(getTooltipContent(marker, mapFilter), {
             direction: 'top',
