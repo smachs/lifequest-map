@@ -3,6 +3,7 @@ import styles from './Comment.module.css';
 import Markdown from 'markdown-to-jsx';
 import DeleteIcon from '../icons/DeleteIcon';
 import { fetchJSON } from '../../utils/api';
+import { writeError } from '../../utils/logs';
 
 type CommentProps = {
   id: string;
@@ -36,7 +37,7 @@ function Comment({
       });
       onRemove();
     } catch (error) {
-      console.error(error);
+      writeError(error);
     }
   }
 

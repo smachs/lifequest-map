@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from 'react';
 import Markdown from 'markdown-to-jsx';
 import { getAppVersion } from '../../utils/extensions';
 import styles from './Changelog.module.css';
+import { writeError } from '../../utils/logs';
 
 type Release = {
   id: number;
@@ -24,7 +25,7 @@ function Changelog(): JSX.Element {
         )
         .then(setReleases);
     } catch (error) {
-      console.error(error);
+      writeError(error);
     }
   }, []);
 

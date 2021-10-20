@@ -14,6 +14,7 @@ import { useModal } from '../../contexts/ModalContext';
 import UploadScreenshot from '../AddResources/UploadScreenshot';
 import { useUser } from '../../contexts/UserContext';
 import Credit from './Credit';
+import { writeError } from '../../utils/logs';
 
 type MarkerDetailsProps = {
   marker: Marker;
@@ -48,7 +49,7 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
       marker.screenshotFilename = screenshotFilename;
       refreshMarkers();
     } catch (error) {
-      console.error(error);
+      writeError(error);
     }
   }
 
@@ -66,7 +67,7 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
       refreshMarkers();
       closeLatestModal();
     } catch (error) {
-      console.error(error);
+      writeError(error);
     }
   }
 

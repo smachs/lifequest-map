@@ -1,5 +1,6 @@
 import type { ErrorInfo, ReactNode } from 'react';
 import { Component } from 'react';
+import { writeError } from '../../utils/logs';
 
 type MyProps = {
   children: ReactNode;
@@ -17,7 +18,7 @@ class ErrorBoundary extends Component<MyProps, MyState> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error(error, errorInfo);
+    writeError(error, errorInfo);
   }
 
   render() {
