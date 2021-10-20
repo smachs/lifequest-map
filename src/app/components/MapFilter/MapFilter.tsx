@@ -24,6 +24,7 @@ import SettingsIcon from '../icons/SettingsIcon';
 import Settings from '../Settings/Settings';
 import { useEffect } from 'react';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 
 type View = 'markers' | 'settings' | 'areas' | 'markerRoutes';
 
@@ -60,7 +61,9 @@ function MapFilter(): JSX.Element {
         {view === 'settings' && <Settings />}
         {view === 'areas' && <AreasView />}
         {view === 'markerRoutes' && <MarkerRoutes />}
-        <Ads active={isOpen} />
+        <ErrorBoundary>
+          <Ads active={isOpen} />
+        </ErrorBoundary>
       </div>
       <nav className={styles.nav}>
         <button

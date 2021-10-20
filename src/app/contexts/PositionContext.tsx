@@ -3,6 +3,7 @@ import { createContext, useEffect, useState, useContext } from 'react';
 import { usePersistentState } from '../utils/storage';
 import { getGameInfo, useIsNewWorldRunning } from '../utils/games';
 import { useSetUser } from './UserContext';
+import { writeError } from '../utils/logs';
 
 type PositionContextProps = {
   position: [number, number] | null;
@@ -71,7 +72,7 @@ export function PositionProvider({
         }
       } catch (error) {
         if (!hasError) {
-          console.error(error);
+          writeError(error);
           hasError = true;
         }
       } finally {

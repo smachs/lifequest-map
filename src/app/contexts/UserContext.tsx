@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { createContext, useEffect, useState, useContext } from 'react';
 import { fetchJSON } from '../utils/api';
+import { writeError } from '../utils/logs';
 import { usePersistentState } from '../utils/storage';
 
 export type User = {
@@ -48,7 +49,7 @@ export function UserProvider({ children }: UserProviderProps): JSX.Element {
       });
       setUser(result as User);
     } catch (error) {
-      console.error(error);
+      writeError(error);
     }
   };
 

@@ -1,5 +1,6 @@
 import { isNewWorldRunning, NEW_WORLD_CLASS_ID } from './utils/games';
 import { SHOW_HIDE_APP } from './utils/hotkeys';
+import { writeLog } from './utils/logs';
 import { waitForOverwolf } from './utils/overwolf';
 import { getJSONItem } from './utils/storage';
 import {
@@ -11,7 +12,7 @@ import {
   WINDOWS,
 } from './utils/windows';
 
-console.log('Starting background process');
+writeLog('Starting background process');
 
 async function openApp() {
   const newWorldIsRunning = await isNewWorldRunning();

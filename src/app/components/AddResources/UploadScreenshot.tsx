@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useUser } from '../../contexts/UserContext';
 import { fetchJSON } from '../../utils/api';
+import { writeError } from '../../utils/logs';
 import { takeScreenshot } from '../../utils/media';
 import { classNames } from '../../utils/styles';
 import styles from './UploadScreenshot.module.css';
@@ -76,7 +77,7 @@ function UploadScreenshot({ onUpload }: UploadScreenshotProps): JSX.Element {
       const screenshotUrl = await takeScreenshot();
       setScreenshot(screenshotUrl);
     } catch (error) {
-      console.error(error);
+      writeError(error);
     }
   }
 
@@ -96,7 +97,7 @@ function UploadScreenshot({ onUpload }: UploadScreenshotProps): JSX.Element {
           setScreenshot(screenshotUrl);
           setTimer(null);
         } catch (error) {
-          console.error(error);
+          writeError(error);
           setTimer(3);
         }
       })();

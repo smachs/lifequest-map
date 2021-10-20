@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { useUser } from '../../contexts/UserContext';
 import { fetchJSON } from '../../utils/api';
+import { writeError } from '../../utils/logs';
 import styles from './AddComment.module.css';
 
 type AddCommentProps = {
@@ -41,7 +42,7 @@ function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
       setMessage('');
       refreshMarkers();
     } catch (error) {
-      console.error(error);
+      writeError(error);
     }
   }
 

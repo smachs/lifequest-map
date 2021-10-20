@@ -8,6 +8,7 @@ import { useMarkers } from '../../contexts/MarkersContext';
 import { useFilters } from '../../contexts/FiltersContext';
 import CanvasMarker from './CanvasMarker';
 import { useSettings } from '../../contexts/SettingsContext';
+import { writeError } from '../../utils/logs';
 
 export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
   leaflet.Icon.extend({
@@ -171,7 +172,7 @@ function useLayerGroups({
           }
         }
       } catch (error) {
-        console.error(error);
+        writeError(error);
       }
     }
 
