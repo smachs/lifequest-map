@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import leaflet from 'leaflet';
 import { mapFilters, mapFiltersCategories } from '../MapFilter/mapFilters';
 import type { Marker } from '../../contexts/MarkersContext';
@@ -18,13 +18,6 @@ export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
     },
   });
 
-const allLayers: {
-  [id: string]: {
-    layer: CanvasMarker | leaflet.LayerGroup;
-    hasComments: boolean;
-  };
-} = {};
-
 function useLayerGroups({
   leafletMap,
   onMarkerClick,
@@ -35,16 +28,35 @@ function useLayerGroups({
   const { visibleMarkers } = useMarkers();
   const [filters] = useFilters();
   const { markerSize, markerShowBackground } = useSettings();
+  const isFirstRender = useRef(true);
+  const allLayersRef = useRef<{
+    [id: string]: {
+      layer: CanvasMarker | leaflet.LayerGroup;
+      hasComments: boolean;
+    };
+  }>({});
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     const handle = setTimeout(() => {
-      const allMarkers = Object.values(allLayers);
+      const allMarkers = Object.values(allLayersRef.current);
       if (allMarkers.length === 0 || !leafletMap) {
         return;
       }
       let clearedCanvas = false;
       allMarkers.forEach(({ layer }) => {
         if (layer instanceof CanvasMarker) {
+          if (
+            layer.options.image.size[0] === markerSize &&
+            layer.options.image.size[1] === markerSize &&
+            layer.options.image.showBackground === markerShowBackground
+          ) {
+            return;
+          }
           if (!clearedCanvas) {
             clearedCanvas = true;
             const renderer = leafletMap.getRenderer(layer);
@@ -63,13 +75,13 @@ function useLayerGroups({
     return () => {
       clearTimeout(handle);
     };
-  }, [leafletMap, markerSize, markerShowBackground]);
+  }, [markerSize, markerShowBackground]);
 
   useEffect(() => {
     if (!leafletMap) {
       return;
     }
-
+    const allLayers = allLayersRef.current;
     const removableMarkers = Object.keys(allLayers);
 
     for (let i = 0; i < visibleMarkers.length; i++) {
@@ -181,6 +193,14 @@ function useLayerGroups({
       }
     });
   }, [leafletMap, filters, visibleMarkers]);
+
+  useEffect(() => {
+    return () => {
+      Object.values(allLayersRef.current).forEach(({ layer }) => {
+        layer.remove();
+      });
+    };
+  }, []);
 }
 
 export default useLayerGroups;

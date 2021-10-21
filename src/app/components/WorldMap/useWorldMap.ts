@@ -147,7 +147,6 @@ function useWorldMap({
     worldTiles.addTo(map);
 
     return () => {
-      setLeafletMap(null);
       map.remove();
     };
   }, [elementRef]);
