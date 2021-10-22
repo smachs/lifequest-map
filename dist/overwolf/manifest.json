@@ -30,7 +30,7 @@
         "native_window": true,
         "resizable": false,
         "transparent": true,
-        "override_on_update": true,
+        "override_on_update": false,
         "size": {
           "width": 1280,
           "height": 720
@@ -54,7 +54,7 @@
         "focus_game_takeover_release_hotkey": "show_hide_app",
         "resizable": false,
         "transparent": true,
-        "override_on_update": true,
+        "override_on_update": false,
         "size": {
           "width": 1280,
           "height": 720
@@ -76,7 +76,7 @@
         "style": "inputPassThrough",
         "resizable": false,
         "transparent": true,
-        "override_on_update": true,
+        "override_on_update": false,
         "size": {
           "width": 260,
           "height": 260
@@ -87,7 +87,8 @@
         },
         "allow_local_file_access": true,
         "popup_blocker": true,
-        "mute": true
+        "mute": true,
+        "keep_window_location": true
       }
     },
     "game_targeting": {
