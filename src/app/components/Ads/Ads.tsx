@@ -11,6 +11,7 @@ type AdsProps = {
 function Ads({ active }: AdsProps): JSX.Element {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [owAd, setOwAd] = useState<OwAd>();
+  const isDisplayedFirstTime = useRef(true);
 
   useEffect(() => {
     if (!active || owAd) {
@@ -81,7 +82,11 @@ function Ads({ active }: AdsProps): JSX.Element {
       }
     }
 
-    owAd.refreshAd({});
+    if (!isDisplayedFirstTime.current) {
+      owAd.refreshAd({});
+    }
+    isDisplayedFirstTime.current = false;
+
     overwolf.windows.onStateChanged.addListener(handleWindowStateChanged);
     overwolf.games.onGameInfoUpdated.addListener(handleGameInfoUpdated);
 

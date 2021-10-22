@@ -28,13 +28,13 @@ function useLayerGroups({
   const { visibleMarkers, markerRoutes } = useMarkers();
   const [filters] = useFilters();
   const { markerSize, markerShowBackground } = useSettings();
+  const isFirstRender = useRef(true);
   const allLayersRef = useRef<{
     [id: string]: {
       layer: CanvasMarker | leaflet.LayerGroup;
       hasComments: boolean;
     };
   }>({});
-  const isFirstRender = useRef(true);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -50,6 +50,13 @@ function useLayerGroups({
       let clearedCanvas = false;
       allMarkers.forEach(({ layer }) => {
         if (layer instanceof CanvasMarker) {
+          if (
+            layer.options.image.size[0] === markerSize &&
+            layer.options.image.size[1] === markerSize &&
+            layer.options.image.showBackground === markerShowBackground
+          ) {
+            return;
+          }
           if (!clearedCanvas) {
             clearedCanvas = true;
             const renderer = leafletMap.getRenderer(layer);
@@ -74,7 +81,6 @@ function useLayerGroups({
     if (!leafletMap) {
       return;
     }
-
     const allLayers = allLayersRef.current;
     const removableMarkers = Object.keys(allLayers);
 
@@ -208,6 +214,14 @@ function useLayerGroups({
       layerGroup.remove();
     };
   }, [leafletMap, markerRoutes]);
+
+  useEffect(() => {
+    return () => {
+      Object.values(allLayersRef.current).forEach(({ layer }) => {
+        layer.remove();
+      });
+    };
+  }, []);
 }
 
 export default useLayerGroups;

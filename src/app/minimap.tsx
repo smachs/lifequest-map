@@ -10,7 +10,11 @@ import WorldMap from './components/WorldMap/WorldMap';
 import styles from './Minimap.module.css';
 import { RouterProvider } from './components/Router/Router';
 import { dragMoveWindow, dragResize, WINDOWS } from './utils/windows';
-import { SETUP_MINIMAP } from './utils/hotkeys';
+import {
+  SETUP_MINIMAP,
+  ZOOM_IN_MINIMAP,
+  ZOOM_OUT_MINIMAP,
+} from './utils/hotkeys';
 import { usePersistentState } from './utils/storage';
 import { FiltersProvider } from './contexts/FiltersContext';
 import { SettingsProvider } from './contexts/SettingsContext';
@@ -79,13 +83,17 @@ function Minimap(): JSX.Element {
     ) {
       if (event.name === SETUP_MINIMAP) {
         setShowSetup(!showSetup);
+      } else if (event.name === ZOOM_IN_MINIMAP) {
+        setMinimapZoom((minimapZoom) => Math.min(minimapZoom + 1, 6));
+      } else if (event.name === ZOOM_OUT_MINIMAP) {
+        setMinimapZoom((minimapZoom) => Math.max(minimapZoom - 1, 0));
       }
     }
     overwolf.settings.hotkeys.onPressed.addListener(handleHotkeyPressed);
     return () => {
       overwolf.settings.hotkeys.onPressed.removeListener(handleHotkeyPressed);
     };
-  }, [showSetup]);
+  }, [showSetup, minimapZoom]);
 
   return (
     <>

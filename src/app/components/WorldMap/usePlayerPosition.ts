@@ -22,7 +22,7 @@ function usePlayerPosition({
   const [marker, setMarker] = useState<leaflet.Marker | null>(null);
 
   useEffect(() => {
-    if (!leafletMap || marker || !position) {
+    if (!leafletMap) {
       return;
     }
     const icon = new LeafIcon({ iconUrl: '/player.webp' });
@@ -30,7 +30,11 @@ function usePlayerPosition({
     newMarker.addTo(leafletMap);
     newMarker.getElement()!.classList.add('leaflet-player-marker');
     setMarker(newMarker);
-  }, [leafletMap, marker, position]);
+
+    return () => {
+      newMarker.remove();
+    };
+  }, [leafletMap]);
 
   const isFollowing = alwaysFollowing || following;
   useEffect(() => {
