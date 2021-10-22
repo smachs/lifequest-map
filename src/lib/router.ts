@@ -1,7 +1,7 @@
 import express from 'express';
 import type { Filter } from 'mongodb';
 import { Double, ObjectId } from 'mongodb';
-import type { Comment, Marker } from '../types';
+import type { Comment, Marker, MarkerRoute } from '../types';
 import { getCommentsCollection } from './comments';
 import { getMarkersCollection } from './markers';
 import { mapFilters } from '../app/components/MapFilter/mapFilters';
@@ -9,7 +9,8 @@ import { getUsersCollection } from './users';
 import multer from 'multer';
 import sharp from 'sharp';
 import fs from 'fs/promises';
-import { sendToDiscord } from './discord';
+import { postToDiscord, sendToDiscord } from './discord';
+import { getMarkerRoutesCollection } from './markerRoutes';
 
 const screenshotsUpload = multer({ dest: process.env.SCREENSHOTS_PATH });
 
@@ -405,5 +406,87 @@ router.post(
     }
   }
 );
+
+router.post('/marker-routes', async (req, res, next) => {
+  try {
+    const { name, username, positions, markersByType } = req.body;
+
+    const markerRoute: MarkerRoute = {
+      name,
+      username,
+      positions,
+      markersByType,
+      createdAt: new Date(),
+    };
+    if (Array.isArray(positions)) {
+      markerRoute.positions = positions.map((position) =>
+        position.map((part: number) => new Double(part))
+      ) as [Double, Double][];
+    }
+
+    const inserted = await getMarkerRoutesCollection().insertOne(markerRoute);
+    if (!inserted.acknowledged) {
+      res.status(500).send('Error inserting marker');
+      return;
+    }
+    res.status(200).json(markerRoute);
+
+    postToDiscord(`🗺️➕ New route ${name} added by ${username}`);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/marker-routes', async (_req, res, next) => {
+  try {
+    const markerRoutes = await getMarkerRoutesCollection().find({}).toArray();
+    res.status(200).json(markerRoutes);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/marker-routes/:markerRouteId', async (req, res, next) => {
+  try {
+    const { markerRouteId } = req.params;
+    const { userId } = req.body;
+
+    if (!ObjectId.isValid(markerRouteId) || !ObjectId.isValid(userId)) {
+      res.status(400).send('Invalid payload');
+      return;
+    }
+    const user = await getUsersCollection().findOne({
+      _id: new ObjectId(userId),
+    });
+    if (!user) {
+      res.status(401).send('No access');
+      return;
+    }
+
+    const query: Filter<MarkerRoute> = {
+      _id: new ObjectId(markerRouteId),
+    };
+    if (!user.isModerator) {
+      query.username = user.username;
+    }
+
+    const markerRoutesCollection = getMarkerRoutesCollection();
+    const markerRoute = await markerRoutesCollection.findOne(query);
+    if (!markerRoute) {
+      res.status(404).end(`No marker route found for id ${markerRouteId}`);
+      return;
+    }
+
+    const result = await getMarkerRoutesCollection().deleteOne(query);
+    if (!result.deletedCount) {
+      res.status(404).end(`No marker route found for id ${markerRouteId}`);
+      return;
+    }
+    res.status(200).json({});
+    postToDiscord(`🗺️💀 Route ${markerRoute.name} deleted by ${user.username}`);
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default router;

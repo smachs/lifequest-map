@@ -25,7 +25,7 @@ function useLayerGroups({
   leafletMap: leaflet.Map | null;
   onMarkerClick?: (marker: Marker) => void;
 }): void {
-  const { visibleMarkers } = useMarkers();
+  const { visibleMarkers, markerRoutes } = useMarkers();
   const [filters] = useFilters();
   const { markerSize, markerShowBackground } = useSettings();
   const isFirstRender = useRef(true);
@@ -41,9 +41,9 @@ function useLayerGroups({
       isFirstRender.current = false;
       return;
     }
-
     const handle = setTimeout(() => {
-      const allMarkers = Object.values(allLayersRef.current);
+      const allLayers = allLayersRef.current;
+      const allMarkers = Object.values(allLayers);
       if (allMarkers.length === 0 || !leafletMap) {
         return;
       }
@@ -118,13 +118,15 @@ function useLayerGroups({
             {
               radius: 16,
               image: {
+                markerId: marker._id,
+                type: marker.type,
                 src: mapFilter.iconUrl,
                 showBackground: markerShowBackground,
                 borderColor: filterCategory.borderColor,
                 size: [markerSize, markerSize],
                 comments: marker.comments,
               },
-              pmIgnore: true,
+              // pmIgnore: true,
             }
           ).bindTooltip(getTooltipContent(marker, mapFilter), {
             direction: 'top',
@@ -195,10 +197,30 @@ function useLayerGroups({
   }, [leafletMap, filters, visibleMarkers]);
 
   useEffect(() => {
+    if (!leafletMap) {
+      return;
+    }
+
+    const layerGroup = new leaflet.LayerGroup();
+
+    for (let i = 0; i < markerRoutes.length; i++) {
+      const markerRoute = markerRoutes[i];
+      const line = leaflet.polyline(markerRoute.positions);
+      line.addTo(layerGroup);
+    }
+    layerGroup.addTo(leafletMap);
+
+    return () => {
+      layerGroup.remove();
+    };
+  }, [leafletMap, markerRoutes]);
+
+  useEffect(() => {
     return () => {
       Object.values(allLayersRef.current).forEach(({ layer }) => {
         layer.remove();
       });
+      allLayersRef.current = {};
     };
   }, []);
 }

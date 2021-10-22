@@ -55,3 +55,24 @@ Content-Type: application/json
 {
     "hiddenMarkerIds": ["{{markerId}}"]
 }
+
+### POST a marker route
+POST {{baseUrl}}/marker-routes HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Essences Route",
+    "positions": [[8455.411, 8984.482], [8460.411, 8984.482], [8470.411, 8950.482]],
+    "markersByType": {
+        "essences_blightroot": 10,
+        "essences_lightning_beetle": 10
+    }
+}
+
+### GET all marker routes
+GET {{baseUrl}}/marker-routes HTTP/1.1
+Accept: application/json
+
+
+
+

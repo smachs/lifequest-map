@@ -1,9 +1,9 @@
 import { toTimeAgo } from '../../utils/dates';
 import styles from './Comment.module.css';
 import Markdown from 'markdown-to-jsx';
-import DeleteIcon from '../icons/DeleteIcon';
 import { fetchJSON } from '../../utils/api';
 import { writeError } from '../../utils/logs';
+import DeleteButton from '../DeleteButton/DeleteButton';
 
 type CommentProps = {
   id: string;
@@ -48,11 +48,7 @@ function Comment({
       <p className={styles.message}>
         <Markdown>{message}</Markdown>
       </p>
-      {removable && (
-        <button className={styles.remove} onClick={handleRemove}>
-          <DeleteIcon />
-        </button>
-      )}
+      {removable && <DeleteButton onClick={handleRemove} />}
     </article>
   );
 }

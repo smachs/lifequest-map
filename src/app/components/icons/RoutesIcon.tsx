@@ -1,4 +1,4 @@
-function NearByIcon(): JSX.Element {
+function RoutesIcon(): JSX.Element {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -14,4 +14,4 @@ function NearByIcon(): JSX.Element {
   );
 }
 
-export default NearByIcon;
+export default RoutesIcon;

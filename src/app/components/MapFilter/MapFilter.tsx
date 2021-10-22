@@ -11,9 +11,9 @@ import MenuOpenIcon from '../icons/MenuOpenIcon';
 import AddResources from '../AddResources/AddResources';
 import { usePosition } from '../../contexts/PositionContext';
 import Ads from '../Ads/Ads';
-import NearBy from '../NearBy/NearBy';
+import MarkerRoutes from '../MarkerRoutes/MarkerRoutes';
 import User from '../User/User';
-import NearByIcon from '../icons/NearByIcon';
+import RoutesIcon from '../icons/RoutesIcon';
 import PlayerIcon from '../icons/PlayerIcon';
 import { useUser } from '../../contexts/UserContext';
 import CompassIcon from '../icons/CompassIcon';
@@ -26,7 +26,7 @@ import { useEffect } from 'react';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 
-type View = 'markers' | 'settings' | 'areas' | 'nearBy';
+type View = 'markers' | 'settings' | 'areas' | 'markerRoutes';
 
 function MapFilter(): JSX.Element {
   const { addModal } = useModal();
@@ -60,7 +60,7 @@ function MapFilter(): JSX.Element {
         {view === 'markers' && <MarkersView />}
         {view === 'settings' && <Settings />}
         {view === 'areas' && <AreasView />}
-        {view === 'nearBy' && <NearBy />}
+        {view === 'markerRoutes' && <MarkerRoutes />}
         <ErrorBoundary>
           <Ads active={isOpen} />
         </ErrorBoundary>
@@ -93,15 +93,15 @@ function MapFilter(): JSX.Element {
           <MarkerIcon />
         </button>
         <button
-          data-tooltip="Show/Hide settings"
+          data-tooltip="Routes"
           data-tooltip-position="right"
           className={classNames(
             styles.nav__button,
-            view === 'settings' && styles.nav__active
+            view === 'markerRoutes' && styles.nav__active
           )}
-          onClick={() => handleViewClick('settings')}
+          onClick={() => handleViewClick('markerRoutes')}
         >
-          <SettingsIcon />
+          <RoutesIcon />
         </button>
         <button
           data-tooltip="Areas (Coming Soon)"
@@ -116,16 +116,15 @@ function MapFilter(): JSX.Element {
           <MapIcon />
         </button>
         <button
-          data-tooltip="Near by (Coming Soon)"
+          data-tooltip="Show/Hide settings"
           data-tooltip-position="right"
-          disabled
           className={classNames(
             styles.nav__button,
-            view === 'nearBy' && styles.nav__active
+            view === 'settings' && styles.nav__active
           )}
-          onClick={() => handleViewClick('nearBy')}
+          onClick={() => handleViewClick('settings')}
         >
-          <NearByIcon />
+          <SettingsIcon />
         </button>
 
         <button

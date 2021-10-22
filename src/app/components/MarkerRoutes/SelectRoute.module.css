@@ -1,0 +1,27 @@
+.container {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  row-gap: 0.5em;
+  height: 100%;
+}
+
+.map {
+  height: 100%;
+}
+
+.save {
+  padding: 1em;
+  background: var(--color-shade-two);
+  color: var(--color-primary);
+}
+
+.save:disabled {
+  color: var(--color-trivial);
+  cursor: default;
+}
+
+.label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+}

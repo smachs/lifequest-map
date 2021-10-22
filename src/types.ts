@@ -27,3 +27,13 @@ export type User = {
   createdAt: Date;
   isModerator?: boolean;
 };
+
+export type MarkerRoute = {
+  name: string;
+  username: string;
+  positions: [Double, Double][];
+  markersByType: {
+    [type: string]: number;
+  };
+  createdAt: Date;
+};

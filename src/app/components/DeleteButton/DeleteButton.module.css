@@ -1,0 +1,12 @@
+.delete {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  opacity: 0.5;
+  transition: 0.2s ease-in;
+  padding: 0;
+}
+
+.delete:hover {
+  opacity: 1;
+}

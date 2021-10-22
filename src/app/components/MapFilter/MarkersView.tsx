@@ -1,8 +1,9 @@
 import styles from './MarkersView.module.css';
 import { mapFilters, mapFiltersCategories } from './mapFilters';
 import MarkerSection from './MarkerSection';
-import Checkbox from './Checkbox';
 import { useFilters } from '../../contexts/FiltersContext';
+import ActionButton from '../ActionControl/ActionButton';
+import ActionCheckbox from '../ActionControl/ActionCheckbox';
 
 function MarkersView(): JSX.Element {
   const [filters, setFilters] = useFilters();
@@ -25,23 +26,21 @@ function MarkersView(): JSX.Element {
   return (
     <>
       <div className={styles.actions}>
-        <button
-          className={styles.action}
+        <ActionButton
           onClick={() => {
             setFilters(mapFilters.map((filter) => filter.type));
           }}
         >
           Show all
-        </button>
-        <button
-          className={styles.action}
+        </ActionButton>
+        <ActionButton
           onClick={() => {
             setFilters([]);
           }}
         >
           Hide all
-        </button>
-        <Checkbox
+        </ActionButton>
+        <ActionCheckbox
           className={styles.action}
           onChange={(checked) => handleToggle(['hidden'], checked)}
           checked={filters.includes('hidden')}
