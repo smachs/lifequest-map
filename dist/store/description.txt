@@ -9,6 +9,7 @@ Get all the locations, farming spots, resources, lore documents, chests, mobs an
 - Check markers as done (like lore documents)
 - Automatic detection of your In-Game character
 - Auto start with New World
+- Farming/Marker Routes
 - Private and guild markers (Coming Soon)
 - Areas (Coming Soon)
 - Near by (Coming Soon)
