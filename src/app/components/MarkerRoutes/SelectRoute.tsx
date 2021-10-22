@@ -37,8 +37,9 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
       position: 'topleft',
       drawCircle: false,
       drawMarker: false,
-      // drawPolyline: false,
+      drawPolyline: false,
       drawPolygon: false,
+      removalMode: false,
       drawCircleMarker: false,
       drawRectangle: false,
       cutPolygon: false,
@@ -49,8 +50,6 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
 
     let selectedMarkers: MarkerBase[] = [];
     leafletMap.on('pm:create', (event) => {
-      console.log(event, selectedMarkers);
-
       if (event.shape === 'Line') {
         const latLngs = (
           event.layer as Polyline
@@ -66,8 +65,6 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
     // listen to vertexes being added to currently drawn layer (called workingLayer)
     leafletMap.on('pm:drawstart', ({ workingLayer }) => {
       let snappedMarker: MarkerBase | undefined = undefined;
-      console.log('pm:drawstart');
-
       workingLayer.on('pm:vertexadded', () => {
         if (snappedMarker) {
           selectedMarkers.push(snappedMarker);
@@ -78,7 +75,7 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
           }));
         }
       });
-      workingLayer.on('pm:vertexremoved', (event) => {
+      workingLayer.on('pm:vertexremoved', () => {
         if (snappedMarker) {
           const index = selectedMarkers.findIndex(
             (marker) => marker._id === snappedMarker?._id
@@ -90,7 +87,6 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
             [type]: (prev[type] || 1) - 1,
           }));
         }
-        console.log(event);
       });
       workingLayer.on('pm:snap', (event) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -140,20 +136,24 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
   return (
     <div className={styles.container}>
       <aside>
-        <MarkerTypes markersByType={markersByType} />
-        <label>
+        <label className={styles.label}>
           Name
           <input
             onChange={(event) => setName(event.target.value)}
             value={name || ''}
-            placeholder="Enter name"
+            placeholder="Give this route an explanatory name"
             required
             autoFocus
           />
         </label>
+        <MarkerTypes markersByType={markersByType} />
       </aside>
       <div className={styles.map} ref={elementRef} />
-      <button className={styles.save} onClick={handleSave}>
+      <button
+        className={styles.save}
+        onClick={handleSave}
+        disabled={!name || !Object.keys(markersByType).length}
+      >
         Save Position
       </button>
     </div>

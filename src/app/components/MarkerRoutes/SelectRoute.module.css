@@ -14,3 +14,14 @@
   background: var(--color-shade-two);
   color: var(--color-primary);
 }
+
+.save:disabled {
+  color: var(--color-trivial);
+  cursor: default;
+}
+
+.label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+}

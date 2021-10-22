@@ -220,6 +220,7 @@ function useLayerGroups({
       Object.values(allLayersRef.current).forEach(({ layer }) => {
         layer.remove();
       });
+      allLayersRef.current = {};
     };
   }, []);
 }

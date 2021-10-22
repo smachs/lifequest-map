@@ -9,7 +9,7 @@ type MarkerTypesProps = {
 
 function MarkerTypes({ markersByType }: MarkerTypesProps): JSX.Element {
   return (
-    <>
+    <section className={styles.container}>
       {Object.keys(markersByType).length === 0 && 'No markers selected'}
       {Object.keys(markersByType).map((markerType) => {
         const mapFilter = mapFilters.find(
@@ -19,7 +19,7 @@ function MarkerTypes({ markersByType }: MarkerTypesProps): JSX.Element {
           return <></>;
         }
         return (
-          <span
+          <div
             key={markerType}
             className={styles.marker}
             data-tooltip={mapFilter.title}
@@ -31,11 +31,11 @@ function MarkerTypes({ markersByType }: MarkerTypesProps): JSX.Element {
               }
               alt={markerType}
             />
-            : {markersByType[markerType]}
-          </span>
+            <span>{markersByType[markerType]}x</span>
+          </div>
         );
       })}
-    </>
+    </section>
   );
 }
 
