@@ -72,6 +72,9 @@ router.delete('/markers/:markerId', async (req, res, next) => {
         );
     }
     res.status(200).json({});
+    postToDiscord(
+      `📌💀 Marker from ${marker.username} deleted by ${user.username}`
+    );
   } catch (error) {
     next(error);
   }
@@ -254,6 +257,9 @@ router.delete('/comments/:commentId', async (req, res) => {
   );
 
   res.status(200).json({});
+  postToDiscord(
+    `✍💀 Comment from ${comment.username} deleted by ${user.username}`
+  );
 });
 
 router.post('/markers/:markerId/comments', async (req, res, next) => {
