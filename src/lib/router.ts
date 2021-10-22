@@ -430,6 +430,10 @@ router.post('/marker-routes', async (req, res, next) => {
       ) as [Double, Double][];
     }
 
+    if (markerRoute.positions.length === 0) {
+      res.status(400).send('Invalid payload');
+      return;
+    }
     const inserted = await getMarkerRoutesCollection().insertOne(markerRoute);
     if (!inserted.acknowledged) {
       res.status(500).send('Error inserting marker');

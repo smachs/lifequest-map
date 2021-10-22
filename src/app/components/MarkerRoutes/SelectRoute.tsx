@@ -157,7 +157,9 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
       <button
         className={styles.save}
         onClick={handleSave}
-        disabled={!name || !Object.keys(markersByType).length}
+        disabled={
+          !name || !Object.keys(markersByType).length || positions.length === 0
+        }
       >
         Save Position
       </button>
