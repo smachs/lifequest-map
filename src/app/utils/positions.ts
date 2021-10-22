@@ -4,5 +4,5 @@ export function calcDistance(
 ): number {
   const dx = pointA[0] - pointB[0];
   const dy = pointA[1] - pointB[1];
-  return Math.sqrt(dx * dx + dy * dy);
+  return Math.round(Math.sqrt(dx * dx + dy * dy));
 }
