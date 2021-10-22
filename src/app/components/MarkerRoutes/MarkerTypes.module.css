@@ -13,3 +13,7 @@
 .marker img {
   height: 1.5rem;
 }
+
+.unchecked {
+  opacity: 0.4;
+}
