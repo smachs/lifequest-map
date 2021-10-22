@@ -25,6 +25,7 @@ export type Marker = {
 type MarkersContextProps = {
   markers: Marker[];
   markerRoutes: MarkerRouteItem[];
+  clearMarkerRoutes: () => void;
   toggleMarkerRoute: (markerRoute: MarkerRouteItem) => void;
   visibleMarkers: Marker[];
 
@@ -33,6 +34,7 @@ type MarkersContextProps = {
 const MarkersContext = createContext<MarkersContextProps>({
   markers: [],
   markerRoutes: [],
+  clearMarkerRoutes: () => undefined,
   toggleMarkerRoute: () => undefined,
   visibleMarkers: [],
   refresh: () => undefined,
@@ -95,6 +97,10 @@ export function MarkersProvider({
     setMarkerRoutes(markerRoutesClone);
   };
 
+  function clearMarkerRoutes() {
+    setMarkerRoutes([]);
+  }
+
   return (
     <MarkersContext.Provider
       value={{
@@ -102,6 +108,7 @@ export function MarkersProvider({
         visibleMarkers,
         refresh,
         markerRoutes,
+        clearMarkerRoutes,
         toggleMarkerRoute,
       }}
     >

@@ -10,9 +10,11 @@ import type leaflet from 'leaflet';
 import MarkerTypes from './MarkerTypes';
 import { fetchJSON } from '../../utils/api';
 import { useModal } from '../../contexts/ModalContext';
+import { useUser } from '../../contexts/UserContext';
+import type { MarkerRouteItem } from './MarkerRoutes';
 
 type SelectRouteProps = {
-  onAdd: () => void;
+  onAdd: (markerRoute: MarkerRouteItem) => void;
 };
 type MarkerBase = { _id: string; type: string };
 function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
@@ -23,6 +25,7 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
     [type: string]: number;
   }>({});
   const [name, setName] = useState('');
+  const user = useUser();
 
   useLayerGroups({
     leafletMap,
@@ -118,13 +121,14 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
   }, [leafletMap]);
 
   function handleSave() {
-    fetchJSON('/api/marker-routes', {
+    fetchJSON<MarkerRouteItem>('/api/marker-routes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         name,
+        username: user?.username,
         positions,
         markersByType,
       }),
@@ -136,6 +140,7 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
   return (
     <div className={styles.container}>
       <aside>
+        <small>Only selected markers are visible on this map</small>
         <label className={styles.label}>
           Name
           <input

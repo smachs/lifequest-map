@@ -4,6 +4,7 @@
   text-transform: uppercase;
   grid-template-columns: repeat(4, 1fr);
   transition: 0.2s background-color ease-in;
+  position: relative;
 }
 
 .container:hover {
@@ -11,7 +12,8 @@
   background-color: var(--color-shade-three);
 }
 
-.container h4 {
+.container h4,
+.container small {
   grid-column: 1 / 5;
 }
 

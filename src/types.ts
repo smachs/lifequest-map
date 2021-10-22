@@ -30,8 +30,10 @@ export type User = {
 
 export type MarkerRoute = {
   name: string;
-  positions: [number, number][];
+  username: string;
+  positions: [Double, Double][];
   markersByType: {
     [type: string]: number;
   };
+  createdAt: Date;
 };

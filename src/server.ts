@@ -21,6 +21,10 @@ import { connectToMongoDb } from './lib/db';
 import { ensureMarkersSchema, ensureMarkersIndexes } from './lib/markers';
 import { ensureCommentsIndexes, ensureCommentsSchema } from './lib/comments';
 import path from 'path';
+import {
+  ensureMarkerRoutesIndexes,
+  ensureMarkerRoutesSchema,
+} from './lib/markerRoutes';
 
 const app = express();
 
@@ -50,6 +54,8 @@ connectToMongoDb(MONGODB_URI).then(async () => {
   await ensureMarkersSchema();
   await ensureCommentsIndexes();
   await ensureCommentsSchema();
+  await ensureMarkerRoutesIndexes();
+  await ensureMarkerRoutesSchema();
 
   app.listen(PORT, () => {
     console.log(`Server listening at http://localhost:${PORT}`);

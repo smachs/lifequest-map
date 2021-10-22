@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch';
 import { mapFilters } from '../app/components/MapFilter/mapFilters';
 import type { Marker, Comment, User } from '../types';
 
-function postToDiscord(
+export function postToDiscord(
   content: string,
   embeds?: { title: string; description: string; image?: string }[]
 ): Promise<Response> {
