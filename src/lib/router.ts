@@ -431,9 +431,7 @@ router.post('/marker-routes', async (req, res, next) => {
     }
     res.status(200).json(markerRoute);
 
-    res.status(200).json({});
-
-    postToDiscord(`🗺️ New route ${name} added by ${username}`);
+    postToDiscord(`🗺️➕ New route ${name} added by ${username}`);
   } catch (error) {
     next(error);
   }
@@ -485,7 +483,7 @@ router.delete('/marker-routes/:markerRouteId', async (req, res, next) => {
       return;
     }
     res.status(200).json({});
-    postToDiscord(`🗺️ Route ${markerRoute.name} deleted by ${user.username}`);
+    postToDiscord(`🗺️💀 Route ${markerRoute.name} deleted by ${user.username}`);
   } catch (error) {
     next(error);
   }

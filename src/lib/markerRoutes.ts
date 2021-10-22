@@ -49,6 +49,7 @@ export function ensureMarkerRoutesSchema(): Promise<Document> {
           'username',
           'positions',
           'markersByType',
+
           'createdAt',
         ],
       },

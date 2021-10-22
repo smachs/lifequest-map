@@ -1,3 +1,13 @@
+.container {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+}
+
+.items {
+  overflow: auto;
+}
+
 .actions {
   display: flex;
   gap: 0.5em;

@@ -70,7 +70,7 @@ function MarkerRoutes(): JSX.Element {
   }
 
   return (
-    <section>
+    <section className={styles.container}>
       <div className={styles.actions}>
         <ActionButton
           disabled={!user}
@@ -85,7 +85,7 @@ function MarkerRoutes(): JSX.Element {
         </ActionButton>
         <ActionButton onClick={clearMarkerRoutes}>Hide all</ActionButton>
       </div>
-      <div>
+      <div className={styles.items}>
         {allMarkerRoutes.map((markerRoute) => (
           <MarkerRoute
             key={markerRoute.name}

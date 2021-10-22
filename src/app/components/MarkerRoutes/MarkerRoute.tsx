@@ -4,6 +4,8 @@ import styles from './MarkerRoute.module.css';
 import { classNames } from '../../utils/styles';
 import DeleteButton from '../DeleteButton/DeleteButton';
 import { toTimeAgo } from '../../utils/dates';
+import { usePosition } from '../../contexts/PositionContext';
+import { calcDistance } from '../../utils/positions';
 
 type MarkerRouteProps = {
   markerRoute: MarkerRouteItem;
@@ -17,6 +19,12 @@ function MarkerRoute({
   onClick,
   onRemove,
 }: MarkerRouteProps): JSX.Element {
+  const { position } = usePosition();
+
+  const distance: number | null = position
+    ? calcDistance(markerRoute.positions[0], position)
+    : null;
+
   return (
     <article
       key={markerRoute.name}
@@ -29,6 +37,7 @@ function MarkerRoute({
         <b>{markerRoute.username}</b>
       </small>
       <MarkerTypes markersByType={markerRoute.markersByType} />
+      {distance && <div className={styles.distance}>Distance: {distance}</div>}
       {onRemove && <DeleteButton onClick={onRemove} />}
     </article>
   );
