@@ -117,6 +117,16 @@
         "title": "Show/Hide Minimap",
         "action-type": "custom",
         "default": "F6"
+      },
+      "zoom_in_minimap": {
+        "title": "Zoom In Minimap",
+        "action-type": "custom",
+        "default": "F7"
+      },
+      "zoom_out_minimap": {
+        "title": "Zoom Out Minimap",
+        "action-type": "custom",
+        "default": "F8"
       }
     },
     "protocol_override_domains": {
