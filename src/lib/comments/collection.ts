@@ -1,16 +1,16 @@
 import type { Collection, Document } from 'mongodb';
-import { getCollection, getDb } from './db';
-import type { Comment } from '../types';
+import type { CommentDTO } from './types';
+import { getCollection, getDb } from '../db';
 
-export function getCommentsCollection(): Collection<Comment> {
-  return getCollection<Comment>('comments');
+export function getCommentsCollection(): Collection<CommentDTO> {
+  return getCollection<CommentDTO>('comments');
 }
 
-export function ensureCommentsIndexes(): Promise<string[]> {
+function ensureCommentsIndexes(): Promise<string[]> {
   return getCommentsCollection().createIndexes([{ key: { markerId: 1 } }]);
 }
 
-export function ensureCommentsSchema(): Promise<Document> {
+function ensureCommentsSchema(): Promise<Document> {
   return getDb().command({
     collMod: 'comments',
     validator: {
@@ -39,4 +39,8 @@ export function ensureCommentsSchema(): Promise<Document> {
       },
     },
   });
+}
+
+export function initCommentsCollection(): Promise<[string[], Document]> {
+  return Promise.all([ensureCommentsIndexes(), ensureCommentsSchema()]);
 }

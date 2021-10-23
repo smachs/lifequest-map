@@ -1,14 +1,12 @@
 import type { Collection, Document } from 'mongodb';
-import { getCollection, getDb } from './db';
-import type { Marker } from '../types';
+import type { MarkerDTO } from './types';
+import { getCollection, getDb } from '../db';
 
-export function getMarkersCollection(): Collection<Marker> {
-  return getCollection<Marker>('markers');
+export function getMarkersCollection(): Collection<MarkerDTO> {
+  return getCollection<MarkerDTO>('markers');
 }
 
-export function ensureMarkersIndexes(): Promise<
-  [string[], string[], string[]]
-> {
+function ensureMarkersIndexes(): Promise<[string[], string[], string[]]> {
   return Promise.all([
     getMarkersCollection().createIndexes(
       [{ key: { type: 1, position: 1, positions: 1 } }],
@@ -23,7 +21,7 @@ export function ensureMarkersIndexes(): Promise<
   ]);
 }
 
-export function ensureMarkersSchema(): Promise<Document> {
+function ensureMarkersSchema(): Promise<Document> {
   return getDb().command({
     collMod: 'markers',
     validator: {
@@ -85,4 +83,10 @@ export function ensureMarkersSchema(): Promise<Document> {
       },
     },
   });
+}
+
+export function initMarkersCollection(): Promise<
+  [[string[], string[], string[]], Document]
+> {
+  return Promise.all([ensureMarkersIndexes(), ensureMarkersSchema()]);
 }

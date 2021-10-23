@@ -1,12 +1,12 @@
 import type { Collection, Document } from 'mongodb';
-import { getCollection, getDb } from './db';
-import type { MarkerRoute } from '../types';
+import { getCollection, getDb } from '../db';
+import type { MarkerRouteDTO } from './types';
 
-export function getMarkerRoutesCollection(): Collection<MarkerRoute> {
-  return getCollection<MarkerRoute>('marker-routes');
+export function getMarkerRoutesCollection(): Collection<MarkerRouteDTO> {
+  return getCollection<MarkerRouteDTO>('marker-routes');
 }
 
-export function ensureMarkerRoutesIndexes(): Promise<string[]> {
+function ensureMarkerRoutesIndexes(): Promise<string[]> {
   return getMarkerRoutesCollection().createIndexes([
     { key: { username: 1, name: 1 }, unique: true },
     { key: { isPublic: 1 } },
@@ -14,7 +14,7 @@ export function ensureMarkerRoutesIndexes(): Promise<string[]> {
   ]);
 }
 
-export function ensureMarkerRoutesSchema(): Promise<Document> {
+function ensureMarkerRoutesSchema(): Promise<Document> {
   return getDb().command({
     collMod: 'marker-routes',
     validator: {
@@ -61,4 +61,8 @@ export function ensureMarkerRoutesSchema(): Promise<Document> {
       },
     },
   });
+}
+
+export function initMarkerRoutesCollection(): Promise<[string[], Document]> {
+  return Promise.all([ensureMarkerRoutesIndexes(), ensureMarkerRoutesSchema()]);
 }

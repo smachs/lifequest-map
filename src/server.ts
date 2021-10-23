@@ -1,9 +1,18 @@
-import dotenv from 'dotenv';
+import { PORT, MONGODB_URI, SCREENSHOTS_PATH } from './lib/env';
+import express from 'express';
 import cors from 'cors';
-
-dotenv.config();
-
-const { PORT, MONGODB_URI, SCREENSHOTS_PATH } = process.env;
+import { connectToMongoDb } from './lib/db';
+import path from 'path';
+import { initCommentsCollection } from './lib/comments/collection';
+import { initMarkersCollection } from './lib/markers/collection';
+import { initMarkerRoutesCollection } from './lib/markerRoutes/collection';
+import { initUsersCollection } from './lib/users/collection';
+import commentsRouter from './lib/comments/router';
+import markersRouter from './lib/markers/router';
+import markerRoutesRouter from './lib/markerRoutes/router';
+import usersRouter from './lib/users/router';
+import screenshotsRouter from './lib/screenshots/router';
+import compression from 'compression';
 
 if (typeof PORT !== 'string') {
   throw new Error('PORT is not set');
@@ -15,27 +24,26 @@ if (typeof SCREENSHOTS_PATH !== 'string') {
   throw new Error('SCREENSHOTS_PATH environment variable is not set');
 }
 
-import express from 'express';
-import router from './lib/router';
-import { connectToMongoDb } from './lib/db';
-import { ensureMarkersSchema, ensureMarkersIndexes } from './lib/markers';
-import { ensureCommentsIndexes, ensureCommentsSchema } from './lib/comments';
-import path from 'path';
-import {
-  ensureMarkerRoutesIndexes,
-  ensureMarkerRoutesSchema,
-} from './lib/markerRoutes';
-
 const app = express();
 
 // Middleware to set CORS headers
 app.use(cors());
 
+// Disable X-Powered-By header
+app.disable('x-powered-by');
+
+// Middleware for gzip compression
+app.use(compression());
+
 // Middleware that parses json and looks at requests where the Content-Type header matches the type option.
 app.use(express.json());
 
 // Serve API requests from the router
-app.use('/api', router);
+app.use('/api/comments', commentsRouter);
+app.use('/api/markers', markersRouter);
+app.use('/api/marker-routes', markerRoutesRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/screenshots', screenshotsRouter);
 
 // Static screenshots folder
 app.use('/screenshots', express.static(SCREENSHOTS_PATH));
@@ -50,12 +58,12 @@ app.get('*', (_req, res) => {
 
 connectToMongoDb(MONGODB_URI).then(async () => {
   console.log('Connected to MongoDB');
-  await ensureMarkersIndexes();
-  await ensureMarkersSchema();
-  await ensureCommentsIndexes();
-  await ensureCommentsSchema();
-  await ensureMarkerRoutesIndexes();
-  await ensureMarkerRoutesSchema();
+  await Promise.all([
+    initCommentsCollection(),
+    initMarkersCollection(),
+    initMarkerRoutesCollection(),
+    initUsersCollection(),
+  ]);
 
   app.listen(PORT, () => {
     console.log(`Server listening at http://localhost:${PORT}`);
