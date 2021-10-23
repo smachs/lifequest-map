@@ -17,6 +17,7 @@ export type MarkerRouteItem = {
   _id: string;
   name: string;
   username: string;
+  isPublic: boolean;
   positions: [number, number][];
   markersByType: {
     [type: string]: number;
@@ -25,6 +26,17 @@ export type MarkerRouteItem = {
 };
 
 type SortBy = 'match' | 'distance' | 'date' | 'name' | 'username';
+type Filter = 'all' | 'private' | 'public';
+
+function handleFilter(filter: Filter) {
+  if (filter === 'private') {
+    return (item: MarkerRouteItem) => !item.isPublic;
+  }
+  if (filter === 'public') {
+    return (item: MarkerRouteItem) => item.isPublic;
+  }
+  return (item: MarkerRouteItem) => item;
+}
 
 function handleSort(
   sortBy: SortBy,
@@ -67,6 +79,10 @@ function MarkerRoutes(): JSX.Element {
   const [sortBy, setSortBy] = usePersistentState<SortBy>(
     'markerRoutesSort',
     'match'
+  );
+  const [filter, setFilter] = usePersistentState<Filter>(
+    'markerRoutesFilter',
+    'all'
   );
   const [filters] = useFilters();
   const { position } = usePosition();
@@ -115,8 +131,11 @@ function MarkerRoutes(): JSX.Element {
   }
 
   const sortedMarkerRoutes = useMemo(
-    () => allMarkerRoutes.sort(handleSort(sortBy, filters, position)),
-    [sortBy, allMarkerRoutes, filters, position]
+    () =>
+      allMarkerRoutes
+        .filter(handleFilter(filter))
+        .sort(handleSort(sortBy, filters, position)),
+    [sortBy, allMarkerRoutes, filters, position, filter]
   );
 
   return (
@@ -143,6 +162,14 @@ function MarkerRoutes(): JSX.Element {
           <option value="date">By date</option>
           <option value="name">By name</option>
           <option value="username">By username</option>
+        </select>
+        <select
+          value={filter}
+          onChange={(event) => setFilter(event.target.value as Filter)}
+        >
+          <option value="all">All</option>
+          <option value="private">Private</option>
+          <option value="public">Public</option>
         </select>
       </div>
       <div className={styles.items}>
