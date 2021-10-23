@@ -1,21 +1,7 @@
-import dotenv from 'dotenv';
-import cors from 'cors';
-
-dotenv.config();
-
-const { PORT, MONGODB_URI, SCREENSHOTS_PATH } = process.env;
-
-if (typeof PORT !== 'string') {
-  throw new Error('PORT is not set');
-}
-if (typeof MONGODB_URI !== 'string') {
-  throw new Error('MONGODB_URI is not set');
-}
-if (typeof SCREENSHOTS_PATH !== 'string') {
-  throw new Error('SCREENSHOTS_PATH environment variable is not set');
-}
+import { PORT, MONGODB_URI, SCREENSHOTS_PATH } from './env';
 
 import express from 'express';
+import cors from 'cors';
 import router from './lib/router';
 import { connectToMongoDb } from './lib/db';
 import { ensureMarkersSchema, ensureMarkersIndexes } from './lib/markers';
@@ -26,6 +12,16 @@ import {
   ensureMarkerRoutesSchema,
 } from './lib/markerRoutes';
 import { ensureUsersIndexes, ensureUsersSchema } from './lib/users';
+
+if (typeof PORT !== 'string') {
+  throw new Error('PORT is not set');
+}
+if (typeof MONGODB_URI !== 'string') {
+  throw new Error('MONGODB_URI is not set');
+}
+if (typeof SCREENSHOTS_PATH !== 'string') {
+  throw new Error('SCREENSHOTS_PATH environment variable is not set');
+}
 
 const app = express();
 
