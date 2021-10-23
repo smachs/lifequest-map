@@ -15,7 +15,19 @@ const markersRouter = Router();
 
 markersRouter.get('/', async (_req, res, next) => {
   try {
-    const markers = await getMarkersCollection().find({}).toArray();
+    const markers = await getMarkersCollection()
+      .find(
+        {},
+        {
+          projection: {
+            description: 0,
+            username: 0,
+            screenshotFilename: 0,
+            createdAt: 0,
+          },
+        }
+      )
+      .toArray();
     res.status(200).json(markers);
   } catch (error) {
     next(error);
@@ -29,10 +41,14 @@ markersRouter.get('/:markerId', async (req, res, next) => {
       res.status(400).send('Invalid payload');
       return;
     }
-    const markers = await getMarkersCollection()
-      .find({ _id: new ObjectId(markerId) })
+    const marker = await getMarkersCollection().findOne({
+      _id: new ObjectId(markerId),
+    });
+    const comments = await getCommentsCollection()
+      .find({ markerId: new ObjectId(markerId) })
+      .sort({ createdAt: -1 })
       .toArray();
-    res.status(200).json(markers);
+    res.status(200).json({ marker, comments });
   } catch (error) {
     next(error);
   }
@@ -215,23 +231,6 @@ markersRouter.post('/', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
-
-markersRouter.get('/:markerId/comments', async (req, res) => {
-  const { markerId } = req.params;
-  if (!ObjectId.isValid(markerId)) {
-    res.status(400).send('Invalid payload');
-    return;
-  }
-  const comments = await getCommentsCollection()
-    .find({ markerId: new ObjectId(markerId) })
-    .sort({ createdAt: -1 })
-    .toArray();
-  if (!comments) {
-    res.status(404).end(`No comments found for marker ${markerId}`);
-    return;
-  }
-  res.status(200).json(comments);
 });
 
 markersRouter.post('/:markerId/comments', async (req, res, next) => {

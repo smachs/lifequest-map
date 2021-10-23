@@ -1,10 +1,10 @@
-import type { Marker } from '../../contexts/MarkersContext';
+import type { MarkerBasic } from '../../contexts/MarkersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { fetchJSON, getScreenshotUrl } from '../../utils/api';
 import { toTimeAgo } from '../../utils/dates';
 import AddComment from '../AddComment/AddComment';
 import Comment from '../Comment/Comment';
-import useComments from '../Comment/useComments';
+import useMarker from './useMarker';
 import Loading from '../Loading/Loading';
 import { mapFilters } from '../MapFilter/mapFilters';
 import styles from './MarkerDetails.module.css';
@@ -17,11 +17,16 @@ import Credit from './Credit';
 import { writeError } from '../../utils/logs';
 
 type MarkerDetailsProps = {
-  marker: Marker;
+  marker: MarkerBasic;
 };
 
 function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
-  const { comments, loading, refresh } = useComments(marker._id);
+  const {
+    marker: fullMarker,
+    comments,
+    loading,
+    refresh,
+  } = useMarker(marker._id);
   const filterItem = mapFilters.find(
     (mapFilter) => mapFilter.type === marker.type
   );
@@ -34,7 +39,7 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
   ) {
     try {
       closeLatestModal();
-      if (!screenshotFilename) {
+      if (!screenshotFilename || !fullMarker) {
         return;
       }
       await fetchJSON(`/api/markers/${marker._id}`, {
@@ -46,7 +51,7 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
           screenshotFilename,
         }),
       });
-      marker.screenshotFilename = screenshotFilename;
+      fullMarker.screenshotFilename = screenshotFilename;
       refreshMarkers();
     } catch (error) {
       writeError(error);
@@ -107,7 +112,7 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
       <aside className={styles.more}>
         <h3>Actions</h3>
         <HideMarkerInput markerId={marker._id} />
-        {user && (user.isModerator || user.username === marker.username) && (
+        {user && (user.isModerator || user.username === fullMarker?.username) && (
           <button
             className={styles.button}
             onClick={() => handleDelete(user._id)}
@@ -116,13 +121,16 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
           </button>
         )}
         <h3>Screenshot</h3>
-        {marker.screenshotFilename ? (
-          <a href={getScreenshotUrl(marker.screenshotFilename)} target="_blank">
+        {fullMarker?.screenshotFilename ? (
+          <a
+            href={getScreenshotUrl(fullMarker.screenshotFilename)}
+            target="_blank"
+          >
             <img
               className={styles.preview}
               src={
-                marker.screenshotFilename
-                  ? getScreenshotUrl(marker.screenshotFilename)
+                fullMarker.screenshotFilename
+                  ? getScreenshotUrl(fullMarker.screenshotFilename)
                   : '/icon.png'
               }
               alt=""
@@ -146,10 +154,14 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
         <h3>Details</h3>
         {marker.level && <p>Level {marker.level}</p>}
         {marker.levelRange && <p>Level Range {marker.levelRange.join('-')}</p>}
-        {marker.description && <Markdown>{marker.description}</Markdown>}
+        {fullMarker?.description && (
+          <Markdown>{fullMarker.description}</Markdown>
+        )}
         {marker.position && <p>[{marker.position.join(', ')}]</p>}
-        <small>Added {toTimeAgo(new Date(marker.createdAt))}</small>
-        {marker.username && <Credit username={marker.username} />}
+        <small>
+          Added {fullMarker && toTimeAgo(new Date(fullMarker.createdAt))}
+        </small>
+        {fullMarker?.username && <Credit username={fullMarker.username} />}
       </aside>
     </section>
   );

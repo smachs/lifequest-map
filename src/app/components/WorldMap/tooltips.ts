@@ -1,9 +1,9 @@
-import type { Marker } from '../../contexts/MarkersContext';
+import type { MarkerBasic } from '../../contexts/MarkersContext';
 import type { Details } from '../AddResources/AddResources';
 import type { FilterItem } from '../MapFilter/mapFilters';
 
 export function getTooltipContent(
-  markerOrDetails: Marker | Details,
+  markerOrDetails: MarkerBasic | Details,
   mapFilter: FilterItem
 ): string {
   let tooltipContent = markerOrDetails.name

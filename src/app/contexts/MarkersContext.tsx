@@ -7,27 +7,23 @@ import { usePersistentState } from '../utils/storage';
 import { useFilters } from './FiltersContext';
 import { useUser } from './UserContext';
 
-export type Marker = {
+export type MarkerBasic = {
   type: string;
   position?: [number, number, number];
   positions?: [number, number][];
   name?: string;
   level?: number;
   levelRange?: [number, number];
-  description?: string;
-  screenshotFilename?: string;
-  createdAt: string;
-  username?: string;
   comments?: number;
   _id: string;
 };
 
 type MarkersContextProps = {
-  markers: Marker[];
+  markers: MarkerBasic[];
   markerRoutes: MarkerRouteItem[];
   clearMarkerRoutes: () => void;
   toggleMarkerRoute: (markerRoute: MarkerRouteItem) => void;
-  visibleMarkers: Marker[];
+  visibleMarkers: MarkerBasic[];
 
   refresh: () => void;
 };
@@ -49,7 +45,10 @@ export function MarkersProvider({
   children,
   readonly,
 }: MarkersProviderProps): JSX.Element {
-  const [markers, setMarkers] = usePersistentState<Marker[]>('markers', []);
+  const [markers, setMarkers] = usePersistentState<MarkerBasic[]>(
+    'markers',
+    []
+  );
   const [markerRoutes, setMarkerRoutes] = usePersistentState<MarkerRouteItem[]>(
     'markers-routes',
     []
@@ -59,7 +58,7 @@ export function MarkersProvider({
 
   const refresh = useCallback(() => {
     if (!readonly) {
-      fetchJSON<Marker[]>('/api/markers').then((newMarkers) => {
+      fetchJSON<MarkerBasic[]>('/api/markers').then((newMarkers) => {
         setMarkers(newMarkers);
       });
     }

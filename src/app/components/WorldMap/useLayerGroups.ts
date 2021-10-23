@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import leaflet from 'leaflet';
 import { mapFilters, mapFiltersCategories } from '../MapFilter/mapFilters';
-import type { Marker } from '../../contexts/MarkersContext';
+import type { MarkerBasic } from '../../contexts/MarkersContext';
 import { getTooltipContent } from './tooltips';
 import { classNames } from '../../utils/styles';
 import { useMarkers } from '../../contexts/MarkersContext';
@@ -25,7 +25,7 @@ function useLayerGroups({
 }: {
   leafletMap: leaflet.Map | null;
   pmIgnore: boolean;
-  onMarkerClick?: (marker: Marker) => void;
+  onMarkerClick?: (marker: MarkerBasic) => void;
 }): void {
   const { visibleMarkers, markerRoutes } = useMarkers();
   const [filters] = useFilters();
