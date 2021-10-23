@@ -7,7 +7,9 @@ export function getMarkerRoutesCollection(): Collection<MarkerRoute> {
 }
 
 export function ensureMarkerRoutesIndexes(): Promise<string[]> {
-  return getMarkerRoutesCollection().createIndexes([{ key: { name: 1 } }]);
+  return getMarkerRoutesCollection().createIndexes([
+    { key: { name: 1 }, unique: true },
+  ]);
 }
 
 export function ensureMarkerRoutesSchema(): Promise<Document> {
