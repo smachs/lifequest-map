@@ -66,7 +66,7 @@ usersRouter.patch('/:username', async (req, res, next) => {
       }
     );
     if (!result.modifiedCount) {
-      res.status(404).end(`No change for ${username}`);
+      res.status(400).end(`No change`);
       return;
     }
     res.status(200).json(hiddenMarkerIds);
