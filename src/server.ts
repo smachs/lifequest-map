@@ -1,17 +1,17 @@
-import { PORT, MONGODB_URI, SCREENSHOTS_PATH } from './env';
-
+import { PORT, MONGODB_URI, SCREENSHOTS_PATH } from './lib/env';
 import express from 'express';
 import cors from 'cors';
-import router from './lib/router';
 import { connectToMongoDb } from './lib/db';
-import { ensureMarkersSchema, ensureMarkersIndexes } from './lib/markers';
-import { ensureCommentsIndexes, ensureCommentsSchema } from './lib/comments';
 import path from 'path';
-import {
-  ensureMarkerRoutesIndexes,
-  ensureMarkerRoutesSchema,
-} from './lib/markerRoutes';
-import { ensureUsersIndexes, ensureUsersSchema } from './lib/users';
+import { initCommentsCollection } from './lib/comments/collection';
+import { initMarkersCollection } from './lib/markers/collection';
+import { initMarkerRoutesCollection } from './lib/markerRoutes/collection';
+import { initUsersCollection } from './lib/users/collection';
+import commentsRouter from './lib/comments/router';
+import markersRouter from './lib/markers/router';
+import markerRoutesRouter from './lib/markerRoutes/router';
+import usersRouter from './lib/users/router';
+import screenshotsRouter from './lib/screenshots/router';
 
 if (typeof PORT !== 'string') {
   throw new Error('PORT is not set');
@@ -32,7 +32,11 @@ app.use(cors());
 app.use(express.json());
 
 // Serve API requests from the router
-app.use('/api', router);
+app.use('/api/comments', commentsRouter);
+app.use('/api/markers', markersRouter);
+app.use('/api/marker-routes', markerRoutesRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/screenshots', screenshotsRouter);
 
 // Static screenshots folder
 app.use('/screenshots', express.static(SCREENSHOTS_PATH));
@@ -48,14 +52,10 @@ app.get('*', (_req, res) => {
 connectToMongoDb(MONGODB_URI).then(async () => {
   console.log('Connected to MongoDB');
   await Promise.all([
-    ensureMarkersIndexes(),
-    ensureMarkersSchema(),
-    ensureCommentsIndexes(),
-    ensureCommentsSchema(),
-    ensureMarkerRoutesIndexes(),
-    ensureMarkerRoutesSchema(),
-    ensureUsersIndexes(),
-    ensureUsersSchema(),
+    initCommentsCollection(),
+    initMarkersCollection(),
+    initMarkerRoutesCollection(),
+    initUsersCollection(),
   ]);
 
   app.listen(PORT, () => {
