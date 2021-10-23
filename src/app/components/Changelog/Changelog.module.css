@@ -4,11 +4,11 @@
 }
 
 .hr {
-  border-color: rgba(234, 234, 234, 0.2);
+  border-color: rgb(234 234 234 / 20%);
 }
 
 .h2 {
-  margin: 8px 0 4px 0;
+  margin: 8px 0 4px;
 }
 
 .aside {

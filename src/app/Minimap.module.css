@@ -7,7 +7,7 @@
 }
 
 .hideOnHover:hover {
-  opacity: 0.1 !important;
+  opacity: 10% !important;
 }
 
 .noMouseEvents,
