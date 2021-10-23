@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { createContext, useEffect, useState, useContext } from 'react';
+import { createContext, useEffect, useContext } from 'react';
 import { fetchJSON } from '../utils/api';
 import { writeError } from '../utils/logs';
 import { usePersistentState } from '../utils/storage';
@@ -27,7 +27,7 @@ type UserProviderProps = {
 };
 
 export function UserProvider({ children }: UserProviderProps): JSX.Element {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = usePersistentState<User | null>('user', null);
   const [username, setUsername] = usePersistentState<string | null>(
     'username',
     null

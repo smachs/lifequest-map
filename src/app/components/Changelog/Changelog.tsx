@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from 'react';
-import Markdown from 'markdown-to-jsx';
+import Markdown from '../Markdown/Markdown';
 import { getAppVersion } from '../../utils/extensions';
 import styles from './Changelog.module.css';
 import { writeError } from '../../utils/logs';

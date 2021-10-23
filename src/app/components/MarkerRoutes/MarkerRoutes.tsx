@@ -74,7 +74,7 @@ function MarkerRoutes(): JSX.Element {
   const reload = async () => {
     try {
       const newMarkerRoutes = await fetchJSON<MarkerRouteItem[]>(
-        `/api/marker-routes?userId=${user?._id}`
+        `/api/marker-routes?userId=${user ? user._id : ''}`
       );
       setAllMarkerRoutes(newMarkerRoutes);
     } catch (error) {
