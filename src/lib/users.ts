@@ -14,7 +14,7 @@ export function ensureUsersIndexes(): Promise<string[]> {
 
 export function ensureUsersSchema(): Promise<Document> {
   return getDb().command({
-    collMod: 'Users',
+    collMod: 'users',
     validator: {
       $jsonSchema: {
         bsonType: 'object',

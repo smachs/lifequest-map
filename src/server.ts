@@ -25,6 +25,7 @@ import {
   ensureMarkerRoutesIndexes,
   ensureMarkerRoutesSchema,
 } from './lib/markerRoutes';
+import { ensureUsersIndexes, ensureUsersSchema } from './lib/users';
 
 const app = express();
 
@@ -50,12 +51,16 @@ app.get('*', (_req, res) => {
 
 connectToMongoDb(MONGODB_URI).then(async () => {
   console.log('Connected to MongoDB');
-  await ensureMarkersIndexes();
-  await ensureMarkersSchema();
-  await ensureCommentsIndexes();
-  await ensureCommentsSchema();
-  await ensureMarkerRoutesIndexes();
-  await ensureMarkerRoutesSchema();
+  await Promise.all([
+    ensureMarkersIndexes(),
+    ensureMarkersSchema(),
+    ensureCommentsIndexes(),
+    ensureCommentsSchema(),
+    ensureMarkerRoutesIndexes(),
+    ensureMarkerRoutesSchema(),
+    ensureUsersIndexes(),
+    ensureUsersSchema(),
+  ]);
 
   app.listen(PORT, () => {
     console.log(`Server listening at http://localhost:${PORT}`);
