@@ -27,6 +27,11 @@ Content-Type: application/json
 GET {{baseUrl}}/markers HTTP/1.1
 Accept: application/json
 
+### Get a single markers
+# @name getMarkers
+GET {{baseUrl}}/markers/{{getMarkers.response.body.$[0]._id}} HTTP/1.1
+Accept: application/json
+
 
 ### Insert a marker
 # @name insertMarker

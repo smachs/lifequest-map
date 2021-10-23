@@ -22,6 +22,22 @@ markersRouter.get('/', async (_req, res, next) => {
   }
 });
 
+markersRouter.get('/:markerId', async (req, res, next) => {
+  try {
+    const { markerId } = req.params;
+    if (!ObjectId.isValid(markerId)) {
+      res.status(400).send('Invalid payload');
+      return;
+    }
+    const markers = await getMarkersCollection()
+      .find({ _id: new ObjectId(markerId) })
+      .toArray();
+    res.status(200).json(markers);
+  } catch (error) {
+    next(error);
+  }
+});
+
 markersRouter.delete('/:markerId', async (req, res, next) => {
   try {
     const { markerId } = req.params;
