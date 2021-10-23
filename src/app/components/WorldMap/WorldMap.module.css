@@ -54,4 +54,16 @@
   font-size: 0.8em;
 }
 
+:global(.leaflet-revert) {
+  background: #f4f4f4;
+  color: #000;
+  display: flex;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  background-clip: padding-box;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  cursor: pointer;
+}
+
 /* stylelint-enable */
