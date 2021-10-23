@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { createContext, useEffect, useState, useContext } from 'react';
+import { createContext, useEffect, useContext } from 'react';
 import { fetchJSON } from '../utils/api';
 import { writeError } from '../utils/logs';
 import { usePersistentState } from '../utils/storage';

@@ -1,9 +1,9 @@
 import { toTimeAgo } from '../../utils/dates';
 import styles from './Comment.module.css';
-import Markdown from 'markdown-to-jsx';
 import { fetchJSON } from '../../utils/api';
 import { writeError } from '../../utils/logs';
 import DeleteButton from '../DeleteButton/DeleteButton';
+import Markdown from '../Markdown/Markdown';
 
 type CommentProps = {
   id: string;
@@ -45,9 +45,9 @@ function Comment({
     <article className={styles.container}>
       <p className={styles.name}>{username}</p>
       <small className={styles.createdAt}>{toTimeAgo(createdAt)}</small>
-      <p className={styles.message}>
+      <div className={styles.message}>
         <Markdown>{message}</Markdown>
-      </p>
+      </div>
       {removable && <DeleteButton onClick={handleRemove} />}
     </article>
   );
