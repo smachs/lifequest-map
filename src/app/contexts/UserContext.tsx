@@ -27,7 +27,7 @@ type UserProviderProps = {
 };
 
 export function UserProvider({ children }: UserProviderProps): JSX.Element {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = usePersistentState<User | null>('user', null);
   const [username, setUsername] = usePersistentState<string | null>(
     'username',
     null
