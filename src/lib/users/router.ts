@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { postToDiscord } from '../discord';
 import { getUsersCollection } from './collection';
+import { ObjectId } from 'mongodb';
 
 const usersRouter = Router();
 
@@ -40,21 +41,6 @@ usersRouter.post('/', async (req, res, next) => {
   }
 });
 
-usersRouter.get('/:username', async (req, res, next) => {
-  try {
-    const { username } = req.params;
-
-    const user = await getUsersCollection().findOne({ username });
-    if (!user) {
-      res.status(404).end(`No user found for ${username}`);
-      return;
-    }
-    res.status(200).json(user);
-  } catch (error) {
-    next(error);
-  }
-});
-
 usersRouter.patch('/:username', async (req, res, next) => {
   try {
     const { username } = req.params;
@@ -63,17 +49,20 @@ usersRouter.patch('/:username', async (req, res, next) => {
       res.status(400).send('Invalid payload');
       return;
     }
+    const hiddenMarkerObjectIds = hiddenMarkerIds.map(
+      (markerId: string) => new ObjectId(markerId)
+    );
 
     const result = await getUsersCollection().updateOne(
       { username },
       {
         $set: {
-          hiddenMarkerIds,
+          hiddenMarkerIds: hiddenMarkerObjectIds,
         },
       }
     );
     if (!result.modifiedCount) {
-      res.status(404).end(`No user found for ${username}`);
+      res.status(404).end(`No change for ${username}`);
       return;
     }
     res.status(200).json(hiddenMarkerIds);

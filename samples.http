@@ -1,10 +1,32 @@
+### Here are tests for all routes of the API. Take a look at https://marketplace.visualstudio.com/items?itemName=humao.rest-client for more information on how to use this file.
 @port = {{$dotenv PORT}}
 @baseUrl = http://localhost:{{port}}/api
+
+### Register/Login a user
+# @name postUsers
+POST {{baseUrl}}/users HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "lmachens"
+}
+
+### Update hidden marker ids
+@markerId = {{getMarkers.response.body.$[0]._id}}
+
+PATCH {{baseUrl}}/users/{{postUsers.request.body.username}} HTTP/1.1
+Content-Type: application/json
+
+{
+    "hiddenMarkerIds": ["{{markerId}}"]
+}
+
 
 ### Get markers
 # @name getMarkers
 GET {{baseUrl}}/markers HTTP/1.1
 Accept: application/json
+
 
 ### Insert a marker
 # @name insertMarker
@@ -13,8 +35,18 @@ Content-Type: application/json
 
 {
     "type": "fish_hotspot3",
-    "position": [9455.411, 8984.482]
+    "position": [9405.321, 8984.482],
+    "username": "{{postUsers.request.body.username}}"
 }
+
+### Delete a single marker
+DELETE {{baseUrl}}/markers/{{insertMarker.response.body._id}} HTTP/1.1
+Content-Type: application/json
+
+{
+    "userId": "{{postUsers.response.body._id}}"
+}
+
 
 ### Get comments
 # @name getComments
@@ -32,28 +64,6 @@ Content-Type: application/json
 {
     "username": "[Coach] Leon",
     "message": "This is a test comment"
-}
-
-### Register/Login a user
-POST {{baseUrl}}/users HTTP/1.1
-Content-Type: application/json
-
-{
-    "username": "lmachens"
-}
-
-### Get a user
-GET {{baseUrl}}/users/lmachens HTTP/1.1
-Accept: application/json
-
-### Update hidden marker ids
-@markerId = {{getMarkers.response.body.$[0]._id}}
-
-PATCH {{baseUrl}}/users/lmachens HTTP/1.1
-Content-Type: application/json
-
-{
-    "hiddenMarkerIds": ["{{markerId}}"]
 }
 
 ### POST a marker route
