@@ -29,6 +29,9 @@ const app = express();
 // Middleware to set CORS headers
 app.use(cors());
 
+// Disable X-Powered-By header
+app.disable('x-powered-by');
+
 // Middleware for gzip compression
 app.use(compression());
 
