@@ -20,7 +20,7 @@ async function openApp() {
     const preferedWindowName = await getPreferedWindowName();
     restoreWindow(preferedWindowName);
     if (getJSONItem('showMinimap', false)) {
-      restoreWindow(WINDOWS.MINIMAP);
+      restoreWindow(WINDOWS.MINIMAP, true);
     }
   } else {
     restoreWindow(WINDOWS.DESKTOP);
@@ -55,7 +55,7 @@ overwolf.games.onGameInfoUpdated.addListener(async (event) => {
         closeWindow(WINDOWS.OVERLAY);
       }
       if (getJSONItem('showMinimap', false)) {
-        restoreWindow(WINDOWS.MINIMAP);
+        restoreWindow(WINDOWS.MINIMAP, true);
       }
     } else {
       closeMainWindow();
