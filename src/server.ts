@@ -12,6 +12,7 @@ import markersRouter from './lib/markers/router';
 import markerRoutesRouter from './lib/markerRoutes/router';
 import usersRouter from './lib/users/router';
 import screenshotsRouter from './lib/screenshots/router';
+import compression from 'compression';
 
 if (typeof PORT !== 'string') {
   throw new Error('PORT is not set');
@@ -27,6 +28,9 @@ const app = express();
 
 // Middleware to set CORS headers
 app.use(cors());
+
+// Middleware for gzip compression
+app.use(compression());
 
 // Middleware that parses json and looks at requests where the Content-Type header matches the type option.
 app.use(express.json());
