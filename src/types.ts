@@ -31,6 +31,7 @@ export type User = {
 export type MarkerRoute = {
   name: string;
   username: string;
+  isPublic: boolean;
   positions: [Double, Double][];
   markersByType: {
     [type: string]: number;

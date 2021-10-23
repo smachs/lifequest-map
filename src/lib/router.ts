@@ -415,13 +415,14 @@ router.post(
 
 router.post('/marker-routes', async (req, res, next) => {
   try {
-    const { name, username, positions, markersByType } = req.body;
+    const { name, username, isPublic, positions, markersByType } = req.body;
 
     const markerRoute: MarkerRoute = {
       name,
       username,
       positions,
       markersByType,
+      isPublic: Boolean(isPublic),
       createdAt: new Date(),
     };
     if (Array.isArray(positions)) {
@@ -447,9 +448,33 @@ router.post('/marker-routes', async (req, res, next) => {
   }
 });
 
-router.get('/marker-routes', async (_req, res, next) => {
+router.get('/marker-routes', async (req, res, next) => {
   try {
-    const markerRoutes = await getMarkerRoutesCollection().find({}).toArray();
+    const { userId } = req.query;
+    let query: Filter<MarkerRoute> | undefined = undefined;
+    if (typeof userId === 'string' && userId) {
+      const user = await getUsersCollection().findOne({
+        _id: new ObjectId(userId),
+      });
+      if (user) {
+        query = {
+          $or: [
+            {
+              username: user.username,
+            },
+            {
+              isPublic: true,
+            },
+          ],
+        };
+      }
+    }
+    if (!query) {
+      query = { isPublic: true };
+    }
+    const markerRoutes = await getMarkerRoutesCollection()
+      .find(query)
+      .toArray();
     res.status(200).json(markerRoutes);
   } catch (error) {
     next(error);

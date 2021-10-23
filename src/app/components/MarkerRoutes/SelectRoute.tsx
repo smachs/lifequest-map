@@ -41,6 +41,7 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
   }>({});
   const [name, setName] = useState('');
   const user = useUser();
+  const [isPublic, setIsPublic] = useState(false);
 
   useLayerGroups({
     leafletMap,
@@ -153,6 +154,7 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
       body: JSON.stringify({
         name,
         username: user?.username,
+        isPublic,
         positions,
         markersByType,
       }),
@@ -173,6 +175,14 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
             placeholder="Give this route an explanatory name"
             required
             autoFocus
+          />
+        </label>
+        <label className={styles.label}>
+          Make it available for everyone
+          <input
+            type="checkbox"
+            onChange={(event) => setIsPublic(event.target.checked)}
+            checked={isPublic}
           />
         </label>
         <MarkerTypes markersByType={markersByType} />
