@@ -20,9 +20,11 @@ export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
 
 function useLayerGroups({
   leafletMap,
+  pmIgnore,
   onMarkerClick,
 }: {
   leafletMap: leaflet.Map | null;
+  pmIgnore: boolean;
   onMarkerClick?: (marker: Marker) => void;
 }): void {
   const { visibleMarkers, markerRoutes } = useMarkers();
@@ -126,7 +128,7 @@ function useLayerGroups({
                 size: [markerSize, markerSize],
                 comments: marker.comments,
               },
-              // pmIgnore: true,
+              pmIgnore,
             }
           ).bindTooltip(getTooltipContent(marker, mapFilter), {
             direction: 'top',

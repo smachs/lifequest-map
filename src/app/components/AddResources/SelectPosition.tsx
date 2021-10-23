@@ -51,6 +51,7 @@ function SelectPosition({
   });
   useLayerGroups({
     leafletMap,
+    pmIgnore: true,
   });
 
   function handleSave() {

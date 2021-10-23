@@ -28,6 +28,7 @@
 
 ::-webkit-scrollbar {
   width: 5px;
+  height: 5px;
   background: var(--color-shade-three);
 }
 
@@ -132,6 +133,7 @@ svg {
 
 *[data-tooltip]:hover::after {
   position: absolute;
+  pointer-events: none;
   top: 120%;
   left: 50%;
   transform: translateX(-50%);

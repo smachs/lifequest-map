@@ -7,7 +7,11 @@ export function getMarkerRoutesCollection(): Collection<MarkerRoute> {
 }
 
 export function ensureMarkerRoutesIndexes(): Promise<string[]> {
-  return getMarkerRoutesCollection().createIndexes([{ key: { name: 1 } }]);
+  return getMarkerRoutesCollection().createIndexes([
+    { key: { name: 1 }, unique: true },
+    { key: { isPublic: 1 } },
+    { key: { username: 1 } },
+  ]);
 }
 
 export function ensureMarkerRoutesSchema(): Promise<Document> {
@@ -26,6 +30,9 @@ export function ensureMarkerRoutesSchema(): Promise<Document> {
           },
           username: {
             bsonType: 'string',
+          },
+          isPublic: {
+            bsonType: 'bool',
           },
           positions: {
             bsonType: 'array',
@@ -49,7 +56,6 @@ export function ensureMarkerRoutesSchema(): Promise<Document> {
           'username',
           'positions',
           'markersByType',
-
           'createdAt',
         ],
       },

@@ -62,6 +62,7 @@ Content-Type: application/json
 
 {
     "name": "Essences Route",
+    "username": "system",
     "positions": [[8455.411, 8984.482], [8460.411, 8984.482], [8470.411, 8950.482]],
     "markersByType": {
         "essences_blightroot": 10,

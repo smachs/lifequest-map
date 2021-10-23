@@ -33,6 +33,7 @@ function WorldMap({
         children: <MarkerDetails marker={marker} />,
       });
     },
+    pmIgnore: true,
   });
   usePlayerPosition({ leafletMap, alwaysFollowing });
 

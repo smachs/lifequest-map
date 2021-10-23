@@ -33,7 +33,7 @@ export function ensureUsersSchema(): Promise<Document> {
             },
           },
           isModerator: {
-            bsonType: 'boolean',
+            bsonType: 'bool',
           },
           createdAt: {
             bsonType: 'date',
