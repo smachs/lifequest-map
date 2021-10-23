@@ -3,9 +3,9 @@ import { DISCORD_WEBHOOK_URL } from './env';
 
 export function postToDiscord(
   content: string,
-  embeds?: { title: string; description: string; image?: string }[]
+  webhookURL = DISCORD_WEBHOOK_URL
 ): Promise<Response> {
-  return fetch(DISCORD_WEBHOOK_URL, {
+  return fetch(webhookURL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -13,7 +13,6 @@ export function postToDiscord(
     body: JSON.stringify({
       username: 'BottyMcBotface',
       content,
-      embeds,
     }),
   });
 }

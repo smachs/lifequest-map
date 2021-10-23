@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { postToDiscord } from '../discord';
 import { getUsersCollection } from './collection';
 import { ObjectId } from 'mongodb';
+import { DISCORD_NEW_USER_WEBHOOK_URL } from '../env';
 
 const usersRouter = Router();
 
@@ -32,7 +33,10 @@ usersRouter.post('/', async (req, res, next) => {
     );
     if (result.value) {
       res.status(200).json(result.value);
-      postToDiscord(`🤘 ${result.value.username} is using Aeternum Map`);
+      postToDiscord(
+        `🤘 ${result.value.username} is using Aeternum Map`,
+        DISCORD_NEW_USER_WEBHOOK_URL
+      );
     } else {
       throw new Error('Could not create user');
     }

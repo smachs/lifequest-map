@@ -13,6 +13,14 @@ if (typeof process.env.SCREENSHOTS_PATH !== 'string') {
 if (typeof process.env.DISCORD_WEBHOOK_URL !== 'string') {
   throw new Error('DISCORD_WEBHOOK_URL is not set');
 }
+if (typeof process.env.DISCORD_NEW_USER_WEBHOOK_URL !== 'string') {
+  throw new Error('DISCORD_NEW_USER_WEBHOOK_URL is not set');
+}
 
-export const { PORT, MONGODB_URI, SCREENSHOTS_PATH, DISCORD_WEBHOOK_URL } =
-  process.env;
+export const {
+  PORT,
+  MONGODB_URI,
+  SCREENSHOTS_PATH,
+  DISCORD_WEBHOOK_URL,
+  DISCORD_NEW_USER_WEBHOOK_URL,
+} = process.env;
