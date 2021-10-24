@@ -4,9 +4,13 @@ import MarkerSection from './MarkerSection';
 import { useFilters } from '../../contexts/FiltersContext';
 import ActionButton from '../ActionControl/ActionButton';
 import ActionCheckbox from '../ActionControl/ActionCheckbox';
+import SearchIcon from '../icons/SearchIcon';
+import { searchMapFilter } from './searchMapFilter';
+import { usePersistentState } from '../../utils/storage';
 
 function MarkersView(): JSX.Element {
   const [filters, setFilters] = useFilters();
+  const [search, setSearch] = usePersistentState('searchMarkerTypes', '');
 
   function handleToggle(filterTypes: string[], checked: boolean) {
     const newFilters = [...filters];
@@ -20,32 +24,53 @@ function MarkersView(): JSX.Element {
         }
       });
     }
-    setFilters(newFilters);
+    const uniqueFilters = Array.from(new Set(newFilters));
+    setFilters(uniqueFilters);
   }
 
   return (
-    <>
+    <section className={styles.container}>
       <div className={styles.actions}>
-        <ActionButton
-          onClick={() => {
-            setFilters(mapFilters.map((filter) => filter.type));
-          }}
-        >
-          Show all
-        </ActionButton>
-        <ActionButton
-          onClick={() => {
-            setFilters([]);
-          }}
-        >
-          Hide all
-        </ActionButton>
         <ActionCheckbox
           className={styles.action}
           onChange={(checked) => handleToggle(['hidden'], checked)}
           checked={filters.includes('hidden')}
           title="Show Hidden"
         />
+      </div>
+      <div className={styles.actions}>
+        <label className={styles.search}>
+          <SearchIcon />
+          <input
+            placeholder="Search marker types..."
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </label>
+        <ActionButton
+          onClick={() => {
+            handleToggle(
+              mapFilters
+                .filter(searchMapFilter(search))
+                .map((filter) => filter.type),
+              true
+            );
+          }}
+        >
+          Show all
+        </ActionButton>
+        <ActionButton
+          onClick={() => {
+            handleToggle(
+              mapFilters
+                .filter(searchMapFilter(search))
+                .map((filter) => filter.type),
+              false
+            );
+          }}
+        >
+          Hide all
+        </ActionButton>
       </div>
       <div className={styles.list}>
         {mapFiltersCategories.map((mapFilterCategory) => (
@@ -54,10 +79,11 @@ function MarkersView(): JSX.Element {
             mapFilterCategory={mapFilterCategory}
             filters={filters}
             onToggle={handleToggle}
+            search={search}
           />
         ))}
       </div>
-    </>
+    </section>
   );
 }
 
