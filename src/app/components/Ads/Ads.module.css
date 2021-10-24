@@ -12,3 +12,11 @@
   display: grid;
   place-items: center;
 }
+
+.ads {
+  position: absolute;
+  inset: 0;
+  height: 300px;
+  width: 400px;
+  z-index: 1;
+}

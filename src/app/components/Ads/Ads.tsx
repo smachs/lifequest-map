@@ -98,11 +98,12 @@ function Ads({ active }: AdsProps): JSX.Element {
   }, [owAd, active]);
 
   return (
-    <div className={classes.container} ref={containerRef}>
-      <span className={classes.text}>
+    <aside className={classes.container}>
+      <div className={classes.text}>
         Ads support the development of this app
-      </span>
-    </div>
+      </div>
+      <div ref={containerRef} className={classes.ads} />
+    </aside>
   );
 }
 
