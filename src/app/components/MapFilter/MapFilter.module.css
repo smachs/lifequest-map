@@ -8,7 +8,6 @@
 
 .content {
   position: absolute;
-  z-index: 90000;
   background: var(--color-shade-one);
   left: 0;
   width: 400px;

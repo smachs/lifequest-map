@@ -1,25 +1,33 @@
-.label {
+.container {
   position: relative;
+  width: 13em;
+  height: 1.8rem;
+  overflow: hidden;
+}
+
+.location {
+  position: absolute;
+  z-index: 1;
 }
 
 .search {
   position: absolute;
-  left: 100%;
+  left: 28px;
   top: 0;
   display: grid;
   grid-template-columns: 1fr 1.5em;
   align-items: center;
   transition: transform 0.3s ease-in-out;
   transform: translateX(-100%);
-  z-index: -1;
   color: var(--color-text);
   background: var(--color-shade-one);
   height: 100%;
   pointer-events: none;
-  width: 11em;
+  width: calc(100% - 28px);
 }
 
-.label:hover .search {
+.search:hover,
+.location:hover ~ .search {
   transform: translateX(0);
   pointer-events: initial;
 }

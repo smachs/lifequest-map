@@ -27,8 +27,10 @@ function MapSearch({ className }: MapSearchType): JSX.Element {
   }
 
   return (
-    <label className={classNames(styles.label, className)}>
-      <LocationIcon />
+    <div className={styles.container}>
+      <button className={classNames(styles.location, className)}>
+        <LocationIcon />
+      </button>
       <form className={styles.search} onSubmit={handleSubmit}>
         <input
           placeholder="Enter coordinates [x, y]"
@@ -39,7 +41,7 @@ function MapSearch({ className }: MapSearchType): JSX.Element {
           <SearchIcon />
         </button>
       </form>
-    </label>
+    </div>
   );
 }
 
