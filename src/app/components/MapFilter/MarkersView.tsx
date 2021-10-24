@@ -7,10 +7,15 @@ import ActionCheckbox from '../ActionControl/ActionCheckbox';
 import SearchIcon from '../icons/SearchIcon';
 import { searchMapFilter } from './searchMapFilter';
 import { usePersistentState } from '../../utils/storage';
+import { useUser } from '../../contexts/UserContext';
+import { useModal } from '../../contexts/ModalContext';
+import AddResources from '../AddResources/AddResources';
 
 function MarkersView(): JSX.Element {
+  const { addModal } = useModal();
   const [filters, setFilters] = useFilters();
   const [search, setSearch] = usePersistentState('searchMarkerTypes', '');
+  const user = useUser();
 
   function handleToggle(filterTypes: string[], checked: boolean) {
     const newFilters = [...filters];
@@ -31,11 +36,22 @@ function MarkersView(): JSX.Element {
   return (
     <section className={styles.container}>
       <div className={styles.actions}>
+        <ActionButton
+          disabled={!user}
+          onClick={() => {
+            addModal({
+              title: 'Add resources',
+              children: <AddResources />,
+            });
+          }}
+        >
+          {user ? 'Add resource' : 'Login to add route'}
+        </ActionButton>
         <ActionCheckbox
           className={styles.action}
           onChange={(checked) => handleToggle(['hidden'], checked)}
           checked={filters.includes('hidden')}
-          title="Show Hidden"
+          title="Toggle Hidden"
         />
       </div>
       <div className={styles.actions}>
