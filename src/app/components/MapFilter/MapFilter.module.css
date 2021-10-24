@@ -8,6 +8,8 @@
 
 .content {
   position: absolute;
+  z-index: 90000;
+  background: var(--color-shade-one);
   left: 0;
   width: 400px;
   height: 100%;
@@ -30,7 +32,10 @@
 
 .nav__button {
   padding: 0.5em;
+  width: 1.8rem;
+  height: 1.8rem;
   display: grid;
+  justify-content: center;
   color: var(--color-text);
   background: var(--color-shade-one);
 }
