@@ -84,7 +84,9 @@ function useWorldMap({
       zoomControl: false,
       maxBounds: leaflet.latLngBounds([-10000, -7000], [20000, 25000]),
     });
-    latestLeafletMap = map;
+    if (!selectMode) {
+      latestLeafletMap = map;
+    }
     setLeafletMap(map);
 
     const mapPosition = getJSONItem<

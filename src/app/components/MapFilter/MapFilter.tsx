@@ -25,6 +25,7 @@ import Settings from '../Settings/Settings';
 import { useEffect } from 'react';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
+import MapSearch from '../MapSearch/MapSearch';
 
 type View = 'markers' | 'settings' | 'areas' | 'markerRoutes';
 
@@ -66,6 +67,7 @@ function MapFilter(): JSX.Element {
         </ErrorBoundary>
       </div>
       <nav className={styles.nav}>
+        <MapSearch className={styles.nav__button} />
         <button
           className={styles.nav__button}
           disabled={!user}
@@ -161,7 +163,6 @@ function MapFilter(): JSX.Element {
         >
           <CompassIcon />
         </button>
-
         <button
           data-tooltip="Show/Hide menu"
           data-tooltip-position="right"
