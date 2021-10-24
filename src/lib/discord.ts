@@ -1,10 +1,13 @@
 import fetch from 'isomorphic-fetch';
-import { DISCORD_WEBHOOK_URL } from './env';
+import { DISCORD_PUBLIC_WEBHOOK_URL, DISCORD_PRIVATE_WEBHOOK_URL } from './env';
 
 export function postToDiscord(
   content: string,
-  webhookURL = DISCORD_WEBHOOK_URL
+  isPublic = true
 ): Promise<Response> {
+  const webhookURL = isPublic
+    ? DISCORD_PUBLIC_WEBHOOK_URL
+    : DISCORD_PRIVATE_WEBHOOK_URL;
   return fetch(webhookURL, {
     method: 'POST',
     headers: {
