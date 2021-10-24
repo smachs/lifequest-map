@@ -1,21 +1,18 @@
 import { useModal } from '../../contexts/ModalContext';
 import { classNames } from '../../utils/styles';
 import { useRouter } from '../Router/Router';
-import AddIcon from '../icons/AddIcon';
 import AreasView from './AreasView';
 import styles from './MapFilter.module.css';
 import MapIcon from '../icons/MapIcon';
 import MarkerIcon from '../icons/MarkerIcon';
 import MarkersView from './MarkersView';
 import MenuOpenIcon from '../icons/MenuOpenIcon';
-import AddResources from '../AddResources/AddResources';
 import { usePosition } from '../../contexts/PositionContext';
 import Ads from '../Ads/Ads';
 import MarkerRoutes from '../MarkerRoutes/MarkerRoutes';
 import User from '../User/User';
 import RoutesIcon from '../icons/RoutesIcon';
 import PlayerIcon from '../icons/PlayerIcon';
-import { useUser } from '../../contexts/UserContext';
 import CompassIcon from '../icons/CompassIcon';
 import useMinimap from '../Minimap/useMinimap';
 import MinimapSetup from '../Minimap/MinimapSetup';
@@ -37,7 +34,6 @@ function MapFilter(): JSX.Element {
   );
   const { url, search } = useRouter();
   const { following, toggleFollowing } = usePosition();
-  const user = useUser();
   const [showMinimap, setShowMinimap] = useMinimap();
 
   useEffect(() => {
@@ -68,20 +64,7 @@ function MapFilter(): JSX.Element {
       </div>
       <nav className={styles.nav}>
         <MapSearch className={styles.nav__button} />
-        <button
-          className={styles.nav__button}
-          disabled={!user}
-          data-tooltip={user ? 'Add resources' : 'Login to add resources'}
-          data-tooltip-position="right"
-          onClick={() =>
-            addModal({
-              title: 'Add resources',
-              children: <AddResources />,
-            })
-          }
-        >
-          <AddIcon />
-        </button>
+
         <button
           data-tooltip="Markers"
           data-tooltip-position="right"
