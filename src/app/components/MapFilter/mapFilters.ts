@@ -357,12 +357,6 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'farming',
-    type: 'cookingIngredient',
-    title: i18n('Cooking Ingredient'),
-    iconUrl: '/pois/cooking.webp',
-  },
-  {
-    category: 'farming',
     type: 'fungus',
     title: i18n('Fungus'),
     iconUrl: '/pois/fungi.webp',
@@ -390,6 +384,102 @@ export const mapFilters: FilterItem[] = [
     type: 'wirefiber',
     title: i18n('Wirefiber'),
     iconUrl: '/pois/wirefiber.webp',
+  },
+  {
+    category: 'farming',
+    type: 'cookingIngredient',
+    title: i18n('Cooking Ingredient'),
+    iconUrl: '/pois/cooking.webp',
+  },
+  {
+    category: 'cooking_ingredients',
+    type: 'barley',
+    title: i18n('Barley'),
+    iconUrl: '/pois/barley.webp',
+  },
+  {
+    category: 'cooking_ingredients',
+    type: 'berry',
+    title: i18n('Berry'),
+    iconUrl: '/pois/berry.webp',
+  },
+  {
+    category: 'cooking_ingredients',
+    type: 'blueberry',
+    title: i18n('Blueberry'),
+    iconUrl: '/pois/blueberry.webp',
+  },
+  {
+    category: 'cooking_ingredients',
+    type: 'broccoli',
+    title: i18n('Broccoli'),
+    iconUrl: '/pois/broccoli.webp',
+  },
+  {
+    category: 'cooking_ingredients',
+    type: 'cabbage',
+    title: i18n('Cabbage'),
+    iconUrl: '/pois/cabbage.webp',
+  },
+  {
+    category: 'cooking_ingredients',
+    type: 'carrot',
+    title: i18n('Carrot'),
+    iconUrl: '/pois/carrot.webp',
+  },
+  {
+    category: 'cooking_ingredients',
+    type: 'corn',
+    title: i18n('Corn'),
+    iconUrl: '/pois/corn.webp',
+  },
+  {
+    category: 'cooking_ingredients',
+    type: 'cranberry',
+    title: i18n('Cranberry'),
+    iconUrl: '/pois/cranberry.webp',
+  },
+  {
+    category: 'cooking_ingredients',
+    type: 'honey',
+    title: i18n('Honey'),
+    iconUrl: '/pois/honey.webp',
+  },
+  {
+    category: 'cooking_ingredients',
+    type: 'milk',
+    title: i18n('Milk'),
+    iconUrl: '/pois/milk.webp',
+  },
+  {
+    category: 'cooking_ingredients',
+    type: 'nuts',
+    title: i18n('Nuts'),
+    iconUrl: '/pois/nuts.webp',
+  },
+  {
+    category: 'cooking_ingredients',
+    type: 'potato',
+    title: i18n('Potato'),
+    iconUrl: '/pois/potato.webp',
+  },
+  {
+    category: 'cooking_ingredients',
+    type: 'pumpkin',
+    title: i18n('Pumpkin'),
+    iconUrl: '/pois/pumpkin.webp',
+  },
+  {
+    category: 'cooking_ingredients',
+    type: 'squash',
+    title: i18n('Squash'),
+    iconUrl: '/pois/squash.webp',
+  },
+  {
+    category: 'cooking_ingredients',
+    type: 'strawberry',
+    title: i18n('Strawberry'),
+    iconUrl: '/pois/strawberry.webp',
   },
   {
     category: 'npc',
@@ -744,6 +834,14 @@ export const mapFiltersCategories: MapFiltersCategory[] = [
     title: i18n('Farming'),
     filters: mapFilters.filter((mapFilter) => mapFilter.category === 'farming'),
     borderColor: 'rgba(34, 139, 34, 0.7)',
+  },
+  {
+    value: 'cooking_ingredients',
+    title: i18n('Cooking Ingredients'),
+    filters: mapFilters.filter(
+      (mapFilter) => mapFilter.category === 'cooking_ingredients'
+    ),
+    borderColor: 'rgba(0, 100, 0, 0.7)',
   },
   {
     value: 'fishing',
