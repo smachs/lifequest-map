@@ -386,12 +386,6 @@ export const mapFilters: FilterItem[] = [
     iconUrl: '/pois/wirefiber.webp',
   },
   {
-    category: 'farming',
-    type: 'cookingIngredient',
-    title: i18n('Cooking Ingredient'),
-    iconUrl: '/pois/cooking.webp',
-  },
-  {
     category: 'cooking_ingredients',
     type: 'barley',
     title: i18n('Barley'),
