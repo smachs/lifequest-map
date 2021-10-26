@@ -101,7 +101,7 @@ function MapFilter(): JSX.Element {
           <MapIcon />
         </button>
         <button
-          data-tooltip="Show/Hide settings"
+          data-tooltip="Settings"
           data-tooltip-position="right"
           className={classNames(
             styles.nav__button,
