@@ -1,3 +1,4 @@
+import { writeLog } from './logs';
 import { getJSONItem, setJSONItem } from './storage';
 
 export const WINDOWS = {
@@ -96,7 +97,7 @@ export async function restoreWindow(
         await new Promise((resolve) =>
           overwolf.windows.bringToFront(windowName, resolve)
         );
-
+        writeLog(`Window ${windowName} restored`);
         if (!preventCenter) {
           const alreadyCentered = getJSONItem<boolean>(
             `centered-${windowName}`,
@@ -106,6 +107,7 @@ export async function restoreWindow(
             const primaryDisplay = declaredWindow.name === WINDOWS.OVERLAY;
             await centerWindow(windowName, primaryDisplay);
             setJSONItem(`centered-${declaredWindow.name}`, true);
+            writeLog(`Window ${windowName} centered`);
           }
         }
         resolve(result.window_id!); // window_id is always a string if success
