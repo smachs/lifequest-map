@@ -26,7 +26,12 @@ function onDragResize(edge: overwolf.windows.enums.WindowDragEdge) {
     dragResize(edge, (result) => {
       if (result.height && result.width) {
         const minSize = Math.max(result.width, result.height, 200);
-        overwolf.windows.changeSize(WINDOWS.MINIMAP, minSize, minSize);
+        overwolf.windows.changeSize({
+          window_id: result.id!,
+          width: minSize,
+          height: minSize,
+          auto_dpi_resize: true,
+        });
       }
     });
   };
