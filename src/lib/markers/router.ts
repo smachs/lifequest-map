@@ -130,9 +130,8 @@ markersRouter.patch('/:markerId', async (req, res, next) => {
         _id: new ObjectId(markerId),
       },
       {
-        // Also fix a bug here where user can't edit screenshotfile name (its return 200ok but not edited)
         $set: {
-          screenshotFilename: screenshotFilename,
+          screenshotFilename,
         },
       }
     );
