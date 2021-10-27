@@ -9,6 +9,8 @@ import { notify } from '../../utils/notifications';
 import { calcDistance } from '../../utils/positions';
 import { usePersistentState } from '../../utils/storage';
 import ActionButton from '../ActionControl/ActionButton';
+import SearchIcon from '../icons/SearchIcon';
+import { mapFilters } from '../MapFilter/mapFilters';
 import { deleteMarkerRoute, getMarkerRoutes } from './api';
 import MarkerRoute from './MarkerRoute';
 import styles from './MarkerRoutes.module.css';
@@ -29,14 +31,28 @@ export type MarkerRouteItem = {
 type SortBy = 'match' | 'distance' | 'date' | 'name' | 'username';
 type Filter = 'all' | 'private' | 'public';
 
-function handleFilter(filter: Filter) {
+function handleFilter(filter: Filter, search: string) {
+  const regExp = new RegExp(search, 'i');
+  const filterBySearch = (item: MarkerRouteItem) => {
+    if (search === '') {
+      return true;
+    }
+    const matchedMarkersType = Object.keys(item.markersByType).some((type) => {
+      const mapFilter = mapFilters.find((filter) => filter.type === type);
+      if (!mapFilter) {
+        return false;
+      }
+      return mapFilter.title.match(regExp);
+    });
+    return matchedMarkersType || item.name.match(regExp);
+  };
   if (filter === 'private') {
-    return (item: MarkerRouteItem) => !item.isPublic;
+    return (item: MarkerRouteItem) => !item.isPublic && filterBySearch(item);
   }
   if (filter === 'public') {
-    return (item: MarkerRouteItem) => item.isPublic;
+    return (item: MarkerRouteItem) => item.isPublic && filterBySearch(item);
   }
-  return (item: MarkerRouteItem) => item;
+  return (item: MarkerRouteItem) => filterBySearch(item);
 }
 
 function handleSort(
@@ -85,6 +101,7 @@ function MarkerRoutes(): JSX.Element {
     'markerRoutesFilter',
     'all'
   );
+  const [search, setSearch] = usePersistentState('searchRoutes', '');
   const [filters] = useFilters();
   const { position } = usePosition();
 
@@ -129,9 +146,9 @@ function MarkerRoutes(): JSX.Element {
   const sortedMarkerRoutes = useMemo(
     () =>
       allMarkerRoutes
-        .filter(handleFilter(filter))
+        .filter(handleFilter(filter, search))
         .sort(handleSort(sortBy, filters, position)),
-    [sortBy, allMarkerRoutes, filters, position, filter]
+    [sortBy, allMarkerRoutes, filters, position, filter, search]
   );
 
   return (
@@ -149,6 +166,16 @@ function MarkerRoutes(): JSX.Element {
           {user ? 'Add route' : 'Login to add route'}
         </ActionButton>
         <ActionButton onClick={clearMarkerRoutes}>Hide all</ActionButton>
+      </div>
+      <div className={styles.actions}>
+        <label className={styles.search}>
+          <SearchIcon />
+          <input
+            placeholder="Marker or title..."
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </label>
         <select
           value={sortBy}
           onChange={(event) => setSortBy(event.target.value as SortBy)}
