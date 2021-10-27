@@ -9,10 +9,12 @@ type DetailsInputProps = {
   onChange: (details: Details) => void;
 };
 function DetailsInput({ filter, onChange }: DetailsInputProps): JSX.Element {
-  const [description, setDescription] = useState<string | null>(null);
-  const [name, setName] = useState<string | null>(null);
-  const [level, setLevel] = useState<number | null>(null);
-  const [levelRange, setLevelRange] = useState<[number, number] | null>(null);
+  const [description, setDescription] = useState<string | undefined>(undefined);
+  const [name, setName] = useState<string | undefined>(undefined);
+  const [level, setLevel] = useState<number | undefined>(undefined);
+  const [levelRange, setLevelRange] = useState<[number, number] | undefined>(
+    undefined
+  );
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
