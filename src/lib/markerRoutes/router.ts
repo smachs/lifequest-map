@@ -13,8 +13,8 @@ markerRoutesRouter.post('/', async (req, res, next) => {
     const { name, username, isPublic, positions, markersByType } = req.body;
 
     const markerRoute: MarkerRouteDTO = {
-      name,
-      username,
+      name.substring(0, 100),
+      username.substring(0, 50),
       positions,
       markersByType,
       isPublic: Boolean(isPublic),
@@ -28,6 +28,11 @@ markerRoutesRouter.post('/', async (req, res, next) => {
 
     if (markerRoute.positions.length === 0) {
       res.status(400).send('Invalid payload');
+      return;
+    }
+    const existingUser = await getUsersCollection().findOne({ username });
+    if (!existingUser) {
+      res.status(400).send('User not exist');
       return;
     }
     const inserted = await getMarkerRoutesCollection().insertOne(markerRoute);
