@@ -9,7 +9,7 @@ usersRouter.post('/', async (req, res, next) => {
   try {
     const { username } = req.body;
 
-    if (typeof username !== 'string') {
+    if (typeof username !== 'string' || username.length > 50) { /* Limit Username to 50 characters */
       res.status(400).send('Invalid payload');
       return;
     }
@@ -32,7 +32,7 @@ usersRouter.post('/', async (req, res, next) => {
     );
     if (result.value) {
       res.status(200).json(result.value);
-      postToDiscord(`🤘 ${result.value.username} is using Aeternum Map`, false);
+      postToDiscord(`🤘 ${result.value.username} is using Aeternum Map`);
     } else {
       throw new Error('Could not create user');
     }
