@@ -8,7 +8,6 @@ import { MarkersProvider } from './contexts/MarkersContext';
 import { PositionProvider } from './contexts/PositionContext';
 import WorldMap from './components/WorldMap/WorldMap';
 import styles from './Minimap.module.css';
-import { RouterProvider } from './components/Router/Router';
 import { dragMoveWindow, dragResize, WINDOWS } from './utils/windows';
 import {
   SETUP_MINIMAP,
@@ -184,19 +183,17 @@ function Minimap(): JSX.Element {
 waitForOverwolf().then(() => {
   ReactDOM.render(
     <StrictMode>
-      <RouterProvider readonly>
-        <SettingsProvider>
-          <UserProvider>
-            <FiltersProvider>
-              <MarkersProvider readonly>
-                <PositionProvider>
-                  <Minimap />
-                </PositionProvider>
-              </MarkersProvider>
-            </FiltersProvider>
-          </UserProvider>
-        </SettingsProvider>
-      </RouterProvider>
+      <SettingsProvider>
+        <UserProvider>
+          <FiltersProvider>
+            <MarkersProvider readonly>
+              <PositionProvider>
+                <Minimap />
+              </PositionProvider>
+            </MarkersProvider>
+          </FiltersProvider>
+        </UserProvider>
+      </SettingsProvider>
     </StrictMode>,
     document.querySelector('#root')
   );
