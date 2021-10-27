@@ -15,7 +15,7 @@ export function postToDiscord(
     },
     body: JSON.stringify({
       username: 'BottyMcBotface',
-      content,
+      content.substring(0,2000) /* MAX Discord MSG Length is 2000 */,
     }),
   });
 }
