@@ -207,7 +207,7 @@ markersRouter.post('/', async (req, res, next) => {
         position: { $near: marker.position, $maxDistance: 2 },
       });
       if (nearByMarker) {
-        res.status(409).send('A similar marker is too near');
+        res.status(409).send('A similar marker is too close');
         return;
       }
     }

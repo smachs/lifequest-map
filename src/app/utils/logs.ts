@@ -12,6 +12,13 @@ function log(logger: Logger) {
 }
 
 export const writeLog = log(console.log);
-export const writeError = log(console.error);
+const errorLogger = log(console.error);
+export const writeError = (error: unknown) => {
+  if (error instanceof Error) {
+    errorLogger(error.message, error.stack);
+  } else {
+    errorLogger(error);
+  }
+};
 export const writeInfo = log(console.info);
 export const writeWarn = log(console.warn);

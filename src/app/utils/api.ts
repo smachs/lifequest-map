@@ -4,13 +4,22 @@ if (!VITE_API_ENDPOINT) {
   throw new Error('VITE_API_ENDPOINT is not set');
 }
 
-export function fetchJSON<T>(
+export async function fetchJSON<T>(
   url: RequestInfo,
   init?: RequestInit | undefined
 ): Promise<T> {
-  return fetch(`${VITE_API_ENDPOINT}${url}`, init).then((response) =>
-    response.json()
-  );
+  const response = await fetch(`${VITE_API_ENDPOINT}${url}`, init);
+  if (!response.ok) {
+    if (response.headers.get('Content-Type')?.includes('application/json')) {
+      const body = await response.json();
+      throw new Error(body);
+    } else {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
+    }
+  }
+  const body = await response.json();
+  return body;
 }
 
 export function getScreenshotUrl(filename: string): string {
