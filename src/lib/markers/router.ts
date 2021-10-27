@@ -91,6 +91,11 @@ markersRouter.delete('/:markerId', async (req, res, next) => {
     await getCommentsCollection().deleteMany({
       markerId: new ObjectId(markerId),
     });
+    // disable screenshot removal since any user exploit it to remove any file from the server
+    // TODO.: 
+    // 1. add uploaded screenshot name to new db collection
+    // 2. check if screenshot in the db collection with its _id then remove it
+    /*
     if (marker.screenshotFilename) {
       await fs
         .rm(`${SCREENSHOTS_PATH}/${marker.screenshotFilename}`)
@@ -100,6 +105,7 @@ markersRouter.delete('/:markerId', async (req, res, next) => {
           )
         );
     }
+    */ 
     res.status(200).json({});
     postToDiscord(
       `📌💀 Marker from ${marker.username} deleted by ${user.username}`
