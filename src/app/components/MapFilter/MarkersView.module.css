@@ -1,5 +1,7 @@
 .container {
-  overflow: auto;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  overflow: hidden;
 }
 
 .list {
