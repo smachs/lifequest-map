@@ -124,14 +124,15 @@ markersRouter.patch('/:markerId', async (req, res, next) => {
       res.status(400).send('Invalid payload');
       return;
     }
-
+    // TODO. Check if new screenshot name in db screenshots collection then change it to prevent user from adding any name then exploit it again to remove any file from the server
     const result = await getMarkersCollection().updateOne(
       {
         _id: new ObjectId(markerId),
       },
       {
+        // Also fix a bug here where user can't edit screenshotfile name (its return 200ok but not edited)
         $set: {
-          screenshotFilename,
+          screenshotFilename: screenshotFilename,
         },
       }
     );
@@ -163,6 +164,11 @@ markersRouter.post('/', async (req, res, next) => {
       res.status(400).send('Invalid payload');
       return;
     }
+    const existingUser = await getUsersCollection().findOne({ username });
+    if (!existingUser) {
+      res.status(400).send('User not exist');
+      return;
+    }
     const marker: MarkerDTO = {
       type,
       username,
@@ -179,13 +185,13 @@ markersRouter.post('/', async (req, res, next) => {
       ) as [Double, Double][];
     }
     if (name) {
-      marker.name = name;
+      marker.name = name.substring(0,50); // Limit name to 50 characters
     }
     if (level) {
       marker.level = level;
     }
     if (description) {
-      marker.description = description;
+      marker.description = description.substring(0, 200); // Limit description to 200 characters
     }
     if (screenshotFilename) {
       marker.screenshotFilename = screenshotFilename;
@@ -265,6 +271,11 @@ markersRouter.post('/:markerId/comments', async (req, res, next) => {
     });
     if (!marker) {
       res.status(404).send("Marker doesn't exists");
+      return;
+    }
+    const existingUser = await getUsersCollection().findOne({ username });
+    if (!existingUser) {
+      res.status(400).send('User not exist');
       return;
     }
     const inserted = await getCommentsCollection().insertOne(comment);
