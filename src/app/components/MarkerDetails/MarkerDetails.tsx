@@ -1,6 +1,6 @@
 import type { MarkerBasic } from '../../contexts/MarkersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
-import { fetchJSON, getScreenshotUrl } from '../../utils/api';
+import { getScreenshotUrl } from '../../utils/api';
 import { toTimeAgo } from '../../utils/dates';
 import AddComment from '../AddComment/AddComment';
 import Comment from '../Comment/Comment';
@@ -15,6 +15,8 @@ import UploadScreenshot from '../AddResources/UploadScreenshot';
 import { useUser } from '../../contexts/UserContext';
 import Credit from './Credit';
 import { writeError } from '../../utils/logs';
+import { deleteMarker, patchMarker } from './api';
+import { notify } from '../../utils/notifications';
 
 type MarkerDetailsProps = {
   marker: MarkerBasic;
@@ -42,15 +44,7 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
       if (!screenshotFilename || !fullMarker) {
         return;
       }
-      await fetchJSON(`/api/markers/${marker._id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          screenshotFilename,
-        }),
-      });
+      await notify(patchMarker(marker._id, screenshotFilename));
       fullMarker.screenshotFilename = screenshotFilename;
       refreshMarkers();
     } catch (error) {
@@ -60,14 +54,8 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
 
   async function handleDelete(userId: string) {
     try {
-      await fetchJSON(`/api/markers/${marker._id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId,
-        }),
+      await notify(deleteMarker(marker._id, userId), {
+        success: 'Marker deleted 👌',
       });
       refreshMarkers();
       closeLatestModal();

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { createContext, useEffect, useContext } from 'react';
 import { fetchJSON } from '../utils/api';
 import { writeError } from '../utils/logs';
+import { notify } from '../utils/notifications';
 import { usePersistentState } from '../utils/storage';
 
 export type User = {
@@ -38,15 +39,17 @@ export function UserProvider({ children }: UserProviderProps): JSX.Element {
       if (!username) {
         return;
       }
-      const result = await fetchJSON('/api/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username,
-        }),
-      });
+      const result = await notify(
+        fetchJSON('/api/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username,
+          }),
+        })
+      );
       setUser(result as User);
     } catch (error) {
       writeError(error);

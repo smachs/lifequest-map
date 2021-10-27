@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { createContext, useCallback, useContext, useEffect } from 'react';
 import type { MarkerRouteItem } from '../components/MarkerRoutes/MarkerRoutes';
 import { fetchJSON } from '../utils/api';
+import { notify } from '../utils/notifications';
 import { usePersistentState } from '../utils/storage';
 import { useFilters } from './FiltersContext';
 import { useUser } from './UserContext';
@@ -58,9 +59,11 @@ export function MarkersProvider({
 
   const refresh = useCallback(() => {
     if (!readonly) {
-      fetchJSON<MarkerBasic[]>('/api/markers').then((newMarkers) => {
-        setMarkers(newMarkers);
-      });
+      notify(
+        fetchJSON<MarkerBasic[]>('/api/markers').then((newMarkers) => {
+          setMarkers(newMarkers);
+        })
+      );
     }
   }, [readonly, markers]);
 

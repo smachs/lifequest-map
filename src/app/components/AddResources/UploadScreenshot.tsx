@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useUser } from '../../contexts/UserContext';
-import { fetchJSON } from '../../utils/api';
 import { writeError } from '../../utils/logs';
 import { takeScreenshot } from '../../utils/media';
+import { notify } from '../../utils/notifications';
 import { classNames } from '../../utils/styles';
+import { uploadScreenshot } from './api';
 import styles from './UploadScreenshot.module.css';
 
 type UploadScreenshotProps = {
@@ -51,20 +52,11 @@ function UploadScreenshot({ onUpload }: UploadScreenshotProps): JSX.Element {
       onUpload();
     } else {
       setIsUploading(true);
-      const formData = new FormData();
       canvas.toBlob(async (blob) => {
         if (!blob) {
           return;
         }
-        formData.append('screenshot', blob);
-
-        const result = await fetchJSON<{ filename: string }>(
-          '/api/screenshots',
-          {
-            method: 'POST',
-            body: formData,
-          }
-        );
+        const result = await notify(uploadScreenshot(blob));
         onUpload(result.filename);
         setIsUploading(false);
       });

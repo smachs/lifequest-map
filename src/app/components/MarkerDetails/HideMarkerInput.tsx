@@ -1,6 +1,7 @@
 import type { ChangeEvent } from 'react';
 import { useRefreshUser, useUser } from '../../contexts/UserContext';
-import { fetchJSON } from '../../utils/api';
+import { notify } from '../../utils/notifications';
+import { patchUser } from './api';
 
 type HideMarkerInputProps = {
   markerId: string;
@@ -22,15 +23,7 @@ function HideMarkerInput({ markerId }: HideMarkerInputProps): JSX.Element {
     } else {
       return;
     }
-    await fetchJSON(`/api/users/${user.username}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        hiddenMarkerIds,
-      }),
-    });
+    await notify(patchUser(user.username, hiddenMarkerIds));
     refreshUser();
   }
   return (

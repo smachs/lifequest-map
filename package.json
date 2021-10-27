@@ -58,6 +58,7 @@
     "multer": "^1.4.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-toastify": "^8.0.3",
     "react-twitter-widgets": "^1.10.0",
     "sharp": "^0.29.2",
     "tilelayer-canvas": "^1.1.3"

@@ -4,11 +4,12 @@ import { useMarkers } from '../../contexts/MarkersContext';
 import { useModal } from '../../contexts/ModalContext';
 import { usePosition } from '../../contexts/PositionContext';
 import { useUser } from '../../contexts/UserContext';
-import { fetchJSON } from '../../utils/api';
 import { writeError } from '../../utils/logs';
+import { notify } from '../../utils/notifications';
 import { calcDistance } from '../../utils/positions';
 import { usePersistentState } from '../../utils/storage';
 import ActionButton from '../ActionControl/ActionButton';
+import { deleteMarkerRoute, getMarkerRoutes } from './api';
 import MarkerRoute from './MarkerRoute';
 import styles from './MarkerRoutes.module.css';
 import SelectRoute from './SelectRoute';
@@ -89,9 +90,7 @@ function MarkerRoutes(): JSX.Element {
 
   const reload = async () => {
     try {
-      const newMarkerRoutes = await fetchJSON<MarkerRouteItem[]>(
-        `/api/marker-routes?userId=${user ? user._id : ''}`
-      );
+      const newMarkerRoutes = await notify(getMarkerRoutes(user?._id));
       setAllMarkerRoutes(newMarkerRoutes);
     } catch (error) {
       writeError(error);
@@ -103,15 +102,12 @@ function MarkerRoutes(): JSX.Element {
   }, []);
 
   async function handleRemove(markerRouteId: string): Promise<void> {
+    if (!user) {
+      return;
+    }
     try {
-      await fetchJSON(`/api/marker-routes/${markerRouteId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: user?._id,
-        }),
+      await notify(deleteMarkerRoute(markerRouteId, user._id), {
+        success: 'Route deleted 👌',
       });
       reload();
     } catch (error) {

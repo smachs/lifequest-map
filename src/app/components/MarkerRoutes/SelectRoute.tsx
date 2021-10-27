@@ -8,10 +8,11 @@ import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 import type { Polyline } from 'leaflet';
 import leaflet from 'leaflet';
 import MarkerTypes from './MarkerTypes';
-import { fetchJSON } from '../../utils/api';
 import { useModal } from '../../contexts/ModalContext';
 import { useUser } from '../../contexts/UserContext';
 import type { MarkerRouteItem } from './MarkerRoutes';
+import { notify } from '../../utils/notifications';
+import { postMarkerRoute } from './api';
 
 function createUndoControl(onClick: () => void): leaflet.Control {
   const revertControl = new leaflet.Control({ position: 'topleft' });
@@ -146,21 +147,20 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
   }, [leafletMap]);
 
   function handleSave() {
-    fetchJSON<MarkerRouteItem>('/api/marker-routes', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    if (!user) {
+      return;
+    }
+    notify(
+      postMarkerRoute({
         name,
-        username: user?.username,
+        username: user.username,
         isPublic,
         positions,
         markersByType,
-      }),
-    })
-      .then(onAdd)
-      .then(closeLatestModal);
+      })
+        .then(onAdd)
+        .then(closeLatestModal)
+    );
   }
 
   return (

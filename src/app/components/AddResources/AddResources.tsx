@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { useModal } from '../../contexts/ModalContext';
 import { useUser } from '../../contexts/UserContext';
-import { fetchJSON } from '../../utils/api';
 import { classNames } from '../../utils/styles';
 import type { FilterItem } from '../MapFilter/mapFilters';
 import styles from './AddResources.module.css';
@@ -11,12 +10,16 @@ import SelectPosition from './SelectPosition';
 import StepIcon from './StepIcon';
 import UploadScreenshot from './UploadScreenshot';
 import DetailsInput from './DetailsInput';
+import { writeError } from '../../utils/logs';
+import type { MarkerDTO } from './api';
+import { postMarker } from './api';
+import { notify } from '../../utils/notifications';
 
 export type Details = {
-  description: string | null;
-  name: string | null;
-  level: number | null;
-  levelRange: [number, number] | null;
+  description?: string;
+  name?: string;
+  level?: number;
+  levelRange?: [number, number];
 };
 function AddResources(): JSX.Element {
   const user = useUser();
@@ -34,23 +37,25 @@ function AddResources(): JSX.Element {
     if (!filter || (!position && !positions) || !user) {
       return;
     }
-    const marker = {
-      type: filter.type,
-      position,
-      positions,
-      username: user.username,
-      screenshotFilename,
-      ...details,
-    };
-    await fetchJSON('/api/markers', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(marker),
-    });
-    refresh();
-    closeLatestModal();
+    try {
+      const marker: MarkerDTO = {
+        type: filter.type,
+        position: position || undefined,
+        positions: positions || undefined,
+        username: user.username,
+        screenshotFilename,
+        ...details,
+      };
+
+      await notify(postMarker(marker), {
+        success: 'Marker added 👌',
+      });
+
+      refresh();
+      closeLatestModal();
+    } catch (error) {
+      writeError(error);
+    }
   }
 
   return (

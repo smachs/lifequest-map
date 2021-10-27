@@ -2,9 +2,10 @@ import type { FormEvent, KeyboardEvent } from 'react';
 import { useState } from 'react';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { useUser } from '../../contexts/UserContext';
-import { fetchJSON } from '../../utils/api';
 import { writeError } from '../../utils/logs';
+import { notify } from '../../utils/notifications';
 import styles from './AddComment.module.css';
+import { postComment } from './api';
 
 type AddCommentProps = {
   markerId: string;
@@ -28,16 +29,7 @@ function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
     }
 
     try {
-      await fetchJSON(`/api/markers/${markerId}/comments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: user.username,
-          message: message,
-        }),
-      });
+      await notify(postComment(markerId, { username: user.username, message }));
       onAdd();
       setMessage('');
       refreshMarkers();

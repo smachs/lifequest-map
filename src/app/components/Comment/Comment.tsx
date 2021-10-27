@@ -1,9 +1,10 @@
 import { toTimeAgo } from '../../utils/dates';
 import styles from './Comment.module.css';
-import { fetchJSON } from '../../utils/api';
 import { writeError } from '../../utils/logs';
 import DeleteButton from '../DeleteButton/DeleteButton';
 import Markdown from '../Markdown/Markdown';
+import { deleteComment } from './api';
+import { notify } from '../../utils/notifications';
 
 type CommentProps = {
   id: string;
@@ -25,16 +26,11 @@ function Comment({
   onRemove,
 }: CommentProps): JSX.Element {
   async function handleRemove(): Promise<void> {
+    if (!userId) {
+      return;
+    }
     try {
-      await fetchJSON(`/api/comments/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: userId,
-        }),
-      });
+      await notify(deleteComment(id, userId));
       onRemove();
     } catch (error) {
       writeError(error);
