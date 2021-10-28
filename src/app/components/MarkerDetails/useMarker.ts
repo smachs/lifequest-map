@@ -12,8 +12,7 @@ export type Comment = {
 
 export type MarkerFull = {
   type: string;
-  position?: [number, number, number];
-  positions?: [number, number][];
+  position: [number, number, number];
   name?: string;
   level?: number;
   levelRange?: [number, number];

@@ -10,8 +10,7 @@ import { useUser } from './UserContext';
 
 export type MarkerBasic = {
   type: string;
-  position?: [number, number, number];
-  positions?: [number, number][];
+  position: [number, number, number];
   name?: string;
   level?: number;
   levelRange?: [number, number];

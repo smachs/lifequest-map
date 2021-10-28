@@ -31,17 +31,15 @@ function AddResources(): JSX.Element {
   const [position, setPosition] = useState<[number, number, number] | null>(
     null
   );
-  const [positions, setPositions] = useState<[number, number][] | null>(null);
 
   async function handleUploadScreenshot(screenshotId?: string) {
-    if (!filter || (!position && !positions) || !user) {
+    if (!filter || !position || !user) {
       return;
     }
     try {
       const marker: MarkerDTO = {
         type: filter.type,
         position: position || undefined,
-        positions: positions || undefined,
         username: user.username,
         screenshotId,
         ...details,
@@ -122,10 +120,6 @@ function AddResources(): JSX.Element {
           filter={filter}
           onSelectPosition={(position) => {
             setPosition(position);
-            setStep(3);
-          }}
-          onSelectPositions={(positions) => {
-            setPositions(positions);
             setStep(3);
           }}
         />

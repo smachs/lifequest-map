@@ -1,9 +1,6 @@
 import { useModal } from '../../contexts/ModalContext';
 import { classNames } from '../../utils/styles';
-import { useRouter } from '../Router/Router';
-import AreasView from './AreasView';
 import styles from './MapFilter.module.css';
-import MapIcon from '../icons/MapIcon';
 import MarkerIcon from '../icons/MarkerIcon';
 import MarkersView from './MarkersView';
 import MenuOpenIcon from '../icons/MenuOpenIcon';
@@ -24,7 +21,7 @@ import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import MapSearch from '../MapSearch/MapSearch';
 
-type View = 'markers' | 'settings' | 'areas' | 'markerRoutes';
+type View = 'markers' | 'settings' | 'markerRoutes';
 
 function MapFilter(): JSX.Element {
   const { addModal } = useModal();
@@ -32,7 +29,7 @@ function MapFilter(): JSX.Element {
     'aeternum-map-client.sidebar-state',
     true
   );
-  const { url, search } = useRouter();
+  const [view, setView] = usePersistentState<View>('view', 'markers');
   const { following, toggleFollowing } = usePosition();
   const [showMinimap, setShowMinimap] = useMinimap();
 
@@ -44,11 +41,8 @@ function MapFilter(): JSX.Element {
 
   function handleViewClick(view: View) {
     setIsOpen(true);
-    search({
-      filterCategory: view,
-    });
+    setView(view);
   }
-  const view = url.searchParams.get('filterCategory') || 'markers';
 
   return (
     <aside className={classNames(styles.container, isOpen && styles.open)}>
@@ -56,7 +50,6 @@ function MapFilter(): JSX.Element {
         <User />
         {view === 'markers' && <MarkersView />}
         {view === 'settings' && <Settings />}
-        {view === 'areas' && <AreasView />}
         {view === 'markerRoutes' && <MarkerRoutes />}
         <ErrorBoundary>
           <Ads active={isOpen} />
@@ -87,18 +80,6 @@ function MapFilter(): JSX.Element {
           onClick={() => handleViewClick('markerRoutes')}
         >
           <RoutesIcon />
-        </button>
-        <button
-          data-tooltip="Areas (Coming Soon)"
-          data-tooltip-position="right"
-          disabled
-          className={classNames(
-            styles.nav__button,
-            view === 'areas' && styles.nav__active
-          )}
-          onClick={() => handleViewClick('areas')}
-        >
-          <MapIcon />
         </button>
         <button
           data-tooltip="Settings"

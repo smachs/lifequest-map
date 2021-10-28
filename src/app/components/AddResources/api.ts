@@ -2,8 +2,7 @@ import { fetchJSON } from '../../utils/api';
 
 export type MarkerDTO = {
   type: string;
-  position?: [number, number, number];
-  positions?: [number, number][];
+  position: [number, number, number];
   name?: string;
   level?: number;
   description?: string;
