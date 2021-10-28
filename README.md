@@ -34,12 +34,13 @@ cp template.env .env
 
 The following list shows the variables you need to set:
 
-| KEY               | VALUE                                                           |
-| ----------------- | --------------------------------------------------------------- |
-| PORT              | Port for the server environment                                 |
-| MONGODB_URI       | URI of your MongoDB server                                      |
-| VITE_API_ENDPOINT | URL of your server environment                                  |
-| SCREENSHOTS_PATH  | Server side path to a folder in which screenshots will be saved |
+| KEY               | VALUE                                                                     |
+| ----------------- | ------------------------------------------------------------------------- |
+| PORT              | Port for the server environment                                           |
+| MONGODB_URI       | URI of your MongoDB server                                                |
+| VITE_API_ENDPOINT | URL of your server environment                                            |
+| SCREENSHOTS_PATH  | Server side path to a folder in which screenshots will be saved           |
+| STEAM_API_KEY     | [Steam API](https://steamcommunity.com/dev/apikey) key required for oAuth |
 
 ### Install dependencies
 

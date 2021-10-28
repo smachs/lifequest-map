@@ -16,7 +16,7 @@ export function postToDiscord(
     },
     body: JSON.stringify({
       username: 'BottyMcBotface',
-      constent: content.substring(0, MAX_DISCORD_MESSAGE_LENGTH),
+      content: content.substring(0, MAX_DISCORD_MESSAGE_LENGTH),
     }),
   });
 }
