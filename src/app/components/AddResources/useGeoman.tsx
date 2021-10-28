@@ -1,6 +1,6 @@
 import 'leaflet';
 import leaflet from 'leaflet';
-import type { Map, Polyline } from 'leaflet';
+import type { Map } from 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 import { useEffect, useState } from 'react';
@@ -18,7 +18,6 @@ type UseGeomanProps = {
   x: number;
   y: number;
   onMove: (x: number, y: number) => void;
-  onDraw: (latLngs: [number, number][]) => void;
 };
 function useGeoman({
   details,
@@ -28,7 +27,6 @@ function useGeoman({
   x,
   y,
   onMove,
-  onDraw,
 }: UseGeomanProps): void {
   const [dragging, setDragging] = useState(false);
 
@@ -47,38 +45,10 @@ function useGeoman({
     if (!leafletMap || !leafletMap.getPane('markerPane')) {
       return;
     }
-    if (!filter.isArea) {
-      markerRef.current.addTo(leafletMap);
+    markerRef.current.addTo(leafletMap);
 
-      leafletMap.pm.enableGlobalDragMode();
-    } else {
-      leafletMap.pm.addControls({
-        position: 'topleft',
-        drawCircle: false,
-        drawMarker: false,
-        drawPolyline: false,
-        drawCircleMarker: false,
-        drawRectangle: false,
-        cutPolygon: false,
-        dragMode: false,
-        rotateMode: false,
-        editMode: false,
-      });
-      leafletMap.pm.enableDraw('Polygon');
+    leafletMap.pm.enableGlobalDragMode();
 
-      leafletMap.on('pm:create', (event) => {
-        if (event.shape === 'Polygon') {
-          const latLngs = (
-            event.layer as Polyline
-          ).getLatLngs() as leaflet.LatLng[][];
-          const positions = latLngs[0].map((latLng) => [
-            +latLng.lng.toFixed(2),
-            +latLng.lat.toFixed(2),
-          ]) as [number, number][];
-          onDraw(positions);
-        }
-      });
-    }
     markerRef.current.on('pm:dragstart', () => {
       setDragging(true);
     });

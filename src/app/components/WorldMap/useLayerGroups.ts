@@ -3,7 +3,6 @@ import leaflet from 'leaflet';
 import { mapFilters, mapFiltersCategories } from '../MapFilter/mapFilters';
 import type { MarkerBasic } from '../../contexts/MarkersContext';
 import { getTooltipContent } from './tooltips';
-import { classNames } from '../../utils/styles';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { useFilters } from '../../contexts/FiltersContext';
 import CanvasMarker from './CanvasMarker';
@@ -108,82 +107,40 @@ function useLayerGroups({
           continue;
         }
 
-        if (marker.position) {
-          const filterCategory = mapFiltersCategories.find(
-            (filterCategory) => filterCategory.value === mapFilter.category
-          );
-          if (!filterCategory) {
-            continue;
-          }
-          const mapMarker = new CanvasMarker(
-            [marker.position[1], marker.position[0]],
-            {
-              radius: 16,
-              image: {
-                markerId: marker._id,
-                type: marker.type,
-                src: mapFilter.iconUrl,
-                showBackground: markerShowBackground,
-                borderColor: filterCategory.borderColor,
-                size: [markerSize, markerSize],
-                comments: marker.comments,
-              },
-              pmIgnore,
-            }
-          ).bindTooltip(getTooltipContent(marker, mapFilter), {
-            direction: 'top',
-          });
-          if (onMarkerClick) {
-            mapMarker.on('click', () => {
-              onMarkerClick(marker);
-            });
-          }
-          allLayers[marker._id] = {
-            layer: mapMarker,
-            hasComments: Boolean(marker.comments),
-          };
-          allLayers[marker._id].layer.addTo(leafletMap);
-        } else if (marker.positions) {
-          const layerGroup = new leaflet.LayerGroup();
-
-          const polygon = leaflet.polygon(
-            marker.positions.map((position) => [position[1], position[0]])
-          );
-
-          layerGroup.addLayer(polygon);
-          allLayers[marker._id] = {
-            layer: layerGroup,
-            hasComments: Boolean(marker.comments),
-          };
-          allLayers[marker._id].layer.addTo(leafletMap);
-          const text = leaflet.divIcon({
-            className: classNames(
-              'leaflet-polygon-text',
-              `leaflet-polygon-text-${leafletMap.getZoom()}`
-            ),
-            html: `${marker.name}<br/>(${marker.levelRange?.join('-')})`,
-          });
-          const textMarker = leaflet.marker(polygon.getCenter(), {
-            icon: text,
-          });
-
-          leafletMap.on('zoomend', () => {
-            const element = textMarker.getElement();
-            if (element) {
-              element.className = classNames(
-                'leaflet-polygon-text',
-                `leaflet-polygon-text-${leafletMap.getZoom()}`
-              );
-            }
-          });
-          layerGroup.addLayer(textMarker);
-
-          if (onMarkerClick) {
-            polygon.on('click', () => {
-              onMarkerClick(marker);
-            });
-          }
+        const filterCategory = mapFiltersCategories.find(
+          (filterCategory) => filterCategory.value === mapFilter.category
+        );
+        if (!filterCategory) {
+          continue;
         }
+        const mapMarker = new CanvasMarker(
+          [marker.position[1], marker.position[0]],
+          {
+            radius: 16,
+            image: {
+              markerId: marker._id,
+              type: marker.type,
+              src: mapFilter.iconUrl,
+              showBackground: markerShowBackground,
+              borderColor: filterCategory.borderColor,
+              size: [markerSize, markerSize],
+              comments: marker.comments,
+            },
+            pmIgnore,
+          }
+        ).bindTooltip(getTooltipContent(marker, mapFilter), {
+          direction: 'top',
+        });
+        if (onMarkerClick) {
+          mapMarker.on('click', () => {
+            onMarkerClick(marker);
+          });
+        }
+        allLayers[marker._id] = {
+          layer: mapMarker,
+          hasComments: Boolean(marker.comments),
+        };
+        allLayers[marker._id].layer.addTo(leafletMap);
       } catch (error) {
         writeError(error);
       }
