@@ -11,6 +11,7 @@ import { getCommentsCollection } from '../comments/collection';
 import type { CommentDTO } from '../comments/types';
 import { SCREENSHOTS_PATH } from '../env';
 import { getScreenshotsCollection } from '../screenshots/collection';
+import { isModerator } from '../security';
 
 const markersRouter = Router();
 
@@ -59,6 +60,11 @@ markersRouter.get('/:markerId', async (req, res, next) => {
 
 markersRouter.delete('/:markerId', async (req, res, next) => {
   try {
+    const { secret } = req.query;
+    if (!isModerator(secret)) {
+      res.status(403).send('💀 no access');
+      return;
+    }
     const { markerId } = req.params;
     const { userId } = req.body;
 

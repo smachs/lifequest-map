@@ -5,6 +5,7 @@ import { Double, ObjectId } from 'mongodb';
 import { getMarkerRoutesCollection } from './collection';
 import { postToDiscord } from '../discord';
 import { getUsersCollection } from '../users/collection';
+import { isModerator } from '../security';
 
 const markerRoutesRouter = Router();
 
@@ -68,7 +69,7 @@ markerRoutesRouter.get('/', async (req, res, next) => {
   try {
     const { userId } = req.query;
     let query: Filter<MarkerRouteDTO> | undefined = undefined;
-    if (typeof userId === 'string' && userId) {
+    if (typeof userId === 'string' && ObjectId.isValid(userId)) {
       const user = await getUsersCollection().findOne({
         _id: new ObjectId(userId),
       });
@@ -99,6 +100,8 @@ markerRoutesRouter.get('/', async (req, res, next) => {
 
 markerRoutesRouter.delete('/:markerRouteId', async (req, res, next) => {
   try {
+    const { secret } = req.query;
+
     const { markerRouteId } = req.params;
     const { userId } = req.body;
 
@@ -125,6 +128,10 @@ markerRoutesRouter.delete('/:markerRouteId', async (req, res, next) => {
     const markerRoute = await markerRoutesCollection.findOne(query);
     if (!markerRoute) {
       res.status(404).end(`No marker route found for id ${markerRouteId}`);
+      return;
+    }
+    if (markerRoute.isPublic && !isModerator(secret)) {
+      res.status(403).send('💀 no access');
       return;
     }
 
