@@ -175,7 +175,7 @@ markersRouter.post('/', async (req, res, next) => {
     }
     const existingUser = await getUsersCollection().findOne({ username });
     if (!existingUser) {
-      res.status(400).send('User not exist');
+      res.status(400).send('User does not exist');
       return;
     }
     const marker: MarkerDTO = {
@@ -284,7 +284,7 @@ markersRouter.post('/:markerId/comments', async (req, res, next) => {
     }
     const existingUser = await getUsersCollection().findOne({ username });
     if (!existingUser) {
-      res.status(400).send('User not exist');
+      res.status(400).send('User does not exist');
       return;
     }
     const inserted = await getCommentsCollection().insertOne(comment);
