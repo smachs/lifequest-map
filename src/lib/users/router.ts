@@ -2,12 +2,17 @@ import { Router } from 'express';
 import { postToDiscord } from '../discord';
 import { getUsersCollection } from './collection';
 import { ObjectId } from 'mongodb';
+import { getMarkerRoutesCollection } from '../markerRoutes/collection';
+import { getMarkersCollection } from '../markers/collection';
+import { getCommentsCollection } from '../comments/collection';
 
 const usersRouter = Router();
 
 const MAX_USERNAME_LENGTH = 50;
 usersRouter.post('/', async (req, res, next) => {
   try {
+    const account = req.account;
+
     const { username } = req.body;
 
     if (typeof username !== 'string' || username.length > MAX_USERNAME_LENGTH) {
@@ -17,6 +22,51 @@ usersRouter.post('/', async (req, res, next) => {
 
     const existingUser = await getUsersCollection().findOne({ username });
     if (existingUser) {
+      if (!existingUser.accountId && account) {
+        // Migrate to new account
+        await getUsersCollection().updateOne(
+          { username },
+          { $set: { accountId: account.steamId }, $unset: { isModerator: 1 } }
+        );
+
+        await getMarkerRoutesCollection().updateMany(
+          {
+            userId: { $exists: false },
+            username: existingUser.username,
+          },
+          {
+            $set: {
+              userId: account.steamId,
+              username: account.name,
+            },
+          }
+        );
+        await getMarkersCollection().updateMany(
+          {
+            userId: { $exists: false },
+            username: existingUser.username,
+          },
+          {
+            $set: {
+              userId: account.steamId,
+              username: account.name,
+            },
+          }
+        );
+        await getCommentsCollection().updateMany(
+          {
+            userId: { $exists: false },
+            username: existingUser.username,
+          },
+          {
+            $set: {
+              userId: account.steamId,
+              username: account.name,
+            },
+          }
+        );
+      }
+
       res.status(200).json(existingUser);
       return;
     }
@@ -25,15 +75,17 @@ usersRouter.post('/', async (req, res, next) => {
       {
         $setOnInsert: {
           username,
+          accountId: account?.steamId,
           hiddenMarkerIds: [],
           createdAt: new Date(),
         },
       },
       { upsert: true, returnDocument: 'after' }
     );
-    if (result.value) {
-      res.status(200).json(result.value);
-      postToDiscord(`🤘 ${result.value.username} is using Aeternum Map`, false);
+    const user = result.value;
+    if (user) {
+      res.status(200).json(user);
+      postToDiscord(`🤘 ${user.username} is using Aeternum Map`, false);
     } else {
       throw new Error('Could not create user');
     }

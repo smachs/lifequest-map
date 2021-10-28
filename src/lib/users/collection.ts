@@ -26,14 +26,14 @@ function ensureUsersSchema(): Promise<Document> {
           username: {
             bsonType: 'string',
           },
+          accountId: {
+            bsonType: 'string',
+          },
           hiddenMarkerIds: {
             bsonType: 'array',
             items: {
               bsonType: 'objectId',
             },
-          },
-          isModerator: {
-            bsonType: 'bool',
           },
           createdAt: {
             bsonType: 'date',
