@@ -13,6 +13,7 @@ import markerRoutesRouter from './lib/markerRoutes/router';
 import usersRouter from './lib/users/router';
 import screenshotsRouter from './lib/screenshots/router';
 import compression from 'compression';
+import { initScreenshotsCollection } from './lib/screenshots/collection';
 
 if (typeof PORT !== 'string') {
   throw new Error('PORT is not set');
@@ -63,6 +64,7 @@ connectToMongoDb(MONGODB_URI).then(async () => {
     initMarkersCollection(),
     initMarkerRoutesCollection(),
     initUsersCollection(),
+    initScreenshotsCollection(),
   ]);
 
   app.listen(PORT, () => {
