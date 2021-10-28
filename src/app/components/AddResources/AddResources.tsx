@@ -33,7 +33,7 @@ function AddResources(): JSX.Element {
   );
   const [positions, setPositions] = useState<[number, number][] | null>(null);
 
-  async function handleUploadScreenshot(screenshotFilename?: string) {
+  async function handleUploadScreenshot(screenshotId?: string) {
     if (!filter || (!position && !positions) || !user) {
       return;
     }
@@ -43,7 +43,7 @@ function AddResources(): JSX.Element {
         position: position || undefined,
         positions: positions || undefined,
         username: user.username,
-        screenshotFilename,
+        screenshotId,
         ...details,
       };
 

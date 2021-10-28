@@ -9,7 +9,7 @@ export type MarkerDTO = {
   description?: string;
   levelRange?: [number, number];
   username: string;
-  screenshotFilename?: string;
+  screenshotId?: string;
 };
 
 export function postMarker(marker: MarkerDTO) {
@@ -26,7 +26,7 @@ export function uploadScreenshot(blob: Blob) {
   const formData = new FormData();
   formData.append('screenshot', blob);
 
-  return fetchJSON<{ filename: string }>('/api/screenshots', {
+  return fetchJSON<{ screenshotId: string }>('/api/screenshots', {
     method: 'POST',
     body: formData,
   });

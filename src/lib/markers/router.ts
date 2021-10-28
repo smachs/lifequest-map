@@ -10,6 +10,7 @@ import { postToDiscord } from '../discord';
 import { getCommentsCollection } from '../comments/collection';
 import type { CommentDTO } from '../comments/types';
 import { SCREENSHOTS_PATH } from '../env';
+import { getScreenshotsCollection } from '../screenshots/collection';
 
 const markersRouter = Router();
 
@@ -102,6 +103,9 @@ markersRouter.delete('/:markerId', async (req, res, next) => {
             `Could not remove screenshot ${marker.screenshotFilename}`
           )
         );
+      await getScreenshotsCollection().deleteOne({
+        filename: marker.screenshotFilename,
+      });
     }
 
     res.status(200).json({});
@@ -116,11 +120,26 @@ markersRouter.delete('/:markerId', async (req, res, next) => {
 markersRouter.patch('/:markerId', async (req, res, next) => {
   try {
     const { markerId } = req.params;
-    const { screenshotFilename, userId } = req.body;
+    const { screenshotFilename, screenshotId, userId } = req.body; // screenshotFilename is deprecated and will be removed soon
 
-    if (typeof screenshotFilename !== 'string' || !ObjectId.isValid(markerId)) {
+    if (
+      (typeof screenshotFilename !== 'string' &&
+        !ObjectId.isValid(screenshotId)) ||
+      !ObjectId.isValid(markerId)
+    ) {
       res.status(400).send('Invalid payload');
       return;
+    }
+    let newScreenshotFilename = screenshotFilename;
+    if (screenshotId) {
+      const screenshot = await getScreenshotsCollection().findOne({
+        _id: new ObjectId(screenshotId),
+      });
+      if (!screenshot) {
+        res.status(404).send('Screenshot not found');
+        return;
+      }
+      newScreenshotFilename = screenshot.filename;
     }
 
     const user = await getUsersCollection().findOne({
@@ -142,14 +161,14 @@ markersRouter.patch('/:markerId', async (req, res, next) => {
 
     const result = await getMarkersCollection().updateOne(query, {
       $set: {
-        screenshotFilename,
+        screenshotFilename: newScreenshotFilename,
       },
     });
     if (!result.modifiedCount) {
       res.status(404).end(`No marker found for id ${markerId}`);
       return;
     }
-    res.status(200).json(screenshotFilename);
+    res.status(200).json(newScreenshotFilename);
   } catch (error) {
     next(error);
   }
@@ -167,6 +186,7 @@ markersRouter.post('/', async (req, res, next) => {
       levelRange,
       description,
       screenshotFilename,
+      screenshotId,
     } = req.body;
 
     if (typeof type !== 'string' || typeof username !== 'string') {
@@ -203,7 +223,17 @@ markersRouter.post('/', async (req, res, next) => {
       marker.description = description.substring(0, MAX_DESCRIPTION_LENGTH);
     }
     if (screenshotFilename) {
+      // Deprecated -> will be removed soon
       marker.screenshotFilename = screenshotFilename;
+    } else if (screenshotId) {
+      const screenshot = await getScreenshotsCollection().findOne({
+        _id: new ObjectId(screenshotId),
+      });
+      if (!screenshot) {
+        res.status(404).send('Screenshot not found');
+        return;
+      }
+      marker.screenshotFilename = screenshot.filename;
     }
     if (levelRange) {
       marker.levelRange = levelRange;
