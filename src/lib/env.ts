@@ -19,6 +19,9 @@ if (typeof process.env.DISCORD_PRIVATE_WEBHOOK_URL !== 'string') {
 if (typeof process.env.STEAM_API_KEY !== 'string') {
   throw new Error('STEAM_API_KEY is not set');
 }
+if (typeof process.env.SESSION_SECRET !== 'string') {
+  throw new Error('SESSION_SECRET is not set');
+}
 
 export const {
   PORT,
@@ -27,4 +30,5 @@ export const {
   DISCORD_PUBLIC_WEBHOOK_URL,
   DISCORD_PRIVATE_WEBHOOK_URL,
   STEAM_API_KEY,
+  SESSION_SECRET,
 } = process.env;

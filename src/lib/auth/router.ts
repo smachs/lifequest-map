@@ -1,9 +1,9 @@
-import type { NextFunction, Request, Response } from 'express';
 import { Router } from 'express';
 import passport from 'passport';
 import { v4 as uuid, validate as validateUUID } from 'uuid';
 import { postToDiscord } from '../discord';
 import { getAccountCollection } from './collection';
+import { ensureAuthenticated } from './middlewares';
 import type { AccountDTO } from './types';
 
 declare module 'express-session' {
@@ -26,24 +26,6 @@ declare global {
 }
 
 const authRouter = Router();
-export async function ensureAuthenticated(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  const sessionId = req.query?.sessionId;
-  if (typeof sessionId !== 'string' || !validateUUID(sessionId)) {
-    res.status(401).send('No access');
-    return;
-  }
-  const account = await getAccountCollection().findOne({ sessionId });
-  if (!account) {
-    res.status(401).send('No access');
-    return;
-  }
-  req.account = account;
-  next();
-}
 
 authRouter.get('/session', (_req, res) => {
   const sessionId = uuid();

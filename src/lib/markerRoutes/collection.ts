@@ -28,6 +28,10 @@ function ensureMarkerRoutesSchema(): Promise<Document> {
           name: {
             bsonType: 'string',
           },
+          userId: {
+            bsonType: 'string',
+          },
+          // Deprecated
           username: {
             bsonType: 'string',
           },
@@ -51,13 +55,7 @@ function ensureMarkerRoutesSchema(): Promise<Document> {
           },
         },
         additionalProperties: false,
-        required: [
-          'name',
-          'username',
-          'positions',
-          'markersByType',
-          'createdAt',
-        ],
+        required: ['name', 'positions', 'markersByType', 'createdAt'],
       },
     },
   });

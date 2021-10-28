@@ -12,7 +12,7 @@ import Markdown from 'markdown-to-jsx';
 import HideMarkerInput from './HideMarkerInput';
 import { useModal } from '../../contexts/ModalContext';
 import UploadScreenshot from '../AddResources/UploadScreenshot';
-import { useUser } from '../../contexts/UserContext';
+import { useAccount } from '../../contexts/UserContext';
 import Credit from './Credit';
 import { writeError } from '../../utils/logs';
 import { deleteMarker, patchMarker } from './api';
@@ -34,7 +34,7 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
   );
   const { addModal, closeLatestModal } = useModal();
   const { refresh: refreshMarkers } = useMarkers();
-  const user = useUser();
+  const [account] = useAccount();
 
   async function handleUploadScreenshot(screenshotId?: string) {
     try {
@@ -43,7 +43,7 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
         return;
       }
       const screenshotFilename = await notify(
-        patchMarker(marker._id, screenshotId, user?._id)
+        patchMarker(marker._id, screenshotId)
       );
       fullMarker.screenshotFilename = screenshotFilename;
       refreshMarkers();
@@ -52,9 +52,9 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
     }
   }
 
-  async function handleDelete(userId: string) {
+  async function handleDelete() {
     try {
-      await notify(deleteMarker(marker._id, userId), {
+      await notify(deleteMarker(marker._id), {
         success: 'Marker deleted 👌',
       });
       refreshMarkers();
@@ -80,12 +80,12 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
             <Comment
               key={comment._id}
               id={comment._id}
-              userId={user?._id}
               username={comment.username}
               message={comment.message}
               createdAt={comment.createdAt}
               removable={Boolean(
-                user && (user.isModerator || user.username === comment.username)
+                account &&
+                  (account.isModerator || account.steamId === comment.userId)
               )}
               onRemove={() => refresh().then(refreshMarkers)}
             />
@@ -100,14 +100,12 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
       <aside className={styles.more}>
         <h3>Actions</h3>
         <HideMarkerInput markerId={marker._id} />
-        {user && (user.isModerator || user.username === fullMarker?.username) && (
-          <button
-            className={styles.button}
-            onClick={() => handleDelete(user._id)}
-          >
-            💀 Remove invalid marker 💀
-          </button>
-        )}
+        {account &&
+          (account.isModerator || account.steamId === fullMarker?.userId) && (
+            <button className={styles.button} onClick={handleDelete}>
+              💀 Remove invalid marker 💀
+            </button>
+          )}
         <h3>Screenshot</h3>
         {fullMarker?.screenshotFilename ? (
           <a

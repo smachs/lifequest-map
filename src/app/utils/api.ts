@@ -1,3 +1,6 @@
+import type { AccountDTO } from '../contexts/UserContext';
+import { getJSONItem } from './storage';
+
 const { VITE_API_ENDPOINT } = import.meta.env;
 
 if (!VITE_API_ENDPOINT) {
@@ -8,12 +11,15 @@ export async function fetchJSON<T>(
   url: RequestInfo,
   init?: RequestInit | undefined
 ): Promise<T> {
-  const secret = localStorage.getItem('secret');
-  const hasQuery = url.toString().includes('?');
-  const response = await fetch(
-    `${VITE_API_ENDPOINT}${url}${hasQuery ? '&' : '?'}secret=${secret}`,
-    init
-  );
+  let targetUrl = `${VITE_API_ENDPOINT}${url}`;
+
+  const account = getJSONItem<AccountDTO | null>('account', null);
+  if (account) {
+    const sessionId = account?.sessionId || '';
+    const hasQuery = url.toString().includes('?');
+    targetUrl += `${hasQuery ? '&' : '?'}sessionId=${sessionId}`;
+  }
+  const response = await fetch(targetUrl, init);
 
   if (!response.ok) {
     if (response.headers.get('Content-Type')?.includes('application/json')) {

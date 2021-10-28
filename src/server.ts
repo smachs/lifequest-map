@@ -1,4 +1,10 @@
-import { PORT, MONGODB_URI, SCREENSHOTS_PATH, STEAM_API_KEY } from './lib/env';
+import {
+  PORT,
+  MONGODB_URI,
+  SCREENSHOTS_PATH,
+  STEAM_API_KEY,
+  SESSION_SECRET,
+} from './lib/env';
 import express from 'express';
 import cors from 'cors';
 import { connectToMongoDb } from './lib/db';
@@ -20,6 +26,7 @@ import passport from 'passport';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import SteamStrategy from 'passport-steam';
+import { readAccount } from './lib/auth/middlewares';
 
 if (typeof PORT !== 'string') {
   throw new Error('PORT is not set');
@@ -47,8 +54,8 @@ app.use(express.json());
 
 app.use(
   session({
-    secret: 'your secret',
-    name: 'name of session id',
+    secret: SESSION_SECRET,
+    name: 'sessionId',
     resave: true,
     saveUninitialized: true,
   })
@@ -91,9 +98,7 @@ passport.use(strategy);
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('/account', function (req, res) {
-  res.send(req.isAuthenticated());
-});
+app.use(readAccount);
 
 // Serve API requests from the router
 app.use('/api/auth', authRouter);

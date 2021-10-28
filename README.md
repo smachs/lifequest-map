@@ -41,6 +41,7 @@ The following list shows the variables you need to set:
 | VITE_API_ENDPOINT | URL of your server environment                                            |
 | SCREENSHOTS_PATH  | Server side path to a folder in which screenshots will be saved           |
 | STEAM_API_KEY     | [Steam API](https://steamcommunity.com/dev/apikey) key required for oAuth |
+| SESSION_SECRET    | Secret used to sign the session cookie                                    |
 
 ### Install dependencies
 

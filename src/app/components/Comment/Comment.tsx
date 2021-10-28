@@ -8,7 +8,6 @@ import { notify } from '../../utils/notifications';
 
 type CommentProps = {
   id: string;
-  userId?: string;
   username: string;
   createdAt: Date;
   message: string;
@@ -18,7 +17,6 @@ type CommentProps = {
 
 function Comment({
   id,
-  userId,
   username,
   createdAt,
   message,
@@ -26,11 +24,8 @@ function Comment({
   onRemove,
 }: CommentProps): JSX.Element {
   async function handleRemove(): Promise<void> {
-    if (!userId) {
-      return;
-    }
     try {
-      await notify(deleteComment(id, userId));
+      await notify(deleteComment(id));
       onRemove();
     } catch (error) {
       writeError(error);

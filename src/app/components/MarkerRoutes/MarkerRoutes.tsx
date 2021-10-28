@@ -3,7 +3,7 @@ import { useFilters } from '../../contexts/FiltersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { useModal } from '../../contexts/ModalContext';
 import { usePosition } from '../../contexts/PositionContext';
-import { useUser } from '../../contexts/UserContext';
+import { useAccount } from '../../contexts/UserContext';
 import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
 import { calcDistance } from '../../utils/positions';
@@ -19,6 +19,7 @@ import SelectRoute from './SelectRoute';
 export type MarkerRouteItem = {
   _id: string;
   name: string;
+  userId: string;
   username: string;
   isPublic: boolean;
   positions: [number, number][];
@@ -92,7 +93,7 @@ function MarkerRoutes(): JSX.Element {
   const { addModal } = useModal();
   const { markerRoutes, clearMarkerRoutes, toggleMarkerRoute } = useMarkers();
   const [allMarkerRoutes, setAllMarkerRoutes] = useState<MarkerRouteItem[]>([]);
-  const user = useUser();
+  const [account] = useAccount();
   const [sortBy, setSortBy] = usePersistentState<SortBy>(
     'markerRoutesSort',
     'match'
@@ -107,7 +108,7 @@ function MarkerRoutes(): JSX.Element {
 
   const reload = async () => {
     try {
-      const newMarkerRoutes = await notify(getMarkerRoutes(user?._id));
+      const newMarkerRoutes = await notify(getMarkerRoutes());
       setAllMarkerRoutes(newMarkerRoutes);
     } catch (error) {
       writeError(error);
@@ -119,11 +120,11 @@ function MarkerRoutes(): JSX.Element {
   }, []);
 
   async function handleRemove(markerRouteId: string): Promise<void> {
-    if (!user) {
+    if (!account) {
       return;
     }
     try {
-      await notify(deleteMarkerRoute(markerRouteId, user._id), {
+      await notify(deleteMarkerRoute(markerRouteId), {
         success: 'Route deleted 👌',
       });
       reload();
@@ -134,7 +135,7 @@ function MarkerRoutes(): JSX.Element {
 
   function isRemoveable(markerRoute: MarkerRouteItem): boolean {
     return Boolean(
-      user && (user.isModerator || user.username === markerRoute.username)
+      account && (account.isModerator || account.steamId === markerRoute.userId)
     );
   }
 
@@ -155,7 +156,7 @@ function MarkerRoutes(): JSX.Element {
     <section className={styles.container}>
       <div className={styles.actions}>
         <ActionButton
-          disabled={!user}
+          disabled={!account}
           onClick={() => {
             addModal({
               title: 'New Route',
@@ -163,7 +164,7 @@ function MarkerRoutes(): JSX.Element {
             });
           }}
         >
-          {user ? 'Add route' : 'Login to add route'}
+          {account ? 'Add route' : 'Login to add route'}
         </ActionButton>
         <ActionButton onClick={clearMarkerRoutes}>Hide all</ActionButton>
       </div>
