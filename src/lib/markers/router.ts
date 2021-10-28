@@ -11,6 +11,7 @@ import { getCommentsCollection } from '../comments/collection';
 import type { CommentDTO } from '../comments/types';
 import { SCREENSHOTS_PATH } from '../env';
 import { getScreenshotsCollection } from '../screenshots/collection';
+import { isModerator } from '../security';
 
 const markersRouter = Router();
 
@@ -59,6 +60,11 @@ markersRouter.get('/:markerId', async (req, res, next) => {
 
 markersRouter.delete('/:markerId', async (req, res, next) => {
   try {
+    const { secret } = req.query;
+    if (!isModerator(secret)) {
+      res.status(403).send('💀 no access');
+      return;
+    }
     const { markerId } = req.params;
     const { userId } = req.body;
 
@@ -176,6 +182,12 @@ markersRouter.patch('/:markerId', async (req, res, next) => {
 
 markersRouter.post('/', async (req, res, next) => {
   try {
+    const { secret } = req.query;
+    if (!isModerator(secret)) {
+      res.status(403).send('💀 no access');
+      return;
+    }
+
     const {
       type,
       position,
@@ -259,18 +271,18 @@ markersRouter.post('/', async (req, res, next) => {
       }
     }
 
+    const mapFilter = mapFilters.find((filter) => filter.type === marker.type);
+    if (!mapFilter) {
+      res.status(400).send('Invalid filter type');
+      return;
+    }
+
     const inserted = await getMarkersCollection().insertOne(marker);
     if (!inserted.acknowledged) {
       res.status(500).send('Error inserting marker');
       return;
     }
     res.status(200).json(marker);
-
-    const mapFilter = mapFilters.find((filter) => filter.type === marker.type);
-    if (!mapFilter) {
-      console.error(`Unknown type ${marker.type}`);
-      return;
-    }
 
     await postToDiscord(
       `📌 ${mapFilter.title} was added by ${marker.username} at [${position}]`
