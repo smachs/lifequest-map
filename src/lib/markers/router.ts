@@ -144,7 +144,6 @@ markersRouter.post('/', async (req, res, next) => {
     const {
       type,
       position,
-      positions,
       name,
       username,
       level,
@@ -153,7 +152,11 @@ markersRouter.post('/', async (req, res, next) => {
       screenshotFilename,
     } = req.body;
 
-    if (typeof type !== 'string' || typeof username !== 'string') {
+    if (
+      typeof type !== 'string' ||
+      typeof username !== 'string' ||
+      !Array.isArray(position)
+    ) {
       res.status(400).send('Invalid payload');
       return;
     }
@@ -161,17 +164,11 @@ markersRouter.post('/', async (req, res, next) => {
       type,
       username,
       createdAt: new Date(),
-    };
-    if (position) {
-      marker.position = position.map(
+      position: position.map(
         (part: number) => new Double(+part.toFixed(2))
-      ) as [Double, Double, Double];
-    }
-    if (Array.isArray(positions)) {
-      marker.positions = positions.map((position) =>
-        position.map((part: number) => new Double(part))
-      ) as [Double, Double][];
-    }
+      ) as [Double, Double, Double],
+    };
+
     if (name) {
       marker.name = name;
     }
@@ -195,7 +192,6 @@ markersRouter.post('/', async (req, res, next) => {
     const existingMarker = await getMarkersCollection().findOne({
       type: marker.type,
       position: marker.position,
-      positions: marker.positions,
     });
     if (existingMarker) {
       res.status(409).send('Marker already exists');

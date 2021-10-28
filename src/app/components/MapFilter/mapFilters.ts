@@ -8,7 +8,6 @@ export type FilterItem = {
   hasName?: boolean;
   hasLevel?: boolean;
   hasLevelRange?: boolean;
-  isArea?: boolean;
 };
 
 export const mapFilters: FilterItem[] = [
@@ -146,15 +145,6 @@ export const mapFilters: FilterItem[] = [
     iconUrl: '/pois/boss.webp',
     hasName: true,
     hasLevel: true,
-  },
-  {
-    category: 'enemies',
-    type: 'enemy_area',
-    title: i18n('Enemy Area'),
-    iconUrl: '/pois/enemy_area.webp',
-    hasName: true,
-    hasLevelRange: true,
-    isArea: true,
   },
   {
     category: 'skinning',

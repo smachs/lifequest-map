@@ -8,12 +8,9 @@ export function getMarkersCollection(): Collection<MarkerDTO> {
 
 function ensureMarkersIndexes(): Promise<[string[], string[], string[]]> {
   return Promise.all([
-    getMarkersCollection().createIndexes(
-      [{ key: { type: 1, position: 1, positions: 1 } }],
-      {
-        unique: true,
-      }
-    ),
+    getMarkersCollection().createIndexes([{ key: { type: 1, position: 1 } }], {
+      unique: true,
+    }),
     getMarkersCollection().createIndexes([{ key: { createdAt: -1 } }]),
     getMarkersCollection().createIndexes([
       { key: { position: '2d' }, min: 0, max: 14336 },
@@ -39,15 +36,6 @@ function ensureMarkersSchema(): Promise<Document> {
             bsonType: 'array',
             items: {
               bsonType: 'double',
-            },
-          },
-          positions: {
-            bsonType: 'array',
-            items: {
-              bsonType: 'array',
-              items: {
-                bsonType: 'double',
-              },
             },
           },
           name: {
@@ -79,7 +67,7 @@ function ensureMarkersSchema(): Promise<Document> {
           },
         },
         additionalProperties: false,
-        required: ['type', 'createdAt'],
+        required: ['type', 'position', 'createdAt'],
       },
     },
   });
