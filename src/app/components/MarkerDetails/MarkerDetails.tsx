@@ -44,7 +44,7 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
       if (!screenshotFilename || !fullMarker) {
         return;
       }
-      await notify(patchMarker(marker._id, screenshotFilename));
+      await notify(patchMarker(marker._id, screenshotFilename, user?._id));
       fullMarker.screenshotFilename = screenshotFilename;
       refreshMarkers();
     } catch (error) {

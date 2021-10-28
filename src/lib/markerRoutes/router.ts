@@ -8,13 +8,24 @@ import { getUsersCollection } from '../users/collection';
 
 const markerRoutesRouter = Router();
 
+const MAX_MARKER_ROUTE_LENGTH = 100;
 markerRoutesRouter.post('/', async (req, res, next) => {
   try {
     const { name, username, isPublic, positions, markersByType } = req.body;
 
+    if (
+      typeof name !== 'string' ||
+      name.length > MAX_MARKER_ROUTE_LENGTH ||
+      typeof username !== 'string' ||
+      typeof isPublic !== 'boolean'
+    ) {
+      res.status(400).send('Invalid payload');
+      return;
+    }
+
     const markerRoute: MarkerRouteDTO = {
-      name.substring(0, 100),
-      username.substring(0, 50),
+      name,
+      username,
       positions,
       markersByType,
       isPublic: Boolean(isPublic),
@@ -30,11 +41,13 @@ markerRoutesRouter.post('/', async (req, res, next) => {
       res.status(400).send('Invalid payload');
       return;
     }
+
     const existingUser = await getUsersCollection().findOne({ username });
     if (!existingUser) {
       res.status(400).send('User not exist');
       return;
     }
+
     const inserted = await getMarkerRoutesCollection().insertOne(markerRoute);
     if (!inserted.acknowledged) {
       res.status(500).send('Error inserting marker');

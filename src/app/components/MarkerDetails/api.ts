@@ -12,7 +12,11 @@ export function patchUser(username: string, hiddenMarkerIds: string[]) {
   });
 }
 
-export function patchMarker(markerId: string, screenshotFilename: string) {
+export function patchMarker(
+  markerId: string,
+  screenshotFilename: string,
+  userId?: string
+) {
   return fetchJSON(`/api/markers/${markerId}`, {
     method: 'PATCH',
     headers: {
@@ -20,6 +24,7 @@ export function patchMarker(markerId: string, screenshotFilename: string) {
     },
     body: JSON.stringify({
       screenshotFilename,
+      userId,
     }),
   });
 }

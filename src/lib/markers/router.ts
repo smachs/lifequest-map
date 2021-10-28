@@ -13,6 +13,8 @@ import { SCREENSHOTS_PATH } from '../env';
 
 const markersRouter = Router();
 
+const MAX_NAME_LENGTH = 50;
+const MAX_DESCRIPTION_LENGTH = 200;
 markersRouter.get('/', async (_req, res, next) => {
   try {
     const markers = await getMarkersCollection()
@@ -91,11 +93,7 @@ markersRouter.delete('/:markerId', async (req, res, next) => {
     await getCommentsCollection().deleteMany({
       markerId: new ObjectId(markerId),
     });
-    // disable screenshot removal since any user exploit it to remove any file from the server
-    // TODO.: 
-    // 1. add uploaded screenshot name to new db collection
-    // 2. check if screenshot in the db collection with its _id then remove it
-    /*
+
     if (marker.screenshotFilename) {
       await fs
         .rm(`${SCREENSHOTS_PATH}/${marker.screenshotFilename}`)
@@ -105,7 +103,7 @@ markersRouter.delete('/:markerId', async (req, res, next) => {
           )
         );
     }
-    */ 
+
     res.status(200).json({});
     postToDiscord(
       `📌💀 Marker from ${marker.username} deleted by ${user.username}`
@@ -118,23 +116,35 @@ markersRouter.delete('/:markerId', async (req, res, next) => {
 markersRouter.patch('/:markerId', async (req, res, next) => {
   try {
     const { markerId } = req.params;
-    const { screenshotFilename } = req.body;
+    const { screenshotFilename, userId } = req.body;
 
     if (typeof screenshotFilename !== 'string' || !ObjectId.isValid(markerId)) {
       res.status(400).send('Invalid payload');
       return;
     }
-    // TODO. Check if new screenshot name in db screenshots collection then change it to prevent user from adding any name then exploit it again to remove any file from the server
-    const result = await getMarkersCollection().updateOne(
-      {
-        _id: new ObjectId(markerId),
+
+    const user = await getUsersCollection().findOne({
+      _id: new ObjectId(userId),
+    });
+    if (!user) {
+      res.status(401).send('No access');
+      return;
+    }
+    const query: Filter<MarkerDTO> = {
+      _id: new ObjectId(markerId),
+    };
+    if (!user.isModerator) {
+      query.$or = [
+        { username: user.username },
+        { screenshotFilename: { $exists: false } },
+      ];
+    }
+
+    const result = await getMarkersCollection().updateOne(query, {
+      $set: {
+        screenshotFilename,
       },
-      {
-        $set: {
-          screenshotFilename,
-        },
-      }
-    );
+    });
     if (!result.modifiedCount) {
       res.status(404).end(`No marker found for id ${markerId}`);
       return;
@@ -184,13 +194,13 @@ markersRouter.post('/', async (req, res, next) => {
       ) as [Double, Double][];
     }
     if (name) {
-      marker.name = name.substring(0,50); // Limit name to 50 characters
+      marker.name = name.substring(0, MAX_NAME_LENGTH);
     }
     if (level) {
       marker.level = level;
     }
     if (description) {
-      marker.description = description.substring(0, 200); // Limit description to 200 characters
+      marker.description = description.substring(0, MAX_DESCRIPTION_LENGTH);
     }
     if (screenshotFilename) {
       marker.screenshotFilename = screenshotFilename;
