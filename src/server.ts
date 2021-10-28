@@ -4,6 +4,7 @@ import {
   SCREENSHOTS_PATH,
   STEAM_API_KEY,
   SESSION_SECRET,
+  VITE_API_ENDPOINT,
 } from './lib/env';
 import express from 'express';
 import cors from 'cors';
@@ -74,8 +75,8 @@ passport.deserializeUser((userSerialized: Express.User, done) => {
 // callback with a user object.
 const strategy = new SteamStrategy(
   {
-    returnURL: 'http://localhost:3000/api/auth/steam/return',
-    realm: 'http://localhost:3000/',
+    returnURL: `${VITE_API_ENDPOINT}/api/auth/steam/return`,
+    realm: VITE_API_ENDPOINT,
     apiKey: STEAM_API_KEY,
   },
   (
