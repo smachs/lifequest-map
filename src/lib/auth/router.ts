@@ -58,7 +58,7 @@ authRouter.get(
       req.session.sessionId = req.query.sessionId;
       next();
     } else {
-      res.sendStatus(401);
+      res.sendStatus(403);
     }
   },
   passport.authenticate('steam', { failureRedirect: '/' }),
@@ -76,13 +76,13 @@ authRouter.get(
     ) {
       next();
     } else {
-      res.sendStatus(401);
+      res.sendStatus(403);
     }
   },
   passport.authenticate('steam', { failureRedirect: '/' }),
   async (req, res) => {
     if (!req.isAuthenticated()) {
-      res.sendStatus(401);
+      res.sendStatus(403);
       return;
     }
     const result = await getAccountCollection().findOneAndUpdate(

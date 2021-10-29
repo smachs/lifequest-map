@@ -19,9 +19,11 @@ function User(): JSX.Element {
     }
     const intervalId = setInterval(async () => {
       try {
-        const account = await fetchJSON<AccountDTO>(
-          `/api/auth/account?sessionId=${verifyingSessionId}`
-        );
+        const account = await fetchJSON<AccountDTO>(`/api/auth/account`, {
+          headers: {
+            'x-session-id': verifyingSessionId,
+          },
+        });
         setAccount(account);
         setVerifyingSessionId('');
       } catch (error) {

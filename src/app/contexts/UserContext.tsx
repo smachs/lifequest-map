@@ -73,6 +73,18 @@ export function UserProvider({ children }: UserProviderProps): JSX.Element {
   };
 
   useEffect(() => {
+    function handleSessionExpired() {
+      setAccount(null);
+      console.log('Expired');
+    }
+    window.addEventListener('session-expired', handleSessionExpired);
+
+    return () => {
+      window.removeEventListener('session-expired', handleSessionExpired);
+    };
+  }, []);
+
+  useEffect(() => {
     if (username) {
       refresh();
     }
