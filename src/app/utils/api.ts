@@ -1,5 +1,5 @@
 import type { AccountDTO } from '../contexts/UserContext';
-import { getJSONItem, setJSONItem } from './storage';
+import { getJSONItem } from './storage';
 
 const { VITE_API_ENDPOINT } = import.meta.env;
 
