@@ -5,6 +5,7 @@ import { ObjectId } from 'mongodb';
 import { getMarkerRoutesCollection } from '../markerRoutes/collection';
 import { getMarkersCollection } from '../markers/collection';
 import { getCommentsCollection } from '../comments/collection';
+import type { UserDTO } from './types';
 
 const usersRouter = Router();
 
@@ -70,15 +71,19 @@ usersRouter.post('/', async (req, res, next) => {
       res.status(200).json(existingUser);
       return;
     }
+    const setOnInsert: Partial<UserDTO> = {
+      username,
+      hiddenMarkerIds: [],
+      createdAt: new Date(),
+    };
+    if (account?.steamId) {
+      setOnInsert.accountId = account.steamId;
+    }
+
     const result = await getUsersCollection().findOneAndUpdate(
       { username },
       {
-        $setOnInsert: {
-          username,
-          accountId: account?.steamId,
-          hiddenMarkerIds: [],
-          createdAt: new Date(),
-        },
+        $setOnInsert: setOnInsert,
       },
       { upsert: true, returnDocument: 'after' }
     );
