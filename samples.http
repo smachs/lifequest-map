@@ -90,5 +90,7 @@ GET {{baseUrl}}/marker-routes HTTP/1.1
 Accept: application/json
 
 
+### GET session
+GET {{baseUrl}}/auth/account HTTP/1.1
 
 

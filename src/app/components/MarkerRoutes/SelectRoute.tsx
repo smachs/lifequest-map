@@ -9,7 +9,7 @@ import type { Polyline } from 'leaflet';
 import leaflet from 'leaflet';
 import MarkerTypes from './MarkerTypes';
 import { useModal } from '../../contexts/ModalContext';
-import { useUser } from '../../contexts/UserContext';
+import { useAccount } from '../../contexts/UserContext';
 import type { MarkerRouteItem } from './MarkerRoutes';
 import { notify } from '../../utils/notifications';
 import { postMarkerRoute } from './api';
@@ -41,7 +41,7 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
     [type: string]: number;
   }>({});
   const [name, setName] = useState('');
-  const user = useUser();
+  const [account] = useAccount();
   const [isPublic, setIsPublic] = useState(false);
 
   useLayerGroups({
@@ -147,13 +147,12 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
   }, [leafletMap]);
 
   function handleSave() {
-    if (!user) {
+    if (!account) {
       return;
     }
     notify(
       postMarkerRoute({
         name,
-        username: user.username,
         isPublic,
         positions,
         markersByType,

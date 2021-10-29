@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { useModal } from '../../contexts/ModalContext';
-import { useUser } from '../../contexts/UserContext';
+import { useAccount } from '../../contexts/UserContext';
 import { classNames } from '../../utils/styles';
 import type { FilterItem } from '../MapFilter/mapFilters';
 import styles from './AddResources.module.css';
@@ -22,7 +22,7 @@ export type Details = {
   levelRange?: [number, number];
 };
 function AddResources(): JSX.Element {
-  const user = useUser();
+  const [account] = useAccount();
   const { closeLatestModal } = useModal();
   const { refresh } = useMarkers();
   const [step, setStep] = useState(0);
@@ -33,14 +33,13 @@ function AddResources(): JSX.Element {
   );
 
   async function handleUploadScreenshot(screenshotId?: string) {
-    if (!filter || !position || !user) {
+    if (!filter || !position || !account) {
       return;
     }
     try {
       const marker: MarkerDTO = {
         type: filter.type,
         position: position || undefined,
-        username: user.username,
         screenshotId,
         ...details,
       };

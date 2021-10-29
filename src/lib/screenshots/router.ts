@@ -4,6 +4,7 @@ import fs from 'fs/promises';
 import multer from 'multer';
 import { SCREENSHOTS_PATH } from '../env';
 import { getScreenshotsCollection } from './collection';
+import { ensureAuthenticated } from '../auth/middlewares';
 
 const screenshotsUpload = multer({ dest: SCREENSHOTS_PATH });
 
@@ -12,6 +13,7 @@ const screenshotsRouter = Router();
 screenshotsRouter.post(
   '/',
   screenshotsUpload.single('screenshot'),
+  ensureAuthenticated,
   async (req, res, next) => {
     try {
       if (!req.file) {

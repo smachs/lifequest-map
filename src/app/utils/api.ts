@@ -1,3 +1,6 @@
+import type { AccountDTO } from '../contexts/UserContext';
+import { getJSONItem } from './storage';
+
 const { VITE_API_ENDPOINT } = import.meta.env;
 
 if (!VITE_API_ENDPOINT) {
@@ -6,16 +9,23 @@ if (!VITE_API_ENDPOINT) {
 
 export async function fetchJSON<T>(
   url: RequestInfo,
-  init?: RequestInit | undefined
+  init: RequestInit | undefined = {}
 ): Promise<T> {
-  const secret = localStorage.getItem('secret');
-  const hasQuery = url.toString().includes('?');
-  const response = await fetch(
-    `${VITE_API_ENDPOINT}${url}${hasQuery ? '&' : '?'}secret=${secret}`,
-    init
-  );
+  const account = getJSONItem<AccountDTO | null>('account', null);
+  if (account) {
+    const sessionId = account?.sessionId || '';
+    init.headers = {
+      ...(init.headers || {}),
+      'x-session-id': sessionId,
+    };
+  }
+  const response = await fetch(`${VITE_API_ENDPOINT}${url}`, init);
 
   if (!response.ok) {
+    if (response.status === 401) {
+      const event = new CustomEvent('session-expired');
+      window.dispatchEvent(event);
+    }
     if (response.headers.get('Content-Type')?.includes('application/json')) {
       const body = await response.json();
       throw new Error(body);

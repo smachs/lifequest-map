@@ -24,6 +24,9 @@ function ensureCommentsSchema(): Promise<Document> {
           markerId: {
             bsonType: 'objectId',
           },
+          userId: {
+            bsonType: 'string',
+          },
           username: {
             bsonType: 'string',
           },

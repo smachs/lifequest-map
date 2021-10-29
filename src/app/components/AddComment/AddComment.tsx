@@ -1,7 +1,7 @@
 import type { FormEvent, KeyboardEvent } from 'react';
 import { useState } from 'react';
 import { useMarkers } from '../../contexts/MarkersContext';
-import { useUser } from '../../contexts/UserContext';
+import { useAccount } from '../../contexts/UserContext';
 import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
 import styles from './AddComment.module.css';
@@ -13,7 +13,7 @@ type AddCommentProps = {
 };
 
 function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
-  const user = useUser();
+  const [account] = useAccount();
   const [message, setMessage] = useState('');
   const { refresh: refreshMarkers } = useMarkers();
 
@@ -21,7 +21,7 @@ function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
     if (event) {
       event.preventDefault();
     }
-    if (!user) {
+    if (!account) {
       return;
     }
     if (!message.trim()) {
@@ -29,7 +29,7 @@ function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
     }
 
     try {
-      await notify(postComment(markerId, { username: user.username, message }));
+      await notify(postComment(markerId, { message }));
       onAdd();
       setMessage('');
       refreshMarkers();
@@ -52,15 +52,15 @@ function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
         onChange={(event) => setMessage(event.target.value)}
         onKeyPress={handleKeyPress}
         placeholder={
-          !user ? 'You need to login to add a comment' : 'Add a comment'
+          !account ? 'You need to login to add a comment' : 'Add a comment'
         }
         rows={1}
-        disabled={!user}
+        disabled={!account}
       />
       <input
         type="submit"
         value="Send"
-        disabled={message.trim().length === 0 || !user}
+        disabled={message.trim().length === 0 || !account}
       />
       <small className={styles.hint}>
         <a

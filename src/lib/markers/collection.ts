@@ -53,6 +53,9 @@ function ensureMarkersSchema(): Promise<Document> {
           description: {
             bsonType: 'string',
           },
+          userId: {
+            bsonType: 'string',
+          },
           username: {
             bsonType: 'string',
           },

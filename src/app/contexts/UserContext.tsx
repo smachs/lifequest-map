@@ -16,21 +16,37 @@ type UserContextValue = {
   user: User | null;
   setUsername: (name: string) => void;
   refresh: () => void;
+  account: AccountDTO | null;
+  setAccount: (account: AccountDTO | null) => void;
 };
 const UserContext = createContext<UserContextValue>({
   user: null,
   setUsername: () => undefined,
   refresh: () => undefined,
+  account: null,
+  setAccount: () => undefined,
 });
 
 type UserProviderProps = {
   children: ReactNode;
 };
 
+export type AccountDTO = {
+  steamId: string;
+  name: string;
+  sessionId: string;
+  isModerator?: boolean;
+  createdAt: Date;
+};
+
 export function UserProvider({ children }: UserProviderProps): JSX.Element {
   const [user, setUser] = usePersistentState<User | null>('user', null);
   const [username, setUsername] = usePersistentState<string | null>(
     'username',
+    null
+  );
+  const [account, setAccount] = usePersistentState<AccountDTO | null>(
+    'account',
     null
   );
 
@@ -57,18 +73,39 @@ export function UserProvider({ children }: UserProviderProps): JSX.Element {
   };
 
   useEffect(() => {
+    function handleSessionExpired() {
+      setAccount(null);
+      console.log('Expired');
+    }
+    window.addEventListener('session-expired', handleSessionExpired);
+
+    return () => {
+      window.removeEventListener('session-expired', handleSessionExpired);
+    };
+  }, []);
+
+  useEffect(() => {
     if (username) {
       refresh();
     }
   }, [username]);
 
   return (
-    <UserContext.Provider value={{ user, setUsername, refresh }}>
+    <UserContext.Provider
+      value={{ user, setUsername, refresh, account, setAccount }}
+    >
       {children}
     </UserContext.Provider>
   );
 }
 
+export function useAccount(): [
+  AccountDTO | null,
+  (account: AccountDTO | null) => void
+] {
+  const { account, setAccount } = useContext(UserContext);
+  return [account, setAccount];
+}
 export function useUser(): User | null {
   return useContext(UserContext).user;
 }

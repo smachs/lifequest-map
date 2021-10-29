@@ -29,7 +29,7 @@ function HideMarkerInput({ markerId }: HideMarkerInputProps): JSX.Element {
   return (
     <label
       data-tooltip={
-        user ? "Marker won't be shown on the map" : 'Login to hide marker'
+        user ? "Marker won't be shown on the map" : 'Character not detected'
       }
     >
       <input

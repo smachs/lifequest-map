@@ -1,7 +1,6 @@
 import { fetchJSON } from '../../utils/api';
 
 type CommentDTO = {
-  username: string;
   message: string;
 };
 

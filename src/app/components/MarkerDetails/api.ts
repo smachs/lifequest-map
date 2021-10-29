@@ -12,11 +12,7 @@ export function patchUser(username: string, hiddenMarkerIds: string[]) {
   });
 }
 
-export function patchMarker(
-  markerId: string,
-  screenshotId: string,
-  userId?: string
-) {
+export function patchMarker(markerId: string, screenshotId: string) {
   return fetchJSON<string>(`/api/markers/${markerId}`, {
     method: 'PATCH',
     headers: {
@@ -24,19 +20,15 @@ export function patchMarker(
     },
     body: JSON.stringify({
       screenshotId,
-      userId,
     }),
   });
 }
 
-export function deleteMarker(markerId: string, userId: string) {
+export function deleteMarker(markerId: string) {
   return fetchJSON(`/api/markers/${markerId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      userId,
-    }),
   });
 }

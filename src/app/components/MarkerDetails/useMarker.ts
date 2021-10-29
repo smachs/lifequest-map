@@ -6,6 +6,7 @@ export type Comment = {
   _id: string;
   markerId: string;
   createdAt: Date;
+  userId: string;
   username: string;
   message: string;
 };
@@ -19,6 +20,7 @@ export type MarkerFull = {
   description?: string;
   screenshotFilename?: string;
   createdAt: string;
+  userId?: string;
   username?: string;
   comments?: number;
   _id: string;
