@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useFilters } from '../../contexts/FiltersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { useModal } from '../../contexts/ModalContext';
+import type { Position } from '../../contexts/PositionContext';
 import { usePosition } from '../../contexts/PositionContext';
 import { useAccount } from '../../contexts/UserContext';
 import { writeError } from '../../utils/logs';
@@ -60,7 +61,7 @@ function handleFilter(filter: Filter, search: string, accountId?: string) {
 function handleSort(
   sortBy: SortBy,
   filters: string[],
-  position: [number, number] | null
+  position: Position | null
 ) {
   if (sortBy === 'date') {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
@@ -68,8 +69,8 @@ function handleSort(
   }
   if (sortBy === 'distance' && position) {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
-      calcDistance(position, b.positions[0]) -
-      calcDistance(position, a.positions[0]);
+      calcDistance(position.location, b.positions[0]) -
+      calcDistance(position.location, a.positions[0]);
   }
   if (sortBy === 'name') {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>

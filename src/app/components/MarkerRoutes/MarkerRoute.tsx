@@ -28,8 +28,8 @@ function MarkerRoute({
 }: MarkerRouteProps): JSX.Element {
   const { position } = usePosition();
 
-  const distance: number | null = position
-    ? calcDistance(markerRoute.positions[0], position)
+  const distance: number | null = position?.location
+    ? calcDistance(markerRoute.positions[0], position.location)
     : null;
 
   return (

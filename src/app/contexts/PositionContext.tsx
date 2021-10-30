@@ -5,8 +5,9 @@ import { getGameInfo, useIsNewWorldRunning } from '../utils/games';
 import { useSetUser } from './UserContext';
 import { writeError } from '../utils/logs';
 
+export type Position = { location: [number, number]; rotation: number };
 type PositionContextProps = {
-  position: [number, number] | null;
+  position: Position | null;
   following: boolean;
   toggleFollowing: () => void;
 };
@@ -23,7 +24,7 @@ type PositionProviderProps = {
 export function PositionProvider({
   children,
 }: PositionProviderProps): JSX.Element {
-  const [position, setPosition] = useState<[number, number] | null>(null);
+  const [position, setPosition] = useState<Position | null>(null);
   const [following, setFollowing] = usePersistentState<boolean>(
     'following',
     true
@@ -38,10 +39,10 @@ export function PositionProvider({
 
     overwolf.games.events.setRequiredFeatures(['game_info'], () => undefined);
 
-    let handler = setTimeout(updatePosition, 20);
+    let handler = setTimeout(updatePosition, 50);
     let active = true;
 
-    let lastPosition = [0, 0];
+    let lastLocation = [0, 0];
     let hasError = false;
     let lastPlayerName = '';
     async function updatePosition() {
@@ -50,19 +51,20 @@ export function PositionProvider({
         const { player_name, location: locationList } =
           gameInfo?.game_info || {};
         if (locationList) {
-          const location = {
-            x: +locationList.match(/position.x,(\d+.\d+)/)[1],
-            y: +locationList.match(/position.y,(\d+.\d+)/)[1],
-          };
-
-          const position: [number, number] = [location.y, location.x];
+          const location: [number, number] = [
+            +locationList.match(/position.y,(\d+.\d+)/)[1],
+            +locationList.match(/position.x,(\d+.\d+)/)[1],
+          ];
+          const rotation = +locationList.match(/rotation.z,(\d+)/)[1];
           if (
-            position &&
-            lastPosition[0] !== position[0] &&
-            lastPosition[1] !== position[1]
+            lastLocation[0] !== location[0] &&
+            lastLocation[1] !== location[1]
           ) {
-            lastPosition = position;
-            setPosition(position);
+            lastLocation = location;
+            setPosition({
+              location,
+              rotation,
+            });
             hasError = false;
           }
         }
