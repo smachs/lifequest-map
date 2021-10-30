@@ -31,7 +31,6 @@ screenshotsRouter.post(
 
       res.json({
         screenshotId: screenshot.insertedId,
-        filename: `${req.file.filename}.webp`, // Deprecated -> will be be removed soon
       });
     } catch (error) {
       next(error);

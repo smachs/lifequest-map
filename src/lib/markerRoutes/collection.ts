@@ -31,7 +31,6 @@ function ensureMarkerRoutesSchema(): Promise<Document> {
           userId: {
             bsonType: 'string',
           },
-          // Deprecated
           username: {
             bsonType: 'string',
           },

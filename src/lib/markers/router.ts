@@ -122,26 +122,18 @@ markersRouter.patch(
     try {
       const account = req.account!;
       const { markerId } = req.params;
-      const { screenshotFilename, screenshotId } = req.body; // screenshotFilename is deprecated and will be removed soon
+      const { screenshotId } = req.body;
 
-      if (
-        (typeof screenshotFilename !== 'string' &&
-          !ObjectId.isValid(screenshotId)) ||
-        !ObjectId.isValid(markerId)
-      ) {
+      if (!ObjectId.isValid(screenshotId) || !ObjectId.isValid(markerId)) {
         res.status(400).send('Invalid payload');
         return;
       }
-      let newScreenshotFilename = screenshotFilename;
-      if (screenshotId) {
-        const screenshot = await getScreenshotsCollection().findOne({
-          _id: new ObjectId(screenshotId),
-        });
-        if (!screenshot) {
-          res.status(404).send('Screenshot not found');
-          return;
-        }
-        newScreenshotFilename = screenshot.filename;
+      const screenshot = await getScreenshotsCollection().findOne({
+        _id: new ObjectId(screenshotId),
+      });
+      if (!screenshot) {
+        res.status(404).send('Screenshot not found');
+        return;
       }
 
       const query: Filter<MarkerDTO> = {
@@ -156,14 +148,14 @@ markersRouter.patch(
 
       const result = await getMarkersCollection().updateOne(query, {
         $set: {
-          screenshotFilename: newScreenshotFilename,
+          screenshotFilename: screenshot.filename,
         },
       });
       if (!result.modifiedCount) {
         res.status(404).end(`No marker found for id ${markerId}`);
         return;
       }
-      res.status(200).json(newScreenshotFilename);
+      res.status(200).json(screenshot.filename);
     } catch (error) {
       next(error);
     }
@@ -181,11 +173,14 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       level,
       levelRange,
       description,
-      screenshotFilename,
       screenshotId,
     } = req.body;
 
-    if (typeof type !== 'string' || !Array.isArray(position)) {
+    if (
+      !ObjectId.isValid(screenshotId) ||
+      typeof type !== 'string' ||
+      !Array.isArray(position)
+    ) {
       res.status(400).send('Invalid payload');
       return;
     }
@@ -208,19 +203,16 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
     if (description) {
       marker.description = description.substring(0, MAX_DESCRIPTION_LENGTH);
     }
-    if (screenshotFilename) {
-      // Deprecated -> will be removed soon
-      marker.screenshotFilename = screenshotFilename;
-    } else if (screenshotId) {
-      const screenshot = await getScreenshotsCollection().findOne({
-        _id: new ObjectId(screenshotId),
-      });
-      if (!screenshot) {
-        res.status(404).send('Screenshot not found');
-        return;
-      }
-      marker.screenshotFilename = screenshot.filename;
+
+    const screenshot = await getScreenshotsCollection().findOne({
+      _id: new ObjectId(screenshotId),
+    });
+    if (!screenshot) {
+      res.status(404).send('Screenshot not found');
+      return;
     }
+    marker.screenshotFilename = screenshot.filename;
+
     if (levelRange) {
       marker.levelRange = levelRange;
     }
