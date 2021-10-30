@@ -60,11 +60,13 @@ export function MarkersProvider({
     if (!readonly) {
       notify(
         fetchJSON<MarkerBasic[]>('/api/markers').then((newMarkers) => {
-          setMarkers(newMarkers);
+          if (JSON.stringify(newMarkers) !== JSON.stringify(markers)) {
+            setMarkers(newMarkers);
+          }
         })
       );
     }
-  }, [readonly, markers]);
+  }, [readonly]);
 
   useEffect(() => {
     refresh();

@@ -4,7 +4,6 @@ import { mapFilters, mapFiltersCategories } from '../MapFilter/mapFilters';
 import type { MarkerBasic } from '../../contexts/MarkersContext';
 import { getTooltipContent } from './tooltips';
 import { useMarkers } from '../../contexts/MarkersContext';
-import { useFilters } from '../../contexts/FiltersContext';
 import CanvasMarker from './CanvasMarker';
 import { useSettings } from '../../contexts/SettingsContext';
 import { writeError } from '../../utils/logs';
@@ -27,15 +26,22 @@ function useLayerGroups({
   onMarkerClick?: (marker: MarkerBasic) => void;
 }): void {
   const { visibleMarkers, markerRoutes } = useMarkers();
-  const [filters] = useFilters();
   const { markerSize, markerShowBackground } = useSettings();
   const isFirstRender = useRef(true);
+  const markersLayerGroupRef = useRef(leaflet.layerGroup());
   const allLayersRef = useRef<{
     [id: string]: {
       layer: CanvasMarker | leaflet.LayerGroup;
       hasComments: boolean;
     };
   }>({});
+
+  useEffect(() => {
+    if (!leafletMap) {
+      return;
+    }
+    markersLayerGroupRef.current.addTo(leafletMap);
+  }, [leafletMap]);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -79,9 +85,7 @@ function useLayerGroups({
   }, [markerSize, markerShowBackground]);
 
   useEffect(() => {
-    if (!leafletMap) {
-      return;
-    }
+    const markersLayerGroup = markersLayerGroupRef.current;
     const allLayers = allLayersRef.current;
     const removableMarkers = Object.keys(allLayers);
 
@@ -94,9 +98,11 @@ function useLayerGroups({
             removableMarkers.splice(index, 1);
           }
           if (allLayers[marker._id].hasComments !== Boolean(marker.comments)) {
-            allLayers[marker._id].layer.removeFrom(leafletMap);
-            delete allLayers[marker._id];
+            markersLayerGroup.removeLayer(allLayers[marker._id].layer);
           } else {
+            if (!markersLayerGroup.hasLayer(allLayers[marker._id].layer)) {
+              markersLayerGroup.addLayer(allLayers[marker._id].layer);
+            }
             continue;
           }
         }
@@ -140,20 +146,18 @@ function useLayerGroups({
           layer: mapMarker,
           hasComments: Boolean(marker.comments),
         };
-        allLayers[marker._id].layer.addTo(leafletMap);
+        markersLayerGroup.addLayer(allLayers[marker._id].layer);
       } catch (error) {
         writeError(error);
       }
     }
-
     removableMarkers.forEach((markerId) => {
       const layerCache = allLayers[markerId];
       if (layerCache) {
-        layerCache.layer.removeFrom(leafletMap);
-        delete allLayers[markerId];
+        markersLayerGroup.removeLayer(layerCache.layer);
       }
     });
-  }, [leafletMap, filters, visibleMarkers]);
+  }, [visibleMarkers]);
 
   useEffect(() => {
     if (!leafletMap) {
