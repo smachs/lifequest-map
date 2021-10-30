@@ -11,7 +11,7 @@ import { usePersistentState } from '../../utils/storage';
 import ActionButton from '../ActionControl/ActionButton';
 import SearchIcon from '../icons/SearchIcon';
 import { mapFilters } from '../MapFilter/mapFilters';
-import { deleteMarkerRoute, getMarkerRoutes } from './api';
+import { deleteMarkerRoute, getMarkerRoutes, patchMarkerRoute } from './api';
 import MarkerRoute from './MarkerRoute';
 import styles from './MarkerRoutes.module.css';
 import SelectRoute from './SelectRoute';
@@ -32,7 +32,7 @@ export type MarkerRouteItem = {
 type SortBy = 'match' | 'distance' | 'date' | 'name' | 'username';
 type Filter = 'all' | 'private' | 'public';
 
-function handleFilter(filter: Filter, search: string) {
+function handleFilter(filter: Filter, search: string, accountId?: string) {
   const regExp = new RegExp(search, 'i');
   const filterBySearch = (item: MarkerRouteItem) => {
     if (search === '') {
@@ -48,7 +48,8 @@ function handleFilter(filter: Filter, search: string) {
     return matchedMarkersType || item.name.match(regExp);
   };
   if (filter === 'private') {
-    return (item: MarkerRouteItem) => !item.isPublic && filterBySearch(item);
+    return (item: MarkerRouteItem) =>
+      (!item.isPublic || item.userId === accountId) && filterBySearch(item);
   }
   if (filter === 'public') {
     return (item: MarkerRouteItem) => item.isPublic && filterBySearch(item);
@@ -133,7 +134,24 @@ function MarkerRoutes(): JSX.Element {
     }
   }
 
-  function isRemoveable(markerRoute: MarkerRouteItem): boolean {
+  async function handleTogglePublic(
+    markerRouteId: string,
+    isPublic: boolean
+  ): Promise<void> {
+    if (!account) {
+      return;
+    }
+    try {
+      await notify(patchMarkerRoute(markerRouteId, { isPublic: !isPublic }), {
+        success: 'Route visibility changed 👌',
+      });
+      reload();
+    } catch (error) {
+      writeError(error);
+    }
+  }
+
+  function isEditable(markerRoute: MarkerRouteItem): boolean {
     return Boolean(
       account && (account.isModerator || account.steamId === markerRoute.userId)
     );
@@ -147,7 +165,7 @@ function MarkerRoutes(): JSX.Element {
   const sortedMarkerRoutes = useMemo(
     () =>
       allMarkerRoutes
-        .filter(handleFilter(filter, search))
+        .filter(handleFilter(filter, search, account?.steamId))
         .sort(handleSort(sortBy, filters, position)),
     [sortBy, allMarkerRoutes, filters, position, filter, search]
   );
@@ -199,16 +217,19 @@ function MarkerRoutes(): JSX.Element {
       <div className={styles.items}>
         {sortedMarkerRoutes.map((markerRoute) => (
           <MarkerRoute
-            key={markerRoute.name}
+            key={`${markerRoute.name}-${markerRoute.username}`}
             markerRoute={markerRoute}
             selected={markerRoutes.some(
               (selectedMarkerRoute) =>
                 selectedMarkerRoute.name == markerRoute.name
             )}
+            editable={isEditable(markerRoute)}
+            isPublic={markerRoute.isPublic}
             onClick={() => toggleMarkerRoute(markerRoute)}
-            onRemove={
-              isRemoveable(markerRoute) && (() => handleRemove(markerRoute._id))
+            onPublic={() =>
+              handleTogglePublic(markerRoute._id, markerRoute.isPublic)
             }
+            onRemove={() => handleRemove(markerRoute._id)}
           />
         ))}
       </div>

@@ -11,6 +11,7 @@ function ensureMarkerRoutesIndexes(): Promise<string[]> {
     { key: { username: 1, name: 1 }, unique: true },
     { key: { isPublic: 1 } },
     { key: { username: 1 } },
+    { key: { userId: 1 } },
   ]);
 }
 

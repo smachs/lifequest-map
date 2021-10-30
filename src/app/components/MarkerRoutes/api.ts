@@ -31,3 +31,16 @@ export function postMarkerRoute(markerRoute: MarkerRouteDTO) {
     body: JSON.stringify(markerRoute),
   });
 }
+
+export function patchMarkerRoute(
+  markerRouteId: string,
+  patch: Partial<MarkerRouteDTO>
+) {
+  return fetchJSON(`/api/marker-routes/${markerRouteId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(patch),
+  });
+}
