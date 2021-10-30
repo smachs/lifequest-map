@@ -8,8 +8,9 @@ export function getMarkerRoutesCollection(): Collection<MarkerRouteDTO> {
 
 function ensureMarkerRoutesIndexes(): Promise<string[]> {
   return getMarkerRoutesCollection().createIndexes([
-    { key: { userId: 1, name: 1 }, unique: true },
+    { key: { username: 1, name: 1 }, unique: true },
     { key: { isPublic: 1 } },
+    { key: { username: 1 } },
     { key: { userId: 1 } },
   ]);
 }
