@@ -32,7 +32,7 @@ export type MarkerRouteItem = {
 type SortBy = 'match' | 'distance' | 'date' | 'name' | 'username';
 type Filter = 'all' | 'private' | 'public';
 
-function handleFilter(filter: Filter, search: string) {
+function handleFilter(filter: Filter, search: string, accountId?: string) {
   const regExp = new RegExp(search, 'i');
   const filterBySearch = (item: MarkerRouteItem) => {
     if (search === '') {
@@ -48,7 +48,8 @@ function handleFilter(filter: Filter, search: string) {
     return matchedMarkersType || item.name.match(regExp);
   };
   if (filter === 'private') {
-    return (item: MarkerRouteItem) => !item.isPublic && filterBySearch(item);
+    return (item: MarkerRouteItem) =>
+      (!item.isPublic || item.userId === accountId) && filterBySearch(item);
   }
   if (filter === 'public') {
     return (item: MarkerRouteItem) => item.isPublic && filterBySearch(item);
@@ -164,7 +165,7 @@ function MarkerRoutes(): JSX.Element {
   const sortedMarkerRoutes = useMemo(
     () =>
       allMarkerRoutes
-        .filter(handleFilter(filter, search))
+        .filter(handleFilter(filter, search, account?.steamId))
         .sort(handleSort(sortBy, filters, position)),
     [sortBy, allMarkerRoutes, filters, position, filter, search]
   );
@@ -216,7 +217,7 @@ function MarkerRoutes(): JSX.Element {
       <div className={styles.items}>
         {sortedMarkerRoutes.map((markerRoute) => (
           <MarkerRoute
-            key={markerRoute.name}
+            key={`${markerRoute.name}-${markerRoute.username}`}
             markerRoute={markerRoute}
             selected={markerRoutes.some(
               (selectedMarkerRoute) =>
