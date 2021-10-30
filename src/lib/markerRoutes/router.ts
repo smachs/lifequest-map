@@ -114,7 +114,11 @@ markerRoutesRouter.delete(
         res.status(404).end(`No marker route found for id ${markerRouteId}`);
         return;
       }
-      if (markerRoute.isPublic && !account.isModerator) {
+      if (
+        markerRoute.isPublic &&
+        !account.isModerator &&
+        markerRoute.userId !== account.steamId
+      ) {
         res.status(403).send('💀 no access');
         return;
       }
