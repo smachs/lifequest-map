@@ -176,11 +176,7 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       screenshotId,
     } = req.body;
 
-    if (
-      !ObjectId.isValid(screenshotId) ||
-      typeof type !== 'string' ||
-      !Array.isArray(position)
-    ) {
+    if (typeof type !== 'string' || !Array.isArray(position)) {
       res.status(400).send('Invalid payload');
       return;
     }
@@ -204,14 +200,16 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       marker.description = description.substring(0, MAX_DESCRIPTION_LENGTH);
     }
 
-    const screenshot = await getScreenshotsCollection().findOne({
-      _id: new ObjectId(screenshotId),
-    });
-    if (!screenshot) {
-      res.status(404).send('Screenshot not found');
-      return;
+    if (ObjectId.isValid(screenshotId)) {
+      const screenshot = await getScreenshotsCollection().findOne({
+        _id: new ObjectId(screenshotId),
+      });
+      if (!screenshot) {
+        res.status(404).send('Screenshot not found');
+        return;
+      }
+      marker.screenshotFilename = screenshot.filename;
     }
-    marker.screenshotFilename = screenshot.filename;
 
     if (levelRange) {
       marker.levelRange = levelRange;
