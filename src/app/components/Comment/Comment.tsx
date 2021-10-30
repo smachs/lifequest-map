@@ -39,7 +39,9 @@ function Comment({
       <div className={styles.message}>
         <Markdown>{message}</Markdown>
       </div>
-      {removable && <DeleteButton onClick={handleRemove} />}
+      <div className={styles.actions}>
+        {removable && <DeleteButton onClick={handleRemove} />}
+      </div>
     </article>
   );
 }

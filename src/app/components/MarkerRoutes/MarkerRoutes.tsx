@@ -11,7 +11,7 @@ import { usePersistentState } from '../../utils/storage';
 import ActionButton from '../ActionControl/ActionButton';
 import SearchIcon from '../icons/SearchIcon';
 import { mapFilters } from '../MapFilter/mapFilters';
-import { deleteMarkerRoute, getMarkerRoutes } from './api';
+import { deleteMarkerRoute, getMarkerRoutes, patchMarkerRoute } from './api';
 import MarkerRoute from './MarkerRoute';
 import styles from './MarkerRoutes.module.css';
 import SelectRoute from './SelectRoute';
@@ -133,7 +133,24 @@ function MarkerRoutes(): JSX.Element {
     }
   }
 
-  function isRemoveable(markerRoute: MarkerRouteItem): boolean {
+  async function handleTogglePublic(
+    markerRouteId: string,
+    isPublic: boolean
+  ): Promise<void> {
+    if (!account) {
+      return;
+    }
+    try {
+      await notify(patchMarkerRoute(markerRouteId, { isPublic: !isPublic }), {
+        success: 'Route visibility changed 👌',
+      });
+      reload();
+    } catch (error) {
+      writeError(error);
+    }
+  }
+
+  function isEditable(markerRoute: MarkerRouteItem): boolean {
     return Boolean(
       account && (account.isModerator || account.steamId === markerRoute.userId)
     );
@@ -205,10 +222,13 @@ function MarkerRoutes(): JSX.Element {
               (selectedMarkerRoute) =>
                 selectedMarkerRoute.name == markerRoute.name
             )}
+            editable={isEditable(markerRoute)}
+            isPublic={markerRoute.isPublic}
             onClick={() => toggleMarkerRoute(markerRoute)}
-            onRemove={
-              isRemoveable(markerRoute) && (() => handleRemove(markerRoute._id))
+            onPublic={() =>
+              handleTogglePublic(markerRoute._id, markerRoute.isPublic)
             }
+            onRemove={() => handleRemove(markerRoute._id)}
           />
         ))}
       </div>

@@ -36,3 +36,9 @@
   max-width: 100%;
   margin: 0.5em 0;
 }
+
+.actions {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+}

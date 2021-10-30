@@ -116,8 +116,8 @@ app.use('/screenshots', express.static(SCREENSHOTS_PATH));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 // All other requests are answered with a 404
-app.get('*', (_req, res) => {
-  res.status(404).send('Not found');
+app.all('*', (_req, res) => {
+  res.status(404).send('🙈 Not found');
 });
 
 connectToMongoDb(MONGODB_URI).then(async () => {

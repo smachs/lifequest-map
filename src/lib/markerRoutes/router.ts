@@ -139,4 +139,64 @@ markerRoutesRouter.delete(
   }
 );
 
+markerRoutesRouter.patch(
+  '/:markerRouteId',
+  ensureAuthenticated,
+  async (req, res, next) => {
+    try {
+      const account = req.account!;
+
+      const { markerRouteId } = req.params;
+      const { isPublic } = req.body;
+
+      if (!ObjectId.isValid(markerRouteId) || typeof isPublic !== 'boolean') {
+        res.status(400).send('Invalid payload');
+        return;
+      }
+
+      const query: Filter<MarkerRouteDTO> = {
+        _id: new ObjectId(markerRouteId),
+      };
+      if (!account.isModerator) {
+        query.userId = account.steamId;
+      }
+
+      const markerRoutesCollection = getMarkerRoutesCollection();
+      const markerRoute = await markerRoutesCollection.findOne(query);
+      if (!markerRoute) {
+        res.status(404).end(`No marker route found for id ${markerRouteId}`);
+        return;
+      }
+      if (
+        markerRoute.isPublic &&
+        !account.isModerator &&
+        markerRoute.userId !== account.steamId
+      ) {
+        res.status(403).send('💀 no access');
+        return;
+      }
+
+      const result = await getMarkerRoutesCollection().updateOne(query, {
+        $set: {
+          isPublic: isPublic,
+        },
+      });
+
+      if (!result.matchedCount) {
+        res.status(404).end(`No marker route found for id ${markerRouteId}`);
+        return;
+      }
+      res.status(200).json({});
+
+      postToDiscord(
+        `🗺️ Route ${markerRoute.name} is not ${
+          isPublic ? 'public' : 'private'
+        }. Changed by ${account.name}`
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 export default markerRoutesRouter;

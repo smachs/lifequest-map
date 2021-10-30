@@ -20,3 +20,18 @@
   color: var(--color-primary);
   background-color: var(--color-shade-two);
 }
+
+.info {
+  padding-right: 2em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actions {
+  position: absolute;
+  z-index: 1;
+  top: 0.25rem;
+  right: 0.25rem;
+  display: grid;
+}

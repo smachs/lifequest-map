@@ -6,7 +6,7 @@ type DeleteButtonProps = {
 };
 function DeleteButton({ onClick }: DeleteButtonProps): JSX.Element {
   return (
-    <button className={styles.delete} onClick={onClick}>
+    <button className={styles.delete} onClick={onClick} title="Delete">
       <DeleteIcon />
     </button>
   );

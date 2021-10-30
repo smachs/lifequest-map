@@ -1,9 +1,9 @@
-.delete {
+.button {
   opacity: 50%;
   transition: 0.2s ease-in;
   padding: 0;
 }
 
-.delete:hover {
+.button:hover {
   opacity: 100%;
 }
