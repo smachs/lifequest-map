@@ -22,7 +22,7 @@ export type Details = {
   levelRange?: [number, number];
 };
 function AddResources(): JSX.Element {
-  const [account] = useAccount();
+  const { account } = useAccount();
   const { closeLatestModal } = useModal();
   const { refresh } = useMarkers();
   const [step, setStep] = useState(0);

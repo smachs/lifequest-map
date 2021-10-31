@@ -29,8 +29,7 @@ function MarkerTypes({ markersByType }: MarkerTypesProps): JSX.Element {
               styles.marker,
               !filters.includes(markerType) && styles.unchecked
             )}
-            data-tooltip={mapFilter.title}
-            data-tooltip-position="right"
+            title={mapFilter.title}
           >
             <img
               src={

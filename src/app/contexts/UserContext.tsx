@@ -17,14 +17,16 @@ type UserContextValue = {
   setUsername: (name: string) => void;
   refresh: () => void;
   account: AccountDTO | null;
-  setAccount: (account: AccountDTO | null) => void;
+  logoutAccount: () => void;
+  refreshAccount: (verifyingSessionId?: string) => void;
 };
 const UserContext = createContext<UserContextValue>({
   user: null,
   setUsername: () => undefined,
   refresh: () => undefined,
   account: null,
-  setAccount: () => undefined,
+  logoutAccount: () => undefined,
+  refreshAccount: () => undefined,
 });
 
 type UserProviderProps = {
@@ -36,6 +38,7 @@ export type AccountDTO = {
   name: string;
   sessionId: string;
   isModerator?: boolean;
+  favoriteRouteIds?: string[];
   createdAt: Date;
 };
 
@@ -72,6 +75,35 @@ export function UserProvider({ children }: UserProviderProps): JSX.Element {
     }
   };
 
+  const refreshAccount = async (verifyingSessionId?: string): Promise<void> => {
+    try {
+      const init: RequestInit = {};
+      if (verifyingSessionId) {
+        init.headers = {
+          'x-session-id': verifyingSessionId,
+        };
+      }
+      const account = await fetchJSON<AccountDTO>(`/api/auth/account`, init);
+      setAccount(account);
+    } catch (error) {
+      if (verifyingSessionId) {
+        // Keep waiting
+        return;
+      }
+      writeError(error);
+    }
+  };
+
+  const logoutAccount = async () => {
+    try {
+      await fetchJSON<string>('/api/auth/logout');
+    } catch (error) {
+      // DO nothing
+    } finally {
+      setAccount(null);
+    }
+  };
+
   useEffect(() => {
     function handleSessionExpired() {
       setAccount(null);
@@ -92,19 +124,27 @@ export function UserProvider({ children }: UserProviderProps): JSX.Element {
 
   return (
     <UserContext.Provider
-      value={{ user, setUsername, refresh, account, setAccount }}
+      value={{
+        user,
+        setUsername,
+        refresh,
+        account,
+        refreshAccount,
+        logoutAccount,
+      }}
     >
       {children}
     </UserContext.Provider>
   );
 }
 
-export function useAccount(): [
-  AccountDTO | null,
-  (account: AccountDTO | null) => void
-] {
-  const { account, setAccount } = useContext(UserContext);
-  return [account, setAccount];
+export function useAccount(): {
+  account: AccountDTO | null;
+  refreshAccount: (verifyingSessionId?: string) => void;
+  logoutAccount: () => void;
+} {
+  const { account, refreshAccount, logoutAccount } = useContext(UserContext);
+  return { account, refreshAccount, logoutAccount };
 }
 export function useUser(): User | null {
   return useContext(UserContext).user;

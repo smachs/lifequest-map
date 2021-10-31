@@ -44,3 +44,18 @@ export function patchMarkerRoute(
     body: JSON.stringify(patch),
   });
 }
+
+export function patchFavoriteMarkerRoute(
+  markerRouteId: string,
+  isFavorite: boolean
+) {
+  return fetchJSON(`/api/auth/favorite-routes/${markerRouteId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      isFavorite,
+    }),
+  });
+}
