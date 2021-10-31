@@ -36,6 +36,12 @@ function ensureAccountsSchema(): Promise<Document> {
           isModerator: {
             bsonType: 'bool',
           },
+          favoriteRouteIds: {
+            bsonType: 'array',
+            items: {
+              bsonType: 'objectId',
+            },
+          },
           createdAt: {
             bsonType: 'date',
           },

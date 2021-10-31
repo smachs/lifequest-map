@@ -11,7 +11,7 @@ type UploadScreenshotProps = {
   onUpload: (path?: string) => void;
 };
 function UploadScreenshot({ onUpload }: UploadScreenshotProps): JSX.Element {
-  const [account] = useAccount();
+  const { account } = useAccount();
   const [screenshot, setScreenshot] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [timer, setTimer] = useState<number | null>(null);

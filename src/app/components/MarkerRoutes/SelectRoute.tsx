@@ -41,7 +41,7 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
     [type: string]: number;
   }>({});
   const [name, setName] = useState('');
-  const [account] = useAccount();
+  const { account } = useAccount();
   const [isPublic, setIsPublic] = useState(false);
 
   useLayerGroups({

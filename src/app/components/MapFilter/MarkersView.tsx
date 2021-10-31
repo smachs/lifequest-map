@@ -15,7 +15,7 @@ function MarkersView(): JSX.Element {
   const { addModal } = useModal();
   const [filters, setFilters] = useFilters();
   const [search, setSearch] = usePersistentState('searchMarkerTypes', '');
-  const [account] = useAccount();
+  const { account } = useAccount();
 
   function handleToggle(filterTypes: string[], checked: boolean) {
     const newFilters = [...filters];

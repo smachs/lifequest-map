@@ -7,6 +7,7 @@ import { toTimeAgo } from '../../utils/dates';
 import { usePosition } from '../../contexts/PositionContext';
 import { calcDistance } from '../../utils/positions';
 import PublicButton from '../PublicButton/PublicButton';
+import FavoriteButton from '../FavoriteButton/FavoriteButton';
 
 type MarkerRouteProps = {
   markerRoute: MarkerRouteItem;
@@ -16,6 +17,8 @@ type MarkerRouteProps = {
   onRemove: () => void;
   isPublic: boolean;
   onPublic: () => void;
+  isFavorite: boolean;
+  onFavorite: () => void;
 };
 function MarkerRoute({
   markerRoute,
@@ -23,7 +26,9 @@ function MarkerRoute({
   editable,
   onClick,
   onRemove,
+  onFavorite,
   isPublic,
+  isFavorite,
   onPublic,
 }: MarkerRouteProps): JSX.Element {
   const { position } = usePosition();
@@ -48,6 +53,11 @@ function MarkerRoute({
       <MarkerTypes markersByType={markerRoute.markersByType} />
       {distance && <div className={styles.distance}>Distance: {distance}</div>}
       <div className={styles.actions}>
+        <FavoriteButton
+          onClick={onFavorite}
+          isFavorite={isFavorite}
+          favorites={markerRoute.favorites || 0}
+        />
         {editable && <PublicButton isPublic={isPublic} onClick={onPublic} />}
         {editable && <DeleteButton onClick={onRemove} />}
       </div>

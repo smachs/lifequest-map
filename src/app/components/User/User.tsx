@@ -1,4 +1,3 @@
-import type { AccountDTO } from '../../contexts/UserContext';
 import { useAccount, useUser } from '../../contexts/UserContext';
 import { fetchJSON } from '../../utils/api';
 import styles from './User.module.css';
@@ -9,7 +8,7 @@ const { VITE_API_ENDPOINT } = import.meta.env;
 
 function User(): JSX.Element {
   const user = useUser();
-  const [account, setAccount] = useAccount();
+  const { account, refreshAccount, logoutAccount } = useAccount();
 
   const [verifyingSessionId, setVerifyingSessionId] = useState('');
 
@@ -19,12 +18,7 @@ function User(): JSX.Element {
     }
     const intervalId = setInterval(async () => {
       try {
-        const account = await fetchJSON<AccountDTO>(`/api/auth/account`, {
-          headers: {
-            'x-session-id': verifyingSessionId,
-          },
-        });
-        setAccount(account);
+        await refreshAccount(verifyingSessionId);
         setVerifyingSessionId('');
       } catch (error) {
         // Keep waiting
@@ -43,15 +37,6 @@ function User(): JSX.Element {
     setVerifyingSessionId(newSessionId);
   }
 
-  async function handleLogout() {
-    try {
-      await fetchJSON<string>('/api/auth/logout');
-    } catch (error) {
-      // DO nothing
-    } finally {
-      setAccount(null);
-    }
-  }
   return (
     <section className={styles.container}>
       {!account ? (
@@ -61,7 +46,7 @@ function User(): JSX.Element {
       ) : (
         <p className={styles.welcome}>
           Welcome back, {account.name}!{' '}
-          <button onClick={handleLogout}>Sign out</button>
+          <button onClick={logoutAccount}>Sign out</button>
         </p>
       )}
       {user ? (

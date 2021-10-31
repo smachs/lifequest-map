@@ -13,7 +13,7 @@ type AddCommentProps = {
 };
 
 function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
-  const [account] = useAccount();
+  const { account } = useAccount();
   const [message, setMessage] = useState('');
   const { refresh: refreshMarkers } = useMarkers();
 

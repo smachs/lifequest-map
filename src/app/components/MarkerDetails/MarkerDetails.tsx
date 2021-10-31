@@ -34,7 +34,7 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
   );
   const { addModal, closeLatestModal } = useModal();
   const { refresh: refreshMarkers } = useMarkers();
-  const [account] = useAccount();
+  const { account } = useAccount();
 
   async function handleUploadScreenshot(screenshotId?: string) {
     try {

@@ -4,6 +4,7 @@ import { useMarkers } from '../../contexts/MarkersContext';
 import { useModal } from '../../contexts/ModalContext';
 import type { Position } from '../../contexts/PositionContext';
 import { usePosition } from '../../contexts/PositionContext';
+import type { AccountDTO } from '../../contexts/UserContext';
 import { useAccount } from '../../contexts/UserContext';
 import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
@@ -12,7 +13,12 @@ import { usePersistentState } from '../../utils/storage';
 import ActionButton from '../ActionControl/ActionButton';
 import SearchIcon from '../icons/SearchIcon';
 import { mapFilters } from '../MapFilter/mapFilters';
-import { deleteMarkerRoute, getMarkerRoutes, patchMarkerRoute } from './api';
+import {
+  deleteMarkerRoute,
+  getMarkerRoutes,
+  patchFavoriteMarkerRoute,
+  patchMarkerRoute,
+} from './api';
 import MarkerRoute from './MarkerRoute';
 import styles from './MarkerRoutes.module.css';
 import SelectRoute from './SelectRoute';
@@ -27,13 +33,18 @@ export type MarkerRouteItem = {
   markersByType: {
     [type: string]: number;
   };
+  favorites?: number;
   createdAt: string;
 };
 
-type SortBy = 'match' | 'distance' | 'date' | 'name' | 'username';
-type Filter = 'all' | 'private' | 'public';
+type SortBy = 'match' | 'favorites' | 'distance' | 'date' | 'name' | 'username';
+type Filter = 'all' | 'private' | 'public' | 'favorites';
 
-function handleFilter(filter: Filter, search: string, accountId?: string) {
+function handleFilter(
+  filter: Filter,
+  search: string,
+  account: AccountDTO | null
+) {
   const regExp = new RegExp(search, 'i');
   const filterBySearch = (item: MarkerRouteItem) => {
     if (search === '') {
@@ -48,9 +59,14 @@ function handleFilter(filter: Filter, search: string, accountId?: string) {
     });
     return matchedMarkersType || item.name.match(regExp);
   };
+  if (filter === 'favorites') {
+    return (item: MarkerRouteItem) =>
+      account?.favoriteRouteIds?.includes(item._id) && filterBySearch(item);
+  }
   if (filter === 'private') {
     return (item: MarkerRouteItem) =>
-      (!item.isPublic || item.userId === accountId) && filterBySearch(item);
+      (!item.isPublic || item.userId === account?.steamId) &&
+      filterBySearch(item);
   }
   if (filter === 'public') {
     return (item: MarkerRouteItem) => item.isPublic && filterBySearch(item);
@@ -63,6 +79,10 @@ function handleSort(
   filters: string[],
   position: Position | null
 ) {
+  if (sortBy === 'favorites') {
+    return (a: MarkerRouteItem, b: MarkerRouteItem) =>
+      (b.favorites || 0) - (a.favorites || 0);
+  }
   if (sortBy === 'date') {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
       b.createdAt.localeCompare(a.createdAt);
@@ -95,7 +115,7 @@ function MarkerRoutes(): JSX.Element {
   const { addModal } = useModal();
   const { markerRoutes, clearMarkerRoutes, toggleMarkerRoute } = useMarkers();
   const [allMarkerRoutes, setAllMarkerRoutes] = useState<MarkerRouteItem[]>([]);
-  const [account] = useAccount();
+  const { account, refreshAccount } = useAccount();
   const [sortBy, setSortBy] = usePersistentState<SortBy>(
     'markerRoutesSort',
     'match'
@@ -152,6 +172,24 @@ function MarkerRoutes(): JSX.Element {
     }
   }
 
+  async function handleFavorite(markerRouteId: string): Promise<void> {
+    if (!account) {
+      return;
+    }
+    const isFavorite = account.favoriteRouteIds?.some(
+      (routeId) => markerRouteId === routeId
+    );
+    try {
+      await notify(patchFavoriteMarkerRoute(markerRouteId, !isFavorite), {
+        success: 'Favored route changed 👌',
+      });
+      refreshAccount();
+      reload();
+    } catch (error) {
+      writeError(error);
+    }
+  }
+
   function isEditable(markerRoute: MarkerRouteItem): boolean {
     return Boolean(
       account && (account.isModerator || account.steamId === markerRoute.userId)
@@ -166,7 +204,7 @@ function MarkerRoutes(): JSX.Element {
   const sortedMarkerRoutes = useMemo(
     () =>
       allMarkerRoutes
-        .filter(handleFilter(filter, search, account?.steamId))
+        .filter(handleFilter(filter, search, account))
         .sort(handleSort(sortBy, filters, position)),
     [sortBy, allMarkerRoutes, filters, position, filter, search]
   );
@@ -201,6 +239,7 @@ function MarkerRoutes(): JSX.Element {
           onChange={(event) => setSortBy(event.target.value as SortBy)}
         >
           <option value="match">By match</option>
+          <option value="favorites">By favorites</option>
           <option value="distance">By distance</option>
           <option value="date">By date</option>
           <option value="name">By name</option>
@@ -211,6 +250,7 @@ function MarkerRoutes(): JSX.Element {
           onChange={(event) => setFilter(event.target.value as Filter)}
         >
           <option value="all">All</option>
+          <option value="favorites">Favorites</option>
           <option value="private">Private</option>
           <option value="public">Public</option>
         </select>
@@ -231,6 +271,12 @@ function MarkerRoutes(): JSX.Element {
               handleTogglePublic(markerRoute._id, markerRoute.isPublic)
             }
             onRemove={() => handleRemove(markerRoute._id)}
+            isFavorite={Boolean(
+              account?.favoriteRouteIds?.some(
+                (routeId) => markerRoute._id === routeId
+              )
+            )}
+            onFavorite={() => handleFavorite(markerRoute._id)}
           />
         ))}
       </div>

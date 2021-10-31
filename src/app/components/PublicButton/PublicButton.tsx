@@ -16,7 +16,10 @@ function PublicButton({
 }: PublicButtonProps): JSX.Element {
   return (
     <button
-      onClick={onClick}
+      onClick={(event) => {
+        event.stopPropagation();
+        onClick();
+      }}
       className={classNames(styles.button, className)}
       title={isPublic ? 'Public' : 'Private'}
     >

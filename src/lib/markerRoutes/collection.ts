@@ -38,6 +38,9 @@ function ensureMarkerRoutesSchema(): Promise<Document> {
           isPublic: {
             bsonType: 'bool',
           },
+          favorites: {
+            bsonType: 'int',
+          },
           positions: {
             bsonType: 'array',
             items: {
