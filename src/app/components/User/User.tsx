@@ -1,3 +1,4 @@
+import type { AccountDTO } from '../../contexts/UserContext';
 import { useAccount, useUser } from '../../contexts/UserContext';
 import { fetchJSON } from '../../utils/api';
 import styles from './User.module.css';
@@ -8,7 +9,7 @@ const { VITE_API_ENDPOINT } = import.meta.env;
 
 function User(): JSX.Element {
   const user = useUser();
-  const { account, refreshAccount, logoutAccount } = useAccount();
+  const { account, setAccount, logoutAccount } = useAccount();
 
   const [verifyingSessionId, setVerifyingSessionId] = useState('');
 
@@ -18,7 +19,18 @@ function User(): JSX.Element {
     }
     const intervalId = setInterval(async () => {
       try {
-        await refreshAccount(verifyingSessionId);
+        const init: RequestInit = {};
+        if (verifyingSessionId) {
+          init.headers = {
+            'x-session-id': verifyingSessionId,
+            'x-prevent-logout': 'true',
+          };
+        }
+        const newAccount = await fetchJSON<AccountDTO>(
+          `/api/auth/account`,
+          init
+        );
+        setAccount(newAccount);
         setVerifyingSessionId('');
       } catch (error) {
         // Keep waiting

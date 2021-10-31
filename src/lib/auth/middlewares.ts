@@ -7,14 +7,19 @@ export async function readAccount(
   res: Response,
   next: NextFunction
 ) {
-  const { 'x-session-id': sessionId } = req.headers;
+  const { 'x-session-id': sessionId, 'x-prevent-logout': preventLogout } =
+    req.headers;
   if (typeof sessionId !== 'string' || !validateUUID(sessionId)) {
     next();
     return;
   }
   const account = await getAccountCollection().findOne({ sessionId });
   if (!account) {
-    res.status(401).send('😞 Session expired. Please login again.');
+    if (preventLogout) {
+      next();
+    } else {
+      res.status(401).send('😞 Session expired. Please login again.');
+    }
     return;
   }
   req.account = account;

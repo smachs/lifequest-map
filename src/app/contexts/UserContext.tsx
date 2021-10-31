@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { createContext, useEffect, useContext } from 'react';
 import { fetchJSON } from '../utils/api';
-import { writeError } from '../utils/logs';
+import { writeError, writeWarn } from '../utils/logs';
 import { notify } from '../utils/notifications';
 import { usePersistentState } from '../utils/storage';
 
@@ -18,7 +18,8 @@ type UserContextValue = {
   refresh: () => void;
   account: AccountDTO | null;
   logoutAccount: () => void;
-  refreshAccount: (verifyingSessionId?: string) => void;
+  setAccount: (account: AccountDTO) => void;
+  refreshAccount: () => void;
 };
 const UserContext = createContext<UserContextValue>({
   user: null,
@@ -26,6 +27,7 @@ const UserContext = createContext<UserContextValue>({
   refresh: () => undefined,
   account: null,
   logoutAccount: () => undefined,
+  setAccount: () => undefined,
   refreshAccount: () => undefined,
 });
 
@@ -75,21 +77,11 @@ export function UserProvider({ children }: UserProviderProps): JSX.Element {
     }
   };
 
-  const refreshAccount = async (verifyingSessionId?: string): Promise<void> => {
+  const refreshAccount = async (): Promise<void> => {
     try {
-      const init: RequestInit = {};
-      if (verifyingSessionId) {
-        init.headers = {
-          'x-session-id': verifyingSessionId,
-        };
-      }
-      const account = await fetchJSON<AccountDTO>(`/api/auth/account`, init);
+      const account = await notify(fetchJSON<AccountDTO>(`/api/auth/account`));
       setAccount(account);
     } catch (error) {
-      if (verifyingSessionId) {
-        // Keep waiting
-        return;
-      }
       writeError(error);
     }
   };
@@ -107,7 +99,7 @@ export function UserProvider({ children }: UserProviderProps): JSX.Element {
   useEffect(() => {
     function handleSessionExpired() {
       setAccount(null);
-      console.log('Expired');
+      writeWarn('Session expired');
     }
     window.addEventListener('session-expired', handleSessionExpired);
 
@@ -129,6 +121,7 @@ export function UserProvider({ children }: UserProviderProps): JSX.Element {
         setUsername,
         refresh,
         account,
+        setAccount,
         refreshAccount,
         logoutAccount,
       }}
@@ -140,11 +133,13 @@ export function UserProvider({ children }: UserProviderProps): JSX.Element {
 
 export function useAccount(): {
   account: AccountDTO | null;
-  refreshAccount: (verifyingSessionId?: string) => void;
+  refreshAccount: () => void;
+  setAccount: (account: AccountDTO) => void;
   logoutAccount: () => void;
 } {
-  const { account, refreshAccount, logoutAccount } = useContext(UserContext);
-  return { account, refreshAccount, logoutAccount };
+  const { account, refreshAccount, setAccount, logoutAccount } =
+    useContext(UserContext);
+  return { account, refreshAccount, setAccount, logoutAccount };
 }
 export function useUser(): User | null {
   return useContext(UserContext).user;
