@@ -34,6 +34,7 @@
 }
 
 :global(.leaflet-player-marker) {
+  pointer-events: none !important;
   transition: transform 1s linear;
 }
 
