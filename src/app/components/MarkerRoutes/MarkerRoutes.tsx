@@ -89,8 +89,8 @@ function handleSort(
   }
   if (sortBy === 'distance' && position) {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
-      calcDistance(position.location, b.positions[0]) -
-      calcDistance(position.location, a.positions[0]);
+      calcDistance(position.location, a.positions[0]) -
+      calcDistance(position.location, b.positions[0]);
   }
   if (sortBy === 'name') {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
