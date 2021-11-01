@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { writeError } from './logs';
+import useDebounce from './useDebounce';
 
 export function getJSONItem<T>(key: string, defaultValue: T): T {
   try {
@@ -26,12 +27,12 @@ export function usePersistentState<T>(
   const [state, setState] = useState<T>(() =>
     getJSONItem<T>(key, initialValue)
   );
+  useDebounce(state, (value) => setJSONItem<T>(key, value));
 
   function setValue(value: T | ((value: T) => T)) {
     try {
       const valueToStore =
         typeof value === 'function' ? (value as (value: T) => T)(state) : value;
-      setJSONItem<T>(key, valueToStore);
       setState(valueToStore);
     } catch (e) {
       writeError(e);
@@ -45,6 +46,7 @@ export function usePersistentState<T>(
           return;
         }
         if (event.newValue) {
+          console.log(`Write Storage ${event.key}`);
           const item = JSON.parse(event.newValue);
           setValue(item);
         }

@@ -79,7 +79,7 @@ export function PositionProvider({
         }
       } finally {
         if (active) {
-          handler = setTimeout(updatePosition, 20);
+          handler = setTimeout(updatePosition, 50);
         }
       }
     }

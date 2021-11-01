@@ -16,10 +16,10 @@ import MinimapSetup from '../Minimap/MinimapSetup';
 import usePersistentState from '../../utils/usePersistentState';
 import SettingsIcon from '../icons/SettingsIcon';
 import Settings from '../Settings/Settings';
-import { useEffect } from 'react';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import MapSearch from '../MapSearch/MapSearch';
+import useDebounce from '../../utils/useDebounce';
 
 type View = 'markers' | 'settings' | 'markerRoutes';
 
@@ -33,11 +33,11 @@ function MapFilter(): JSX.Element {
   const { following, toggleFollowing } = usePosition();
   const [showMinimap, setShowMinimap] = useMinimap();
 
-  useEffect(() => {
-    setTimeout(() => {
-      latestLeafletMap?.invalidateSize({ pan: false });
-    }, 300);
-  }, [isOpen]);
+  useDebounce(
+    isOpen,
+    () => latestLeafletMap?.invalidateSize({ pan: false }),
+    300
+  );
 
   function handleViewClick(view: View) {
     setIsOpen(true);
