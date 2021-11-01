@@ -159,13 +159,17 @@ function useWorldMap({
       if (!leafletMap) {
         return;
       }
+      let timeoutId: NodeJS.Timeout;
       const handleMoveEnd = () => {
-        const center = leafletMap.getCenter();
-        setJSONItem('mapPosition', {
-          x: center.lng,
-          y: center.lat,
-          zoom: leafletMap.getZoom(),
-        });
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          const center = leafletMap.getCenter();
+          setJSONItem('mapPosition', {
+            x: center.lng,
+            y: center.lat,
+            zoom: leafletMap.getZoom(),
+          });
+        }, 1000);
       };
       leafletMap.on('moveend', handleMoveEnd);
 

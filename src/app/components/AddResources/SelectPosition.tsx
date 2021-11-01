@@ -5,6 +5,7 @@ import useWorldMap from '../WorldMap/useWorldMap';
 import styles from './SelectPosition.module.css';
 import type { FilterItem } from '../MapFilter/mapFilters';
 import type { Details } from './AddResources';
+import { usePosition } from '../../contexts/PositionContext';
 import { getJSONItem } from '../../utils/storage';
 
 type SelectPositionType = {
@@ -17,18 +18,25 @@ function SelectPosition({
   filter,
   onSelectPosition,
 }: SelectPositionType): JSX.Element {
-  const mapPosition = getJSONItem<
-    | {
-        y: number;
-        x: number;
-        zoom: number;
-      }
-    | undefined
-  >('mapPosition', undefined);
+  const { position } = usePosition();
 
-  const [x, setX] = useState(mapPosition?.x || 8000);
-  const [y, setY] = useState(mapPosition?.y || 8000);
-  const [z, setZ] = useState(mapPosition?.zoom || 8000);
+  const [location, setLocation] = useState<[number, number, number]>(() => {
+    if (position) {
+      return [...position.location, 0];
+    }
+    const mapPosition = getJSONItem<
+      | {
+          y: number;
+          x: number;
+          zoom: number;
+        }
+      | undefined
+    >('mapPosition', undefined);
+    if (mapPosition) {
+      return [mapPosition.x, mapPosition.y, 0];
+    }
+    return [8000, 8000, 0];
+  });
   const { leafletMap, elementRef } = useWorldMap({ selectMode: true });
 
   useGeoman({
@@ -36,11 +44,10 @@ function SelectPosition({
     leafletMap,
     iconUrl: filter.iconUrl,
     filter,
-    x,
-    y,
+    x: location[0],
+    y: location[1],
     onMove: (x: number, y: number) => {
-      setX(x);
-      setY(y);
+      setLocation((location) => [x, y, location[2]]);
     },
   });
   useLayerGroups({
@@ -49,7 +56,7 @@ function SelectPosition({
   });
 
   function handleSave() {
-    onSelectPosition([x, y, z]);
+    onSelectPosition(location);
   }
 
   return (
@@ -64,8 +71,14 @@ function SelectPosition({
             min={0}
             max={14336}
             step={0.01}
-            value={x}
-            onChange={(event) => setX(+(+event.target.value).toFixed(2))}
+            value={location[0]}
+            onChange={(event) =>
+              setLocation([
+                +(+event.target.value).toFixed(2),
+                location[1],
+                location[2],
+              ])
+            }
             required
           />
         </label>
@@ -78,8 +91,14 @@ function SelectPosition({
             min={0}
             max={14336}
             step={0.01}
-            value={y}
-            onChange={(event) => setY(+(+event.target.value).toFixed(2))}
+            value={location[1]}
+            onChange={(event) =>
+              setLocation([
+                location[0],
+                +(+event.target.value).toFixed(2),
+                location[2],
+              ])
+            }
             required
           />
         </label>
@@ -92,8 +111,14 @@ function SelectPosition({
             min={0}
             max={2000}
             step={0.01}
-            value={z}
-            onChange={(event) => setZ(+(+event.target.value).toFixed(2))}
+            value={location[2]}
+            onChange={(event) =>
+              setLocation([
+                location[0],
+                location[1],
+                +(+event.target.value).toFixed(2),
+              ])
+            }
           />
         </label>
       </aside>
