@@ -184,10 +184,33 @@ export async function centerWindow(
 
 export async function dragResize(
   edge: overwolf.windows.enums.WindowDragEdge,
-  callback?: overwolf.CallbackFunction<overwolf.windows.DragResizeResult>
+  square?: boolean
 ): Promise<void> {
   const currentWindow = await getCurrentWindow();
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  overwolf.windows.dragResize(currentWindow.id, edge, null, callback);
+  const result = await new Promise<overwolf.windows.DragResizeResult>(
+    (resolve) => {
+      overwolf.windows.dragResize(
+        currentWindow.id,
+        edge,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        null,
+        resolve
+      );
+    }
+  );
+  if (square) {
+    if (result.height && result.width) {
+      const minSize = Math.max(
+        Math.floor((result.width + result.height) / 2),
+        200
+      );
+      overwolf.windows.changeSize({
+        window_id: result.id!,
+        width: minSize,
+        height: minSize,
+        auto_dpi_resize: true,
+      });
+    }
+  }
 }

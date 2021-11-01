@@ -3,10 +3,13 @@ import { dragResize, getCurrentWindow } from '../../utils/windows';
 import type { MouseEvent } from 'react';
 import { useEffect, useState } from 'react';
 
-function onDragResize(edge: overwolf.windows.enums.WindowDragEdge) {
+function onDragResize(
+  edge: overwolf.windows.enums.WindowDragEdge,
+  square?: boolean
+) {
   return (event: MouseEvent) => {
     event.stopPropagation();
-    dragResize(edge);
+    dragResize(edge, square);
   };
 }
 
@@ -39,7 +42,11 @@ function useIsMaximizedWindow(): boolean {
   return isMaximized;
 }
 
-function ResizeBorder(): JSX.Element {
+type ResizeBorderTypes = {
+  square?: boolean;
+};
+
+function ResizeBorder({ square }: ResizeBorderTypes): JSX.Element {
   const isMaximizedWindow = useIsMaximizedWindow();
   if (isMaximizedWindow) {
     return <></>;
@@ -48,42 +55,58 @@ function ResizeBorder(): JSX.Element {
     <>
       <div
         className={styles.topBorder}
-        onMouseDown={onDragResize(overwolf.windows.enums.WindowDragEdge.Top)}
+        onMouseDown={onDragResize(
+          overwolf.windows.enums.WindowDragEdge.Top,
+          square
+        )}
       />
       <div
         className={styles.rightBorder}
-        onMouseDown={onDragResize(overwolf.windows.enums.WindowDragEdge.Right)}
+        onMouseDown={onDragResize(
+          overwolf.windows.enums.WindowDragEdge.Right,
+          square
+        )}
       />
       <div
         className={styles.bottomBorder}
-        onMouseDown={onDragResize(overwolf.windows.enums.WindowDragEdge.Bottom)}
+        onMouseDown={onDragResize(
+          overwolf.windows.enums.WindowDragEdge.Bottom,
+          square
+        )}
       />
       <div
         className={styles.leftBorder}
-        onMouseDown={onDragResize(overwolf.windows.enums.WindowDragEdge.Left)}
+        onMouseDown={onDragResize(
+          overwolf.windows.enums.WindowDragEdge.Left,
+          square
+        )}
       />
       <div
         className={styles.topLeftBorder}
         onMouseDown={onDragResize(
-          overwolf.windows.enums.WindowDragEdge.TopLeft
+          overwolf.windows.enums.WindowDragEdge.TopLeft,
+          square
         )}
       />
       <div
         className={styles.topRightBorder}
         onMouseDown={onDragResize(
-          overwolf.windows.enums.WindowDragEdge.TopRight
+          overwolf.windows.enums.WindowDragEdge.TopRight,
+          square
         )}
       />
       <div
         className={styles.bottomLeftBorder}
         onMouseDown={onDragResize(
-          overwolf.windows.enums.WindowDragEdge.BottomLeft
+          overwolf.windows.enums.WindowDragEdge.BottomLeft,
+          square
         )}
       />
       <div
         className={styles.bottomRightBorder}
         onMouseDown={onDragResize(
-          overwolf.windows.enums.WindowDragEdge.BottomRight
+          overwolf.windows.enums.WindowDragEdge.BottomRight,
+          square
         )}
       />
     </>
