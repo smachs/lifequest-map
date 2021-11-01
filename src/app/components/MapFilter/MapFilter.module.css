@@ -27,6 +27,11 @@
   left: 100%;
   top: calc(50% - 80px);
   z-index: 9000;
+  pointer-events: none;
+}
+
+.nav > * {
+  pointer-events: all;
 }
 
 .nav__button {

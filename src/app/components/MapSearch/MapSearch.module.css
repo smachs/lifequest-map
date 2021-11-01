@@ -3,6 +3,11 @@
   width: 13em;
   height: 1.8rem;
   overflow: hidden;
+  pointer-events: none;
+}
+
+.container > * {
+  pointer-events: all;
 }
 
 .location {
