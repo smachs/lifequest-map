@@ -31,7 +31,7 @@ function useLayerGroups({
   const markersLayerGroupRef = useRef(leaflet.layerGroup());
   const allLayersRef = useRef<{
     [id: string]: {
-      layer: CanvasMarker | leaflet.LayerGroup;
+      layer: CanvasMarker;
       hasComments: boolean;
     };
   }>({});
@@ -56,26 +56,24 @@ function useLayerGroups({
       }
       let clearedCanvas = false;
       allMarkers.forEach(({ layer }) => {
-        if (layer instanceof CanvasMarker) {
-          if (
-            layer.options.image.size[0] === markerSize &&
-            layer.options.image.size[1] === markerSize &&
-            layer.options.image.showBackground === markerShowBackground
-          ) {
-            return;
-          }
-          if (!clearedCanvas) {
-            clearedCanvas = true;
-            const renderer = leafletMap.getRenderer(layer);
-
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            renderer._clear();
-          }
-          layer.options.image.size = [markerSize, markerSize];
-          layer.options.image.showBackground = markerShowBackground;
-          layer._updatePath();
+        if (
+          layer.options.image.size[0] === markerSize &&
+          layer.options.image.size[1] === markerSize &&
+          layer.options.image.showBackground === markerShowBackground
+        ) {
+          return;
         }
+        if (!clearedCanvas) {
+          clearedCanvas = true;
+          const renderer = leafletMap.getRenderer(layer);
+
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          renderer._clear();
+        }
+        layer.options.image.size = [markerSize, markerSize];
+        layer.options.image.showBackground = markerShowBackground;
+        layer._updatePath();
       });
     }, 200);
 
@@ -85,27 +83,46 @@ function useLayerGroups({
   }, [markerSize, markerShowBackground]);
 
   useEffect(() => {
+    if (!leafletMap) {
+      return;
+    }
     const markersLayerGroup = markersLayerGroupRef.current;
     const allLayers = allLayersRef.current;
     const removableMarkers = Object.keys(allLayers);
+    const mapBounds = leafletMap.getBounds();
 
     for (let i = 0; i < visibleMarkers.length; i++) {
       try {
         const marker = visibleMarkers[i];
+        const latLng: [number, number] = [
+          marker.position[1],
+          marker.position[0],
+        ];
+        const shouldBeVisible = mapBounds.contains([
+          marker.position[1],
+          marker.position[0],
+        ]);
+
         if (allLayers[marker._id]) {
           const index = removableMarkers.indexOf(marker._id);
           if (index > -1) {
             removableMarkers.splice(index, 1);
           }
+          const isVisible = markersLayerGroup.hasLayer(
+            allLayers[marker._id].layer
+          );
+
           if (allLayers[marker._id].hasComments !== Boolean(marker.comments)) {
             markersLayerGroup.removeLayer(allLayers[marker._id].layer);
+            delete allLayers[marker._id];
           } else {
-            if (!markersLayerGroup.hasLayer(allLayers[marker._id].layer)) {
+            if (shouldBeVisible && !isVisible) {
               markersLayerGroup.addLayer(allLayers[marker._id].layer);
             }
             continue;
           }
         }
+
         const mapFilter = mapFilters.find(
           (mapFilter) => mapFilter.type === marker.type
         );
@@ -119,22 +136,19 @@ function useLayerGroups({
         if (!filterCategory) {
           continue;
         }
-        const mapMarker = new CanvasMarker(
-          [marker.position[1], marker.position[0]],
-          {
-            radius: 16,
-            image: {
-              markerId: marker._id,
-              type: marker.type,
-              src: mapFilter.iconUrl,
-              showBackground: markerShowBackground,
-              borderColor: filterCategory.borderColor,
-              size: [markerSize, markerSize],
-              comments: marker.comments,
-            },
-            pmIgnore,
-          }
-        ).bindTooltip(getTooltipContent(marker, mapFilter), {
+        const mapMarker = new CanvasMarker(latLng, {
+          radius: 16,
+          image: {
+            markerId: marker._id,
+            type: marker.type,
+            src: mapFilter.iconUrl,
+            showBackground: markerShowBackground,
+            borderColor: filterCategory.borderColor,
+            size: [markerSize, markerSize],
+            comments: marker.comments,
+          },
+          pmIgnore,
+        }).bindTooltip(getTooltipContent(marker, mapFilter), {
           direction: 'top',
         });
         if (onMarkerClick) {
@@ -146,7 +160,9 @@ function useLayerGroups({
           layer: mapMarker,
           hasComments: Boolean(marker.comments),
         };
-        markersLayerGroup.addLayer(allLayers[marker._id].layer);
+        if (shouldBeVisible) {
+          markersLayerGroup.addLayer(allLayers[marker._id].layer);
+        }
       } catch (error) {
         writeError(error);
       }
@@ -155,9 +171,50 @@ function useLayerGroups({
       const layerCache = allLayers[markerId];
       if (layerCache) {
         markersLayerGroup.removeLayer(layerCache.layer);
+        delete allLayers[markerId];
       }
     });
-  }, [visibleMarkers]);
+
+    let isThrottled = false;
+    let currentMapBounds = leafletMap.getBounds();
+    function placeMarkersInBounds() {
+      if (isThrottled) {
+        return;
+      }
+      isThrottled = true;
+
+      setTimeout(() => {
+        const allMarkers = Object.values(allLayers);
+        if (allMarkers.length === 0) {
+          return;
+        }
+
+        const mapBounds = leafletMap!.getBounds();
+        currentMapBounds = mapBounds;
+        allMarkers.forEach((marker) => {
+          if (currentMapBounds !== mapBounds) {
+            return;
+          }
+          const layer = marker.layer;
+          const shouldBeVisible = mapBounds.contains(layer.getLatLng());
+
+          const isVisible = markersLayerGroup.hasLayer(layer);
+
+          if (isVisible && !shouldBeVisible) {
+            markersLayerGroup.removeLayer(layer);
+          } else if (!isVisible && shouldBeVisible) {
+            markersLayerGroup.addLayer(layer);
+          }
+        }, 500);
+        isThrottled = false;
+      });
+    }
+
+    leafletMap.on('moveend', placeMarkersInBounds);
+    return () => {
+      leafletMap.off('moveend', placeMarkersInBounds);
+    };
+  }, [leafletMap, visibleMarkers]);
 
   useEffect(() => {
     if (!leafletMap) {
