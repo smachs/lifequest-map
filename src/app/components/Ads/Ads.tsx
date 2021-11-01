@@ -74,7 +74,11 @@ function Ads({ active }: AdsProps): JSX.Element {
       }
       const { gameInfo, focusChanged } = res;
       if (gameInfo && gameInfo.classId === NEW_WORLD_CLASS_ID && focusChanged) {
-        if (gameInfo.isInFocus) {
+        if (
+          gameInfo.isInFocus &&
+          (currentWindow.stateEx === 'normal' ||
+            currentWindow.stateEx === 'maximized')
+        ) {
           owAd!.refreshAd({});
         } else {
           owAd!.removeAd();
