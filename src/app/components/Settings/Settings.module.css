@@ -1,9 +1,12 @@
 .container {
   padding: 1rem;
+  display: grid;
+  align-content: baseline;
+  row-gap: 1rem;
 }
 
 .label {
   display: grid;
-  grid-template-columns: 40% 60%;
+  grid-template-columns: 50% 50%;
   align-items: center;
 }
