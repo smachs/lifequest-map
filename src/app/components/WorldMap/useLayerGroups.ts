@@ -175,39 +175,42 @@ function useLayerGroups({
       }
     });
 
-    let isThrottled = false;
+    const allMarkers = Object.values(allLayers);
     let currentMapBounds = leafletMap.getBounds();
+    function showHideLayers() {
+      const mapBounds = leafletMap!.getBounds();
+      currentMapBounds = mapBounds;
+      allMarkers.forEach((marker) => {
+        if (currentMapBounds !== mapBounds) {
+          return;
+        }
+        const layer = marker.layer;
+        const shouldBeVisible = mapBounds.contains(layer.getLatLng());
+
+        const isVisible = markersLayerGroup.hasLayer(layer);
+
+        if (isVisible && !shouldBeVisible) {
+          markersLayerGroup.removeLayer(layer);
+        } else if (!isVisible && shouldBeVisible) {
+          markersLayerGroup.addLayer(layer);
+        }
+      });
+    }
+
+    let isThrottled = false;
+    let trailingTimeoutId: NodeJS.Timeout;
     function placeMarkersInBounds() {
+      clearTimeout(trailingTimeoutId);
       if (isThrottled) {
+        trailingTimeoutId = setTimeout(showHideLayers, 500);
         return;
       }
       isThrottled = true;
 
       setTimeout(() => {
-        const allMarkers = Object.values(allLayers);
-        if (allMarkers.length === 0) {
-          return;
-        }
-
-        const mapBounds = leafletMap!.getBounds();
-        currentMapBounds = mapBounds;
-        allMarkers.forEach((marker) => {
-          if (currentMapBounds !== mapBounds) {
-            return;
-          }
-          const layer = marker.layer;
-          const shouldBeVisible = mapBounds.contains(layer.getLatLng());
-
-          const isVisible = markersLayerGroup.hasLayer(layer);
-
-          if (isVisible && !shouldBeVisible) {
-            markersLayerGroup.removeLayer(layer);
-          } else if (!isVisible && shouldBeVisible) {
-            markersLayerGroup.addLayer(layer);
-          }
-        }, 500);
+        showHideLayers();
         isThrottled = false;
-      });
+      }, 500);
     }
 
     leafletMap.on('moveend', placeMarkersInBounds);
