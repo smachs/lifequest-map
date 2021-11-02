@@ -5,6 +5,7 @@ import Modal from '../components/Modal/Modal';
 type ModalData = {
   title?: string;
   children: ReactNode;
+  fitContent?: boolean;
 };
 type ModalContextProps = {
   modals: ModalData[];
@@ -36,18 +37,21 @@ export function ModalProvider({ children }: ModalProviderProps): JSX.Element {
     });
   }
 
-  const latestModal = modals[modals.length - 1];
-
   return (
     <ModalContext.Provider
       value={{ modals, addModal, closeLatestModal: handleClose }}
     >
       {children}
-      {latestModal && (
-        <Modal title={latestModal.title} onClose={handleClose}>
-          {latestModal.children}
+      {modals.map((modal, index) => (
+        <Modal
+          key={`${modal.title || 'unknown'}-${index}`}
+          title={modal.title}
+          onClose={handleClose}
+          fitContent={modal.fitContent}
+        >
+          {modal.children}
         </Modal>
-      )}
+      ))}
     </ModalContext.Provider>
   );
 }
