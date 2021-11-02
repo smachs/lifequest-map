@@ -38,7 +38,6 @@ function useMarker(markerId: string): {
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(() => {
-    setLoading(true);
     return notify(
       fetchJSON<{ marker: MarkerFull; comments: Comment[] }>(
         `/api/markers/${markerId}`
