@@ -17,6 +17,7 @@ import Credit from './Credit';
 import { writeError } from '../../utils/logs';
 import { deleteMarker, patchMarker } from './api';
 import { notify } from '../../utils/notifications';
+import Confirm from '../Confirm/Confirm';
 
 type MarkerDetailsProps = {
   marker: MarkerBasic;
@@ -102,7 +103,16 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
         <HideMarkerInput markerId={marker._id} />
         {account &&
           (account.isModerator || account.steamId === fullMarker?.userId) && (
-            <button className={styles.button} onClick={handleDelete}>
+            <button
+              className={styles.button}
+              onClick={() => {
+                addModal({
+                  title: 'Do you really want to delete this marker?',
+                  children: <Confirm onConfirm={handleDelete} />,
+                  fitContent: true,
+                });
+              }}
+            >
               💀 Remove invalid marker 💀
             </button>
           )}

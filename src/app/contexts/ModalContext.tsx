@@ -5,6 +5,7 @@ import Modal from '../components/Modal/Modal';
 type ModalData = {
   title?: string;
   children: ReactNode;
+  fitContent?: boolean;
 };
 type ModalContextProps = {
   modals: ModalData[];
@@ -44,7 +45,11 @@ export function ModalProvider({ children }: ModalProviderProps): JSX.Element {
     >
       {children}
       {latestModal && (
-        <Modal title={latestModal.title} onClose={handleClose}>
+        <Modal
+          title={latestModal.title}
+          onClose={handleClose}
+          fitContent={latestModal.fitContent}
+        >
           {latestModal.children}
         </Modal>
       )}

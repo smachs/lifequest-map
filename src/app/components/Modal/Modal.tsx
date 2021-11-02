@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
+import { classNames } from '../../utils/styles';
 import CloseIcon from '../icons/CloseIcon';
 import styles from './Modal.module.css';
 
@@ -7,8 +8,14 @@ type ModalProps = {
   title?: string;
   children: ReactNode;
   onClose: () => void;
+  fitContent?: boolean;
 };
-function Modal({ children, title, onClose }: ModalProps): JSX.Element {
+function Modal({
+  children,
+  title,
+  onClose,
+  fitContent,
+}: ModalProps): JSX.Element {
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent): void {
       if (event.key === 'Escape') {
@@ -24,7 +31,7 @@ function Modal({ children, title, onClose }: ModalProps): JSX.Element {
   return (
     <section className={styles.backdrop} onClick={onClose}>
       <div
-        className={styles.content}
+        className={classNames(styles.content, fitContent && styles.fitContent)}
         onClick={(event) => event.stopPropagation()}
       >
         <header className={styles.header}>

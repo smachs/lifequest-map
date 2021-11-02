@@ -59,7 +59,12 @@ function MarkerRoute({
           favorites={markerRoute.favorites || 0}
         />
         {editable && <PublicButton isPublic={isPublic} onClick={onPublic} />}
-        {editable && <DeleteButton onClick={onRemove} />}
+        {editable && (
+          <DeleteButton
+            onClick={onRemove}
+            title={`Do you really want to delete ${markerRoute.name}?`}
+          />
+        )}
       </div>
     </article>
   );
