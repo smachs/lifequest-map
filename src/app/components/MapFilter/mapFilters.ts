@@ -642,9 +642,21 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'pigment',
+    type: 'pigment_cyan_primsabloom',
+    title: i18n('Cyan Prismabloom'),
+    iconUrl: '/pois/pigment_cyan.webp',
+  },
+  {
+    category: 'pigment',
     type: 'pigment_green_primsabloom',
     title: i18n('Green Prismabloom'),
     iconUrl: '/pois/pigment_green.webp',
+  },
+  {
+    category: 'pigment',
+    type: 'pigment_magenta_primsabloom',
+    title: i18n('Magenta Prismabloom'),
+    iconUrl: '/pois/pigment_magenta.webp',
   },
   {
     category: 'pigment',
@@ -654,15 +666,21 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'pigment',
-    type: 'pigment_purple_primsabloom',
-    title: i18n('Purple Prismabloom'),
-    iconUrl: '/pois/pigment_purple.webp',
-  },
-  {
-    category: 'pigment',
     type: 'pigment_red_primsabloom',
     title: i18n('Red Prismabloom'),
     iconUrl: '/pois/pigment_red.webp',
+  },
+  {
+    category: 'pigment',
+    type: 'pigment_turquoise_primsabloom',
+    title: i18n('Turquoise Prismabloom'),
+    iconUrl: '/pois/pigment_turquoise.webp',
+  },
+  {
+    category: 'pigment',
+    type: 'pigment_violet_primsabloom',
+    title: i18n('Violet Prismabloom'),
+    iconUrl: '/pois/pigment_violet.webp',
   },
   {
     category: 'pigment',
