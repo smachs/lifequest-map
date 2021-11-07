@@ -1,4 +1,3 @@
-import type { MouseEvent } from 'react';
 import { StrictMode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import './globals.css';
@@ -8,7 +7,7 @@ import { MarkersProvider } from './contexts/MarkersContext';
 import { PositionProvider } from './contexts/PositionContext';
 import WorldMap from './components/WorldMap/WorldMap';
 import styles from './Minimap.module.css';
-import { dragMoveWindow, dragResize, WINDOWS } from './utils/windows';
+import { dragMoveWindow, WINDOWS } from './utils/windows';
 import {
   SETUP_MINIMAP,
   ZOOM_IN_MINIMAP,
@@ -19,13 +18,6 @@ import { FiltersProvider } from './contexts/FiltersContext';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { classNames } from './utils/styles';
 import ResizeBorder from './components/ResizeBorder/ResizeBorder';
-
-function onDragResize(edge: overwolf.windows.enums.WindowDragEdge) {
-  return async (event: MouseEvent) => {
-    event.stopPropagation();
-    await dragResize(edge, true);
-  };
-}
 
 function Minimap(): JSX.Element {
   const [showSetup, setShowSetup] = useState(false);
@@ -38,6 +30,10 @@ function Minimap(): JSX.Element {
     50
   );
   const [minimapZoom, setMinimapZoom] = usePersistentState('minimapZoom', 5);
+  const [rotateMinimap, setRotateMinimap] = usePersistentState(
+    'rotateMinimap',
+    true
+  );
   const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
@@ -107,7 +103,8 @@ function Minimap(): JSX.Element {
           hideControls
           alwaysFollowing
           initialZoom={minimapZoom}
-          className={styles.noMouseEvents}
+          className={styles.minimap}
+          rotate={rotateMinimap}
         />
       </div>
       {showSetup && (
@@ -148,29 +145,15 @@ function Minimap(): JSX.Element {
                 onChange={(event) => setMinimapOpacity(+event.target.value)}
               />
             </label>
-            <svg
-              className={styles.move}
-              onMouseDown={dragMoveWindow}
-              height="24px"
-              viewBox="0 0 24 24"
-              width="24px"
-              fill="currentColor"
-            >
-              <path d="M0 0h24v24H0z" fill="none" />
-              <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z" />
-            </svg>
-            <svg
-              height="24px"
-              viewBox="0 0 24 24"
-              width="24px"
-              fill="currentColor"
-              className={styles.bottomRightBorder}
-              onMouseDown={onDragResize(
-                overwolf.windows.enums.WindowDragEdge.BottomRight
-              )}
-            >
-              <path d="M19 12h-2v3h-3v2h5v-5zM7 9h3V7H5v5h2V9zm14-6H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16.01H3V4.99h18v14.02z" />
-            </svg>
+            <label>
+              Rotate minimap
+              <input
+                type="checkbox"
+                checked={rotateMinimap}
+                onMouseDown={(event) => event.stopPropagation()}
+                onChange={(event) => setRotateMinimap(event.target.checked)}
+              />
+            </label>
             <ResizeBorder square />
           </div>
         </div>

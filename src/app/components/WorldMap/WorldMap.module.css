@@ -2,6 +2,7 @@
   height: 100%;
   width: 100%;
   background: #859594 !important;
+  transition: transform 1s linear;
 }
 
 .follow {

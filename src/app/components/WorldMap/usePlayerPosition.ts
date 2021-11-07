@@ -14,9 +14,11 @@ export const coordinates = new CoordinatesControl({ position: 'bottomright' });
 function usePlayerPosition({
   leafletMap,
   alwaysFollowing,
+  rotate,
 }: {
   leafletMap: leaflet.Map | null;
   alwaysFollowing?: boolean;
+  rotate?: boolean;
 }): void {
   const { position, following } = usePosition();
   const [marker, setMarker] = useState<leaflet.Marker | null>(null);
@@ -37,19 +39,16 @@ function usePlayerPosition({
   }, [leafletMap]);
 
   const isFollowing = alwaysFollowing || following;
+
   useEffect(() => {
     if (!marker || !position || !leafletMap) {
       return;
     }
-    const oldLatLng = marker.getLatLng();
-    if (
-      oldLatLng.lat === position.location[0] &&
-      oldLatLng.lng === position.location[1]
-    ) {
-      return;
-    }
     marker.setLatLng(position.location);
     const playerImage = marker.getElement();
+
+    const leaftletMapContainer = leafletMap.getContainer();
+
     if (playerImage) {
       let rotation = position.rotation - 180;
       const oldRotation =
@@ -68,11 +67,18 @@ function usePlayerPosition({
       }
       playerImage.setAttribute('data-rotation', rotation.toString());
 
+      const newRotation = -rotation - 90;
       playerImage.style.transformOrigin = 'center';
       playerImage.style.transform = `${playerImage.style.transform.replace(
         /\srotate.+/g,
         ''
-      )} rotate(${-rotation - 90}deg)`;
+      )} rotate(${newRotation}deg)`;
+
+      if (rotate) {
+        leaftletMapContainer.style.transform = `rotate(${newRotation * -1}deg)`;
+      } else {
+        leaftletMapContainer.style.transform = '';
+      }
 
       divElement.innerHTML = `<span>[${position.location[1]}, ${position.location[0]}]</span>`;
     }
@@ -85,7 +91,7 @@ function usePlayerPosition({
         noMoveStart: true,
       });
     }
-  }, [marker, leafletMap, position, isFollowing]);
+  }, [marker, leafletMap, position, isFollowing, rotate]);
 }
 
 export default usePlayerPosition;
