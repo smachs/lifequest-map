@@ -22,7 +22,6 @@ const worldCRS = leaflet.extend({}, leaflet.CRS.Simple, {
   transformation: new leaflet.Transformation(1 / 16, 0, -1 / 16, 0),
 });
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const WorldTiles = leaflet.TileLayer.Canvas.extend({
   getTileUrl(coords: { x: number; y: number; z: number }) {

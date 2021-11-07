@@ -24,7 +24,6 @@ import compression from 'compression';
 import { initScreenshotsCollection } from './lib/screenshots/collection';
 import session from 'express-session';
 import passport from 'passport';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import SteamStrategy from 'passport-steam';
 import { readAccount } from './lib/auth/middlewares';
