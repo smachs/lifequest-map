@@ -101,18 +101,8 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
       toggleControls(true);
 
       event.layer.on('pm:edit', (event) => {
-        console.log('pm:edit');
         refreshMarkers(event.layer);
       });
-    });
-
-    leafletMap.on('pm:vertexremoved', (event) => {
-      console.log('pm:vertexremoved');
-      refreshMarkers(event.layer);
-    });
-    leafletMap.on('pm:remove', (event) => {
-      console.log('pm:remove');
-      refreshMarkers(event.layer);
     });
 
     // listen to vertexes being added to currently drawn layer (called workingLayer)
@@ -121,23 +111,8 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
         return;
       }
 
-      workingLayer.on('pm:remove', (event) => {
-        console.log('pm:remove');
-        refreshMarkers(event.layer);
-      });
-
       workingLayer.on('pm:vertexadded', (event) => {
-        console.log('pm:vertexadded');
-
         refreshMarkers(event.workingLayer);
-      });
-      workingLayer.on('pm:vertexremoved', (event) => {
-        console.log('pm:vertexremoved');
-        refreshMarkers(event.layer);
-      });
-      workingLayer.on('pm:edit', (event) => {
-        console.log('pm:edit');
-        refreshMarkers(event.layer);
       });
     });
 
