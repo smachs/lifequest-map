@@ -58,7 +58,6 @@ function useGeoman({
     });
 
     markerRef.current.on('pm:drag', (event) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       onMove(+event.latlng.lng.toFixed(2), +event.latlng.lat.toFixed(2));
     });

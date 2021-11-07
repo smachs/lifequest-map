@@ -149,6 +149,14 @@ function MarkerRoutes(): JSX.Element {
       await notify(deleteMarkerRoute(markerRouteId), {
         success: 'Route deleted 👌',
       });
+
+      const markerRoute = markerRoutes.find(
+        (markerRoute) => markerRoute._id == markerRouteId
+      );
+      if (markerRoute) {
+        toggleMarkerRoute(markerRoute);
+      }
+
       reload();
     } catch (error) {
       writeError(error);

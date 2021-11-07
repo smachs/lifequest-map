@@ -96,11 +96,11 @@ function useLayerGroups({
           marker.position[1],
           marker.position[0],
         ];
+
         const shouldBeVisible = mapBounds.contains([
           marker.position[1],
           marker.position[0],
         ]);
-
         if (allLayers[marker._id]) {
           const index = removableMarkers.indexOf(marker._id);
           if (index > -1) {
@@ -137,6 +137,7 @@ function useLayerGroups({
         const mapMarker = new CanvasMarker(latLng, {
           radius: 16,
           image: {
+            alwaysVisible: false,
             markerId: marker._id,
             type: marker.type,
             src: mapFilter.iconUrl,
@@ -183,7 +184,9 @@ function useLayerGroups({
           return;
         }
         const layer = marker.layer;
-        const shouldBeVisible = mapBounds.contains(layer.getLatLng());
+        const shouldBeVisible =
+          mapBounds.contains(layer.getLatLng()) ||
+          marker.layer.options.image.alwaysVisible;
 
         const isVisible = markersLayerGroup.hasLayer(layer);
 
