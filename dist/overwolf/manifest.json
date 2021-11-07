@@ -88,7 +88,8 @@
         "allow_local_file_access": true,
         "popup_blocker": true,
         "mute": true,
-        "keep_window_location": true
+        "keep_window_location": true,
+        "restrict_to_game_bounds": true
       }
     },
     "game_targeting": {
