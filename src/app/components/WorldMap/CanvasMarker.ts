@@ -11,9 +11,11 @@ type CanvasMarkerOptions = {
     src?: string;
     element?: HTMLImageElement;
     comments?: number;
+    rotate?: number;
   };
 };
 
+const canvasRenderer = leaflet.canvas();
 class CanvasMarker extends leaflet.CircleMarker {
   declare options: leaflet.CircleMarkerOptions & CanvasMarkerOptions;
   private _renderer: any;
@@ -23,6 +25,7 @@ class CanvasMarker extends leaflet.CircleMarker {
     latLng: leaflet.LatLngExpression,
     options: leaflet.CircleMarkerOptions & CanvasMarkerOptions
   ) {
+    options.renderer = canvasRenderer;
     super(latLng, options);
   }
 
@@ -41,7 +44,7 @@ class CanvasMarker extends leaflet.CircleMarker {
         this.options.image.element = undefined;
       };
     } else {
-      this._renderer._updateCanvasImg(this);
+      this._renderer!._updateCanvasImg(this);
     }
   }
 }
@@ -56,7 +59,7 @@ leaflet.Canvas.include({
     const ctx: CanvasRenderingContext2D = this._ctx;
     const dx = p.x - image.size[0] / 2;
     const dy = p.y - image.size[1] / 2;
-
+    ctx.save();
     if (image.showBackground) {
       ctx.beginPath();
       ctx.arc(
@@ -75,8 +78,20 @@ leaflet.Canvas.include({
         ctx.stroke();
       }
     }
-
-    ctx.drawImage(image.element, dx, dy, image.size[0], image.size[1]);
+    if (image.rotate) {
+      ctx.translate(p.x, p.y);
+      ctx.rotate((image.rotate * Math.PI) / 180);
+      ctx.drawImage(
+        image.element,
+        -image.size[0] / 2,
+        -image.size[1] / 2,
+        image.size[0],
+        image.size[1]
+      );
+      ctx.translate(-p.x, -p.y);
+    } else {
+      ctx.drawImage(image.element, dx, dy, image.size[0], image.size[1]);
+    }
 
     if (image.comments) {
       ctx.beginPath();
@@ -93,6 +108,7 @@ leaflet.Canvas.include({
       ctx.strokeStyle = '#333';
       ctx.stroke();
     }
+    ctx.restore();
   },
 });
 

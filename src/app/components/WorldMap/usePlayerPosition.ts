@@ -1,6 +1,7 @@
 import leaflet from 'leaflet';
 import { useEffect, useState } from 'react';
 import { usePosition } from '../../contexts/PositionContext';
+import CanvasMarker from './CanvasMarker';
 import { LeafIcon } from './useLayerGroups';
 
 const divElement = leaflet.DomUtil.create('div', 'leaflet-player-position');
@@ -49,6 +50,7 @@ function usePlayerPosition({
 
     const leaftletMapContainer = leafletMap.getContainer();
 
+    let running = true;
     if (playerImage) {
       let rotation = position.rotation - 180;
       const oldRotation =
@@ -76,6 +78,33 @@ function usePlayerPosition({
 
       if (rotate) {
         leaftletMapContainer.style.transform = `rotate(${newRotation * -1}deg)`;
+
+        const start = Date.now();
+        // @ts-ignore
+        const visibleMarkers = Object.values(leafletMap._layers).filter(
+          (layer) => layer instanceof CanvasMarker
+        ) as CanvasMarker[];
+        const oldMarkerRotation = visibleMarkers[0]?.options.image.rotate || 0;
+
+        const draw = () => {
+          if (!running) {
+            return;
+          }
+          const timeLeft = 1000 - (Date.now() - start);
+          const diff = newRotation - oldMarkerRotation;
+          const markerRotation =
+            oldMarkerRotation + (1 - Math.max(timeLeft, 0) / 1000) * diff;
+          // @ts-ignore
+          visibleMarkers[0]?._renderer._clear();
+          visibleMarkers.forEach((marker) => {
+            marker.options.image.rotate = markerRotation;
+            marker.redraw();
+          });
+          if (timeLeft >= 0) {
+            requestAnimationFrame(draw);
+          }
+        };
+        requestAnimationFrame(draw);
       } else {
         leaftletMapContainer.style.transform = '';
       }
@@ -91,6 +120,9 @@ function usePlayerPosition({
         noMoveStart: true,
       });
     }
+    return () => {
+      running = false;
+    };
   }, [marker, leafletMap, position, isFollowing, rotate]);
 }
 
