@@ -1,7 +1,7 @@
 import leaflet from 'leaflet';
 import { useEffect, useState } from 'react';
 import { usePosition } from '../../contexts/PositionContext';
-import CanvasMarker from './CanvasMarker';
+import type CanvasMarker from './CanvasMarker';
 import { LeafIcon } from './useLayerGroups';
 
 const divElement = leaflet.DomUtil.create('div', 'leaflet-player-position');
@@ -80,9 +80,9 @@ function usePlayerPosition({
         leaftletMapContainer.style.transform = `rotate(${newRotation * -1}deg)`;
 
         const start = Date.now();
-        // @ts-ignore
-        const visibleMarkers = Object.values(leafletMap._layers).filter(
-          (layer) => layer instanceof CanvasMarker
+        const visibleMarkers = Object.values(
+          // @ts-ignore
+          leafletMap.markersLayerGroup._layers
         ) as CanvasMarker[];
         const oldMarkerRotation = visibleMarkers[0]?.options.image.rotate || 0;
 
@@ -101,7 +101,9 @@ function usePlayerPosition({
             marker.redraw();
           });
           if (timeLeft >= 0) {
-            requestAnimationFrame(draw);
+            setTimeout(() => {
+              requestAnimationFrame(draw);
+            }, 1);
           }
         };
         requestAnimationFrame(draw);

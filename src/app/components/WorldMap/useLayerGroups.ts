@@ -41,6 +41,8 @@ function useLayerGroups({
       return;
     }
     markersLayerGroupRef.current.addTo(leafletMap);
+    // @ts-ignore
+    leafletMap.markersLayerGroup = markersLayerGroupRef.current;
   }, [leafletMap]);
 
   useEffect(() => {
