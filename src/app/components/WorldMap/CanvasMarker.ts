@@ -57,6 +57,10 @@ leaflet.Canvas.include({
     }
     const p = layer._point.round();
     const ctx: CanvasRenderingContext2D = this._ctx;
+    if (!ctx) {
+      return;
+    }
+
     const dx = p.x - image.size[0] / 2;
     const dy = p.y - image.size[1] / 2;
     ctx.save();
