@@ -22,7 +22,8 @@ export function setJSONItem<T>(key: string, item: T): void {
 
 export function usePersistentState<T>(
   key: string,
-  initialValue: T
+  initialValue: T,
+  listener = true
 ): [T, (value: T | ((value: T) => T)) => void] {
   const [state, setState] = useState<T>(() =>
     getJSONItem<T>(key, initialValue)
@@ -40,6 +41,9 @@ export function usePersistentState<T>(
   }
 
   useEffect(() => {
+    if (!listener) {
+      return;
+    }
     const handleStorage = (event: StorageEvent) => {
       try {
         if (event.key !== key) {
@@ -58,7 +62,7 @@ export function usePersistentState<T>(
     return () => {
       window.removeEventListener('storage', handleStorage);
     };
-  }, []);
+  }, [listener]);
 
   return [state, setValue];
 }

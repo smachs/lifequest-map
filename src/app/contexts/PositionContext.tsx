@@ -24,10 +24,14 @@ type PositionProviderProps = {
 export function PositionProvider({
   children,
 }: PositionProviderProps): JSX.Element {
-  const [position, setPosition] = usePersistentState<Position>('position', {
-    location: [0, 0],
-    rotation: 0,
-  });
+  const [position, setPosition] = usePersistentState<Position>(
+    'position',
+    {
+      location: [0, 0],
+      rotation: 0,
+    },
+    false
+  );
   const [following, setFollowing] = usePersistentState<boolean>(
     'following',
     true
