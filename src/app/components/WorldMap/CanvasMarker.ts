@@ -15,7 +15,6 @@ type CanvasMarkerOptions = {
   };
 };
 
-const canvasRenderer = leaflet.canvas();
 class CanvasMarker extends leaflet.CircleMarker {
   declare options: leaflet.CircleMarkerOptions & CanvasMarkerOptions;
   private _renderer: any;
@@ -25,7 +24,6 @@ class CanvasMarker extends leaflet.CircleMarker {
     latLng: leaflet.LatLngExpression,
     options: leaflet.CircleMarkerOptions & CanvasMarkerOptions
   ) {
-    options.renderer = canvasRenderer;
     super(latLng, options);
   }
 

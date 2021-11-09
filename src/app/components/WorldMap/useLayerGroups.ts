@@ -35,6 +35,7 @@ function useLayerGroups({
       hasComments: boolean;
     };
   }>({});
+  const canvasRendererRef = useRef(leaflet.canvas());
 
   useEffect(() => {
     if (!leafletMap) {
@@ -99,10 +100,7 @@ function useLayerGroups({
           marker.position[0],
         ];
 
-        const shouldBeVisible = mapBounds.contains([
-          marker.position[1],
-          marker.position[0],
-        ]);
+        const shouldBeVisible = mapBounds.contains(latLng);
         if (allLayers[marker._id]) {
           const index = removableMarkers.indexOf(marker._id);
           if (index > -1) {
@@ -137,6 +135,7 @@ function useLayerGroups({
           continue;
         }
         const mapMarker = new CanvasMarker(latLng, {
+          renderer: canvasRendererRef.current,
           radius: 16,
           image: {
             alwaysVisible: false,
@@ -168,6 +167,7 @@ function useLayerGroups({
         writeError(error);
       }
     }
+
     removableMarkers.forEach((markerId) => {
       const layerCache = allLayers[markerId];
       if (layerCache) {

@@ -46,7 +46,6 @@ export function usePersistentState<T>(
           return;
         }
         if (event.newValue) {
-          console.log(`Write Storage ${event.key}`);
           const item = JSON.parse(event.newValue);
           setValue(item);
         }
