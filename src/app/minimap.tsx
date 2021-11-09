@@ -32,7 +32,7 @@ function Minimap(): JSX.Element {
   const [minimapZoom, setMinimapZoom] = usePersistentState('minimapZoom', 5);
   const [rotateMinimap, setRotateMinimap] = usePersistentState(
     'rotateMinimap',
-    true
+    false
   );
   const [isHovering, setIsHovering] = useState(false);
 
