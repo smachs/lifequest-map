@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { createContext, useEffect, useState, useContext } from 'react';
+import { createContext, useEffect, useContext } from 'react';
 import { usePersistentState } from '../utils/storage';
 import { getGameInfo, useIsNewWorldRunning } from '../utils/games';
 import { useSetUser } from './UserContext';
@@ -24,7 +24,10 @@ type PositionProviderProps = {
 export function PositionProvider({
   children,
 }: PositionProviderProps): JSX.Element {
-  const [position, setPosition] = useState<Position | null>(null);
+  const [position, setPosition] = usePersistentState<Position | null>(
+    'position',
+    null
+  );
   const [following, setFollowing] = usePersistentState<boolean>(
     'following',
     true
