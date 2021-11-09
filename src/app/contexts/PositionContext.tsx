@@ -24,10 +24,10 @@ type PositionProviderProps = {
 export function PositionProvider({
   children,
 }: PositionProviderProps): JSX.Element {
-  const [position, setPosition] = usePersistentState<Position | null>(
-    'position',
-    null
-  );
+  const [position, setPosition] = usePersistentState<Position>('position', {
+    location: [0, 0],
+    rotation: 0,
+  });
   const [following, setFollowing] = usePersistentState<boolean>(
     'following',
     true
@@ -45,7 +45,7 @@ export function PositionProvider({
     let handler = setTimeout(updatePosition, 50);
     let active = true;
 
-    let lastLocation = [0, 0];
+    let lastLocation = position.location;
     let hasError = false;
     let lastPlayerName = '';
     async function updatePosition() {

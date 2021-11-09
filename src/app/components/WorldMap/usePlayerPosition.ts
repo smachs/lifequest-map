@@ -1,6 +1,7 @@
 import leaflet from 'leaflet';
 import { useEffect, useState } from 'react';
 import { usePosition } from '../../contexts/PositionContext';
+import useWindowIsVisible from '../../utils/useWindowIsVisible';
 import type CanvasMarker from './CanvasMarker';
 import { LeafIcon } from './useLayerGroups';
 
@@ -23,6 +24,7 @@ function usePlayerPosition({
 }): void {
   const { position, following } = usePosition();
   const [marker, setMarker] = useState<leaflet.Marker | null>(null);
+  const windowIsVisible = useWindowIsVisible();
 
   useEffect(() => {
     if (!leafletMap) {
@@ -42,7 +44,7 @@ function usePlayerPosition({
   const isFollowing = alwaysFollowing || following;
 
   useEffect(() => {
-    if (!marker || !position || !leafletMap) {
+    if (!marker || !position || !leafletMap || !windowIsVisible) {
       return;
     }
     marker.setLatLng(position.location);
@@ -125,7 +127,7 @@ function usePlayerPosition({
     return () => {
       running = false;
     };
-  }, [marker, leafletMap, position, isFollowing, rotate]);
+  }, [marker, leafletMap, position, isFollowing, rotate, windowIsVisible]);
 }
 
 export default usePlayerPosition;

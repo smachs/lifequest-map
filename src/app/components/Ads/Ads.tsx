@@ -1,8 +1,7 @@
 import type { OwAd } from '@overwolf/types/owads';
 import { useEffect, useRef, useState } from 'react';
-import { getCurrentWindow } from '../../utils/windows';
 import classes from './Ads.module.css';
-import { NEW_WORLD_CLASS_ID } from '../../utils/games';
+import useWindowIsVisible from '../../utils/useWindowIsVisible';
 
 type AdsProps = {
   active: boolean;
@@ -12,6 +11,7 @@ function Ads({ active }: AdsProps): JSX.Element {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [owAd, setOwAd] = useState<OwAd>();
   const isDisplayedFirstTime = useRef(true);
+  const windowIsVisible = useWindowIsVisible();
 
   useEffect(() => {
     if (!active || owAd) {
@@ -41,65 +41,22 @@ function Ads({ active }: AdsProps): JSX.Element {
   }, [active, owAd]);
 
   useEffect(() => {
-    if (!owAd || !active) {
+    if (!owAd) {
       return;
     }
-    async function handleWindowStateChanged(
-      state: overwolf.windows.WindowStateChangedEvent
-    ) {
-      const currentWindow = await getCurrentWindow();
-      if (currentWindow.id !== state.window_id) {
-        return;
-      }
-      if (
-        state.window_state_ex === 'minimized' ||
-        state.window_state_ex === 'hidden'
-      ) {
-        owAd!.removeAd();
-      } else if (
-        (state.window_previous_state_ex === 'minimized' ||
-          state.window_previous_state_ex === 'hidden') &&
-        (state.window_state_ex === 'normal' ||
-          state.window_state_ex === 'maximized')
-      ) {
-        owAd!.refreshAd({});
-      }
-    }
-    async function handleGameInfoUpdated(
-      res: overwolf.games.GameInfoUpdatedEvent
-    ) {
-      const currentWindow = await getCurrentWindow();
-      if (currentWindow.name !== 'overlay') {
-        return;
-      }
-      const { gameInfo, focusChanged } = res;
-      if (gameInfo && gameInfo.classId === NEW_WORLD_CLASS_ID && focusChanged) {
-        if (
-          gameInfo.isInFocus &&
-          (currentWindow.stateEx === 'normal' ||
-            currentWindow.stateEx === 'maximized')
-        ) {
-          owAd!.refreshAd({});
-        } else {
-          owAd!.removeAd();
-        }
-      }
+    if (isDisplayedFirstTime.current) {
+      isDisplayedFirstTime.current = false;
+      return;
     }
 
-    if (!isDisplayedFirstTime.current) {
+    if (windowIsVisible && active) {
+      console.log('refresh ad');
       owAd.refreshAd({});
+    } else {
+      console.log('remove ad');
+      owAd.removeAd();
     }
-    isDisplayedFirstTime.current = false;
-
-    overwolf.windows.onStateChanged.addListener(handleWindowStateChanged);
-    overwolf.games.onGameInfoUpdated.addListener(handleGameInfoUpdated);
-
-    return () => {
-      owAd!.removeAd();
-      overwolf.windows.onStateChanged.removeListener(handleWindowStateChanged);
-      overwolf.games.onGameInfoUpdated.removeListener(handleGameInfoUpdated);
-    };
-  }, [owAd, active]);
+  }, [owAd, active, windowIsVisible]);
 
   return (
     <aside className={classes.container}>
