@@ -32,7 +32,10 @@ function usePlayerPosition({
       return;
     }
     const icon = new LeafIcon({ iconUrl: '/player.webp' });
-    const newMarker = leaflet.marker([0, 0], { icon, zIndexOffset: 9000 });
+    const newMarker = leaflet.marker(position.location, {
+      icon,
+      zIndexOffset: 9000,
+    });
     newMarker.addTo(leafletMap);
     newMarker.getElement()!.classList.add('leaflet-player-marker');
     setMarker(newMarker);
@@ -58,7 +61,7 @@ function usePlayerPosition({
   }, [leafletMap, rotate]);
 
   useEffect(() => {
-    if (!marker || !position || !leafletMap || !windowIsVisible) {
+    if (!marker || !leafletMap || !windowIsVisible) {
       return;
     }
     marker.setLatLng(position.location);

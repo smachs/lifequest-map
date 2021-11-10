@@ -33,9 +33,10 @@ function MarkerRoute({
 }: MarkerRouteProps): JSX.Element {
   const { position } = usePosition();
 
-  const distance: number | null = position?.location
-    ? calcDistance(markerRoute.positions[0], position.location)
-    : null;
+  const distance: number = calcDistance(
+    markerRoute.positions[0],
+    position.location
+  );
 
   return (
     <article

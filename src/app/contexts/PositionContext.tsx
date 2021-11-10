@@ -7,12 +7,17 @@ import { writeError } from '../utils/logs';
 
 export type Position = { location: [number, number]; rotation: number };
 type PositionContextProps = {
-  position: Position | null;
+  position: Position;
   following: boolean;
   toggleFollowing: () => void;
 };
+
+export const defaultPosition: Position = {
+  location: [325, 9750],
+  rotation: 90,
+};
 const PositionContext = createContext<PositionContextProps>({
-  position: null,
+  position: defaultPosition,
   following: true,
   toggleFollowing: () => undefined,
 });
@@ -26,10 +31,7 @@ export function PositionProvider({
 }: PositionProviderProps): JSX.Element {
   const [position, setPosition] = usePersistentState<Position>(
     'position',
-    {
-      location: [0, 0],
-      rotation: 0,
-    },
+    defaultPosition,
     false
   );
   const [following, setFollowing] = usePersistentState<boolean>(
@@ -50,6 +52,7 @@ export function PositionProvider({
     let active = true;
 
     let lastLocation = position.location;
+    let lastRotation = position.rotation;
     let hasError = false;
     let lastPlayerName = '';
     async function updatePosition() {
@@ -64,10 +67,12 @@ export function PositionProvider({
           ];
           const rotation = +locationList.match(/rotation.z,(\d+)/)[1];
           if (
-            lastLocation[0] !== location[0] &&
-            lastLocation[1] !== location[1]
+            lastLocation[0] !== location[0] ||
+            lastLocation[1] !== location[1] ||
+            lastRotation !== rotation
           ) {
             lastLocation = location;
+            lastRotation = rotation;
             setPosition({
               location,
               rotation,

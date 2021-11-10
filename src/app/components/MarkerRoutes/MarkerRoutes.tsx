@@ -74,11 +74,7 @@ function handleFilter(
   return (item: MarkerRouteItem) => filterBySearch(item);
 }
 
-function handleSort(
-  sortBy: SortBy,
-  filters: string[],
-  position: Position | null
-) {
+function handleSort(sortBy: SortBy, filters: string[], position: Position) {
   if (sortBy === 'favorites') {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
       (b.favorites || 0) - (a.favorites || 0);
@@ -87,7 +83,7 @@ function handleSort(
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
       b.createdAt.localeCompare(a.createdAt);
   }
-  if (sortBy === 'distance' && position) {
+  if (sortBy === 'distance') {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
       calcDistance(position.location, a.positions[0]) -
       calcDistance(position.location, b.positions[0]);

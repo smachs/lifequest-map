@@ -495,7 +495,6 @@ export const mapFilters: FilterItem[] = [
     iconUrl: '/pois/lore_note.webp',
     hasName: true,
   },
-
   {
     category: 'essences',
     type: 'essences_shockbulb',

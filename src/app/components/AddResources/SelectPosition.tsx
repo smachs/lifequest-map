@@ -6,7 +6,6 @@ import styles from './SelectPosition.module.css';
 import type { FilterItem } from '../MapFilter/mapFilters';
 import type { Details } from './AddResources';
 import { usePosition } from '../../contexts/PositionContext';
-import { getJSONItem } from '../../utils/storage';
 
 type SelectPositionType = {
   details: Details;
@@ -20,23 +19,11 @@ function SelectPosition({
 }: SelectPositionType): JSX.Element {
   const { position } = usePosition();
 
-  const [location, setLocation] = useState<[number, number, number]>(() => {
-    if (position) {
-      return [...position.location, 0];
-    }
-    const mapPosition = getJSONItem<
-      | {
-          y: number;
-          x: number;
-          zoom: number;
-        }
-      | undefined
-    >('mapPosition', undefined);
-    if (mapPosition) {
-      return [mapPosition.x, mapPosition.y, 0];
-    }
-    return [8000, 8000, 0];
-  });
+  const [location, setLocation] = useState<[number, number, number]>(() => [
+    position.location[1],
+    position.location[0],
+    0,
+  ]);
   const { leafletMap, elementRef } = useWorldMap({ selectMode: true });
 
   useGeoman({

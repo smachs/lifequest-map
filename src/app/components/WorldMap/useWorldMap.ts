@@ -6,6 +6,7 @@ import { coordinates as playerCoordinates } from './usePlayerPosition';
 import { getJSONItem, setJSONItem } from '../../utils/storage';
 import { getRegions } from './regions';
 import { useSettings } from '../../contexts/SettingsContext';
+import { defaultPosition } from '../../contexts/PositionContext';
 const { VITE_API_ENDPOINT } = import.meta.env;
 
 function toThreeDigits(number: number): string {
@@ -84,15 +85,13 @@ function useWorldMap({
       return;
     }
 
-    const southWest = leaflet.latLng(0, 4000);
-    const northEast = leaflet.latLng(10000, 14336);
-    const bounds = leaflet.latLngBounds(southWest, northEast);
+    const zoom = initialZoom || 4;
     const map = leaflet.map(mapElement, {
       preferCanvas: true,
       crs: worldCRS,
       maxZoom: 6,
       minZoom: 0,
-      zoom: initialZoom,
+      zoom: zoom,
       attributionControl: false,
       zoomControl: false,
       maxBounds: leaflet.latLngBounds([-10000, -7000], [20000, 25000]),
@@ -102,32 +101,21 @@ function useWorldMap({
     }
     setLeafletMap(map);
 
-    const mapPosition = getJSONItem<
-      | {
-          y: number;
-          x: number;
-          zoom: number;
-        }
-      | undefined
-    >('mapPosition', undefined);
+    const mapPosition = getJSONItem<{
+      y: number;
+      x: number;
+      zoom: number;
+    }>('mapPosition', {
+      y: defaultPosition.location[0],
+      x: defaultPosition.location[1],
+      zoom: zoom,
+    });
 
-    if (mapPosition) {
-      map.setView(
-        [mapPosition.y, mapPosition.x],
-        initialZoom || mapPosition.zoom
-      );
-    } else {
-      map.fitBounds(bounds);
-      if (initialZoom) {
-        map.setZoom(initialZoom);
-      }
-      const center = map.getCenter();
-      setJSONItem('mapPosition', {
-        x: center.lng,
-        y: center.lat,
-        zoom: map.getZoom(),
-      });
-    }
+    map.setView(
+      [mapPosition.y, mapPosition.x],
+      initialZoom || mapPosition.zoom
+    );
+
     if (!hideControls) {
       leaflet.control.zoom({ position: 'topright' }).addTo(map);
 
