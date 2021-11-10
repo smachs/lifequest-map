@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { usePosition } from '../../contexts/PositionContext';
 import useWindowIsVisible from '../../utils/useWindowIsVisible';
 import type CanvasMarker from './CanvasMarker';
+import { updateRotation } from './rotation';
 import { LeafIcon } from './useLayerGroups';
 
 const divElement = leaflet.DomUtil.create('div', 'leaflet-player-position');
@@ -44,6 +45,19 @@ function usePlayerPosition({
   const isFollowing = alwaysFollowing || following;
 
   useEffect(() => {
+    if (!leafletMap) {
+      return;
+    }
+    if (!rotate) {
+      const visibleMarkers = Object.values(
+        // @ts-ignore
+        leafletMap.markersLayerGroup._layers
+      ) as CanvasMarker[];
+      updateRotation(visibleMarkers, 0);
+    }
+  }, [leafletMap, rotate]);
+
+  useEffect(() => {
     if (!marker || !position || !leafletMap || !windowIsVisible) {
       return;
     }
@@ -52,7 +66,7 @@ function usePlayerPosition({
 
     const leaftletMapContainer = leafletMap.getContainer();
 
-    let running = true;
+    let animationFrameId: number | null = null;
     if (playerImage) {
       let rotation = position.rotation - 180;
       const oldRotation =
@@ -70,7 +84,6 @@ function usePlayerPosition({
         rotation -= 360;
       }
       playerImage.setAttribute('data-rotation', rotation.toString());
-
       const newRotation = -rotation - 90;
       playerImage.style.transformOrigin = 'center';
       playerImage.style.transform = `${playerImage.style.transform.replace(
@@ -80,7 +93,6 @@ function usePlayerPosition({
 
       if (rotate) {
         leaftletMapContainer.style.transform = `rotate(${newRotation * -1}deg)`;
-
         const start = Date.now();
         const visibleMarkers = Object.values(
           // @ts-ignore
@@ -89,26 +101,19 @@ function usePlayerPosition({
         const oldMarkerRotation = visibleMarkers[0]?.options.image.rotate || 0;
 
         const draw = () => {
-          if (!running) {
+          if (!animationFrameId) {
             return;
           }
           const timeLeft = 1000 - (Date.now() - start);
           const diff = newRotation - oldMarkerRotation;
           const markerRotation =
             oldMarkerRotation + (1 - Math.max(timeLeft, 0) / 1000) * diff;
-          // @ts-ignore
-          visibleMarkers[0]?._renderer._clear();
-          visibleMarkers.forEach((marker) => {
-            marker.options.image.rotate = markerRotation;
-            marker.redraw();
-          });
+          updateRotation(visibleMarkers, markerRotation);
           if (timeLeft >= 0) {
-            setTimeout(() => {
-              requestAnimationFrame(draw);
-            }, 1);
+            animationFrameId = requestAnimationFrame(draw);
           }
         };
-        requestAnimationFrame(draw);
+        animationFrameId = requestAnimationFrame(draw);
       } else {
         leaftletMapContainer.style.transform = '';
       }
@@ -125,7 +130,9 @@ function usePlayerPosition({
       });
     }
     return () => {
-      running = false;
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
     };
   }, [marker, leafletMap, position, isFollowing, rotate, windowIsVisible]);
 }

@@ -61,7 +61,6 @@ leaflet.Canvas.include({
 
     const dx = p.x - image.size[0] / 2;
     const dy = p.y - image.size[1] / 2;
-    ctx.save();
     if (image.showBackground) {
       ctx.beginPath();
       ctx.arc(
@@ -81,6 +80,8 @@ leaflet.Canvas.include({
       }
     }
     if (image.rotate) {
+      ctx.save();
+
       ctx.translate(p.x, p.y);
       ctx.rotate((image.rotate * Math.PI) / 180);
       ctx.drawImage(
@@ -91,6 +92,7 @@ leaflet.Canvas.include({
         image.size[1]
       );
       ctx.translate(-p.x, -p.y);
+      ctx.restore();
     } else {
       ctx.drawImage(image.element, dx, dy, image.size[0], image.size[1]);
     }
@@ -110,7 +112,6 @@ leaflet.Canvas.include({
       ctx.strokeStyle = '#333';
       ctx.stroke();
     }
-    ctx.restore();
   },
 });
 
