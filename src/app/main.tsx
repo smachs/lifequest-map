@@ -17,11 +17,11 @@ waitForOverwolf().then(() => {
         <UserProvider>
           <FiltersProvider>
             <MarkersProvider>
-              <ModalProvider>
-                <PositionProvider>
+              <PositionProvider>
+                <ModalProvider>
                   <App />
-                </PositionProvider>
-              </ModalProvider>
+                </ModalProvider>
+              </PositionProvider>
             </MarkersProvider>
           </FiltersProvider>
         </UserProvider>
