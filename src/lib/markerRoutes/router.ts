@@ -43,6 +43,14 @@ markerRoutesRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       return;
     }
 
+    const existingMarkerRoute = await getMarkerRoutesCollection().findOne({
+      name: new RegExp(`^${name}$`, 'i'),
+      username: account.name,
+    });
+    if (existingMarkerRoute) {
+      res.status(409).send('Route with same name already exists');
+      return;
+    }
     const inserted = await getMarkerRoutesCollection().insertOne(markerRoute);
     if (!inserted.acknowledged) {
       res.status(500).send('Error inserting marker');
