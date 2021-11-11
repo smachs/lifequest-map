@@ -231,8 +231,10 @@ function useLayerGroups({
 
     for (let i = 0; i < markerRoutes.length; i++) {
       const markerRoute = markerRoutes[i];
-      const startHereCircle = leaflet.circle(markerRoute.positions[0]);
-      const line = leaflet.polyline(markerRoute.positions);
+      const startHereCircle = leaflet.circle(markerRoute.positions[0], {
+        pmIgnore: true,
+      });
+      const line = leaflet.polyline(markerRoute.positions, { pmIgnore: true });
       startHereCircle.addTo(layerGroup);
       line.addTo(layerGroup);
     }
