@@ -14,7 +14,7 @@ function MarkerTypes({ markersByType }: MarkerTypesProps): JSX.Element {
 
   return (
     <section className={styles.container}>
-      {Object.keys(markersByType).length === 0 && 'No markers selected'}
+      {Object.keys(markersByType).length === 0 && 'No markers'}
       {Object.keys(markersByType).map((markerType) => {
         const mapFilter = mapFilters.find(
           (mapFilter) => mapFilter.type === markerType
