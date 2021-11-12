@@ -70,7 +70,7 @@ export function MarkersProvider({
   );
   const [mode, setMode] = useState<Mode>(null);
 
-  const [filters] = useFilters();
+  const [filters, setFilters] = useFilters();
   const user = useUser();
 
   const refresh = useCallback(() => {
@@ -134,8 +134,14 @@ export function MarkersProvider({
     if (index > -1) {
       markerRoutesClone.splice(index, 1);
     } else {
-      markerRoutesClone.push(markerRoute!);
+      const types = Object.keys(markerRoute.markersByType);
+      setFilters((filters) => [
+        ...filters,
+        ...types.filter((type) => !filters.includes(type)),
+      ]);
+      markerRoutesClone.push(markerRoute);
     }
+
     setMarkerRoutes(markerRoutesClone);
   };
 

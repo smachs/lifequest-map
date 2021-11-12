@@ -120,7 +120,7 @@ function MarkerRoutes(): JSX.Element {
     'all'
   );
   const [search, setSearch] = usePersistentState('searchRoutes', '');
-  const [filters] = useFilters();
+  const [filters, setFilters] = useFilters();
   const { position } = usePosition();
   const [edit, setEdit] = useState<MarkerRouteItem | boolean>(false);
 
@@ -190,6 +190,11 @@ function MarkerRoutes(): JSX.Element {
     ) {
       toggleMarkerRoute(markerRoute);
     }
+    const types = Object.keys(markerRoute.markersByType);
+    setFilters((filters) => [
+      ...filters,
+      ...types.filter((type) => !filters.includes(type)),
+    ]);
     setEdit(markerRoute);
   }
 

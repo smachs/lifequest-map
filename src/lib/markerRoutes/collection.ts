@@ -61,7 +61,15 @@ function ensureMarkerRoutesSchema(): Promise<Document> {
           },
         },
         additionalProperties: false,
-        required: ['name', 'positions', 'markersByType', 'createdAt'],
+        required: [
+          'name',
+          'userId',
+          'username',
+          'positions',
+          'isPublic',
+          'markersByType',
+          'createdAt',
+        ],
       },
     },
   });
