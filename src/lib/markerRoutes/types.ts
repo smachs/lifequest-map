@@ -10,4 +10,5 @@ export type MarkerRouteDTO = {
     [type: string]: number;
   };
   createdAt: Date;
+  updatedAt: Date;
 };

@@ -23,6 +23,7 @@ markerRoutesRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       return;
     }
 
+    const now = new Date();
     const markerRoute: MarkerRouteDTO = {
       name,
       userId: account.steamId,
@@ -30,7 +31,8 @@ markerRoutesRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       positions,
       markersByType,
       isPublic: Boolean(isPublic),
-      createdAt: new Date(),
+      createdAt: now,
+      updatedAt: now,
     };
     if (Array.isArray(positions)) {
       markerRoute.positions = positions.map((position) =>
@@ -183,7 +185,9 @@ markerRoutesRouter.patch(
         return;
       }
 
-      const markerRoute: Partial<MarkerRouteDTO> = {};
+      const markerRoute: Partial<MarkerRouteDTO> = {
+        updatedAt: new Date(),
+      };
       if (typeof name === 'string' && name.length <= MAX_MARKER_ROUTE_LENGTH) {
         markerRoute.name = name;
       }
