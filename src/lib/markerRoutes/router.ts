@@ -208,14 +208,13 @@ markerRoutesRouter.patch(
         $set: markerRoute,
       });
 
-      if (!result.ok) {
+      if (!result.ok || !result.value) {
         res.status(404).end(`No marker route found for id ${markerRouteId}`);
         return;
       }
       res.status(200).json(result.value);
-
       postToDiscord(
-        `🗺️ Route ${markerRoute.name} updated by ${account.name}`,
+        `🗺️ Route ${result.value.name} updated by ${account.name}`,
         markerRoute.isPublic
       );
     } catch (error) {
