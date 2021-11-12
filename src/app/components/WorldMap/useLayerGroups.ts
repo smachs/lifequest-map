@@ -145,7 +145,9 @@ function useLayerGroups({
             size: [markerSize, markerSize],
             comments: marker.comments,
           },
-          pmIgnore: true,
+          pmIgnore:
+            !leafletMap.pm.globalDrawModeEnabled() &&
+            !leafletMap.pm.globalEditModeEnabled(),
         }).bindTooltip(getTooltipContent(marker, mapFilter), {
           direction: 'top',
         });

@@ -114,6 +114,7 @@ function SelectRoute({
 
     let existingLayer: leaflet.Polyline;
     if (markerRoute) {
+      leafletMap.pm.enableGlobalEditMode();
       existingLayer = leaflet.polyline(markerRoute.positions, {
         pmIgnore: false,
       });
@@ -123,8 +124,10 @@ function SelectRoute({
       existingLayer.on('pm:edit', (event) => {
         refreshMarkers(event.layer);
       });
-      leafletMap.pm.enableGlobalEditMode();
       toggleControls(true);
+      setTimeout(() => {
+        refreshMarkers(existingLayer);
+      }, 100);
     } else {
       leafletMap.pm.enableDraw('Line');
     }
