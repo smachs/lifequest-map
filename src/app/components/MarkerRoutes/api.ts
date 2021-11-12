@@ -36,7 +36,7 @@ export function patchMarkerRoute(
   markerRouteId: string,
   patch: Partial<MarkerRouteDTO>
 ) {
-  return fetchJSON(`/api/marker-routes/${markerRouteId}`, {
+  return fetchJSON<MarkerRouteItem>(`/api/marker-routes/${markerRouteId}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

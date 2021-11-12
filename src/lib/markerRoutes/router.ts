@@ -155,9 +155,9 @@ markerRoutesRouter.patch(
       const account = req.account!;
 
       const { markerRouteId } = req.params;
-      const { isPublic } = req.body;
+      const { name, isPublic, positions, markersByType } = req.body;
 
-      if (!ObjectId.isValid(markerRouteId) || typeof isPublic !== 'boolean') {
+      if (!ObjectId.isValid(markerRouteId)) {
         res.status(400).send('Invalid payload');
         return;
       }
@@ -168,38 +168,55 @@ markerRoutesRouter.patch(
       if (!account.isModerator) {
         query.userId = account.steamId;
       }
-
       const markerRoutesCollection = getMarkerRoutesCollection();
-      const markerRoute = await markerRoutesCollection.findOne(query);
-      if (!markerRoute) {
+      const existingMarkerRoute = await markerRoutesCollection.findOne(query);
+      if (!existingMarkerRoute) {
         res.status(404).end(`No marker route found for id ${markerRouteId}`);
         return;
       }
       if (
-        markerRoute.isPublic &&
+        existingMarkerRoute.isPublic &&
         !account.isModerator &&
-        markerRoute.userId !== account.steamId
+        existingMarkerRoute.userId !== account.steamId
       ) {
         res.status(403).send('💀 no access');
         return;
       }
 
-      const result = await getMarkerRoutesCollection().updateOne(query, {
-        $set: {
-          isPublic: isPublic,
-        },
+      const markerRoute: Partial<MarkerRouteDTO> = {};
+      if (typeof name === 'string' && name.length <= MAX_MARKER_ROUTE_LENGTH) {
+        markerRoute.name = name;
+      }
+      if (typeof isPublic === 'boolean') {
+        markerRoute.isPublic = isPublic;
+      }
+      if (Array.isArray(positions)) {
+        markerRoute.positions = positions.map((position) =>
+          position.map((part: number) => new Double(part))
+        ) as [Double, Double][];
+        if (markerRoute.positions.length === 0) {
+          res.status(400).send('Invalid payload');
+          return;
+        }
+      }
+
+      if (typeof markersByType !== 'undefined') {
+        markerRoute.markersByType = markersByType;
+      }
+
+      const result = await getMarkerRoutesCollection().findOneAndUpdate(query, {
+        $set: markerRoute,
       });
 
-      if (!result.matchedCount) {
+      if (!result.ok) {
         res.status(404).end(`No marker route found for id ${markerRouteId}`);
         return;
       }
-      res.status(200).json({});
+      res.status(200).json(result.value);
 
       postToDiscord(
-        `🗺️ Route ${markerRoute.name} is not ${
-          isPublic ? 'public' : 'private'
-        }. Changed by ${account.name}`
+        `🗺️ Route ${markerRoute.name} updated by ${account.name}`,
+        markerRoute.isPublic
       );
     } catch (error) {
       next(error);

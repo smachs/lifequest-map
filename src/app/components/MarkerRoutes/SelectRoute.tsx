@@ -5,25 +5,32 @@ import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 import leaflet from 'leaflet';
 import MarkerTypes from './MarkerTypes';
-import { useAccount } from '../../contexts/UserContext';
 import { notify } from '../../utils/notifications';
-import { postMarkerRoute } from './api';
+import { patchMarkerRoute, postMarkerRoute } from './api';
 import CanvasMarker from '../WorldMap/CanvasMarker';
 import { useMarkers } from '../../contexts/MarkersContext';
+import type { MarkerRouteItem } from './MarkerRoutes';
 
 type SelectRouteProps = {
   leafletMap: leaflet.Map;
+  markerRoute?: MarkerRouteItem;
   onClose: () => void;
 };
-function SelectRoute({ leafletMap, onClose }: SelectRouteProps): JSX.Element {
-  const [positions, setPositions] = useState<[number, number][]>([]);
+function SelectRoute({
+  leafletMap,
+  markerRoute,
+  onClose,
+}: SelectRouteProps): JSX.Element {
+  const [positions, setPositions] = useState<[number, number][]>(
+    markerRoute?.positions || []
+  );
   const [markersByType, setMarkersByType] = useState<{
     [type: string]: number;
   }>({});
-  const [name, setName] = useState('');
-  const { account } = useAccount();
-  const [isPublic, setIsPublic] = useState(false);
+  const [name, setName] = useState(markerRoute?.name || '');
+  const [isPublic, setIsPublic] = useState(markerRoute?.isPublic || false);
   const { toggleMarkerRoute, refreshMarkerRoutes } = useMarkers();
+
   useEffect(() => {
     const toggleControls = (editMode: boolean) => {
       leafletMap.pm.addControls({
@@ -105,7 +112,22 @@ function SelectRoute({ leafletMap, onClose }: SelectRouteProps): JSX.Element {
       });
     });
 
-    leafletMap.pm.enableDraw('Line');
+    let existingLayer: leaflet.Polyline;
+    if (markerRoute) {
+      existingLayer = leaflet.polyline(markerRoute.positions, {
+        pmIgnore: false,
+      });
+      existingLayer.pm.toggleEdit();
+      existingLayer.addTo(leafletMap);
+      refreshMarkers(existingLayer);
+      existingLayer.on('pm:edit', (event) => {
+        refreshMarkers(event.layer);
+      });
+      leafletMap.pm.enableGlobalEditMode();
+      toggleControls(true);
+    } else {
+      leafletMap.pm.enableDraw('Line');
+    }
 
     return () => {
       leafletMap.pm.removeControls();
@@ -115,25 +137,28 @@ function SelectRoute({ leafletMap, onClose }: SelectRouteProps): JSX.Element {
       if (createdLayer) {
         createdLayer.remove();
       }
+      if (existingLayer) {
+        existingLayer.remove();
+      }
     };
   }, []);
 
   async function handleSave() {
-    if (!account) {
-      return;
-    }
-    const markerRoute = await notify(
-      postMarkerRoute({
-        name,
-        isPublic,
-        positions,
-        markersByType,
-      }),
-      { success: 'Route added 👌' }
-    );
+    const partialMarkerRoute = {
+      name,
+      isPublic,
+      positions,
+      markersByType,
+    };
+    const action = markerRoute
+      ? patchMarkerRoute(markerRoute._id, partialMarkerRoute)
+      : postMarkerRoute(partialMarkerRoute);
+    const updatedMarkerRoute = await notify(action, {
+      success: markerRoute ? 'Route updated 👌' : 'Route added 👌',
+    });
 
+    toggleMarkerRoute(updatedMarkerRoute);
     await refreshMarkerRoutes();
-    toggleMarkerRoute(markerRoute);
     onClose();
   }
 
@@ -162,7 +187,7 @@ function SelectRoute({ leafletMap, onClose }: SelectRouteProps): JSX.Element {
         onClick={handleSave}
         disabled={!name || positions.length === 0}
       >
-        Save Position {!name && '(Name missing)'}
+        Save Route {!name && '(Name missing)'}
       </button>
       <button className={styles.button} onClick={onClose}>
         Cancel
