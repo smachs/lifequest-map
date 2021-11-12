@@ -7,7 +7,6 @@ export type FilterItem = {
   iconUrl: string;
   hasName?: boolean;
   hasLevel?: boolean;
-  hasLevelRange?: boolean;
 };
 
 export const mapFilters: FilterItem[] = [

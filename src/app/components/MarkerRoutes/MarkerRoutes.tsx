@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useFilters } from '../../contexts/FiltersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
-import { useModal } from '../../contexts/ModalContext';
 import type { Position } from '../../contexts/PositionContext';
 import { usePosition } from '../../contexts/PositionContext';
 import type { AccountDTO } from '../../contexts/UserContext';
@@ -13,9 +12,9 @@ import { usePersistentState } from '../../utils/storage';
 import ActionButton from '../ActionControl/ActionButton';
 import SearchIcon from '../icons/SearchIcon';
 import { mapFilters } from '../MapFilter/mapFilters';
+import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import {
   deleteMarkerRoute,
-  getMarkerRoutes,
   patchFavoriteMarkerRoute,
   patchMarkerRoute,
 } from './api';
@@ -108,9 +107,13 @@ function handleSort(sortBy: SortBy, filters: string[], position: Position) {
 }
 
 function MarkerRoutes(): JSX.Element {
-  const { addModal } = useModal();
-  const { markerRoutes, clearMarkerRoutes, toggleMarkerRoute } = useMarkers();
-  const [allMarkerRoutes, setAllMarkerRoutes] = useState<MarkerRouteItem[]>([]);
+  const {
+    markerRoutes,
+    clearMarkerRoutes,
+    toggleMarkerRoute,
+    refreshMarkerRoutes,
+    allMarkerRoutes,
+  } = useMarkers();
   const { account, refreshAccount } = useAccount();
   const [sortBy, setSortBy] = usePersistentState<SortBy>(
     'markerRoutesSort',
@@ -123,18 +126,10 @@ function MarkerRoutes(): JSX.Element {
   const [search, setSearch] = usePersistentState('searchRoutes', '');
   const [filters] = useFilters();
   const { position } = usePosition();
-
-  const reload = async () => {
-    try {
-      const newMarkerRoutes = await notify(getMarkerRoutes());
-      setAllMarkerRoutes(newMarkerRoutes);
-    } catch (error) {
-      writeError(error);
-    }
-  };
+  const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
-    reload();
+    refreshMarkerRoutes();
   }, []);
 
   async function handleRemove(markerRouteId: string): Promise<void> {
@@ -153,7 +148,7 @@ function MarkerRoutes(): JSX.Element {
         toggleMarkerRoute(markerRoute);
       }
 
-      reload();
+      refreshMarkerRoutes();
     } catch (error) {
       writeError(error);
     }
@@ -170,7 +165,7 @@ function MarkerRoutes(): JSX.Element {
       await notify(patchMarkerRoute(markerRouteId, { isPublic: !isPublic }), {
         success: 'Route visibility changed 👌',
       });
-      reload();
+      refreshMarkerRoutes();
     } catch (error) {
       writeError(error);
     }
@@ -188,7 +183,7 @@ function MarkerRoutes(): JSX.Element {
         success: 'Favored route changed 👌',
       });
       refreshAccount();
-      reload();
+      refreshMarkerRoutes();
     } catch (error) {
       writeError(error);
     }
@@ -198,11 +193,6 @@ function MarkerRoutes(): JSX.Element {
     return Boolean(
       account && (account.isModerator || account.steamId === markerRoute.userId)
     );
-  }
-
-  async function handleAdd(markerRoute: MarkerRouteItem) {
-    await reload();
-    toggleMarkerRoute(markerRoute);
   }
 
   const sortedMarkerRoutes = useMemo(
@@ -216,18 +206,24 @@ function MarkerRoutes(): JSX.Element {
   return (
     <section className={styles.container}>
       <div className={styles.actions}>
-        <ActionButton
-          disabled={!account}
-          onClick={() => {
-            addModal({
-              title: 'New Route',
-              children: <SelectRoute onAdd={handleAdd} />,
-            });
-          }}
-        >
-          {account ? 'Add route' : 'Login to add route'}
-        </ActionButton>
-        <ActionButton onClick={clearMarkerRoutes}>Hide all</ActionButton>
+        {isAdding && latestLeafletMap ? (
+          <SelectRoute
+            leafletMap={latestLeafletMap}
+            onClose={() => setIsAdding(false)}
+          />
+        ) : (
+          <>
+            <ActionButton
+              disabled={!account}
+              onClick={() => {
+                setIsAdding(true);
+              }}
+            >
+              {account ? 'Add route' : 'Login to add route'}
+            </ActionButton>
+            <ActionButton onClick={clearMarkerRoutes}>Hide all</ActionButton>
+          </>
+        )}
       </div>
       <div className={styles.actions}>
         <label className={styles.search}>

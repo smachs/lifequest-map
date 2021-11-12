@@ -1,43 +1,30 @@
 import { useEffect, useState } from 'react';
-import useLayerGroups from '../WorldMap/useLayerGroups';
-import useWorldMap from '../WorldMap/useWorldMap';
 import styles from './SelectRoute.module.css';
 import 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 import leaflet from 'leaflet';
 import MarkerTypes from './MarkerTypes';
-import { useModal } from '../../contexts/ModalContext';
 import { useAccount } from '../../contexts/UserContext';
-import type { MarkerRouteItem } from './MarkerRoutes';
 import { notify } from '../../utils/notifications';
 import { postMarkerRoute } from './api';
 import CanvasMarker from '../WorldMap/CanvasMarker';
+import { useMarkers } from '../../contexts/MarkersContext';
 
 type SelectRouteProps = {
-  onAdd: (markerRoute: MarkerRouteItem) => void;
+  leafletMap: leaflet.Map;
+  onClose: () => void;
 };
-function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
-  const { closeLatestModal } = useModal();
+function SelectRoute({ leafletMap, onClose }: SelectRouteProps): JSX.Element {
   const [positions, setPositions] = useState<[number, number][]>([]);
-  const { leafletMap, elementRef } = useWorldMap({ selectMode: true });
   const [markersByType, setMarkersByType] = useState<{
     [type: string]: number;
   }>({});
   const [name, setName] = useState('');
   const { account } = useAccount();
   const [isPublic, setIsPublic] = useState(false);
-
-  useLayerGroups({
-    leafletMap,
-    pmIgnore: false,
-  });
-
+  const { toggleMarkerRoute, refreshMarkerRoutes } = useMarkers();
   useEffect(() => {
-    if (!leafletMap) {
-      return;
-    }
-
     const toggleControls = (editMode: boolean) => {
       leafletMap.pm.addControls({
         position: 'topleft',
@@ -94,7 +81,9 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
       setPositions(positions);
     };
 
+    let createdLayer: leaflet.Layer | null = null;
     leafletMap.on('pm:create', (event) => {
+      createdLayer = event.layer;
       refreshMarkers(event.layer);
 
       leafletMap.pm.enableGlobalEditMode();
@@ -119,58 +108,64 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
     leafletMap.pm.enableDraw('Line');
 
     return () => {
+      leafletMap.pm.removeControls();
+      leafletMap.pm.disableGlobalEditMode();
       leafletMap.off('pm:create');
       leafletMap.off('pm:drawstart');
+      if (createdLayer) {
+        createdLayer.remove();
+      }
     };
-  }, [leafletMap]);
+  }, []);
 
-  function handleSave() {
+  async function handleSave() {
     if (!account) {
       return;
     }
-    notify(
+    const markerRoute = await notify(
       postMarkerRoute({
         name,
         isPublic,
         positions,
         markersByType,
-      })
-        .then(onAdd)
-        .then(closeLatestModal)
+      }),
+      { success: 'Route added 👌' }
     );
+
+    await refreshMarkerRoutes();
+    toggleMarkerRoute(markerRoute);
+    onClose();
   }
 
   return (
     <div className={styles.container}>
-      <aside>
-        <small>Only selected markers are visible on this map</small>
-        <label className={styles.label}>
-          Name
-          <input
-            onChange={(event) => setName(event.target.value)}
-            value={name || ''}
-            placeholder="Give this route an explanatory name"
-            required
-            autoFocus
-          />
-        </label>
-        <label className={styles.label}>
-          Make it available for everyone
-          <input
-            type="checkbox"
-            onChange={(event) => setIsPublic(event.target.checked)}
-            checked={isPublic}
-          />
-        </label>
-        <MarkerTypes markersByType={markersByType} />
-      </aside>
-      <div className={styles.map} ref={elementRef} />
+      <label className={styles.label}>
+        Name
+        <input
+          onChange={(event) => setName(event.target.value)}
+          value={name || ''}
+          placeholder="Give this route an explanatory name"
+          required
+        />
+      </label>
+      <label className={styles.label}>
+        Make it available for everyone
+        <input
+          type="checkbox"
+          onChange={(event) => setIsPublic(event.target.checked)}
+          checked={isPublic}
+        />
+      </label>
+      <MarkerTypes markersByType={markersByType} />
       <button
-        className={styles.save}
+        className={styles.button}
         onClick={handleSave}
         disabled={!name || positions.length === 0}
       >
-        Save Position
+        Save Position {!name && '(Name missing)'}
+      </button>
+      <button className={styles.button} onClick={onClose}>
+        Cancel
       </button>
     </div>
   );

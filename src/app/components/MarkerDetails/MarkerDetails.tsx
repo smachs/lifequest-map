@@ -149,7 +149,6 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
         )}
         <h3>Details</h3>
         {marker.level && <p>Level {marker.level}</p>}
-        {marker.levelRange && <p>Level Range {marker.levelRange.join('-')}</p>}
         {fullMarker?.description && (
           <Markdown>{fullMarker.description}</Markdown>
         )}

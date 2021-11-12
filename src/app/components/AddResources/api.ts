@@ -6,7 +6,6 @@ export type MarkerDTO = {
   name?: string;
   level?: number;
   description?: string;
-  levelRange?: [number, number];
   screenshotId?: string;
 };
 

@@ -27,7 +27,6 @@ function WorldMap({
   const { addModal } = useModal();
 
   const { leafletMap, elementRef } = useWorldMap({
-    selectMode: false,
     hideControls,
     initialZoom,
   });
@@ -38,7 +37,6 @@ function WorldMap({
         children: <MarkerDetails marker={marker} />,
       });
     },
-    pmIgnore: true,
   });
   usePlayerPosition({ leafletMap, alwaysFollowing, rotate });
 

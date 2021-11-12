@@ -1,11 +1,12 @@
 .form {
   display: grid;
   grid-template-rows: 1fr auto;
+  width: 100%;
 }
 
 .label {
   display: grid;
-  grid-template-columns: 100px 1fr;
+  grid-template-columns: auto 1fr;
 }
 
 .labelRange {
@@ -19,12 +20,10 @@
   place-content: center;
   align-items: center;
   justify-content: stretch;
-  margin: 0 10%;
 }
 
 .input {
   border-bottom: 1px solid var(--color-shade-four);
-  margin: 0 1em;
   padding-bottom: 0;
   resize: none;
 }

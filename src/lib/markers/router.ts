@@ -166,15 +166,7 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
   try {
     const account = req.account!;
 
-    const {
-      type,
-      position,
-      name,
-      level,
-      levelRange,
-      description,
-      screenshotId,
-    } = req.body;
+    const { type, position, name, level, description, screenshotId } = req.body;
 
     if (typeof type !== 'string' || !Array.isArray(position)) {
       res.status(400).send('Invalid payload');
@@ -209,10 +201,6 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
         return;
       }
       marker.screenshotFilename = screenshot.filename;
-    }
-
-    if (levelRange) {
-      marker.levelRange = levelRange;
     }
 
     if (!mapFilters.some((filter) => filter.type === marker.type)) {

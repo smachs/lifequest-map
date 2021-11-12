@@ -18,12 +18,10 @@ export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
 
 function useLayerGroups({
   leafletMap,
-  pmIgnore,
   onMarkerClick,
 }: {
   leafletMap: leaflet.Map | null;
-  pmIgnore: boolean;
-  onMarkerClick?: (marker: MarkerBasic) => void;
+  onMarkerClick: (marker: MarkerBasic) => void;
 }): void {
   const { visibleMarkers, markerRoutes } = useMarkers();
   const { markerSize, markerShowBackground } = useSettings();
@@ -147,15 +145,18 @@ function useLayerGroups({
             size: [markerSize, markerSize],
             comments: marker.comments,
           },
-          pmIgnore,
+          pmIgnore: true,
         }).bindTooltip(getTooltipContent(marker, mapFilter), {
           direction: 'top',
         });
-        if (onMarkerClick) {
-          mapMarker.on('click', () => {
+        mapMarker.on('click', () => {
+          if (
+            !leafletMap.pm.globalEditModeEnabled() &&
+            !leafletMap.pm.globalDrawModeEnabled()
+          ) {
             onMarkerClick(marker);
-          });
-        }
+          }
+        });
         allLayers[marker._id] = {
           layer: mapMarker,
           hasComments: Boolean(marker.comments),
@@ -253,6 +254,25 @@ function useLayerGroups({
       allLayersRef.current = {};
     };
   }, []);
+
+  useEffect(() => {
+    if (!leafletMap) {
+      return;
+    }
+    leafletMap.on('pm:globaldrawmodetoggled', (event) => {
+      Object.values(allLayersRef.current).forEach(({ layer }) => {
+        layer.setStyle({ pmIgnore: !event.enabled });
+        leaflet.PM.reInitLayer(layer);
+      });
+    });
+
+    leafletMap.on('pm:globaleditmodetoggled', (event) => {
+      Object.values(allLayersRef.current).forEach(({ layer }) => {
+        layer.setStyle({ pmIgnore: !event.enabled });
+        leaflet.PM.reInitLayer(layer);
+      });
+    });
+  }, [leafletMap]);
 }
 
 export default useLayerGroups;

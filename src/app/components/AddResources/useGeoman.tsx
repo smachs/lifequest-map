@@ -11,10 +11,10 @@ import type { Details } from './AddResources';
 import { getTooltipContent } from '../WorldMap/tooltips';
 
 type UseGeomanProps = {
-  details: Details;
-  leafletMap: Map | null;
-  iconUrl: string;
-  filter: FilterItem;
+  details: Details | null;
+  leafletMap: Map;
+  iconUrl?: string;
+  filter: FilterItem | null;
   x: number;
   y: number;
   onMove: (x: number, y: number) => void;
@@ -30,21 +30,25 @@ function useGeoman({
 }: UseGeomanProps): void {
   const [dragging, setDragging] = useState(false);
 
-  const markerRef = useRef(
-    leaflet
-      .marker([y, x], {
-        icon: new LeafIcon({ iconUrl }),
-      })
-      .bindTooltip(getTooltipContent(details, filter), {
-        direction: 'top',
-        permanent: true,
-      })
-  );
+  const markerRef = useRef(leaflet.marker([y, x]));
 
   useEffect(() => {
-    if (!leafletMap || !leafletMap.getPane('markerPane')) {
-      return;
+    if (iconUrl) {
+      markerRef.current.setZIndexOffset(10000);
+      markerRef.current.setIcon(new LeafIcon({ iconUrl }));
     }
+    if (details && filter) {
+      markerRef.current.bindTooltip(getTooltipContent(details, filter), {
+        direction: 'top',
+        permanent: true,
+      });
+    }
+    return () => {
+      markerRef.current.unbindTooltip();
+    };
+  }, [details, filter, iconUrl]);
+
+  useEffect(() => {
     markerRef.current.addTo(leafletMap);
 
     leafletMap.pm.enableGlobalDragMode();
@@ -61,10 +65,14 @@ function useGeoman({
       // @ts-ignore
       onMove(+event.latlng.lng.toFixed(2), +event.latlng.lat.toFixed(2));
     });
-  }, [leafletMap, markerRef]);
+
+    return () => {
+      markerRef.current.remove();
+    };
+  }, []);
 
   useEffect(() => {
-    if (dragging || !leafletMap) {
+    if (dragging) {
       return;
     }
     const latLng = markerRef.current.getLatLng();
@@ -72,7 +80,7 @@ function useGeoman({
       markerRef.current.setLatLng([y, x]);
       leafletMap.setView([y, x]);
     }
-  }, [markerRef, x, y, dragging, leafletMap]);
+  }, [markerRef, x, y, dragging]);
 }
 
 export default useGeoman;
