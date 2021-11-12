@@ -45,16 +45,11 @@ const WorldTiles = leaflet.TileLayer.Canvas.extend({
 });
 
 type UseWorldMapProps = {
-  selectMode: boolean;
   hideControls?: boolean;
   initialZoom?: number;
 };
 export let latestLeafletMap: leaflet.Map | null = null;
-function useWorldMap({
-  hideControls,
-  selectMode,
-  initialZoom,
-}: UseWorldMapProps): {
+function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
   elementRef: React.MutableRefObject<HTMLDivElement | null>;
   leafletMap: leaflet.Map | null;
 } {
@@ -96,9 +91,7 @@ function useWorldMap({
       zoomControl: false,
       maxBounds: leaflet.latLngBounds([-10000, -7000], [20000, 25000]),
     });
-    if (!selectMode) {
-      latestLeafletMap = map;
-    }
+    latestLeafletMap = map;
     setLeafletMap(map);
 
     const mapPosition = getJSONItem<{
@@ -117,7 +110,7 @@ function useWorldMap({
     );
 
     if (!hideControls) {
-      leaflet.control.zoom({ position: 'topright' }).addTo(map);
+      leaflet.control.zoom({ position: 'topleft' }).addTo(map);
 
       const divElement = leaflet.DomUtil.create('div', 'leaflet-position');
       const handleMouseMove = (event: leaflet.LeafletMouseEvent) => {
@@ -155,30 +148,28 @@ function useWorldMap({
     };
   }, [elementRef]);
 
-  if (!selectMode) {
-    useEffect(() => {
-      if (!leafletMap) {
-        return;
-      }
-      let timeoutId: NodeJS.Timeout;
-      const handleMoveEnd = () => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          const center = leafletMap.getCenter();
-          setJSONItem('mapPosition', {
-            x: center.lng,
-            y: center.lat,
-            zoom: leafletMap.getZoom(),
-          });
-        }, 1000);
-      };
-      leafletMap.on('moveend', handleMoveEnd);
+  useEffect(() => {
+    if (!leafletMap) {
+      return;
+    }
+    let timeoutId: NodeJS.Timeout;
+    const handleMoveEnd = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        const center = leafletMap.getCenter();
+        setJSONItem('mapPosition', {
+          x: center.lng,
+          y: center.lat,
+          zoom: leafletMap.getZoom(),
+        });
+      }, 1000);
+    };
+    leafletMap.on('moveend', handleMoveEnd);
 
-      return () => {
-        leafletMap.off('moveend', handleMoveEnd);
-      };
-    }, [leafletMap]);
-  }
+    return () => {
+      leafletMap.off('moveend', handleMoveEnd);
+    };
+  }, [leafletMap]);
 
   return { elementRef, leafletMap };
 }

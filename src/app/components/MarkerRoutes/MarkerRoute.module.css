@@ -14,6 +14,9 @@
 
 .distance {
   font-size: 0.8em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
 }
 
 .selected {
@@ -33,4 +36,5 @@
   top: 0.25rem;
   right: 0.25rem;
   display: grid;
+  gap: 0.5em;
 }

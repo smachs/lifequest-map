@@ -16,7 +16,6 @@ export type MarkerFull = {
   position: [number, number, number];
   name?: string;
   level?: number;
-  levelRange?: [number, number];
   description?: string;
   screenshotFilename?: string;
   createdAt: string;

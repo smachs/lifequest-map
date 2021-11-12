@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useFilters } from '../../contexts/FiltersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
-import { useModal } from '../../contexts/ModalContext';
 import type { Position } from '../../contexts/PositionContext';
 import { usePosition } from '../../contexts/PositionContext';
 import type { AccountDTO } from '../../contexts/UserContext';
@@ -13,12 +12,8 @@ import { usePersistentState } from '../../utils/storage';
 import ActionButton from '../ActionControl/ActionButton';
 import SearchIcon from '../icons/SearchIcon';
 import { mapFilters } from '../MapFilter/mapFilters';
-import {
-  deleteMarkerRoute,
-  getMarkerRoutes,
-  patchFavoriteMarkerRoute,
-  patchMarkerRoute,
-} from './api';
+import { latestLeafletMap } from '../WorldMap/useWorldMap';
+import { deleteMarkerRoute, patchFavoriteMarkerRoute } from './api';
 import MarkerRoute from './MarkerRoute';
 import styles from './MarkerRoutes.module.css';
 import SelectRoute from './SelectRoute';
@@ -108,9 +103,13 @@ function handleSort(sortBy: SortBy, filters: string[], position: Position) {
 }
 
 function MarkerRoutes(): JSX.Element {
-  const { addModal } = useModal();
-  const { markerRoutes, clearMarkerRoutes, toggleMarkerRoute } = useMarkers();
-  const [allMarkerRoutes, setAllMarkerRoutes] = useState<MarkerRouteItem[]>([]);
+  const {
+    markerRoutes,
+    clearMarkerRoutes,
+    toggleMarkerRoute,
+    refreshMarkerRoutes,
+    allMarkerRoutes,
+  } = useMarkers();
   const { account, refreshAccount } = useAccount();
   const [sortBy, setSortBy] = usePersistentState<SortBy>(
     'markerRoutesSort',
@@ -123,18 +122,10 @@ function MarkerRoutes(): JSX.Element {
   const [search, setSearch] = usePersistentState('searchRoutes', '');
   const [filters] = useFilters();
   const { position } = usePosition();
-
-  const reload = async () => {
-    try {
-      const newMarkerRoutes = await notify(getMarkerRoutes());
-      setAllMarkerRoutes(newMarkerRoutes);
-    } catch (error) {
-      writeError(error);
-    }
-  };
+  const [edit, setEdit] = useState<MarkerRouteItem | boolean>(false);
 
   useEffect(() => {
-    reload();
+    refreshMarkerRoutes();
   }, []);
 
   async function handleRemove(markerRouteId: string): Promise<void> {
@@ -153,24 +144,7 @@ function MarkerRoutes(): JSX.Element {
         toggleMarkerRoute(markerRoute);
       }
 
-      reload();
-    } catch (error) {
-      writeError(error);
-    }
-  }
-
-  async function handleTogglePublic(
-    markerRouteId: string,
-    isPublic: boolean
-  ): Promise<void> {
-    if (!account) {
-      return;
-    }
-    try {
-      await notify(patchMarkerRoute(markerRouteId, { isPublic: !isPublic }), {
-        success: 'Route visibility changed 👌',
-      });
-      reload();
+      refreshMarkerRoutes();
     } catch (error) {
       writeError(error);
     }
@@ -188,7 +162,7 @@ function MarkerRoutes(): JSX.Element {
         success: 'Favored route changed 👌',
       });
       refreshAccount();
-      reload();
+      refreshMarkerRoutes();
     } catch (error) {
       writeError(error);
     }
@@ -200,11 +174,6 @@ function MarkerRoutes(): JSX.Element {
     );
   }
 
-  async function handleAdd(markerRoute: MarkerRouteItem) {
-    await reload();
-    toggleMarkerRoute(markerRoute);
-  }
-
   const sortedMarkerRoutes = useMemo(
     () =>
       allMarkerRoutes
@@ -213,21 +182,39 @@ function MarkerRoutes(): JSX.Element {
     [sortBy, allMarkerRoutes, filters, position, filter, search]
   );
 
+  function handleEdit(markerRoute: MarkerRouteItem) {
+    if (
+      markerRoutes.some(
+        (selectedMarkerRoute) => selectedMarkerRoute.name == markerRoute.name
+      )
+    ) {
+      toggleMarkerRoute(markerRoute);
+    }
+    setEdit(markerRoute);
+  }
+
   return (
     <section className={styles.container}>
       <div className={styles.actions}>
-        <ActionButton
-          disabled={!account}
-          onClick={() => {
-            addModal({
-              title: 'New Route',
-              children: <SelectRoute onAdd={handleAdd} />,
-            });
-          }}
-        >
-          {account ? 'Add route' : 'Login to add route'}
-        </ActionButton>
-        <ActionButton onClick={clearMarkerRoutes}>Hide all</ActionButton>
+        {edit && latestLeafletMap ? (
+          <SelectRoute
+            leafletMap={latestLeafletMap}
+            onClose={() => setEdit(false)}
+            markerRoute={typeof edit === 'boolean' ? undefined : edit}
+          />
+        ) : (
+          <>
+            <ActionButton
+              disabled={!account}
+              onClick={() => {
+                setEdit(true);
+              }}
+            >
+              {account ? 'Add route' : 'Login to add route'}
+            </ActionButton>
+            <ActionButton onClick={clearMarkerRoutes}>Hide all</ActionButton>
+          </>
+        )}
       </div>
       <div className={styles.actions}>
         <label className={styles.search}>
@@ -262,18 +249,15 @@ function MarkerRoutes(): JSX.Element {
       <div className={styles.items}>
         {sortedMarkerRoutes.map((markerRoute) => (
           <MarkerRoute
-            key={`${markerRoute.name}-${markerRoute.username}`}
+            key={markerRoute._id}
             markerRoute={markerRoute}
+            isPublic={markerRoute.isPublic}
             selected={markerRoutes.some(
               (selectedMarkerRoute) =>
-                selectedMarkerRoute.name == markerRoute.name
+                selectedMarkerRoute._id == markerRoute._id
             )}
             editable={isEditable(markerRoute)}
-            isPublic={markerRoute.isPublic}
             onClick={() => toggleMarkerRoute(markerRoute)}
-            onPublic={() =>
-              handleTogglePublic(markerRoute._id, markerRoute.isPublic)
-            }
             onRemove={() => handleRemove(markerRoute._id)}
             isFavorite={Boolean(
               account?.favoriteRouteIds?.some(
@@ -281,6 +265,7 @@ function MarkerRoutes(): JSX.Element {
               )
             )}
             onFavorite={() => handleFavorite(markerRoute._id)}
+            onEdit={() => handleEdit(markerRoute)}
           />
         ))}
       </div>

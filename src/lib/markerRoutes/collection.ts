@@ -56,6 +56,9 @@ function ensureMarkerRoutesSchema(): Promise<Document> {
           createdAt: {
             bsonType: 'date',
           },
+          updatedAt: {
+            bsonType: 'date',
+          },
         },
         additionalProperties: false,
         required: ['name', 'positions', 'markersByType', 'createdAt'],

@@ -1,125 +1,76 @@
-import { useState } from 'react';
 import useGeoman from './useGeoman';
-import useLayerGroups from '../WorldMap/useLayerGroups';
-import useWorldMap from '../WorldMap/useWorldMap';
+import type leaflet from 'leaflet';
 import styles from './SelectPosition.module.css';
+import generalStyles from './AddResources.module.css';
 import type { FilterItem } from '../MapFilter/mapFilters';
 import type { Details } from './AddResources';
-import { defaultPosition } from '../../contexts/PositionContext';
-import { getJSONItem } from '../../utils/storage';
 
 type SelectPositionType = {
-  details: Details;
-  filter: FilterItem;
-  onSelectPosition: (position: [number, number, number]) => void;
+  leafletMap: leaflet.Map;
+  details: Details | null;
+  filter: FilterItem | null;
+  location: [number, number, number];
+  onSelectLocation: (position: [number, number, number]) => void;
 };
 function SelectPosition({
+  leafletMap,
   details,
   filter,
-  onSelectPosition,
+  onSelectLocation,
+  location,
 }: SelectPositionType): JSX.Element {
-  const [location, setLocation] = useState<[number, number, number]>(() => {
-    const mapPosition = getJSONItem<{
-      y: number;
-      x: number;
-      zoom: number;
-    }>('mapPosition', {
-      y: defaultPosition.location[1],
-      x: defaultPosition.location[0],
-      zoom: 3,
-    });
-    return [mapPosition.x, mapPosition.y, 0];
-  });
-  const { leafletMap, elementRef } = useWorldMap({ selectMode: true });
-
   useGeoman({
     details,
     leafletMap,
-    iconUrl: filter.iconUrl,
+    iconUrl: filter?.iconUrl,
     filter,
     x: location[0],
     y: location[1],
     onMove: (x: number, y: number) => {
-      setLocation((location) => [x, y, location[2]]);
+      onSelectLocation([x, y, location[2]]);
     },
   });
-  useLayerGroups({
-    leafletMap,
-    pmIgnore: true,
-  });
-
-  function handleSave() {
-    onSelectPosition(location);
-  }
 
   return (
-    <div className={styles.container}>
-      <aside className={styles.selection}>
-        <label>
-          Position X
-          <input
-            className={styles.input}
-            type="number"
-            placeholder="e.g. 9015.32"
-            min={0}
-            max={14336}
-            step={0.01}
-            value={location[0]}
-            onChange={(event) =>
-              setLocation([
-                +(+event.target.value).toFixed(2),
-                location[1],
-                location[2],
-              ])
-            }
-            required
-          />
-        </label>
-        <label>
-          Position Y
-          <input
-            className={styles.input}
-            type="number"
-            placeholder="e.g. 5015.12"
-            min={0}
-            max={14336}
-            step={0.01}
-            value={location[1]}
-            onChange={(event) =>
-              setLocation([
-                location[0],
-                +(+event.target.value).toFixed(2),
-                location[2],
-              ])
-            }
-            required
-          />
-        </label>
-        <label>
-          Position Z
-          <input
-            className={styles.input}
-            type="number"
-            placeholder="e.g. 120.82 (optional)"
-            min={0}
-            max={2000}
-            step={0.01}
-            value={location[2]}
-            onChange={(event) =>
-              setLocation([
-                location[0],
-                location[1],
-                +(+event.target.value).toFixed(2),
-              ])
-            }
-          />
-        </label>
-      </aside>
-      <div className={styles.map} ref={elementRef} />
-      <button className={styles.save} onClick={handleSave}>
-        Save Position
-      </button>
-    </div>
+    <label>
+      <span className={generalStyles.key}>Position</span> [
+      <input
+        className={styles.input}
+        type="number"
+        placeholder="e.g. 9015.32"
+        min={0}
+        max={14336}
+        step={0.01}
+        value={location[0]}
+        onChange={(event) =>
+          onSelectLocation([
+            +(+event.target.value).toFixed(2),
+            location[1],
+            location[2],
+          ])
+        }
+        required
+      />
+      ,{' '}
+      <input
+        className={styles.input}
+        type="number"
+        placeholder="e.g. 5015.12"
+        min={0}
+        max={14336}
+        step={0.01}
+        value={location[1]}
+        onChange={(event) =>
+          onSelectLocation([
+            location[0],
+            +(+event.target.value).toFixed(2),
+            location[2],
+          ])
+        }
+        required
+      />
+      ]
+    </label>
   );
 }
 

@@ -8,14 +8,15 @@ import SearchIcon from '../icons/SearchIcon';
 import { searchMapFilter } from './searchMapFilter';
 import { usePersistentState } from '../../utils/storage';
 import { useAccount } from '../../contexts/UserContext';
-import { useModal } from '../../contexts/ModalContext';
+import { latestLeafletMap } from '../WorldMap/useWorldMap';
+import { useState } from 'react';
 import AddResources from '../AddResources/AddResources';
 
 function MarkersView(): JSX.Element {
-  const { addModal } = useModal();
   const [filters, setFilters] = useFilters();
   const [search, setSearch] = usePersistentState('searchMarkerTypes', '');
   const { account } = useAccount();
+  const [isAdding, setIsAdding] = useState(false);
 
   function handleToggle(filterTypes: string[], checked: boolean) {
     const newFilters = [...filters];
@@ -36,23 +37,29 @@ function MarkersView(): JSX.Element {
   return (
     <section className={styles.container}>
       <div className={styles.actions}>
-        <ActionButton
-          disabled={!account}
-          onClick={() => {
-            addModal({
-              title: 'Add resources',
-              children: <AddResources />,
-            });
-          }}
-        >
-          {account ? 'Add resource' : 'Login to add route'}
-        </ActionButton>
-        <ActionCheckbox
-          className={styles.action}
-          onChange={(checked) => handleToggle(['hidden'], checked)}
-          checked={filters.includes('hidden')}
-          title="Toggle Hidden"
-        />
+        {isAdding && latestLeafletMap ? (
+          <AddResources
+            leafletMap={latestLeafletMap}
+            onClose={() => setIsAdding(false)}
+          />
+        ) : (
+          <>
+            <ActionButton
+              disabled={!account}
+              onClick={() => {
+                setIsAdding(true);
+              }}
+            >
+              {account ? 'Add resource' : 'Login to add route'}
+            </ActionButton>
+            <ActionCheckbox
+              className={styles.action}
+              onChange={(checked) => handleToggle(['hidden'], checked)}
+              checked={filters.includes('hidden')}
+              title="Toggle Hidden"
+            />
+          </>
+        )}
       </div>
       <div className={styles.actions}>
         <label className={styles.search}>

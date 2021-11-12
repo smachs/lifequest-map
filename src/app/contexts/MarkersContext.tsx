@@ -1,8 +1,11 @@
 import type { ReactNode } from 'react';
+import { useState } from 'react';
 import { useMemo } from 'react';
 import { createContext, useCallback, useContext, useEffect } from 'react';
+import { getMarkerRoutes } from '../components/MarkerRoutes/api';
 import type { MarkerRouteItem } from '../components/MarkerRoutes/MarkerRoutes';
 import { fetchJSON } from '../utils/api';
+import { writeError } from '../utils/logs';
 import { notify } from '../utils/notifications';
 import { usePersistentState } from '../utils/storage';
 import { useFilters } from './FiltersContext';
@@ -13,7 +16,6 @@ export type MarkerBasic = {
   position: [number, number, number];
   name?: string;
   level?: number;
-  levelRange?: [number, number];
   comments?: number;
   _id: string;
 };
@@ -24,8 +26,11 @@ type MarkersContextProps = {
   clearMarkerRoutes: () => void;
   toggleMarkerRoute: (markerRoute: MarkerRouteItem) => void;
   visibleMarkers: MarkerBasic[];
-
   refresh: () => void;
+  mode: Mode;
+  setMode: React.Dispatch<React.SetStateAction<Mode>>;
+  allMarkerRoutes: MarkerRouteItem[];
+  refreshMarkerRoutes: () => void;
 };
 const MarkersContext = createContext<MarkersContextProps>({
   markers: [],
@@ -34,12 +39,18 @@ const MarkersContext = createContext<MarkersContextProps>({
   toggleMarkerRoute: () => undefined,
   visibleMarkers: [],
   refresh: () => undefined,
+  mode: null,
+  setMode: () => undefined,
+  allMarkerRoutes: [],
+  refreshMarkerRoutes: () => undefined,
 });
 
 type MarkersProviderProps = {
   children: ReactNode;
   readonly?: boolean;
 };
+
+type Mode = 'route' | 'marker' | null;
 
 export function MarkersProvider({
   children,
@@ -49,10 +60,16 @@ export function MarkersProvider({
     'markers',
     []
   );
+  const [allMarkerRoutes, setAllMarkerRoutes] = usePersistentState<
+    MarkerRouteItem[]
+  >('all-marker-routes', []);
+
   const [markerRoutes, setMarkerRoutes] = usePersistentState<MarkerRouteItem[]>(
     'markers-routes',
     []
   );
+  const [mode, setMode] = useState<Mode>(null);
+
   const [filters] = useFilters();
   const user = useUser();
 
@@ -68,9 +85,31 @@ export function MarkersProvider({
     }
   }, [readonly]);
 
+  const refreshMarkerRoutes = async () => {
+    try {
+      const newMarkerRoutes = await notify(getMarkerRoutes());
+      setAllMarkerRoutes(newMarkerRoutes);
+    } catch (error) {
+      writeError(error);
+    }
+  };
+
   useEffect(() => {
     refresh();
   }, []);
+
+  useEffect(() => {
+    const selectedMarkerRoutes: MarkerRouteItem[] = [];
+    markerRoutes.forEach((markerRoute) => {
+      const newMarkerRoute = allMarkerRoutes.find(
+        (targetMarkerRoute) => targetMarkerRoute._id === markerRoute._id
+      );
+      if (newMarkerRoute) {
+        selectedMarkerRoutes.push(newMarkerRoute);
+      }
+    });
+    setMarkerRoutes(selectedMarkerRoutes);
+  }, [allMarkerRoutes]);
 
   const hiddenMarkerIds = user?.hiddenMarkerIds || [];
   const visibleMarkers = useMemo(
@@ -87,15 +126,15 @@ export function MarkersProvider({
     [filters, markers, hiddenMarkerIds]
   );
 
-  const toggleMarkerRoute = (targetMarkerRoute: MarkerRouteItem) => {
+  const toggleMarkerRoute = (markerRoute: MarkerRouteItem) => {
     const markerRoutesClone = [...markerRoutes];
     const index = markerRoutesClone.findIndex(
-      (markerRoute) => markerRoute.name === targetMarkerRoute.name
+      (targetMarkerRoute) => targetMarkerRoute._id === markerRoute._id
     );
     if (index > -1) {
       markerRoutesClone.splice(index, 1);
     } else {
-      markerRoutesClone.push(targetMarkerRoute);
+      markerRoutesClone.push(markerRoute!);
     }
     setMarkerRoutes(markerRoutesClone);
   };
@@ -113,6 +152,10 @@ export function MarkersProvider({
         markerRoutes,
         clearMarkerRoutes,
         toggleMarkerRoute,
+        mode,
+        setMode,
+        allMarkerRoutes,
+        refreshMarkerRoutes,
       }}
     >
       {children}

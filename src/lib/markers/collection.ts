@@ -44,12 +44,6 @@ function ensureMarkersSchema(): Promise<Document> {
           level: {
             bsonType: 'int',
           },
-          levelRange: {
-            bsonType: 'array',
-            items: {
-              bsonType: 'int',
-            },
-          },
           description: {
             bsonType: 'string',
           },

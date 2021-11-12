@@ -6,30 +6,32 @@ import DeleteButton from '../DeleteButton/DeleteButton';
 import { toTimeAgo } from '../../utils/dates';
 import { usePosition } from '../../contexts/PositionContext';
 import { calcDistance } from '../../utils/positions';
-import PublicButton from '../PublicButton/PublicButton';
+import EditButton from '../EditButton/EditButton';
 import FavoriteButton from '../FavoriteButton/FavoriteButton';
+import PublicIcon from '../icons/PublicIcon';
+import PrivateIcon from '../icons/PrivateIcon';
 
 type MarkerRouteProps = {
   markerRoute: MarkerRouteItem;
   selected: boolean;
+  isPublic: boolean;
   editable: boolean;
   onClick: () => void;
   onRemove: () => void;
-  isPublic: boolean;
-  onPublic: () => void;
   isFavorite: boolean;
   onFavorite: () => void;
+  onEdit: () => void;
 };
 function MarkerRoute({
   markerRoute,
   selected,
+  isPublic,
   editable,
   onClick,
   onRemove,
   onFavorite,
-  isPublic,
   isFavorite,
-  onPublic,
+  onEdit,
 }: MarkerRouteProps): JSX.Element {
   const { position } = usePosition();
 
@@ -52,14 +54,21 @@ function MarkerRoute({
         <b>{markerRoute.username}</b>
       </small>
       <MarkerTypes markersByType={markerRoute.markersByType} />
-      {distance && <div className={styles.distance}>Distance: {distance}</div>}
+      {distance && (
+        <div className={styles.distance}>
+          <span title={isPublic ? 'Public route' : 'Private route'}>
+            {isPublic ? <PublicIcon /> : <PrivateIcon />}
+          </span>{' '}
+          Distance: {distance}
+        </div>
+      )}
       <div className={styles.actions}>
         <FavoriteButton
           onClick={onFavorite}
           isFavorite={isFavorite}
           favorites={markerRoute.favorites || 0}
         />
-        {editable && <PublicButton isPublic={isPublic} onClick={onPublic} />}
+        {editable && <EditButton onClick={onEdit} />}
         {editable && (
           <DeleteButton
             onClick={onRemove}

@@ -1,43 +1,37 @@
 import { useEffect, useState } from 'react';
-import useLayerGroups from '../WorldMap/useLayerGroups';
-import useWorldMap from '../WorldMap/useWorldMap';
 import styles from './SelectRoute.module.css';
 import 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 import leaflet from 'leaflet';
 import MarkerTypes from './MarkerTypes';
-import { useModal } from '../../contexts/ModalContext';
-import { useAccount } from '../../contexts/UserContext';
-import type { MarkerRouteItem } from './MarkerRoutes';
 import { notify } from '../../utils/notifications';
-import { postMarkerRoute } from './api';
+import { patchMarkerRoute, postMarkerRoute } from './api';
 import CanvasMarker from '../WorldMap/CanvasMarker';
+import { useMarkers } from '../../contexts/MarkersContext';
+import type { MarkerRouteItem } from './MarkerRoutes';
 
 type SelectRouteProps = {
-  onAdd: (markerRoute: MarkerRouteItem) => void;
+  leafletMap: leaflet.Map;
+  markerRoute?: MarkerRouteItem;
+  onClose: () => void;
 };
-function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
-  const { closeLatestModal } = useModal();
-  const [positions, setPositions] = useState<[number, number][]>([]);
-  const { leafletMap, elementRef } = useWorldMap({ selectMode: true });
+function SelectRoute({
+  leafletMap,
+  markerRoute,
+  onClose,
+}: SelectRouteProps): JSX.Element {
+  const [positions, setPositions] = useState<[number, number][]>(
+    markerRoute?.positions || []
+  );
   const [markersByType, setMarkersByType] = useState<{
     [type: string]: number;
   }>({});
-  const [name, setName] = useState('');
-  const { account } = useAccount();
-  const [isPublic, setIsPublic] = useState(false);
-
-  useLayerGroups({
-    leafletMap,
-    pmIgnore: false,
-  });
+  const [name, setName] = useState(markerRoute?.name || '');
+  const [isPublic, setIsPublic] = useState(markerRoute?.isPublic || false);
+  const { toggleMarkerRoute, refreshMarkerRoutes } = useMarkers();
 
   useEffect(() => {
-    if (!leafletMap) {
-      return;
-    }
-
     const toggleControls = (editMode: boolean) => {
       leafletMap.pm.addControls({
         position: 'topleft',
@@ -94,7 +88,9 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
       setPositions(positions);
     };
 
+    let createdLayer: leaflet.Layer | null = null;
     leafletMap.on('pm:create', (event) => {
+      createdLayer = event.layer;
       refreshMarkers(event.layer);
 
       leafletMap.pm.enableGlobalEditMode();
@@ -116,61 +112,85 @@ function SelectRoute({ onAdd }: SelectRouteProps): JSX.Element {
       });
     });
 
-    leafletMap.pm.enableDraw('Line');
+    let existingLayer: leaflet.Polyline;
+    if (markerRoute) {
+      existingLayer = leaflet.polyline(markerRoute.positions, {
+        pmIgnore: false,
+      });
+      existingLayer.pm.toggleEdit();
+      existingLayer.addTo(leafletMap);
+      refreshMarkers(existingLayer);
+      existingLayer.on('pm:edit', (event) => {
+        refreshMarkers(event.layer);
+      });
+      leafletMap.pm.enableGlobalEditMode();
+      toggleControls(true);
+    } else {
+      leafletMap.pm.enableDraw('Line');
+    }
 
     return () => {
+      leafletMap.pm.removeControls();
+      leafletMap.pm.disableGlobalEditMode();
       leafletMap.off('pm:create');
       leafletMap.off('pm:drawstart');
+      if (createdLayer) {
+        createdLayer.remove();
+      }
+      if (existingLayer) {
+        existingLayer.remove();
+      }
     };
-  }, [leafletMap]);
+  }, []);
 
-  function handleSave() {
-    if (!account) {
-      return;
-    }
-    notify(
-      postMarkerRoute({
-        name,
-        isPublic,
-        positions,
-        markersByType,
-      })
-        .then(onAdd)
-        .then(closeLatestModal)
-    );
+  async function handleSave() {
+    const partialMarkerRoute = {
+      name,
+      isPublic,
+      positions,
+      markersByType,
+    };
+    const action = markerRoute
+      ? patchMarkerRoute(markerRoute._id, partialMarkerRoute)
+      : postMarkerRoute(partialMarkerRoute);
+    const updatedMarkerRoute = await notify(action, {
+      success: markerRoute ? 'Route updated 👌' : 'Route added 👌',
+    });
+
+    toggleMarkerRoute(updatedMarkerRoute);
+    await refreshMarkerRoutes();
+    onClose();
   }
 
   return (
     <div className={styles.container}>
-      <aside>
-        <small>Only selected markers are visible on this map</small>
-        <label className={styles.label}>
-          Name
-          <input
-            onChange={(event) => setName(event.target.value)}
-            value={name || ''}
-            placeholder="Give this route an explanatory name"
-            required
-            autoFocus
-          />
-        </label>
-        <label className={styles.label}>
-          Make it available for everyone
-          <input
-            type="checkbox"
-            onChange={(event) => setIsPublic(event.target.checked)}
-            checked={isPublic}
-          />
-        </label>
-        <MarkerTypes markersByType={markersByType} />
-      </aside>
-      <div className={styles.map} ref={elementRef} />
+      <label className={styles.label}>
+        Name
+        <input
+          onChange={(event) => setName(event.target.value)}
+          value={name || ''}
+          placeholder="Give this route an explanatory name"
+          required
+        />
+      </label>
+      <label className={styles.label}>
+        Make it available for everyone
+        <input
+          type="checkbox"
+          onChange={(event) => setIsPublic(event.target.checked)}
+          checked={isPublic}
+        />
+      </label>
+      <MarkerTypes markersByType={markersByType} />
       <button
-        className={styles.save}
+        className={styles.button}
         onClick={handleSave}
         disabled={!name || positions.length === 0}
       >
-        Save Position
+        Save Route {!name && '(Name missing)'}
+      </button>
+      <button className={styles.button} onClick={onClose}>
+        Cancel
       </button>
     </div>
   );
