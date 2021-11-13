@@ -19,6 +19,8 @@ type UseGeomanProps = {
   y: number;
   onMove: (x: number, y: number) => void;
 };
+
+const unknownMarkerIcon = new LeafIcon({ iconUrl: '/unknown.webp' });
 function useGeoman({
   details,
   leafletMap,
@@ -30,7 +32,11 @@ function useGeoman({
 }: UseGeomanProps): void {
   const [dragging, setDragging] = useState(false);
 
-  const markerRef = useRef(leaflet.marker([y, x]));
+  const markerRef = useRef(
+    leaflet.marker([y, x], {
+      icon: unknownMarkerIcon,
+    })
+  );
 
   useEffect(() => {
     if (iconUrl) {
@@ -39,6 +45,11 @@ function useGeoman({
     }
     if (details && filter) {
       markerRef.current.bindTooltip(getTooltipContent(details, filter), {
+        direction: 'top',
+        permanent: true,
+      });
+    } else {
+      markerRef.current.bindTooltip('Unknown marker', {
         direction: 'top',
         permanent: true,
       });
