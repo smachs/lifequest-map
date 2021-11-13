@@ -69,3 +69,13 @@
 .nav__border {
   border-top: 1px solid var(--color-shade-three);
 }
+
+.add {
+  position: fixed;
+  right: 5px;
+  top: 37px;
+  z-index: 1000;
+  display: grid;
+  gap: 1rem;
+  width: 300px;
+}

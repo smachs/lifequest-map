@@ -6,6 +6,7 @@ import MarkersView from './MarkersView';
 import MenuOpenIcon from '../icons/MenuOpenIcon';
 import { usePosition } from '../../contexts/PositionContext';
 import Ads from '../Ads/Ads';
+import type { MarkerRouteItem } from '../MarkerRoutes/MarkerRoutes';
 import MarkerRoutes from '../MarkerRoutes/MarkerRoutes';
 import User from '../User/User';
 import RoutesIcon from '../icons/RoutesIcon';
@@ -20,6 +21,9 @@ import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import MapSearch from '../MapSearch/MapSearch';
 import useDebounce from '../../utils/useDebounce';
+import { useState } from 'react';
+import SelectRoute from '../MarkerRoutes/SelectRoute';
+import AddResources from '../AddResources/AddResources';
 
 type View = 'markers' | 'settings' | 'markerRoutes';
 
@@ -32,6 +36,8 @@ function MapFilter(): JSX.Element {
   const [view, setView] = usePersistentState<View>('view', 'markers');
   const { following, toggleFollowing } = usePosition();
   const [showMinimap, setShowMinimap] = useMinimap();
+  const [editRoute, setEditRoute] = useState<MarkerRouteItem | boolean>(false);
+  const [isAddingMarker, setIsAddingMarker] = useState(false);
 
   useDebounce(
     isOpen,
@@ -46,11 +52,29 @@ function MapFilter(): JSX.Element {
 
   return (
     <aside className={classNames(styles.container, isOpen && styles.open)}>
+      <div className={styles.add}>
+        {editRoute && latestLeafletMap && (
+          <SelectRoute
+            leafletMap={latestLeafletMap}
+            onClose={() => setEditRoute(false)}
+            markerRoute={typeof editRoute === 'boolean' ? undefined : editRoute}
+          />
+        )}
+        {isAddingMarker && latestLeafletMap && (
+          <AddResources
+            leafletMap={latestLeafletMap}
+            onClose={() => setIsAddingMarker(false)}
+          />
+        )}
+      </div>
+
       <div className={styles.content}>
         <User />
-        {view === 'markers' && <MarkersView />}
+        {view === 'markers' && (
+          <MarkersView onAdd={() => setIsAddingMarker(true)} />
+        )}
         {view === 'settings' && <Settings />}
-        {view === 'markerRoutes' && <MarkerRoutes />}
+        {view === 'markerRoutes' && <MarkerRoutes onEdit={setEditRoute} />}
         <ErrorBoundary>
           <Ads active={isOpen} />
         </ErrorBoundary>

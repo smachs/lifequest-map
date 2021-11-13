@@ -1,9 +1,9 @@
 .container {
-  height: 100%;
   display: grid;
   grid-template-rows: auto 1fr;
   row-gap: 0.5rem;
-  width: 100%;
+  background: var(--color-shade-one);
+  padding: 0.5em;
 }
 
 .stepper {

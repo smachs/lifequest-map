@@ -55,7 +55,9 @@ function SelectRoute({
       const markers = Object.values(leafletMap._layers).filter(
         (marker) => marker instanceof CanvasMarker
       ) as CanvasMarker[];
-      markers.forEach((marker) => (marker.options.image.alwaysVisible = false));
+      markers.forEach((marker) => {
+        marker.options.image.alwaysVisible = false;
+      });
 
       // @ts-ignore
       const latLngs = workingLayer.getLatLngs() as leaflet.LatLng[];
@@ -65,9 +67,9 @@ function SelectRoute({
         )
       ) as CanvasMarker[];
 
-      snappedMarkers.forEach(
-        (marker) => (marker.options.image.alwaysVisible = true)
-      );
+      snappedMarkers.forEach((marker) => {
+        marker.options.image.alwaysVisible = true;
+      });
 
       const markersByType = snappedMarkers.reduce<{
         [type: string]: number;
@@ -143,6 +145,14 @@ function SelectRoute({
       if (existingLayer) {
         existingLayer.remove();
       }
+
+      // @ts-ignore
+      const markers = Object.values(leafletMap._layers).filter(
+        (marker) => marker instanceof CanvasMarker
+      ) as CanvasMarker[];
+      markers.forEach((marker) => {
+        marker.options.image.alwaysVisible = false;
+      });
     };
   }, []);
 

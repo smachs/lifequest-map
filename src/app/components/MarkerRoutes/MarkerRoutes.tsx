@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useFilters } from '../../contexts/FiltersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
 import type { Position } from '../../contexts/PositionContext';
@@ -12,11 +12,9 @@ import { usePersistentState } from '../../utils/storage';
 import ActionButton from '../ActionControl/ActionButton';
 import SearchIcon from '../icons/SearchIcon';
 import { mapFilters } from '../MapFilter/mapFilters';
-import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import { deleteMarkerRoute, patchFavoriteMarkerRoute } from './api';
 import MarkerRoute from './MarkerRoute';
 import styles from './MarkerRoutes.module.css';
-import SelectRoute from './SelectRoute';
 
 export type MarkerRouteItem = {
   _id: string;
@@ -102,7 +100,10 @@ function handleSort(sortBy: SortBy, filters: string[], position: Position) {
   };
 }
 
-function MarkerRoutes(): JSX.Element {
+type MarkerRoutesProps = {
+  onEdit: (target: MarkerRouteItem | boolean) => void;
+};
+function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
   const {
     markerRoutes,
     clearMarkerRoutes,
@@ -122,7 +123,6 @@ function MarkerRoutes(): JSX.Element {
   const [search, setSearch] = usePersistentState('searchRoutes', '');
   const [filters, setFilters] = useFilters();
   const { position } = usePosition();
-  const [edit, setEdit] = useState<MarkerRouteItem | boolean>(false);
 
   useEffect(() => {
     refreshMarkerRoutes();
@@ -195,31 +195,21 @@ function MarkerRoutes(): JSX.Element {
       ...filters,
       ...types.filter((type) => !filters.includes(type)),
     ]);
-    setEdit(markerRoute);
+    onEdit(markerRoute);
   }
 
   return (
     <section className={styles.container}>
       <div className={styles.actions}>
-        {edit && latestLeafletMap ? (
-          <SelectRoute
-            leafletMap={latestLeafletMap}
-            onClose={() => setEdit(false)}
-            markerRoute={typeof edit === 'boolean' ? undefined : edit}
-          />
-        ) : (
-          <>
-            <ActionButton
-              disabled={!account}
-              onClick={() => {
-                setEdit(true);
-              }}
-            >
-              {account ? 'Add route' : 'Login to add route'}
-            </ActionButton>
-            <ActionButton onClick={clearMarkerRoutes}>Hide all</ActionButton>
-          </>
-        )}
+        <ActionButton
+          disabled={!account}
+          onClick={() => {
+            onEdit(true);
+          }}
+        >
+          {account ? 'Add route' : 'Login to add route'}
+        </ActionButton>
+        <ActionButton onClick={clearMarkerRoutes}>Hide all</ActionButton>
       </div>
       <div className={styles.actions}>
         <label className={styles.search}>

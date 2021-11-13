@@ -173,7 +173,7 @@ function useLayerGroups({
 
     removableMarkers.forEach((markerId) => {
       const layerCache = allLayers[markerId];
-      if (layerCache) {
+      if (layerCache && !layerCache.layer.options.image.alwaysVisible) {
         markersLayerGroup.removeLayer(layerCache.layer);
         delete allLayers[markerId];
       }
