@@ -96,7 +96,7 @@ select {
   background: none;
   color: inherit;
   border: none;
-  padding: 0.5em;
+  padding: 0.4em;
   outline: none;
   font-family: var(--font-family-secondary);
 }

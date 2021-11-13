@@ -31,7 +31,7 @@ export type MarkerRouteItem = {
 };
 
 type SortBy = 'match' | 'favorites' | 'distance' | 'date' | 'name' | 'username';
-type Filter = 'all' | 'private' | 'public' | 'favorites';
+type Filter = 'all' | 'myRoutes' | 'favorites';
 
 function handleFilter(
   filter: Filter,
@@ -56,13 +56,9 @@ function handleFilter(
     return (item: MarkerRouteItem) =>
       account?.favoriteRouteIds?.includes(item._id) && filterBySearch(item);
   }
-  if (filter === 'private') {
+  if (filter === 'myRoutes') {
     return (item: MarkerRouteItem) =>
-      (!item.isPublic || item.userId === account?.steamId) &&
-      filterBySearch(item);
-  }
-  if (filter === 'public') {
-    return (item: MarkerRouteItem) => item.isPublic && filterBySearch(item);
+      item.userId === account?.steamId && filterBySearch(item);
   }
   return (item: MarkerRouteItem) => filterBySearch(item);
 }
@@ -240,8 +236,7 @@ function MarkerRoutes({ editing, onEdit }: MarkerRoutesProps): JSX.Element {
         >
           <option value="all">All</option>
           <option value="favorites">Favorites</option>
-          <option value="private">Private</option>
-          <option value="public">Public</option>
+          <option value="myRoutes">My routes</option>
         </select>
       </div>
       <div className={styles.items}>
