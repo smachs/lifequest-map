@@ -13,3 +13,8 @@
 .action:active {
   color: var(--color-primary);
 }
+
+.action:disabled {
+  color: var(--color-trivial);
+  text-decoration: none;
+}

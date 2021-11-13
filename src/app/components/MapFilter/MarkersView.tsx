@@ -10,9 +10,10 @@ import { usePersistentState } from '../../utils/storage';
 import { useAccount } from '../../contexts/UserContext';
 
 type MarkersViewProps = {
+  adding: boolean;
   onAdd: () => void;
 };
-function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
+function MarkersView({ adding, onAdd }: MarkersViewProps): JSX.Element {
   const [filters, setFilters] = useFilters();
   const [search, setSearch] = usePersistentState('searchMarkerTypes', '');
   const { account } = useAccount();
@@ -36,7 +37,7 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
   return (
     <section className={styles.container}>
       <div className={styles.actions}>
-        <ActionButton disabled={!account} onClick={onAdd}>
+        <ActionButton disabled={adding || !account} onClick={onAdd}>
           {account ? 'Add resource' : 'Login to add route'}
         </ActionButton>
         <ActionCheckbox

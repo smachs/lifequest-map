@@ -101,9 +101,10 @@ function handleSort(sortBy: SortBy, filters: string[], position: Position) {
 }
 
 type MarkerRoutesProps = {
+  editing: boolean;
   onEdit: (target: MarkerRouteItem | boolean) => void;
 };
-function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
+function MarkerRoutes({ editing, onEdit }: MarkerRoutesProps): JSX.Element {
   const {
     markerRoutes,
     clearMarkerRoutes,
@@ -170,7 +171,9 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
 
   function isEditable(markerRoute: MarkerRouteItem): boolean {
     return Boolean(
-      account && (account.isModerator || account.steamId === markerRoute.userId)
+      !editing &&
+        account &&
+        (account.isModerator || account.steamId === markerRoute.userId)
     );
   }
 
@@ -202,7 +205,7 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
     <section className={styles.container}>
       <div className={styles.actions}>
         <ActionButton
-          disabled={!account}
+          disabled={editing || !account}
           onClick={() => {
             onEdit(true);
           }}

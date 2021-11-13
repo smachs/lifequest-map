@@ -71,10 +71,15 @@ function MapFilter(): JSX.Element {
       <div className={styles.content}>
         <User />
         {view === 'markers' && (
-          <MarkersView onAdd={() => setIsAddingMarker(true)} />
+          <MarkersView
+            adding={isAddingMarker}
+            onAdd={() => setIsAddingMarker(true)}
+          />
         )}
         {view === 'settings' && <Settings />}
-        {view === 'markerRoutes' && <MarkerRoutes onEdit={setEditRoute} />}
+        {view === 'markerRoutes' && (
+          <MarkerRoutes editing={Boolean(editRoute)} onEdit={setEditRoute} />
+        )}
         <ErrorBoundary>
           <Ads active={isOpen} />
         </ErrorBoundary>
