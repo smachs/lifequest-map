@@ -35,7 +35,7 @@ function Changelog(): JSX.Element {
       <section className={styles.section}>
         {releases.map((release) => (
           <Fragment key={release.id}>
-            <hr className={styles.hr} />
+            <hr />
             <h2 className={styles.h2}>{release.name}</h2>
             <aside className={styles.aside}>
               {new Date(release.published_at).toLocaleDateString()}

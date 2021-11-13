@@ -88,6 +88,7 @@ function AddResources({ leafletMap, onClose }: AddResourcesProps): JSX.Element {
       <button className={styles.button} onClick={onClose}>
         Cancel
       </button>
+      <small>Move marker by dragging it</small>
     </section>
   );
 }

@@ -161,3 +161,7 @@ small {
   font-size: 0.7em;
   color: var(--color-trivial);
 }
+
+hr {
+  border-color: rgb(234 234 234 / 20%);
+}
