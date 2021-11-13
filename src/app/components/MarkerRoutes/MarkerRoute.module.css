@@ -38,3 +38,11 @@
   display: grid;
   gap: 0.5em;
 }
+
+.public {
+  color: lightblue;
+}
+
+.private {
+  color: lightgreen;
+}

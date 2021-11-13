@@ -8,8 +8,6 @@ import { usePosition } from '../../contexts/PositionContext';
 import { calcDistance } from '../../utils/positions';
 import EditButton from '../EditButton/EditButton';
 import FavoriteButton from '../FavoriteButton/FavoriteButton';
-import PublicIcon from '../icons/PublicIcon';
-import PrivateIcon from '../icons/PrivateIcon';
 
 type MarkerRouteProps = {
   markerRoute: MarkerRouteItem;
@@ -56,10 +54,13 @@ function MarkerRoute({
       <MarkerTypes markersByType={markerRoute.markersByType} />
       {distance && (
         <div className={styles.distance}>
-          <span title={isPublic ? 'Public route' : 'Private route'}>
-            {isPublic ? <PublicIcon /> : <PrivateIcon />}
-          </span>{' '}
-          Distance: {distance}
+          Distance: {distance}{' '}
+          <span
+            className={classNames(isPublic ? styles.public : styles.private)}
+            title={isPublic ? 'Visible for everyone' : 'Only visible for you'}
+          >
+            {isPublic ? 'Public' : 'Private'}
+          </span>
         </div>
       )}
       <div className={styles.actions}>
