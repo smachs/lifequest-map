@@ -73,7 +73,7 @@ export function MarkersProvider({
   const [filters, setFilters] = useFilters();
   const user = useUser();
 
-  const refresh = useCallback(() => {
+  const refresh = () => {
     if (!readonly) {
       notify(
         fetchJSON<MarkerBasic[]>('/api/markers').then((newMarkers) => {
@@ -83,7 +83,7 @@ export function MarkersProvider({
         })
       );
     }
-  }, [readonly]);
+  };
 
   const refreshMarkerRoutes = async () => {
     try {
