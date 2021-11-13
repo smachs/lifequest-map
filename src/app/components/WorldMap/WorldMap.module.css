@@ -68,4 +68,15 @@
   cursor: pointer;
 }
 
+:global(.action-finish) {
+  background: green !important;
+}
+
+:global(.action-removeLastVertex) {
+  background: #00698c !important;
+}
+
+:global(.action-cancel) {
+  background: #a50000 !important;
+}
 /* stylelint-enable */
