@@ -146,15 +146,17 @@ function useLayerGroups({
             comments: marker.comments,
           },
           pmIgnore:
-            !leafletMap.pm.globalDrawModeEnabled() &&
-            !leafletMap.pm.globalEditModeEnabled(),
+            !leafletMap.pm ||
+            (!leafletMap.pm.globalDrawModeEnabled() &&
+              !leafletMap.pm.globalEditModeEnabled()),
         }).bindTooltip(getTooltipContent(marker, mapFilter), {
           direction: 'top',
         });
         mapMarker.on('click', () => {
           if (
-            !leafletMap.pm.globalEditModeEnabled() &&
-            !leafletMap.pm.globalDrawModeEnabled()
+            !leafletMap.pm ||
+            (!leafletMap.pm.globalEditModeEnabled() &&
+              !leafletMap.pm.globalDrawModeEnabled())
           ) {
             onMarkerClick(marker);
           }
