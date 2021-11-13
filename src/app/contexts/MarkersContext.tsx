@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { useMemo } from 'react';
-import { createContext, useCallback, useContext, useEffect } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 import { getMarkerRoutes } from '../components/MarkerRoutes/api';
 import type { MarkerRouteItem } from '../components/MarkerRoutes/MarkerRoutes';
 import { fetchJSON } from '../utils/api';
