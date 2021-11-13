@@ -44,13 +44,13 @@ function SelectRoute({
         dragMode: false,
         cutPolygon: false,
         removalMode: false,
-        drawPolyline: !editMode,
+        drawPolyline: true,
         editMode: editMode,
       });
     };
     toggleControls(false);
 
-    const refreshMarkers = (workingLayer: leaflet.Layer) => {
+    const refreshMarkers = (workingLayer: leaflet.Polyline | leaflet.Layer) => {
       // @ts-ignore
       const markers = Object.values(leafletMap._layers).filter(
         (marker) => marker instanceof CanvasMarker
@@ -90,45 +90,57 @@ function SelectRoute({
       setPositions(positions);
     };
 
-    let createdLayer: leaflet.Layer | null = null;
+    let existingPolyline: leaflet.Polyline | null = null;
     leafletMap.on('pm:create', (event) => {
-      createdLayer = event.layer;
+      existingPolyline = event.layer as leaflet.Polyline;
       refreshMarkers(event.layer);
 
       leafletMap.pm.enableGlobalEditMode();
       toggleControls(true);
 
       event.layer.on('pm:edit', (event) => {
-        refreshMarkers(event.layer);
+        refreshMarkers(event.layer as leaflet.Polyline);
       });
     });
 
     // listen to vertexes being added to currently drawn layer (called workingLayer)
     leafletMap.on('pm:drawstart', ({ workingLayer }) => {
-      if (!(workingLayer instanceof leaflet.Polyline)) {
-        return;
+      if (!existingPolyline) {
+        existingPolyline = workingLayer as leaflet.Polyline;
+      } else {
+        existingPolyline
+          .getLatLngs()
+          .flat(999)
+          .forEach((latlng) => {
+            // @ts-ignore
+            leafletMap.pm.Draw.Line._createVertex({ latlng });
+          });
+        existingPolyline.remove();
+        // @ts-ignore
+        existingPolyline = leafletMap.pm.Draw.Line._layer;
       }
 
-      workingLayer.on('pm:vertexadded', (event) => {
-        refreshMarkers(event.workingLayer);
+      existingPolyline!.on('pm:vertexadded', () => {
+        refreshMarkers(existingPolyline!);
       });
     });
 
-    let existingLayer: leaflet.Polyline;
     if (markerRoute) {
       leafletMap.pm.enableGlobalEditMode();
-      existingLayer = leaflet.polyline(markerRoute.positions, {
+      existingPolyline = leaflet.polyline(markerRoute.positions, {
         pmIgnore: false,
       });
-      existingLayer.pm.toggleEdit();
-      existingLayer.addTo(leafletMap);
-      refreshMarkers(existingLayer);
-      existingLayer.on('pm:edit', (event) => {
+      existingPolyline.pm.toggleEdit();
+      existingPolyline.addTo(leafletMap);
+      refreshMarkers(existingPolyline);
+      existingPolyline.on('pm:edit', (event) => {
         refreshMarkers(event.layer);
       });
       toggleControls(true);
       setTimeout(() => {
-        refreshMarkers(existingLayer);
+        if (existingPolyline) {
+          refreshMarkers(existingPolyline);
+        }
       }, 100);
     } else {
       leafletMap.pm.enableDraw('Line');
@@ -139,11 +151,9 @@ function SelectRoute({
       leafletMap.pm.disableGlobalEditMode();
       leafletMap.off('pm:create');
       leafletMap.off('pm:drawstart');
-      if (createdLayer) {
-        createdLayer.remove();
-      }
-      if (existingLayer) {
-        existingLayer.remove();
+
+      if (existingPolyline) {
+        existingPolyline.remove();
       }
 
       // @ts-ignore
@@ -205,6 +215,7 @@ function SelectRoute({
       <button className={styles.button} onClick={onClose}>
         Cancel
       </button>
+      <small>Right click in edit mode to remove a vertex</small>
     </div>
   );
 }

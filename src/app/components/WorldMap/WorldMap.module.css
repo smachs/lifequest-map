@@ -68,7 +68,8 @@
   cursor: pointer;
 }
 
-:global(.action-finish) {
+:global(.action-finish),
+:global(.action-finishMode) {
   background: green !important;
 }
 

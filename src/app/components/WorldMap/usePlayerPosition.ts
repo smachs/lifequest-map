@@ -35,6 +35,7 @@ function usePlayerPosition({
     const newMarker = leaflet.marker(position.location, {
       icon,
       zIndexOffset: 9000,
+      pmIgnore: true,
     });
     newMarker.addTo(leafletMap);
     newMarker.getElement()!.classList.add('leaflet-player-marker');
