@@ -46,3 +46,11 @@
 .private {
   color: lightgreen;
 }
+
+.notOwner {
+  color: lightgray;
+}
+
+.owner {
+  color: rgb(184 255 255);
+}

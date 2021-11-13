@@ -19,6 +19,7 @@ type MarkerRouteProps = {
   isFavorite: boolean;
   onFavorite: () => void;
   onEdit: () => void;
+  isOwner: boolean;
 };
 function MarkerRoute({
   markerRoute,
@@ -30,6 +31,7 @@ function MarkerRoute({
   onFavorite,
   isFavorite,
   onEdit,
+  isOwner,
 }: MarkerRouteProps): JSX.Element {
   const { position } = usePosition();
 
@@ -49,7 +51,9 @@ function MarkerRoute({
       </h4>
       <small className={styles.info}>
         Added {toTimeAgo(new Date(markerRoute.createdAt))} by{' '}
-        <b>{markerRoute.username}</b>
+        <span className={classNames(isOwner ? styles.owner : styles.notOwner)}>
+          {markerRoute.username}
+        </span>
       </small>
       <MarkerTypes markersByType={markerRoute.markersByType} />
       {distance && (

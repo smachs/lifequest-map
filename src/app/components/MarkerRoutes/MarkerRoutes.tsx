@@ -245,6 +245,7 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
         {sortedMarkerRoutes.map((markerRoute) => (
           <MarkerRoute
             key={markerRoute._id}
+            isOwner={markerRoute.userId === account?.steamId}
             markerRoute={markerRoute}
             isPublic={markerRoute.isPublic}
             selected={markerRoutes.some(
