@@ -49,7 +49,7 @@ function useGeoman({
         permanent: true,
       });
     } else {
-      markerRef.current.bindTooltip('Unknown marker', {
+      markerRef.current.bindTooltip('Choose marker', {
         direction: 'top',
         permanent: true,
       });
