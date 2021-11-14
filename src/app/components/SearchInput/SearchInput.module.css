@@ -1,0 +1,7 @@
+.search {
+  display: grid;
+  grid-template-columns: 1rem 1fr;
+  align-items: center;
+  border: 1px solid var(--color-shade-three);
+  padding: 0.2em;
+}

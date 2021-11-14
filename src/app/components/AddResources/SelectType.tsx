@@ -5,6 +5,7 @@ import styles from './SelectType.module.css';
 import generalStyles from './AddResources.module.css';
 import CloseIcon from '../icons/CloseIcon';
 import { usePersistentState } from '../../utils/storage';
+import SearchInput from '../SearchInput/SearchInput';
 
 type SelectTypeType = {
   onSelect: (filter: FilterItem | null) => void;
@@ -58,10 +59,10 @@ function SelectType({ onSelect, filter }: SelectTypeType): JSX.Element {
     <div className={styles.container}>
       <label className={styles.label}>
         <span className={generalStyles.key}>Type</span>
-        <input
+        <SearchInput
           placeholder="Search marker type..."
           value={search}
-          onChange={(event) => setSearch(event.target.value)}
+          onChange={setSearch}
           autoFocus
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}

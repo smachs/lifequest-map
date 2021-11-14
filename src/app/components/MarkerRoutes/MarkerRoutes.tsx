@@ -10,8 +10,8 @@ import { notify } from '../../utils/notifications';
 import { calcDistance } from '../../utils/positions';
 import { usePersistentState } from '../../utils/storage';
 import ActionButton from '../ActionControl/ActionButton';
-import SearchIcon from '../icons/SearchIcon';
 import { mapFilters } from '../MapFilter/mapFilters';
+import SearchInput from '../SearchInput/SearchInput';
 import { deleteMarkerRoute, patchFavoriteMarkerRoute } from './api';
 import MarkerRoute from './MarkerRoute';
 import styles from './MarkerRoutes.module.css';
@@ -211,14 +211,11 @@ function MarkerRoutes({ editing, onEdit }: MarkerRoutesProps): JSX.Element {
         <ActionButton onClick={clearMarkerRoutes}>Hide all</ActionButton>
       </div>
       <div className={styles.actions}>
-        <label className={styles.search}>
-          <SearchIcon />
-          <input
-            placeholder="Marker or title..."
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-          />
-        </label>
+        <SearchInput
+          placeholder="Marker or title..."
+          value={search}
+          onChange={setSearch}
+        />
         <select
           value={sortBy}
           onChange={(event) => setSortBy(event.target.value as SortBy)}
