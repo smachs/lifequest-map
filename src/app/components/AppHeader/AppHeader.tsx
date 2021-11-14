@@ -49,8 +49,8 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
   }, []);
 
   useEffect(() => {
-    overwolf.windows.getCurrentWindow((result) => {
-      setIsMaximized(result.window.stateEx === 'maximized');
+    getCurrentWindow().then((result) => {
+      setIsMaximized(result.stateEx === 'maximized');
     });
     function handleStateChanged(
       event: overwolf.windows.WindowStateChangedEvent
