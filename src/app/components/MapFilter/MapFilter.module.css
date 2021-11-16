@@ -25,7 +25,7 @@
 .nav {
   position: absolute;
   left: 100%;
-  top: calc(50% - 80px);
+  top: 141px;
   z-index: 9000;
   pointer-events: none;
 }
