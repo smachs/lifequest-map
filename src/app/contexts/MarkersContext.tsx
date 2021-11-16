@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { createContext, useContext, useEffect } from 'react';
 import { getMarkerRoutes } from '../components/MarkerRoutes/api';
 import type { MarkerRouteItem } from '../components/MarkerRoutes/MarkerRoutes';
+import { latestLeafletMap } from '../components/WorldMap/useWorldMap';
 import { fetchJSON } from '../utils/api';
 import { writeError } from '../utils/logs';
 import { notify } from '../utils/notifications';
@@ -140,6 +141,9 @@ export function MarkersProvider({
         ...types.filter((type) => !filters.includes(type)),
       ]);
       markerRoutesClone.push(markerRoute);
+      if (latestLeafletMap) {
+        latestLeafletMap.fitBounds(markerRoute.positions);
+      }
     }
 
     setMarkerRoutes(markerRoutesClone);
