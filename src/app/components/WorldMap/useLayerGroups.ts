@@ -180,9 +180,9 @@ function useLayerGroups({
       }
     });
 
-    const allMarkers = Object.values(allLayers);
     let currentMapBounds = leafletMap.getBounds();
     function showHideLayers() {
+      const allMarkers = Object.values(allLayers);
       const mapBounds = leafletMap!.getBounds();
       currentMapBounds = mapBounds;
       allMarkers.forEach((marker) => {
@@ -221,6 +221,7 @@ function useLayerGroups({
     leafletMap.on('moveend', placeMarkersInBounds);
     return () => {
       leafletMap.off('moveend', placeMarkersInBounds);
+      clearTimeout(trailingTimeoutId);
     };
   }, [leafletMap, visibleMarkers]);
 
