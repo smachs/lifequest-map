@@ -48,8 +48,18 @@ commentsRouter.delete('/:commentId', ensureAuthenticated, async (req, res) => {
     }
   );
 
+  
+  const marker = await getMarkersCollection().findOne({
+    _id: comment.markerId,
+  });
+  if (!marker) {
+    res.status(404).send("Marker doesn't exists");
+    return;
+  }
+
   res.status(200).json({});
-  postToDiscord(`✍💀 Comment deleted by ${account.name}`);
+  const position = marker.position ? marker.position.join(', ') : 'unknown';
+  postToDiscord(`✍💀 ${account.name} deleted a comment for ${marker.type} at [${position}]:\n${comment.message}`);
 });
 
 export default commentsRouter;

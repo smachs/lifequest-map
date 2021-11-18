@@ -453,6 +453,12 @@ export const mapFilters: FilterItem[] = [
     iconUrl: '/pois/strawberry.webp',
   },
   {
+    category: 'cooking_ingredients',
+    type: 'turkey_nest',
+    title: i18n('Turkey Nest'),
+    iconUrl: '/pois/turkey_nest.webp',
+  },
+  {
     category: 'npc',
     type: 'npc_generic',
     title: i18n('Generic'),
