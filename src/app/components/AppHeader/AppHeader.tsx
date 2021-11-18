@@ -3,6 +3,7 @@ import { useModal } from '../../contexts/ModalContext';
 import { isAppUpdated } from '../../utils/extensions';
 import { useIsNewWorldRunning } from '../../utils/games';
 import { SHOW_HIDE_APP, useHotkeyBinding } from '../../utils/hotkeys';
+import { isOverwolfApp } from '../../utils/overwolf';
 import { getJSONItem } from '../../utils/storage';
 import { classNames } from '../../utils/styles';
 import {
@@ -64,6 +65,10 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
   }, []);
 
   async function openExternalLink(url: string) {
+    if (!isOverwolfApp) {
+      window.open(url, '_blank');
+      return;
+    }
     const currentWindow = await getCurrentWindow();
     if (currentWindow.name === WINDOWS.OVERLAY) {
       overwolf.utils.openUrlInOverwolfBrowser(url);
@@ -80,11 +85,13 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
     >
       <img src="/icon.png" alt="" className={classes.logo} />
       <h1 className={classes.title}>Aeternum Map</h1>
-      <p className={classes.gameInfo}>
-        {isNewWorldRunning
-          ? `${hotkeyBinding} to show/hide app`
-          : 'New World is not running'}
-      </p>
+      {isOverwolfApp && (
+        <p className={classes.gameInfo}>
+          {isNewWorldRunning
+            ? `${hotkeyBinding} to show/hide app`
+            : 'New World is not running'}
+        </p>
+      )}
       <div className={classes.controls}>
         <button
           className={classNames(classes.button, classes['button--github'])}
@@ -102,14 +109,16 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
         >
           <DiscordIcon />
         </button>
-        <button
-          className={classes.button}
-          onClick={togglePreferedWindow}
-          data-tooltip={'Toggle Desktop/Overlay'}
-          disabled={!isNewWorldRunning}
-        >
-          <MonitorIcon />
-        </button>
+        {isOverwolfApp && (
+          <button
+            className={classes.button}
+            onClick={togglePreferedWindow}
+            data-tooltip={'Toggle Desktop/Overlay'}
+            disabled={!isNewWorldRunning}
+          >
+            <MonitorIcon />
+          </button>
+        )}
         <button
           className={classes.button}
           onClick={() =>
@@ -122,43 +131,53 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
         >
           <HelpIcon />
         </button>
-        <button
-          className={classNames(classes.button, classes['button--padded'])}
-          onClick={minimizeCurrentWindow}
-        >
-          <MinimizeIcon />
-        </button>
-        {!isMaximized ? (
-          <button
-            className={classNames(classes.button, classes['button--padded'])}
-            onClick={() => {
-              maximizeCurrentWindow();
-              setIsMaximized(true);
-            }}
-          >
-            <MaximizeIcon />
-          </button>
-        ) : (
-          <button
-            className={classNames(classes.button, classes['button--padded'])}
-            onClick={() => {
-              restoreCurrentWindow();
-              setIsMaximized(false);
-            }}
-          >
-            <RestoreIcon />
-          </button>
+        {isOverwolfApp && (
+          <>
+            <button
+              className={classNames(classes.button, classes['button--padded'])}
+              onClick={minimizeCurrentWindow}
+            >
+              <MinimizeIcon />
+            </button>
+            {!isMaximized ? (
+              <button
+                className={classNames(
+                  classes.button,
+                  classes['button--padded']
+                )}
+                onClick={() => {
+                  maximizeCurrentWindow();
+                  setIsMaximized(true);
+                }}
+              >
+                <MaximizeIcon />
+              </button>
+            ) : (
+              <button
+                className={classNames(
+                  classes.button,
+                  classes['button--padded']
+                )}
+                onClick={() => {
+                  restoreCurrentWindow();
+                  setIsMaximized(false);
+                }}
+              >
+                <RestoreIcon />
+              </button>
+            )}
+            <button
+              className={classNames(
+                classes.button,
+                classes['button--padded'],
+                classes['button--danger']
+              )}
+              onClick={closeMainWindow}
+            >
+              <CloseIcon />
+            </button>
+          </>
         )}
-        <button
-          className={classNames(
-            classes.button,
-            classes['button--padded'],
-            classes['button--danger']
-          )}
-          onClick={closeMainWindow}
-        >
-          <CloseIcon />
-        </button>
       </div>
     </header>
   );

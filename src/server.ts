@@ -114,6 +114,9 @@ app.use('/screenshots', express.static(SCREENSHOTS_PATH));
 // Static assets folder
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
+// Serve webversion
+app.use(express.static('dist/overwolf'));
+
 // All other requests are answered with a 404
 app.all('*', (_req, res) => {
   res.status(404).send('🙈 Not found');

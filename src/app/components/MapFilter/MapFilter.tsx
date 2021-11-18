@@ -24,6 +24,7 @@ import useDebounce from '../../utils/useDebounce';
 import { useState } from 'react';
 import SelectRoute from '../MarkerRoutes/SelectRoute';
 import AddResources from '../AddResources/AddResources';
+import { isOverwolfApp } from '../../utils/overwolf';
 
 type View = 'markers' | 'settings' | 'markerRoutes';
 
@@ -80,9 +81,11 @@ function MapFilter(): JSX.Element {
         {view === 'markerRoutes' && (
           <MarkerRoutes editing={Boolean(editRoute)} onEdit={setEditRoute} />
         )}
-        <ErrorBoundary>
-          <Ads active={isOpen} />
-        </ErrorBoundary>
+        {isOverwolfApp && (
+          <ErrorBoundary>
+            <Ads active={isOpen} />
+          </ErrorBoundary>
+        )}
       </div>
       <nav className={styles.nav}>
         <MapSearch className={styles.nav__button} />
@@ -121,41 +124,44 @@ function MapFilter(): JSX.Element {
         >
           <SettingsIcon />
         </button>
-
-        <button
-          data-tooltip="Follow position"
-          data-tooltip-position="right"
-          onClick={() => {
-            toggleFollowing();
-          }}
-          className={classNames(
-            styles.nav__button,
-            styles.nav__border,
-            following && styles.nav__active
-          )}
-        >
-          <PlayerIcon />
-        </button>
-        <button
-          data-tooltip="Show minimap"
-          data-tooltip-position="right"
-          onClick={() => {
-            if (!showMinimap) {
-              addModal({
-                title: 'Setup minimap',
-                children: <MinimapSetup />,
-              });
-            }
-            setShowMinimap(!showMinimap);
-          }}
-          className={classNames(
-            styles.nav__button,
-            styles.nav__border,
-            showMinimap && styles.nav__active
-          )}
-        >
-          <CompassIcon />
-        </button>
+        {isOverwolfApp && (
+          <>
+            <button
+              data-tooltip="Follow position"
+              data-tooltip-position="right"
+              onClick={() => {
+                toggleFollowing();
+              }}
+              className={classNames(
+                styles.nav__button,
+                styles.nav__border,
+                following && styles.nav__active
+              )}
+            >
+              <PlayerIcon />
+            </button>
+            <button
+              data-tooltip="Show minimap"
+              data-tooltip-position="right"
+              onClick={() => {
+                if (!showMinimap) {
+                  addModal({
+                    title: 'Setup minimap',
+                    children: <MinimapSetup />,
+                  });
+                }
+                setShowMinimap(!showMinimap);
+              }}
+              className={classNames(
+                styles.nav__button,
+                styles.nav__border,
+                showMinimap && styles.nav__active
+              )}
+            >
+              <CompassIcon />
+            </button>
+          </>
+        )}
         <button
           data-tooltip="Show/Hide menu"
           data-tooltip-position="right"

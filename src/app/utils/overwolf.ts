@@ -1,5 +1,21 @@
 import { writeLog } from './logs';
 
+export const isOverwolfApp = typeof overwolf !== 'undefined';
+if (typeof overwolf === 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  globalThis.overwolf = new Proxy(
+    () => {
+      return;
+    },
+    {
+      get() {
+        return overwolf;
+      },
+    }
+  );
+}
+
 // Sometimes `overwolf` is not loaded if debug_url is set. A simple reload of the page will fix this.
 export function waitForOverwolf(): Promise<void> {
   return new Promise((resolve) => {
