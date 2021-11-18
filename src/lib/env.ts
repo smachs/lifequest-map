@@ -35,4 +35,5 @@ export const {
   STEAM_API_KEY,
   SESSION_SECRET,
   VITE_API_ENDPOINT,
+  NODE_ENV,
 } = process.env;

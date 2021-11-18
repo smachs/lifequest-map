@@ -5,6 +5,7 @@ import {
   STEAM_API_KEY,
   SESSION_SECRET,
   VITE_API_ENDPOINT,
+  NODE_ENV,
 } from './lib/env';
 import express from 'express';
 import cors from 'cors';
@@ -114,8 +115,10 @@ app.use('/screenshots', express.static(SCREENSHOTS_PATH));
 // Static assets folder
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
-// Serve webversion
-app.use(express.static('dist/overwolf'));
+// Serve webversion (only on production)
+if (NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../overwolf')));
+}
 
 // All other requests are answered with a 404
 app.all('*', (_req, res) => {
