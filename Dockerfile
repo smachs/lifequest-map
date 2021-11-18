@@ -19,7 +19,7 @@ FROM node:alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
-COPY --from=builder /app/dist/server ./dist/server
+COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
