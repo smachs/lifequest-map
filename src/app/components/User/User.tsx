@@ -6,7 +6,7 @@ import steamSrc from './steam.png';
 import { useEffect, useState } from 'react';
 import { isOverwolfApp } from '../../utils/overwolf';
 
-const { VITE_API_ENDPOINT } = import.meta.env;
+const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 function User(): JSX.Element {
   const user = useUser();

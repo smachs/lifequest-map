@@ -7,7 +7,7 @@ import { getJSONItem, setJSONItem } from '../../utils/storage';
 import { getRegions } from './regions';
 import { useSettings } from '../../contexts/SettingsContext';
 import { defaultPosition } from '../../contexts/PositionContext';
-const { VITE_API_ENDPOINT } = import.meta.env;
+const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 function toThreeDigits(number: number): string {
   if (number < 10) {

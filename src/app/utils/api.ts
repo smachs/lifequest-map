@@ -1,11 +1,7 @@
 import type { AccountDTO } from '../contexts/UserContext';
 import { getJSONItem } from './storage';
 
-const { VITE_API_ENDPOINT } = import.meta.env;
-
-if (!VITE_API_ENDPOINT) {
-  throw new Error('VITE_API_ENDPOINT is not set');
-}
+const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 export async function fetchJSON<T>(
   url: RequestInfo,
