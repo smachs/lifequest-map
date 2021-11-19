@@ -35,17 +35,6 @@
   margin-top: -7px;
 }
 
-.more textarea {
-  resize: none;
-  width: 200px;
-  height: 9px;
-  font-size: 9px;
-  margin-top: -10px;
-  padding: 0px;
-  line-height: 8px;
-  text-align: center;
-}
-
 .main {
   display: grid;
   grid-template-rows: 1fr auto;
@@ -72,4 +61,8 @@
   align-content: baseline;
   gap: 1em;
   overflow: auto;
+}
+
+.userSelect {
+  user-select: all;
 }

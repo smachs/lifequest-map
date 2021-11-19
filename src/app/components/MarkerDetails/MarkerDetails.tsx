@@ -103,18 +103,18 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
         <HideMarkerInput markerId={marker._id} onHide={closeLatestModal} />
         {account &&
           (account.isModerator || account.steamId === fullMarker?.userId) && (
-            <><button
-            className={styles.button}
-            onClick={() => {
-              addModal({
-                title: 'Do you really want to delete this marker?',
-                children: <Confirm onConfirm={handleDelete} />,
-                fitContent: true,
-              });
-            } }
-          >
-            💀 Remove invalid marker 💀
-          </button><textarea>{marker._id}</textarea></>
+            <button
+              className={styles.button}
+              onClick={() => {
+                addModal({
+                  title: 'Do you really want to delete this marker?',
+                  children: <Confirm onConfirm={handleDelete} />,
+                  fitContent: true,
+                });
+              }}
+            >
+              💀 Remove invalid marker 💀
+            </button>
           )}
         <h3>Screenshot</h3>
         {fullMarker?.screenshotFilename ? (
@@ -148,6 +148,9 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
           </button>
         )}
         <h3>Details</h3>
+        {account?.isModerator && (
+          <small className={styles.userSelect}>{marker._id}</small>
+        )}
         {marker.level && <p>Level {marker.level}</p>}
         {fullMarker?.description && (
           <Markdown>{fullMarker.description}</Markdown>
