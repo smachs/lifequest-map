@@ -46,7 +46,6 @@ export function initSocket(server: http.Server) {
     });
 
     io.of('/').adapter.on('delete-room', (room) => {
-      console.log(`delete-room ${room}`);
       delete activePlayers[room];
     });
   });
