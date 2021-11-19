@@ -30,6 +30,7 @@ import passport from 'passport';
 import SteamStrategy from 'passport-steam';
 import { readAccount } from './lib/auth/middlewares';
 import { initSocket } from './lib/live/socket';
+import { initAccountsCollection } from './lib/auth/collection';
 
 if (typeof PORT !== 'string') {
   throw new Error('PORT is not set');
@@ -131,6 +132,7 @@ app.all('*', (_req, res) => {
 connectToMongoDb(MONGODB_URI).then(async () => {
   console.log('Connected to MongoDB');
   await Promise.all([
+    initAccountsCollection(),
     initCommentsCollection(),
     initMarkersCollection(),
     initMarkerRoutesCollection(),

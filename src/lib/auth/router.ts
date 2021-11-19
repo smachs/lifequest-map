@@ -94,7 +94,12 @@ authRouter.get(
       {
         $set: {
           name: req.user.displayName,
-          sessionId: req.session.sessionId,
+        },
+        $push: {
+          sessionIds: {
+            $each: [req.session.sessionId!],
+            $slice: -5,
+          },
         },
         $setOnInsert: {
           createdAt: new Date(),

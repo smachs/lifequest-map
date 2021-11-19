@@ -30,8 +30,11 @@ function ensureAccountsSchema(): Promise<Document> {
           name: {
             bsonType: 'string',
           },
-          sessionId: {
-            bsonType: 'string',
+          sessionIds: {
+            bsonType: 'array',
+            items: {
+              bsonType: 'string',
+            },
           },
           isModerator: {
             bsonType: 'bool',
