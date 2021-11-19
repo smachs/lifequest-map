@@ -44,9 +44,9 @@ export function initSocket(server: http.Server) {
       io.to(auth.token).emit('username', username);
       activePlayers[auth.token].username = username;
     });
+  });
 
-    io.of('/').adapter.on('delete-room', (room) => {
-      delete activePlayers[room];
-    });
+  io.of('/').adapter.on('delete-room', (room) => {
+    delete activePlayers[room];
   });
 }
