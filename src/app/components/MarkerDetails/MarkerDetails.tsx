@@ -100,7 +100,7 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
       </main>
       <aside className={styles.more}>
         <h3>Actions</h3>
-        <HideMarkerInput markerId={marker._id} />
+        <HideMarkerInput markerId={marker._id} onHide={closeLatestModal} />
         {account &&
           (account.isModerator || account.steamId === fullMarker?.userId) && (
             <><button

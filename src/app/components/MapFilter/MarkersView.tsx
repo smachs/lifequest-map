@@ -4,10 +4,10 @@ import MarkerSection from './MarkerSection';
 import { useFilters } from '../../contexts/FiltersContext';
 import ActionButton from '../ActionControl/ActionButton';
 import ActionCheckbox from '../ActionControl/ActionCheckbox';
-import SearchIcon from '../icons/SearchIcon';
 import { searchMapFilter } from './searchMapFilter';
 import { usePersistentState } from '../../utils/storage';
 import { useAccount } from '../../contexts/UserContext';
+import SearchInput from '../SearchInput/SearchInput';
 
 type MarkersViewProps = {
   adding: boolean;
@@ -48,14 +48,11 @@ function MarkersView({ adding, onAdd }: MarkersViewProps): JSX.Element {
         />
       </div>
       <div className={styles.actions}>
-        <label className={styles.search}>
-          <SearchIcon />
-          <input
-            placeholder="Search marker types..."
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-          />
-        </label>
+        <SearchInput
+          placeholder="Search marker types..."
+          value={search}
+          onChange={setSearch}
+        />
         <ActionButton
           onClick={() => {
             handleToggle(

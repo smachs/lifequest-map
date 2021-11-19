@@ -50,10 +50,8 @@ function Ads({ active }: AdsProps): JSX.Element {
     }
 
     if (windowIsVisible && active) {
-      console.log('refresh ad');
       owAd.refreshAd({});
     } else {
-      console.log('remove ad');
       owAd.removeAd();
     }
   }, [owAd, active, windowIsVisible]);

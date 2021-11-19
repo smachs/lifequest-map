@@ -9,8 +9,10 @@ import { MarkersProvider } from './contexts/MarkersContext';
 import { PositionProvider } from './contexts/PositionContext';
 import { FiltersProvider } from './contexts/FiltersContext';
 import { SettingsProvider } from './contexts/SettingsContext';
+import { centerWindow } from './utils/windows';
 
 waitForOverwolf().then(() => {
+  centerWindow();
   ReactDOM.render(
     <StrictMode>
       <SettingsProvider>

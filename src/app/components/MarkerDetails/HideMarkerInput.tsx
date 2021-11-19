@@ -5,8 +5,12 @@ import { patchUser } from './api';
 
 type HideMarkerInputProps = {
   markerId: string;
+  onHide: () => void;
 };
-function HideMarkerInput({ markerId }: HideMarkerInputProps): JSX.Element {
+function HideMarkerInput({
+  markerId,
+  onHide,
+}: HideMarkerInputProps): JSX.Element {
   const user = useUser();
   const refreshUser = useRefreshUser();
 
@@ -25,10 +29,13 @@ function HideMarkerInput({ markerId }: HideMarkerInputProps): JSX.Element {
     }
     await notify(patchUser(user.username, hiddenMarkerIds));
     refreshUser();
+    if (checked) {
+      onHide();
+    }
   }
   return (
     <label
-      data-tooltip={
+      title={
         user ? "Marker won't be shown on the map" : 'Character not detected'
       }
     >

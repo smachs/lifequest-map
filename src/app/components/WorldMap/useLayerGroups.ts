@@ -136,7 +136,6 @@ function useLayerGroups({
           renderer: canvasRendererRef.current,
           radius: 16,
           image: {
-            alwaysVisible: false,
             markerId: marker._id,
             type: marker.type,
             src: mapFilter.iconUrl,
@@ -175,15 +174,15 @@ function useLayerGroups({
 
     removableMarkers.forEach((markerId) => {
       const layerCache = allLayers[markerId];
-      if (layerCache && !layerCache.layer.options.image.alwaysVisible) {
+      if (layerCache) {
         markersLayerGroup.removeLayer(layerCache.layer);
         delete allLayers[markerId];
       }
     });
 
-    const allMarkers = Object.values(allLayers);
     let currentMapBounds = leafletMap.getBounds();
     function showHideLayers() {
+      const allMarkers = Object.values(allLayers);
       const mapBounds = leafletMap!.getBounds();
       currentMapBounds = mapBounds;
       allMarkers.forEach((marker) => {
@@ -191,9 +190,7 @@ function useLayerGroups({
           return;
         }
         const layer = marker.layer;
-        const shouldBeVisible =
-          mapBounds.contains(layer.getLatLng()) ||
-          marker.layer.options.image.alwaysVisible;
+        const shouldBeVisible = mapBounds.contains(layer.getLatLng());
 
         const isVisible = markersLayerGroup.hasLayer(layer);
 
@@ -224,6 +221,7 @@ function useLayerGroups({
     leafletMap.on('moveend', placeMarkersInBounds);
     return () => {
       leafletMap.off('moveend', placeMarkersInBounds);
+      clearTimeout(trailingTimeoutId);
     };
   }, [leafletMap, visibleMarkers]);
 

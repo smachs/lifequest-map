@@ -25,6 +25,7 @@
 .setup {
   position: fixed;
   inset: 0;
+  z-index: 1000;
 }
 
 .toolbar {
@@ -34,7 +35,6 @@
   bottom: 0;
   padding: 0.5em;
   background: #000000a6;
-  z-index: 900000;
   display: grid;
   font-size: 0.8rem;
   overflow: auto;

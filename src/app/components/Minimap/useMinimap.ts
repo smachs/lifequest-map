@@ -32,7 +32,7 @@ function useMinimap(): [
 
   useEffect(() => {
     if (newWorldIsRunning && showMinimap) {
-      restoreWindow(WINDOWS.MINIMAP, true);
+      restoreWindow(WINDOWS.MINIMAP);
     } else {
       closeWindow(WINDOWS.MINIMAP);
     }

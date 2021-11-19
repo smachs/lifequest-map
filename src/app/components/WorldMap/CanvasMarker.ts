@@ -2,7 +2,6 @@ import leaflet from 'leaflet';
 
 type CanvasMarkerOptions = {
   image: {
-    alwaysVisible: boolean;
     size: [number, number];
     showBackground: boolean;
     markerId: string;

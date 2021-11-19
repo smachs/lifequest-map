@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styles from './SelectRoute.module.css';
 import 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
@@ -7,7 +7,6 @@ import leaflet from 'leaflet';
 import MarkerTypes from './MarkerTypes';
 import { notify } from '../../utils/notifications';
 import { patchMarkerRoute, postMarkerRoute } from './api';
-import CanvasMarker from '../WorldMap/CanvasMarker';
 import { useMarkers } from '../../contexts/MarkersContext';
 import type { MarkerRouteItem } from './MarkerRoutes';
 
@@ -29,7 +28,38 @@ function SelectRoute({
   }>({});
   const [name, setName] = useState(markerRoute?.name || '');
   const [isPublic, setIsPublic] = useState(markerRoute?.isPublic || false);
-  const { toggleMarkerRoute, refreshMarkerRoutes } = useMarkers();
+  const { markers, toggleMarkerRoute, refreshMarkerRoutes } = useMarkers();
+
+  const refreshMarkers = useCallback(
+    (workingLayer: leaflet.Polyline | leaflet.Layer) => {
+      // @ts-ignore
+      const latLngs = workingLayer.getLatLngs() as leaflet.LatLng[];
+      const snappedMarkers = markers.filter((marker) =>
+        latLngs.some((latLng: leaflet.LatLng) =>
+          latLng.equals([marker.position[1], marker.position[0]])
+        )
+      );
+
+      const markersByType = snappedMarkers.reduce<{
+        [type: string]: number;
+      }>(
+        (prev, acc) => ({
+          ...prev,
+          [acc.type]: (prev[acc.type] || 0) + 1,
+        }),
+        {}
+      );
+
+      setMarkersByType(markersByType);
+
+      const positions = latLngs.map((latLng) => [latLng.lat, latLng.lng]) as [
+        number,
+        number
+      ][];
+      setPositions(positions);
+    },
+    [markers]
+  );
 
   useEffect(() => {
     const toggleControls = (editMode: boolean) => {
@@ -49,46 +79,6 @@ function SelectRoute({
       });
     };
     toggleControls(false);
-
-    const refreshMarkers = (workingLayer: leaflet.Polyline | leaflet.Layer) => {
-      // @ts-ignore
-      const markers = Object.values(leafletMap._layers).filter(
-        (marker) => marker instanceof CanvasMarker
-      ) as CanvasMarker[];
-      markers.forEach((marker) => {
-        marker.options.image.alwaysVisible = false;
-      });
-
-      // @ts-ignore
-      const latLngs = workingLayer.getLatLngs() as leaflet.LatLng[];
-      const snappedMarkers = markers.filter((marker) =>
-        latLngs.some((latLng: leaflet.LatLng) =>
-          latLng.equals(marker.getLatLng())
-        )
-      ) as CanvasMarker[];
-
-      snappedMarkers.forEach((marker) => {
-        marker.options.image.alwaysVisible = true;
-      });
-
-      const markersByType = snappedMarkers.reduce<{
-        [type: string]: number;
-      }>(
-        (prev, acc) => ({
-          ...prev,
-          [acc.options.image.type]: (prev[acc.options.image.type] || 0) + 1,
-        }),
-        {}
-      );
-
-      setMarkersByType(markersByType);
-
-      const positions = latLngs.map((latLng) => [latLng.lat, latLng.lng]) as [
-        number,
-        number
-      ][];
-      setPositions(positions);
-    };
 
     let existingPolyline: leaflet.Polyline | null = null;
     leafletMap.on('pm:create', (event) => {
@@ -155,14 +145,6 @@ function SelectRoute({
       if (existingPolyline) {
         existingPolyline.remove();
       }
-
-      // @ts-ignore
-      const markers = Object.values(leafletMap._layers).filter(
-        (marker) => marker instanceof CanvasMarker
-      ) as CanvasMarker[];
-      markers.forEach((marker) => {
-        marker.options.image.alwaysVisible = false;
-      });
     };
   }, []);
 

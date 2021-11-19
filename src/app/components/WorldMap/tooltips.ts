@@ -5,12 +5,14 @@ import type { FilterItem } from '../MapFilter/mapFilters';
 export function getTooltipContent(
   markerOrDetails: MarkerBasic | Details,
   mapFilter: FilterItem
-): string {
-  let tooltipContent = markerOrDetails.name
-    ? `${markerOrDetails.name} (${mapFilter.title})`
-    : mapFilter.title;
-  if (markerOrDetails.level) {
-    tooltipContent += `<br/>Level ${markerOrDetails.level}`;
-  }
-  return tooltipContent;
+): () => string {
+  return () => {
+    let tooltipContent = markerOrDetails.name
+      ? `${markerOrDetails.name} (${mapFilter.title})`
+      : mapFilter.title;
+    if (markerOrDetails.level) {
+      tooltipContent += `<br/>Level ${markerOrDetails.level}`;
+    }
+    return tooltipContent;
+  };
 }

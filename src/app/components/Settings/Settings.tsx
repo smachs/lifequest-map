@@ -7,6 +7,7 @@ import {
   ZOOM_IN_MINIMAP,
   ZOOM_OUT_MINIMAP,
 } from '../../utils/hotkeys';
+import { isOverwolfApp } from '../../utils/overwolf';
 import styles from './Settings.module.css';
 
 function Settings(): JSX.Element {
@@ -54,37 +55,41 @@ function Settings(): JSX.Element {
           onChange={(event) => setShowRegionBorders(event.target.checked)}
         />
       </label>
-      <h3>Hotkeys</h3>
-      <label className={styles.label}>
-        Show/Hide App
-        <a href="overwolf://settings/games-overlay?hotkey=show_hide_app&gameId=21816">
-          {showHideAppBinding}
-        </a>
-      </label>
-      <label className={styles.label}>
-        Setup minimap
-        <a href="overwolf://settings/games-overlay?hotkey=setup_minimap&gameId=21816">
-          {setupMinimapBinding}
-        </a>
-      </label>
-      <label className={styles.label}>
-        Show/Hide minimap
-        <a href="overwolf://settings/games-overlay?hotkey=show_hide_minimap&gameId=21816">
-          {showHideMinimapBinding}
-        </a>
-      </label>
-      <label className={styles.label}>
-        Zoom in minimap
-        <a href="overwolf://settings/games-overlay?hotkey=zoom_in_minimap&gameId=21816">
-          {zoomInMinimapBinding}
-        </a>
-      </label>
-      <label className={styles.label}>
-        Zoom out minimap
-        <a href="overwolf://settings/games-overlay?hotkey=zoom_out_minimap&gameId=21816">
-          {zoomOutMinimapBinding}
-        </a>
-      </label>
+      {isOverwolfApp && (
+        <>
+          <h3>Hotkeys</h3>
+          <label className={styles.label}>
+            Show/Hide App
+            <a href="overwolf://settings/games-overlay?hotkey=show_hide_app&gameId=21816">
+              {showHideAppBinding}
+            </a>
+          </label>
+          <label className={styles.label}>
+            Setup minimap
+            <a href="overwolf://settings/games-overlay?hotkey=setup_minimap&gameId=21816">
+              {setupMinimapBinding}
+            </a>
+          </label>
+          <label className={styles.label}>
+            Show/Hide minimap
+            <a href="overwolf://settings/games-overlay?hotkey=show_hide_minimap&gameId=21816">
+              {showHideMinimapBinding}
+            </a>
+          </label>
+          <label className={styles.label}>
+            Zoom in minimap
+            <a href="overwolf://settings/games-overlay?hotkey=zoom_in_minimap&gameId=21816">
+              {zoomInMinimapBinding}
+            </a>
+          </label>
+          <label className={styles.label}>
+            Zoom out minimap
+            <a href="overwolf://settings/games-overlay?hotkey=zoom_out_minimap&gameId=21816">
+              {zoomOutMinimapBinding}
+            </a>
+          </label>
+        </>
+      )}
     </div>
   );
 }

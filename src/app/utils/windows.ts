@@ -8,24 +8,24 @@ export const WINDOWS = {
   MINIMAP: 'minimap',
 };
 
+const currentWindow = new Promise<overwolf.windows.WindowInfo>((resolve) =>
+  overwolf.windows.getCurrentWindow((result) => resolve(result.window))
+);
+
 export function getCurrentWindow(): Promise<overwolf.windows.WindowInfo> {
-  return new Promise((resolve, reject) => {
-    overwolf.windows.getCurrentWindow((result) => {
-      if (result.success) {
-        resolve(result.window);
-      } else {
-        reject(result.error);
-      }
-    });
-  });
+  return currentWindow;
 }
 
-export function obtainDeclaredWindow(
+const declaredWindows: {
+  [windowName: string]: overwolf.windows.WindowInfo;
+} = {};
+export async function obtainDeclaredWindow(
   windowName: string
 ): Promise<overwolf.windows.WindowInfo> {
   return new Promise((resolve, reject) => {
     overwolf.windows.obtainDeclaredWindow(windowName, (result) => {
       if (result.success) {
+        declaredWindows[windowName] = result.window;
         resolve(result.window);
       } else {
         reject(result.error);
@@ -80,10 +80,7 @@ export async function getPreferedWindowName(): Promise<string> {
   return secondScreen ? WINDOWS.DESKTOP : WINDOWS.OVERLAY;
 }
 
-export async function restoreWindow(
-  windowName: string,
-  preventCenter?: boolean
-): Promise<string> {
+export async function restoreWindow(windowName: string): Promise<string> {
   const declaredWindow = await obtainDeclaredWindow(windowName);
 
   return new Promise((resolve, reject) => {
@@ -98,18 +95,7 @@ export async function restoreWindow(
           overwolf.windows.bringToFront(windowName, resolve)
         );
         writeLog(`Window ${windowName} restored`);
-        if (!preventCenter) {
-          const alreadyCentered = getJSONItem<boolean>(
-            `centered-${windowName}`,
-            false
-          );
-          if (!alreadyCentered) {
-            const primaryDisplay = declaredWindow.name === WINDOWS.OVERLAY;
-            await centerWindow(windowName, primaryDisplay);
-            setJSONItem(`centered-${declaredWindow.name}`, true);
-            writeLog(`Window ${windowName} centered`);
-          }
-        }
+
         resolve(result.window_id!); // window_id is always a string if success
       } else {
         reject(result.error);
@@ -118,14 +104,13 @@ export async function restoreWindow(
   });
 }
 
-export function toggleWindow(windowName: string): void {
-  overwolf.windows.obtainDeclaredWindow(windowName, (result) => {
-    if (['normal', 'maximized'].includes(result.window.stateEx)) {
-      overwolf.windows.hide(result.window.id);
-    } else {
-      restoreWindow(result.window.name);
-    }
-  });
+export async function toggleWindow(windowName: string): Promise<void> {
+  const window = await obtainDeclaredWindow(windowName);
+  if (['normal', 'maximized'].includes(window.stateEx)) {
+    overwolf.windows.hide(window.id);
+  } else {
+    restoreWindow(window.name);
+  }
 }
 
 export async function togglePreferedWindow(): Promise<void> {
@@ -162,21 +147,36 @@ export function getDisplays(): Promise<overwolf.utils.Display[]> {
   });
 }
 
-export async function centerWindow(
-  windowName: string,
-  primaryDisplay = true
-): Promise<void> {
+export async function centerWindow(): Promise<void> {
+  const currentWindow = await getCurrentWindow();
+  const alreadyCentered = getJSONItem<boolean>(
+    `centered-${currentWindow.name}`,
+    false
+  );
+  if (alreadyCentered) {
+    return;
+  }
+
+  const primaryDisplay = currentWindow.name === WINDOWS.OVERLAY;
+  setJSONItem(`centered-${currentWindow.name}`, true);
+  writeLog(`Window ${currentWindow.name} centered`);
+
   const monitor = await getMonitor(primaryDisplay);
   if (!monitor) {
     return;
   }
-  const declaredWindow = await obtainDeclaredWindow(windowName);
 
   return new Promise((resolve) => {
     overwolf.windows.changePosition(
-      declaredWindow.name,
-      monitor.x + Math.round((monitor.width - declaredWindow.width) / 2),
-      monitor.y + Math.round((monitor.height - declaredWindow.height) / 2),
+      currentWindow.name,
+      monitor.x +
+        Math.round(
+          (monitor.width - (currentWindow.width * monitor.dpiX) / 100) / 2
+        ),
+      monitor.y +
+        Math.round(
+          (monitor.height - (currentWindow.height * monitor.dpiY) / 100) / 2
+        ),
       () => resolve()
     );
   });
@@ -208,7 +208,6 @@ export async function dragResize(
         window_id: result.id!,
         width: minSize,
         height: minSize,
-        auto_dpi_resize: true,
       });
     }
   }

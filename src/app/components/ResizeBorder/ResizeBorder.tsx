@@ -29,9 +29,9 @@ function useIsMaximizedWindow(): boolean {
       }
     }
 
-    getCurrentWindow().then(
-      (currentWindow) => currentWindow.stateEx === 'maximized'
-    );
+    getCurrentWindow().then((currentWindow) => {
+      setIsMaximized(currentWindow.stateEx === 'maximized');
+    });
 
     overwolf.windows.onStateChanged.addListener(handleWindowStateChanged);
     return () => {
