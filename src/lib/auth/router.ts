@@ -37,7 +37,11 @@ authRouter.get('/session', (_req, res) => {
 });
 
 authRouter.get('/account', ensureAuthenticated, (req, res) => {
-  res.json(req.account);
+  const account = {
+    ...req.account!,
+    sessionId: req.account!.sessionIds[req.account!.sessionIds.length - 1],
+  };
+  res.json(account);
 });
 
 authRouter.get('/logout', ensureAuthenticated, async (req, res) => {

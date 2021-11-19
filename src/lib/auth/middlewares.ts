@@ -9,8 +9,12 @@ export async function readAccount(
 ) {
   const { 'x-session-id': sessionId, 'x-prevent-logout': preventLogout } =
     req.headers;
-  if (typeof sessionId !== 'string' || !validateUUID(sessionId)) {
+  if (typeof sessionId !== 'string') {
     next();
+    return;
+  }
+  if (!validateUUID(sessionId)) {
+    res.status(401).send('😞 Invalid session. Please login again.');
     return;
   }
   const account = await getAccountCollection().findOne({
