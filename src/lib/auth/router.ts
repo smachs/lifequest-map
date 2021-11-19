@@ -89,32 +89,41 @@ authRouter.get(
       res.sendStatus(403);
       return;
     }
-    const result = await getAccountCollection().findOneAndUpdate(
-      { steamId: req.user.steamId },
-      {
-        $set: {
-          name: req.user.displayName,
-        },
-        $push: {
-          sessionIds: {
-            $each: [req.session.sessionId!],
-            $slice: -5,
+    try {
+      const result = await getAccountCollection().findOneAndUpdate(
+        { steamId: req.user.steamId },
+        {
+          $set: {
+            name: req.user.displayName,
+          },
+          $push: {
+            sessionIds: {
+              $each: [req.session.sessionId!],
+              $slice: -5,
+            },
+          },
+          $setOnInsert: {
+            createdAt: new Date(),
           },
         },
-        $setOnInsert: {
-          createdAt: new Date(),
-        },
-      },
-      { upsert: true }
-    );
-    if (!result.ok) {
+        { upsert: true }
+      );
+      if (!result.ok) {
+        res
+          .status(500)
+          .send('Login failed. Please try again or visit Discord for support.');
+        return;
+      }
+      res.send(`logged in successfully, you can close this window now`);
+      postToDiscord(`🤘 ${req.user.displayName} is using Aeternum Map`, false);
+    } catch (error) {
+      console.error(
+        `Login failed for ${req.user.displayName} (${req.user.steamId}) with ${req.session.sessionId}`
+      );
       res
         .status(500)
         .send('Login failed. Please try again or visit Discord for support.');
-      return;
     }
-    res.send(`logged in successfully, you can close this window now`);
-    postToDiscord(`🤘 ${req.user.displayName} is using Aeternum Map`, false);
   }
 );
 
