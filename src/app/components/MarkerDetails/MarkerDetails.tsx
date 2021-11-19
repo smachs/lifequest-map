@@ -148,6 +148,9 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
           </button>
         )}
         <h3>Details</h3>
+        {account?.isModerator && (
+          <small className={styles.userSelect}>{marker._id}</small>
+        )}
         {marker.level && <p>Level {marker.level}</p>}
         {fullMarker?.description && (
           <Markdown>{fullMarker.description}</Markdown>
