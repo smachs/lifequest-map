@@ -1,11 +1,13 @@
 import type http from 'http';
 import { Server } from 'socket.io';
 
+type Player = {
+  username?: string;
+  position?: { location: [number, number]; rotation: number };
+};
+
 const activePlayers: {
-  [token: string]: {
-    username: string;
-    position: { location: [number, number]; rotation: number };
-  };
+  [token: string]: Player;
 } = {};
 
 export function initSocket(server: http.Server) {
@@ -24,30 +26,23 @@ export function initSocket(server: http.Server) {
     }
 
     client.join(auth.token);
-    console.log(`${auth.token} connected`);
 
-    activePlayers[auth.token] = {
-      username: 'Unknown',
-      position: {
-        location: [0, 0],
-        rotation: 0,
-      },
-    };
+    if (!activePlayers[auth.token]) {
+      activePlayers[auth.token] = {};
+    }
+
+    client.on('status', (callback) => {
+      callback(activePlayers[auth.token]);
+    });
 
     client.on('position', (position) => {
-      console.log('position', position);
       io.to(auth.token).emit('position', position);
       activePlayers[auth.token].position = position;
     });
 
     client.on('username', (username) => {
-      console.log('username', username);
       io.to(auth.token).emit('username', username);
       activePlayers[auth.token].username = username;
-    });
-
-    client.on('disconnect', () => {
-      console.log(`${auth.token} disconnected`);
     });
 
     io.of('/').adapter.on('delete-room', (room) => {

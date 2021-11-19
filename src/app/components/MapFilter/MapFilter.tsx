@@ -27,6 +27,8 @@ import AddResources from '../AddResources/AddResources';
 import { isOverwolfApp } from '../../utils/overwolf';
 import BroadcastIcon from '../icons/BroadcastIcon';
 import useShareLivePosition from '../../utils/useShareLivePosition';
+import useReadLivePosition from '../../utils/useReadLivePosition';
+import { useAccount } from '../../contexts/UserContext';
 
 type View = 'markers' | 'settings' | 'markerRoutes';
 
@@ -41,8 +43,11 @@ function MapFilter(): JSX.Element {
   const [showMinimap, setShowMinimap] = useMinimap();
   const [editRoute, setEditRoute] = useState<MarkerRouteItem | boolean>(false);
   const [isAddingMarker, setIsAddingMarker] = useState(false);
-  const [isSharingLivePosition, setIsSharingLivePosition] =
-    useShareLivePosition();
+  const { account } = useAccount();
+
+  const [isLive, setIsLive] = isOverwolfApp
+    ? useShareLivePosition()
+    : useReadLivePosition();
 
   useDebounce(
     isOpen,
@@ -164,22 +169,24 @@ function MapFilter(): JSX.Element {
             >
               <CompassIcon />
             </button>
-            <button
-              data-tooltip="Share live status"
-              data-tooltip-position="right"
-              onClick={() => {
-                setIsSharingLivePosition(!isSharingLivePosition);
-              }}
-              className={classNames(
-                styles.nav__button,
-                styles.nav__border,
-                isSharingLivePosition && styles.nav__active
-              )}
-            >
-              <BroadcastIcon />
-            </button>
           </>
         )}
+        <button
+          data-tooltip={
+            account ? 'Share live status' : 'Login to share live status'
+          }
+          data-tooltip-position="right"
+          onClick={() => {
+            setIsLive(!isLive);
+          }}
+          className={classNames(
+            styles.nav__button,
+            styles.nav__border,
+            isLive && account && styles.nav__active
+          )}
+        >
+          <BroadcastIcon />
+        </button>
         <button
           data-tooltip="Show/Hide menu"
           data-tooltip-position="right"
