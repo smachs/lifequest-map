@@ -35,6 +35,8 @@ function useShareLivePosition(): [
         auth: {
           token: account.steamId,
         },
+        upgrade: false,
+        transports: ['websocket'],
       }
     );
     setSocket(newSocket);

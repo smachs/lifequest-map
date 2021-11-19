@@ -29,6 +29,8 @@ function useReadLivePosition(): [
         auth: {
           token: account.steamId,
         },
+        upgrade: false,
+        transports: ['websocket'],
       }
     );
 
