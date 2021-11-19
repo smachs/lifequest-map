@@ -8,6 +8,7 @@ import { writeError } from '../utils/logs';
 export type Position = { location: [number, number]; rotation: number };
 type PositionContextProps = {
   position: Position;
+  setPosition: (value: Position | ((value: Position) => Position)) => void;
   following: boolean;
   toggleFollowing: () => void;
 };
@@ -18,6 +19,7 @@ export const defaultPosition: Position = {
 };
 const PositionContext = createContext<PositionContextProps>({
   position: defaultPosition,
+  setPosition: () => undefined,
   following: true,
   toggleFollowing: () => undefined,
 });
@@ -106,7 +108,9 @@ export function PositionProvider({
     setFollowing(!following);
   }
   return (
-    <PositionContext.Provider value={{ position, following, toggleFollowing }}>
+    <PositionContext.Provider
+      value={{ position, setPosition, following, toggleFollowing }}
+    >
       {children}
     </PositionContext.Provider>
   );

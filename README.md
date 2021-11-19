@@ -39,6 +39,7 @@ The following list shows the variables you need to set:
 | PORT                        | Port for the server environment                                           |
 | MONGODB_URI                 | URI of your MongoDB server                                                |
 | VITE_API_ENDPOINT           | URL of your server environment                                            |
+| VITE_SOCKET_ENDPOINT        | Websocket URL of your server environment                                  |
 | SCREENSHOTS_PATH            | Server side path to a folder in which screenshots will be saved           |
 | DISCORD_PUBLIC_WEBHOOK_URL  | Discord Webhook for public activity log                                   |
 | DISCORD_PRIVATE_WEBHOOK_URL | Discord Webhook for private activity log                                  |

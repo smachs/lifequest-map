@@ -8,6 +8,7 @@ import {
   NODE_ENV,
 } from './lib/env';
 import express from 'express';
+import http from 'http';
 import cors from 'cors';
 import { connectToMongoDb } from './lib/db';
 import path from 'path';
@@ -28,6 +29,8 @@ import passport from 'passport';
 // @ts-ignore
 import SteamStrategy from 'passport-steam';
 import { readAccount } from './lib/auth/middlewares';
+import { initSocket } from './lib/live/socket';
+import { initAccountsCollection } from './lib/auth/collection';
 
 if (typeof PORT !== 'string') {
   throw new Error('PORT is not set');
@@ -40,6 +43,7 @@ if (typeof SCREENSHOTS_PATH !== 'string') {
 }
 
 const app = express();
+const server = http.createServer(app);
 
 // Middleware to set CORS headers
 app.use(cors());
@@ -128,6 +132,7 @@ app.all('*', (_req, res) => {
 connectToMongoDb(MONGODB_URI).then(async () => {
   console.log('Connected to MongoDB');
   await Promise.all([
+    initAccountsCollection(),
     initCommentsCollection(),
     initMarkersCollection(),
     initMarkerRoutesCollection(),
@@ -135,7 +140,10 @@ connectToMongoDb(MONGODB_URI).then(async () => {
     initScreenshotsCollection(),
   ]);
 
-  app.listen(PORT, () => {
+  initSocket(server);
+  console.log('Socket listening');
+
+  server.listen(PORT, () => {
     console.log(`Server listening at http://localhost:${PORT}`);
   });
 });

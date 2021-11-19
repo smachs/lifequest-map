@@ -13,7 +13,9 @@ export async function readAccount(
     next();
     return;
   }
-  const account = await getAccountCollection().findOne({ sessionId });
+  const account = await getAccountCollection().findOne({
+    sessionIds: sessionId,
+  });
   if (!account) {
     if (preventLogout) {
       next();
