@@ -1,5 +1,8 @@
 .container {
   text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
 }
 
 .hotkey {
@@ -9,5 +12,4 @@
 
 .video {
   max-width: 100%;
-  margin-top: 0.5em;
 }
