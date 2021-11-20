@@ -24,7 +24,7 @@ function MinimapWebsite(): JSX.Element {
           OnTopReplica
         </a>{' '}
         to display a minimap in-game 🤘. Keep in mind, that this is definitly in
-        the grey area of Amazon's ToS. Use at own risk 💀!
+        the grey area of AGS ToS. Use at own risk 💀!
       </p>
       <p>
         After installing and configurating (Make sure to enable "clickthrough"),
