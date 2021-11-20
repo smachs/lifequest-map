@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { useSetUser } from '../contexts/UserContext';
 import { usePosition } from '../contexts/PositionContext';
@@ -28,7 +28,7 @@ function useReadLivePosition(): [
 
   const { setPosition } = usePosition();
   const setUsername = useSetUser();
-  const [group, setGroup] = useState<Group>({});
+  const [group, setGroup] = usePersistentState<Group>('group', {});
 
   useGroupPositions(group);
 
@@ -84,6 +84,7 @@ function useReadLivePosition(): [
 
     return () => {
       socket.close();
+      setGroup({});
       toast.info('Stop sharing live status 🛑');
     };
   }, [isReading]);

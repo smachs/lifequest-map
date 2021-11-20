@@ -53,16 +53,16 @@ export function initSocket(server: http.Server) {
     });
 
     client.on('position', (position) => {
-      if (!position) {
-        console.log('No position?');
+      if (!activePlayers[groupToken][playerToken]) {
+        return;
       }
       activePlayers[groupToken][playerToken].position = position;
       io!.to(groupToken).emit('update', activePlayers[groupToken]);
     });
 
     client.on('username', (username) => {
-      if (!username) {
-        console.log('No username?');
+      if (!activePlayers[groupToken][playerToken]) {
+        return;
       }
       activePlayers[groupToken][playerToken].username = username;
       io!.to(groupToken).emit('update', activePlayers[groupToken]);

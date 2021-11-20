@@ -18,6 +18,8 @@ import { FiltersProvider } from './contexts/FiltersContext';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { classNames } from './utils/styles';
 import ResizeBorder from './components/ResizeBorder/ResizeBorder';
+import type { Group } from './utils/useReadLivePosition';
+import useGroupPositions from './components/WorldMap/useGroupPositions';
 
 function Minimap(): JSX.Element {
   const [showSetup, setShowSetup] = useState(false);
@@ -35,6 +37,8 @@ function Minimap(): JSX.Element {
     false
   );
   const [isHovering, setIsHovering] = useState(false);
+  const [group] = usePersistentState<Group>('group', {});
+  useGroupPositions(group);
 
   useEffect(() => {
     if (!isHovering) {
