@@ -1,19 +1,15 @@
-# Aeternum Map - Interactive map for New World
+# Aeternum Map - Your New World companion
 
-Get all the locations, farming spots, resources, lore documents, chests, mobs and more!
+Don't get lost and use Aeternum Map to display your position on a pure map on second screen, overlay or as minimap in-game. 
 
 ## Features
 
+- Amazon ToS accepted
+- Share live status with other applications or websites like [https://aeternum-map.gg](https://aeternum-map.gg] 
 - Live Tracking of your In-Game position
 - Minimap
-- Check markers as done (like lore documents)
 - Automatic detection of your In-Game character
 - Auto start with New World
-- Farming/Marker Routes
-- Private and guild markers (Coming Soon)
-- Areas (Coming Soon)
-- Near by (Coming Soon)
-- Dungeons (Coming Soon)
 
 ## Contribution
 
