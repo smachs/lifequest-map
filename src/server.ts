@@ -37,12 +37,6 @@ import { initAccountsCollection } from './lib/auth/collection';
 if (typeof PORT !== 'string') {
   throw new Error('PORT is not set');
 }
-if (typeof MONGODB_URI !== 'string') {
-  throw new Error('MONGODB_URI is not set');
-}
-if (typeof SCREENSHOTS_PATH !== 'string') {
-  throw new Error('SCREENSHOTS_PATH environment variable is not set');
-}
 
 const app = express();
 const server = http.createServer(app);
