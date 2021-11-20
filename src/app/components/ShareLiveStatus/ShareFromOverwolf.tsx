@@ -25,7 +25,7 @@ function ShareFromOverwolf(): JSX.Element {
           )
         </li>
         <li>
-          🤷‍♂️ Amazon ToS conform, because it's a website, not an app. See{' '}
+          🤷‍♂️ Conforms to AGS ToS, because it's a website, not an app. See{' '}
           <a
             href="https://discord.com/channels/320539672663031818/896014490808745994/911185526210576394"
             target="_blank"

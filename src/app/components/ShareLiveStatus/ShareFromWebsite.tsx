@@ -24,7 +24,7 @@ function ShareFromWebsite(): JSX.Element {
         <li>🎉 Auto start with New World</li>
         <li>🗺️ Minimap</li>
         <li>
-          🤷‍♂️ Amazon ToS conform, because it's showing nothing more than the
+          🤷‍♂️ Conforms to AGS ToS, because it's showing nothing more than the
           map/compass in-game. See{' '}
           <a
             href="https://discord.com/channels/320539672663031818/896014490808745994/911185526210576394"
