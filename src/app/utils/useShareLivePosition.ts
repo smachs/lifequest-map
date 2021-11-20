@@ -5,6 +5,7 @@ import { io } from 'socket.io-client';
 import { useAccount, useUser } from '../contexts/UserContext';
 import { usePosition } from '../contexts/PositionContext';
 import { usePersistentState } from './storage';
+import { toast } from 'react-toastify';
 
 const { VITE_SOCKET_ENDPOINT } = import.meta.env;
 
@@ -41,9 +42,16 @@ function useShareLivePosition(): [
     );
     setSocket(newSocket);
 
+    newSocket.on('connect', () => {
+      if (newSocket.connected) {
+        toast.success('Sharing live status 👌');
+      }
+    });
+
     return () => {
       newSocket.close();
       setSocket(null);
+      toast.info('Stop sharing live status 🛑');
     };
   }, [isSharing, account]);
 

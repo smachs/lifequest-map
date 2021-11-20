@@ -30,7 +30,6 @@ import useShareLivePosition from '../../utils/useShareLivePosition';
 import useReadLivePosition from '../../utils/useReadLivePosition';
 import { useAccount } from '../../contexts/UserContext';
 import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
-import { toast } from 'react-toastify';
 
 type View = 'markers' | 'settings' | 'markerRoutes';
 
@@ -195,13 +194,11 @@ function MapFilter(): JSX.Element {
                     onActivate={() => {
                       setIsLive(true);
                       closeLatestModal();
-                      toast.success('Sharing live status 👌');
                     }}
                   />
                 ),
               });
             } else {
-              toast.info('Stop sharing live status 🛑');
               setIsLive(false);
             }
           }}

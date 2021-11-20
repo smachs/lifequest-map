@@ -3,6 +3,7 @@ import { io } from 'socket.io-client';
 import { useAccount, useSetUser } from '../contexts/UserContext';
 import { usePosition } from '../contexts/PositionContext';
 import { usePersistentState } from './storage';
+import { toast } from 'react-toastify';
 
 const { VITE_SOCKET_ENDPOINT } = import.meta.env;
 
@@ -52,11 +53,18 @@ function useReadLivePosition(): [
       }
     );
 
+    socket.on('connect', () => {
+      if (socket.connected) {
+        toast.success('Sharing live status 👌');
+      }
+    });
+
     socket.on('position', setPosition);
     socket.on('username', setUsername);
 
     return () => {
       socket.close();
+      toast.info('Stop sharing live status 🛑');
     };
   }, [isReading, account]);
 
