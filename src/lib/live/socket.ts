@@ -7,7 +7,9 @@ type Player = {
 };
 
 export const activePlayers: {
-  [token: string]: Player;
+  [groupToken: string]: {
+    [playerToken: string]: Player;
+  };
 } = {};
 
 let io: Server | null = null;
@@ -20,33 +22,56 @@ export function initSocket(server: http.Server) {
   });
 
   io.on('connection', (client) => {
-    const { auth } = client.handshake;
-    if (!auth.token) {
+    const { query } = client.handshake;
+    if (!query.playerToken || !query.groupToken) {
       client.disconnect();
       return;
     }
+    const playerToken =
+      typeof query.playerToken === 'string'
+        ? query.playerToken
+        : query.playerToken[0];
+    const groupToken =
+      typeof query.groupToken === 'string'
+        ? query.groupToken
+        : query.groupToken[0];
 
-    client.join(auth.token);
+    client.join(groupToken);
 
-    if (!activePlayers[auth.token]) {
-      activePlayers[auth.token] = {
-        position: null,
+    if (!activePlayers[groupToken]) {
+      activePlayers[groupToken] = {};
+    }
+    if (!activePlayers[groupToken][playerToken]) {
+      activePlayers[groupToken][playerToken] = {
         username: null,
+        position: null,
       };
     }
 
     client.on('status', (callback) => {
-      callback(activePlayers[auth.token]);
+      callback(activePlayers[groupToken]);
     });
 
     client.on('position', (position) => {
-      io!.to(auth.token).emit('position', position);
-      activePlayers[auth.token].position = position;
+      if (!position) {
+        console.log('No position?');
+      }
+      activePlayers[groupToken][playerToken].position = position;
+      io!.to(groupToken).emit('update', activePlayers[groupToken]);
     });
 
     client.on('username', (username) => {
-      io!.to(auth.token).emit('username', username);
-      activePlayers[auth.token].username = username;
+      if (!username) {
+        console.log('No username?');
+      }
+      activePlayers[groupToken][playerToken].username = username;
+      io!.to(groupToken).emit('update', activePlayers[groupToken]);
+    });
+
+    client.on('disconnect', () => {
+      if (activePlayers[groupToken]?.[playerToken]) {
+        delete activePlayers[groupToken][playerToken];
+      }
     });
   });
 

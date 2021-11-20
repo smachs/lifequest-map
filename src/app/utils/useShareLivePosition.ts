@@ -26,15 +26,17 @@ function useShareLivePosition(): [
   const { position } = usePosition();
 
   useEffect(() => {
-    const token = getJSONItem('share-token', null);
-    if (!token || !isSharing) {
+    const playerToken = getJSONItem('player-token', null);
+    const groupToken = getJSONItem('group-token', null);
+    if (!playerToken || !groupToken || !isSharing) {
       return;
     }
     const newSocket = io(
       typeof VITE_SOCKET_ENDPOINT === 'string' ? VITE_SOCKET_ENDPOINT : '',
       {
-        auth: {
-          token,
+        query: {
+          playerToken,
+          groupToken,
         },
         upgrade: false,
         transports: ['websocket'],

@@ -18,6 +18,7 @@ liveRouter.get('/', async (_request, response) => {
       average: cpu.loadavg(),
     },
     memory: await mem.free(),
+    activePlayers,
   });
 });
 

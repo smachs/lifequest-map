@@ -8,16 +8,27 @@ import { toast } from 'react-toastify';
 import ShareFromOverwolf from './ShareFromOverwolf';
 import { isOverwolfApp } from '../../utils/overwolf';
 import ShareFromWebsite from './ShareFromWebsite';
+import type { FormEvent } from 'react';
 
 type ShareLiveStatusProps = {
   onActivate: () => void;
 };
 function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
   const { account } = useAccount();
-  const [token, setToken] = usePersistentState('share-token', '');
+  const [playerToken, setPlayerToken] = usePersistentState('player-token', '');
+  const [groupToken, setGroupToken] = usePersistentState('group-token', '');
 
+  function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+
+    if (playerToken === groupToken) {
+      toast.error('Tokens can not be equal 🙄');
+      return;
+    }
+    onActivate();
+  }
   return (
-    <section className={styles.container}>
+    <form onSubmit={handleSubmit} className={styles.container}>
       {isOverwolfApp ? <ShareFromOverwolf /> : <ShareFromWebsite />}
       <p>
         If you like to build your own applications based on your live status,
@@ -27,34 +38,69 @@ function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
         </a>
         .
       </p>
-
       <div className={styles.tokenContainer}>
         <label className={styles.label}>
-          Token
+          Player Token
           <input
-            value={token}
-            placeholder="Use this token to connect your apps..."
-            onChange={(event) => setToken(event.target.value)}
+            value={playerToken}
+            placeholder="Use this token to identify your character..."
+            onChange={(event) => setPlayerToken(event.target.value)}
           />
         </label>
         <Button
-          disabled={!token}
+          type="button"
+          disabled={!account}
+          onClick={() => setPlayerToken(account!.steamId)}
+        >
+          Use SteamID
+        </Button>
+        <Button type="button" onClick={() => setPlayerToken(uuid())}>
+          Create random
+        </Button>
+        <Button
+          type="button"
+          disabled={!playerToken}
           onClick={() => {
-            copyTextToClipboard(token);
+            copyTextToClipboard(playerToken);
             toast.info(`Copied to clipboard 📝`);
           }}
         >
           Copy to clipboard
         </Button>
-        <Button onClick={() => setToken(uuid())}>Create random</Button>
-        <Button disabled={!account} onClick={() => setToken(account!.steamId)}>
-          Use SteamID
+      </div>
+      <div className={styles.tokenContainer}>
+        <label className={styles.label}>
+          Group Token
+          <input
+            value={groupToken}
+            placeholder="Use this token to share with your group..."
+            onChange={(event) => setGroupToken(event.target.value)}
+          />
+        </label>
+        <Button type="button" onClick={() => setGroupToken(uuid())}>
+          Create random
+        </Button>
+        <Button
+          type="button"
+          disabled={!groupToken}
+          onClick={() => {
+            copyTextToClipboard(groupToken);
+            toast.info(`Copied to clipboard 📝`);
+          }}
+        >
+          Copy to clipboard
         </Button>
       </div>
-      <Button onClick={onActivate} disabled={!token}>
+      <small>
+        The player token is used to identify your character and should only used
+        by yourself.
+        <br />
+        The group token is used to connect you with friends and companies.
+      </small>
+      <Button disabled={!playerToken || !groupToken} type="submit">
         Share Live Status
       </Button>
-    </section>
+    </form>
   );
 }
 
