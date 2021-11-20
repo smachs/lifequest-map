@@ -29,11 +29,13 @@ import BroadcastIcon from '../icons/BroadcastIcon';
 import useShareLivePosition from '../../utils/useShareLivePosition';
 import useReadLivePosition from '../../utils/useReadLivePosition';
 import { useAccount } from '../../contexts/UserContext';
+import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
+import { toast } from 'react-toastify';
 
 type View = 'markers' | 'settings' | 'markerRoutes';
 
 function MapFilter(): JSX.Element {
-  const { addModal } = useModal();
+  const { addModal, closeLatestModal } = useModal();
   const [isOpen, setIsOpen] = usePersistentState(
     'aeternum-map-client.sidebar-state',
     true
@@ -176,13 +178,30 @@ function MapFilter(): JSX.Element {
             account ? 'Share live status' : 'Login to share live status'
           }
           data-tooltip-position="right"
+          disabled={!account}
           onClick={() => {
-            setIsLive(!isLive);
+            if (!isLive) {
+              addModal({
+                title: 'Share Live Status',
+                children: (
+                  <ShareLiveStatus
+                    onActivate={() => {
+                      setIsLive(true);
+                      closeLatestModal();
+                      toast.success('Sharing live status 👌');
+                    }}
+                  />
+                ),
+              });
+            } else {
+              toast.info('Stop sharing live status 🛑');
+              setIsLive(false);
+            }
           }}
           className={classNames(
             styles.nav__button,
             styles.nav__border,
-            isLive && account && styles.nav__active
+            isLive && styles.nav__active
           )}
         >
           <BroadcastIcon />

@@ -12,7 +12,7 @@
   background-color: var(--color-shade-one);
   padding: 1em;
   width: 800px;
-  height: 560px;
+  max-height: 560px;
   display: grid;
   grid-template-rows: auto 1fr;
 }

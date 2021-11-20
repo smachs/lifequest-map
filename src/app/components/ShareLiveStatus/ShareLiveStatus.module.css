@@ -1,0 +1,10 @@
+.container {
+  display: grid;
+  row-gap: 1rem;
+}
+
+.button {
+  padding: 0.5em;
+  background: var(--color-shade-two);
+  color: var(--color-primary);
+}
