@@ -40,7 +40,10 @@ function MapFilter(): JSX.Element {
     'aeternum-map-client.sidebar-state',
     true
   );
-  const [view, setView] = usePersistentState<View>('view', 'markers');
+  const [view, setView] = usePersistentState<View>(
+    'sidebar-view',
+    isOverwolfApp ? 'settings' : 'markers'
+  );
   const { following, toggleFollowing } = usePosition();
   const [showMinimap, setShowMinimap] = useMinimap();
   const [editRoute, setEditRoute] = useState<MarkerRouteItem | boolean>(false);
@@ -101,29 +104,33 @@ function MapFilter(): JSX.Element {
       <nav className={styles.nav}>
         <MapSearch className={styles.nav__button} />
 
-        <button
-          data-tooltip="Markers"
-          data-tooltip-position="right"
-          className={classNames(
-            styles.nav__button,
-            styles.nav__border,
-            view === 'markers' && styles.nav__active
-          )}
-          onClick={() => handleViewClick('markers')}
-        >
-          <MarkerIcon />
-        </button>
-        <button
-          data-tooltip="Routes"
-          data-tooltip-position="right"
-          className={classNames(
-            styles.nav__button,
-            view === 'markerRoutes' && styles.nav__active
-          )}
-          onClick={() => handleViewClick('markerRoutes')}
-        >
-          <RoutesIcon />
-        </button>
+        {!isOverwolfApp && (
+          <>
+            <button
+              data-tooltip="Markers"
+              data-tooltip-position="right"
+              className={classNames(
+                styles.nav__button,
+                styles.nav__border,
+                view === 'markers' && styles.nav__active
+              )}
+              onClick={() => handleViewClick('markers')}
+            >
+              <MarkerIcon />
+            </button>
+            <button
+              data-tooltip="Routes"
+              data-tooltip-position="right"
+              className={classNames(
+                styles.nav__button,
+                view === 'markerRoutes' && styles.nav__active
+              )}
+              onClick={() => handleViewClick('markerRoutes')}
+            >
+              <RoutesIcon />
+            </button>
+          </>
+        )}
         <button
           data-tooltip="Settings"
           data-tooltip-position="right"

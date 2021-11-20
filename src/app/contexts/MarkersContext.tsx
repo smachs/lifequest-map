@@ -8,6 +8,7 @@ import { latestLeafletMap } from '../components/WorldMap/useWorldMap';
 import { fetchJSON } from '../utils/api';
 import { writeError } from '../utils/logs';
 import { notify } from '../utils/notifications';
+import { isOverwolfApp } from '../utils/overwolf';
 import { usePersistentState } from '../utils/storage';
 import { useFilters } from './FiltersContext';
 import { useUser } from './UserContext';
@@ -76,20 +77,28 @@ export function MarkersProvider({
 
   const refresh = () => {
     if (!readonly) {
-      notify(
-        fetchJSON<MarkerBasic[]>('/api/markers').then((newMarkers) => {
-          if (JSON.stringify(newMarkers) !== JSON.stringify(markers)) {
-            setMarkers(newMarkers);
-          }
-        })
-      );
+      if (isOverwolfApp) {
+        setMarkers([]);
+        setAllMarkerRoutes([]);
+        setMarkerRoutes([]);
+      } else {
+        notify(
+          fetchJSON<MarkerBasic[]>('/api/markers').then((newMarkers) => {
+            if (JSON.stringify(newMarkers) !== JSON.stringify(markers)) {
+              setMarkers(newMarkers);
+            }
+          })
+        );
+      }
     }
   };
 
   const refreshMarkerRoutes = async () => {
     try {
-      const newMarkerRoutes = await notify(getMarkerRoutes());
-      setAllMarkerRoutes(newMarkerRoutes);
+      if (!isOverwolfApp) {
+        const newMarkerRoutes = await notify(getMarkerRoutes());
+        setAllMarkerRoutes(newMarkerRoutes);
+      }
     } catch (error) {
       writeError(error);
     }
