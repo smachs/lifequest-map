@@ -141,44 +141,6 @@ function MapFilter(): JSX.Element {
         >
           <SettingsIcon />
         </button>
-        {isOverwolfApp && (
-          <button
-            data-tooltip="Follow position"
-            data-tooltip-position="right"
-            onClick={() => {
-              toggleFollowing();
-            }}
-            className={classNames(
-              styles.nav__button,
-              styles.nav__border,
-              following && styles.nav__active
-            )}
-          >
-            <PlayerIcon />
-          </button>
-        )}
-        <button
-          data-tooltip="Show minimap"
-          data-tooltip-position="right"
-          onClick={() => {
-            if (!showMinimap) {
-              addModal({
-                title: 'Setup minimap',
-                children: <MinimapSetup />,
-              });
-            }
-            if (isOverwolfApp) {
-              setShowMinimap(!showMinimap);
-            }
-          }}
-          className={classNames(
-            styles.nav__button,
-            styles.nav__border,
-            showMinimap && styles.nav__active
-          )}
-        >
-          <CompassIcon />
-        </button>
         <button
           data-tooltip={
             account ? 'Share live status' : 'Login to share live status'
@@ -208,6 +170,42 @@ function MapFilter(): JSX.Element {
           )}
         >
           <BroadcastIcon />
+        </button>
+        <button
+          data-tooltip="Follow position"
+          data-tooltip-position="right"
+          disabled={!isOverwolfApp && !isLive}
+          onClick={() => {
+            toggleFollowing();
+          }}
+          className={classNames(
+            styles.nav__button,
+            following && styles.nav__active
+          )}
+        >
+          <PlayerIcon />
+        </button>
+        <button
+          data-tooltip="Show minimap"
+          data-tooltip-position="right"
+          onClick={() => {
+            if (!showMinimap) {
+              addModal({
+                title: 'Setup minimap',
+                children: <MinimapSetup />,
+              });
+            }
+            if (isOverwolfApp) {
+              setShowMinimap(!showMinimap);
+            }
+          }}
+          className={classNames(
+            styles.nav__button,
+            styles.nav__border,
+            showMinimap && styles.nav__active
+          )}
+        >
+          <CompassIcon />
         </button>
         <button
           data-tooltip="Show/Hide menu"
