@@ -9,7 +9,7 @@ export function postToDiscord(
   const webhookURL = isPublic
     ? DISCORD_PUBLIC_WEBHOOK_URL
     : DISCORD_PRIVATE_WEBHOOK_URL;
-  return fetch(webhookURL, {
+  return fetch(webhookURL!, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
