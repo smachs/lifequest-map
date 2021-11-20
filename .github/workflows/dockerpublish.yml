@@ -43,10 +43,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
-        env:
-          VITE_API_ENDPOINT: ${{ secrets.VITE_API_ENDPOINT }}
-          VITE_SOCKET_ENDPOINT: ${{ secrets.VITE_SOCKET_ENDPOINT }}
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME --build-arg VITE_SOCKET_ENDPOINT=${{ secrets.VITE_SOCKET_ENDPOINT }} --build-arg VITE_API_ENDPOINT=${{ secrets.VITE_API_ENDPOINT }}
 
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
