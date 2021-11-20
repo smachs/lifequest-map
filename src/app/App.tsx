@@ -13,7 +13,7 @@ function App(): JSX.Element {
       <MapFilter />
       <WorldMap />
       <ResizeBorder />
-      <ToastContainer theme="dark" />
+      <ToastContainer theme="dark" pauseOnFocusLoss={false} />
     </div>
   );
 }
