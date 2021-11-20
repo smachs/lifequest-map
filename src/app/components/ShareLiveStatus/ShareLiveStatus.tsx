@@ -1,46 +1,24 @@
+import { useAccount } from '../../contexts/UserContext';
+import { usePersistentState } from '../../utils/storage';
+import Button from '../Button/Button';
 import styles from './ShareLiveStatus.module.css';
+import { v4 as uuid } from 'uuid';
+import { copyTextToClipboard } from '../../utils/clipboard';
+import { toast } from 'react-toastify';
+import ShareFromOverwolf from './ShareFromOverwolf';
+import { isOverwolfApp } from '../../utils/overwolf';
+import ShareFromWebsite from './ShareFromWebsite';
 
 type ShareLiveStatusProps = {
   onActivate: () => void;
 };
 function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
+  const { account } = useAccount();
+  const [token, setToken] = usePersistentState('share-token', '');
+
   return (
     <section className={styles.container}>
-      <p>
-        You can share you live status including position and character name with
-        other applications 🤘.
-      </p>
-      <h4>Applications</h4>
-      <p>
-        <a href="https://aeternum-map.gg" target="_blank">
-          https://aeternum-map.gg
-        </a>{' '}
-        is an interactive New World map with routes and community managed
-        markers.
-      </p>
-      <ul>
-        <li>🚀 Live Tracking of your In-Game position</li>
-        <li>🔀 Farming/Marker Routes</li>
-        <li>✅ Check markers as done (like lore documents)</li>
-        <li>
-          🗺️ Minimap view (with support of{' '}
-          <a href="https://github.com/LorenzCK/OnTopReplica" target="_blank">
-            OnTopReplica
-          </a>
-          )
-        </li>
-        <li>
-          🤷‍♂️ Amazon ToS conform, because it's a website, not an app. See{' '}
-          <a
-            href="https://discord.com/channels/320539672663031818/896014490808745994/911185526210576394"
-            target="_blank"
-          >
-            announcement in Discord
-          </a>
-          .
-        </li>
-      </ul>
-
+      {isOverwolfApp ? <ShareFromOverwolf /> : <ShareFromWebsite />}
       <p>
         If you like to build your own applications based on your live status,
         make sure to{' '}
@@ -49,9 +27,33 @@ function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
         </a>
         .
       </p>
-      <button className={styles.button} onClick={onActivate}>
+
+      <div className={styles.tokenContainer}>
+        <label className={styles.label}>
+          Token
+          <input
+            value={token}
+            placeholder="Use this token to connect your apps..."
+            onChange={(event) => setToken(event.target.value)}
+          />
+        </label>
+        <Button
+          disabled={!token}
+          onClick={() => {
+            copyTextToClipboard(token);
+            toast.info(`Copied to clipboard 📝`);
+          }}
+        >
+          Copy to clipboard
+        </Button>
+        <Button onClick={() => setToken(uuid())}>Create random</Button>
+        <Button disabled={!account} onClick={() => setToken(account!.steamId)}>
+          Use SteamID
+        </Button>
+      </div>
+      <Button onClick={onActivate} disabled={!token}>
         Share Live Status
-      </button>
+      </Button>
     </section>
   );
 }

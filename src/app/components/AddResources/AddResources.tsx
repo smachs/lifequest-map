@@ -12,6 +12,7 @@ import { postMarker } from './api';
 import { notify } from '../../utils/notifications';
 import { getJSONItem } from '../../utils/storage';
 import { defaultPosition } from '../../contexts/PositionContext';
+import Button from '../Button/Button';
 
 export type Details = {
   description?: string;
@@ -78,16 +79,10 @@ function AddResources({ leafletMap, onClose }: AddResourcesProps): JSX.Element {
       />
       <SelectType onSelect={setFilter} filter={filter} />
       <DetailsInput filter={filter} onChange={setDetails} details={details} />
-      <button
-        className={styles.button}
-        onClick={handleSave}
-        disabled={!isValid}
-      >
+      <Button onClick={handleSave} disabled={!isValid}>
         Save Marker
-      </button>
-      <button className={styles.button} onClick={onClose}>
-        Cancel
-      </button>
+      </Button>
+      <Button onClick={onClose}>Cancel</Button>
       <small>Move marker by dragging it</small>
     </section>
   );

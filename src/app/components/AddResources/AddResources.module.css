@@ -26,17 +26,6 @@
   text-decoration: underline;
 }
 
-.button {
-  padding: 0.5em;
-  background: var(--color-shade-two);
-  color: var(--color-primary);
-}
-
-.button:disabled {
-  color: var(--color-trivial);
-  cursor: default;
-}
-
 .key {
   width: 6rem;
   display: inline-block;

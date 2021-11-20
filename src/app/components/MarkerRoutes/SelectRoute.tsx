@@ -9,6 +9,7 @@ import { notify } from '../../utils/notifications';
 import { patchMarkerRoute, postMarkerRoute } from './api';
 import { useMarkers } from '../../contexts/MarkersContext';
 import type { MarkerRouteItem } from './MarkerRoutes';
+import Button from '../Button/Button';
 
 type SelectRouteProps = {
   leafletMap: leaflet.Map;
@@ -187,16 +188,10 @@ function SelectRoute({
         />
       </label>
       <MarkerTypes markersByType={markersByType} />
-      <button
-        className={styles.button}
-        onClick={handleSave}
-        disabled={!name || positions.length === 0}
-      >
+      <Button onClick={handleSave} disabled={!name || positions.length === 0}>
         Save Route {!name && '(Name missing)'}
-      </button>
-      <button className={styles.button} onClick={onClose}>
-        Cancel
-      </button>
+      </Button>
+      <Button onClick={onClose}>Cancel</Button>
       <small>Right click in edit mode to remove a vertex</small>
     </div>
   );

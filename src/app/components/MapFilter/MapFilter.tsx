@@ -184,7 +184,6 @@ function MapFilter(): JSX.Element {
             account ? 'Share live status' : 'Login to share live status'
           }
           data-tooltip-position="right"
-          disabled={!account}
           onClick={() => {
             if (!isLive) {
               addModal({

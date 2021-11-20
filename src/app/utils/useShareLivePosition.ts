@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import type { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import type { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
-import { useAccount, useUser } from '../contexts/UserContext';
+import { useUser } from '../contexts/UserContext';
 import { usePosition } from '../contexts/PositionContext';
-import { usePersistentState } from './storage';
+import { getJSONItem, usePersistentState } from './storage';
 import { toast } from 'react-toastify';
 
 const { VITE_SOCKET_ENDPOINT } = import.meta.env;
@@ -22,19 +22,19 @@ function useShareLivePosition(): [
     DefaultEventsMap
   > | null>(null);
 
-  const { account } = useAccount();
   const user = useUser();
   const { position } = usePosition();
 
   useEffect(() => {
-    if (!account || !isSharing) {
+    const token = getJSONItem('share-token', null);
+    if (!token || !isSharing) {
       return;
     }
     const newSocket = io(
       typeof VITE_SOCKET_ENDPOINT === 'string' ? VITE_SOCKET_ENDPOINT : '',
       {
         auth: {
-          token: account.steamId,
+          token,
         },
         upgrade: false,
         transports: ['websocket'],
@@ -53,7 +53,7 @@ function useShareLivePosition(): [
       setSocket(null);
       toast.info('Stop sharing live status 🛑');
     };
-  }, [isSharing, account]);
+  }, [isSharing]);
 
   useEffect(() => {
     if (socket) {
