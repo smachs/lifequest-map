@@ -17,13 +17,7 @@ function ShareFromOverwolf(): JSX.Element {
         <li>🚀 Live Tracking of your In-Game position</li>
         <li>🔀 Farming/Marker Routes</li>
         <li>✅ Check markers as done (like lore documents)</li>
-        <li>
-          🗺️ Minimap view (with support of{' '}
-          <a href="https://github.com/LorenzCK/OnTopReplica" target="_blank">
-            OnTopReplica
-          </a>
-          )
-        </li>
+        <li>🗺️ Minimap view</li>
         <li>
           🤷‍♂️ Conforms to AGS ToS, because it's a website, not an app. See{' '}
           <a
