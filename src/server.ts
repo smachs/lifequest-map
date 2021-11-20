@@ -33,6 +33,7 @@ import SteamStrategy from 'passport-steam';
 import { readAccount } from './lib/auth/middlewares';
 import { initSocket } from './lib/live/socket';
 import { initAccountsCollection } from './lib/auth/collection';
+import liveRouter from './lib/live/router';
 
 if (typeof PORT !== 'string') {
   throw new Error('PORT is not set');
@@ -122,11 +123,6 @@ async function runServer() {
       app.use(express.static(path.join(__dirname, '../overwolf')));
     }
 
-    // All other requests are answered with a 404
-    app.all('*', (_req, res) => {
-      res.status(404).send('🙈 Not found');
-    });
-
     await connectToMongoDb(MONGODB_URI!);
 
     console.log('Connected to MongoDB');
@@ -142,8 +138,14 @@ async function runServer() {
 
   if (NO_SOCKET !== 'true') {
     initSocket(server);
+    app.use('/api/live', liveRouter);
     console.log('Socket listening');
   }
+
+  // All other requests are answered with a 404
+  app.all('*', (_req, res) => {
+    res.status(404).send('🙈 Not found');
+  });
 
   server.listen(PORT, () => {
     console.log(`Server listening at http://localhost:${PORT}`);
