@@ -35,8 +35,11 @@
 }
 
 :global(.leaflet-player-marker) {
-  pointer-events: none !important;
   transition: transform 1s linear;
+}
+
+:global(.leaflet-own-player-marker) {
+  pointer-events: none !important;
 }
 
 :global(.leaflet-polygon-text) {

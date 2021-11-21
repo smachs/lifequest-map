@@ -31,6 +31,7 @@ function useGroupPositions(group: Group): void {
               zIndexOffset: 8999,
               pmIgnore: true,
             });
+            marker.bindTooltip(username, { direction: 'top' });
             marker.addTo(latestLeafletMap!);
             marker.getElement()!.classList.add('leaflet-player-marker');
           }

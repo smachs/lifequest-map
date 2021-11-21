@@ -51,7 +51,8 @@ function useReadLivePosition(): [
     );
 
     socket.emit('status', (group: Group) => {
-      const player = group[playerToken];
+      const player = { ...group[playerToken] };
+      delete group[playerToken];
       if (player) {
         if (player.username) {
           setUsername(player.username);
@@ -70,7 +71,8 @@ function useReadLivePosition(): [
     });
 
     socket.on('update', (group: Group) => {
-      const player = group[playerToken];
+      const player = { ...group[playerToken] };
+      delete group[playerToken];
       if (player) {
         if (player.username) {
           setUsername(player.username);

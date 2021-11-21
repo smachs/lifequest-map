@@ -38,7 +38,9 @@ function usePlayerPosition({
       pmIgnore: true,
     });
     newMarker.addTo(leafletMap);
-    newMarker.getElement()!.classList.add('leaflet-player-marker');
+    newMarker
+      .getElement()!
+      .classList.add('leaflet-player-marker', 'leaflet-own-player-marker');
     setMarker(newMarker);
 
     return () => {

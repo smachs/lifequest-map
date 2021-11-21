@@ -11,6 +11,7 @@
   border: 1px solid var(--color-shade-two);
   background-color: var(--color-shade-one);
   padding: 1em;
+  width: 100%;
   max-width: 800px;
   max-height: 560px;
   display: grid;
