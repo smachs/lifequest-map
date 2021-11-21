@@ -28,7 +28,6 @@ import { isOverwolfApp } from '../../utils/overwolf';
 import BroadcastIcon from '../icons/BroadcastIcon';
 import useShareLivePosition from '../../utils/useShareLivePosition';
 import useReadLivePosition from '../../utils/useReadLivePosition';
-import { useAccount } from '../../contexts/UserContext';
 import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
 
 type View = 'markers' | 'settings' | 'markerRoutes';
@@ -47,7 +46,6 @@ function MapFilter(): JSX.Element {
   const [showMinimap, setShowMinimap] = useMinimap();
   const [editRoute, setEditRoute] = useState<MarkerRouteItem | boolean>(false);
   const [isAddingMarker, setIsAddingMarker] = useState(false);
-  const { account } = useAccount();
 
   const [isLive, setIsLive] = isOverwolfApp
     ? useShareLivePosition()
@@ -142,9 +140,7 @@ function MapFilter(): JSX.Element {
           <SettingsIcon />
         </button>
         <button
-          data-tooltip={
-            account ? 'Share live status' : 'Login to share live status'
-          }
+          data-tooltip="Share live status"
           data-tooltip-position="right"
           onClick={() => {
             if (!isLive) {
