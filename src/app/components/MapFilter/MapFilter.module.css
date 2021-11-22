@@ -53,7 +53,7 @@
 
 .nav__button:disabled {
   cursor: default;
-  color: var(--color-shade-three);
+  color: var(--color-disabled);
   background: var(--color-shade-one);
 }
 

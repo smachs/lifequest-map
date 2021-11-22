@@ -6,22 +6,6 @@
   padding: 0.5em;
 }
 
-.stepper {
-  display: grid;
-  grid-auto-flow: column;
-  grid-template-columns: repeat(4, 1fr);
-}
-
-.step {
-  background: none;
-  color: var(--color-text);
-}
-
-.step:disabled {
-  color: var(--color-trivial);
-  cursor: default;
-}
-
 .active {
   text-decoration: underline;
 }

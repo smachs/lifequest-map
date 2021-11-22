@@ -5,6 +5,6 @@
 }
 
 .button:disabled {
-  color: var(--color-trivial);
+  color: var(--color-disabled);
   cursor: default;
 }
