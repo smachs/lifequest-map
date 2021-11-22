@@ -7,6 +7,13 @@ export function getTooltipContent(
   mapFilter: FilterItem
 ): () => string {
   return () => {
+    if (mapFilter.category === 'chests') {
+      let content = `${markerOrDetails.chestType || mapFilter.title} Chest`;
+      if (markerOrDetails.tier) {
+        content += ` T${markerOrDetails.tier}`;
+      }
+      return content;
+    }
     let tooltipContent = markerOrDetails.name
       ? `${markerOrDetails.name} (${mapFilter.title})`
       : mapFilter.title;

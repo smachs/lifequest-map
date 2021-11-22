@@ -1,5 +1,5 @@
 import type leaflet from 'leaflet';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMarkers } from '../../contexts/MarkersContext';
 import type { FilterItem } from '../MapFilter/mapFilters';
 import styles from './AddResources.module.css';
@@ -18,6 +18,8 @@ export type Details = {
   description?: string;
   name?: string;
   level?: number;
+  chestType?: string;
+  tier?: number;
 };
 
 type AddResourcesProps = {
@@ -41,10 +43,25 @@ function AddResources({ leafletMap, onClose }: AddResourcesProps): JSX.Element {
     return [mapPosition.x, mapPosition.y, 0];
   });
 
+  useEffect(() => {
+    if (!filter) {
+      return;
+    }
+    if (filter.category === 'chests') {
+      setDetails({
+        chestType: 'Supply',
+        tier: 1,
+      });
+    } else {
+      setDetails({});
+    }
+  }, [filter]);
+
   const isValid =
     filter &&
     (filter.hasName ? details.name && details.name.length > 0 : true) &&
-    (filter.hasLevel ? details.level && details.level > 0 : true);
+    (filter.hasLevel ? details.level && details.level > 0 : true) &&
+    (filter.category === 'chests' ? details.tier && details.chestType : true);
 
   async function handleSave() {
     if (!isValid) {
