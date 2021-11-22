@@ -57,9 +57,15 @@ function DetailsInput({
                   onChange({ ...details, chestType: event.target.value })
                 }
               >
-                <option value="">--Please choose an option--</option>
+                <option value="Supply">Supply</option>
+                <option value="Blacksmith">Blacksmith</option>
+                <option value="Carpentry">Carpentry</option>
+                <option value="Engineering">Engineering</option>
                 <option value="Farmland">Farmland</option>
-                <option value="Unknown">Unknown</option>
+                <option value="Outfitting">Outfitting</option>
+                <option value="Smelting">Smelting</option>
+                <option value="Tanning">Tanning</option>
+                <option value="Weaving">Weaving</option>
               </select>
             </label>
             <label className={styles.label}>
