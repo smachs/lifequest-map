@@ -5,6 +5,8 @@ export type MarkerDTO = {
   position: [Double, Double, Double];
   name?: string;
   level?: number;
+  chestType?: string;
+  tier?: number;
   description?: string;
   userId?: string;
   username: string;

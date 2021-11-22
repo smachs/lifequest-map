@@ -29,4 +29,5 @@
 .key {
   width: 6rem;
   display: inline-block;
+  padding: 0.2em 0;
 }

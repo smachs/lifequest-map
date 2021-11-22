@@ -166,7 +166,16 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
   try {
     const account = req.account!;
 
-    const { type, position, name, level, description, screenshotId } = req.body;
+    const {
+      type,
+      position,
+      name,
+      level,
+      chestType,
+      tier,
+      description,
+      screenshotId,
+    } = req.body;
 
     if (typeof type !== 'string' || !Array.isArray(position)) {
       res.status(400).send('Invalid payload');
@@ -187,6 +196,12 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
     }
     if (level) {
       marker.level = level;
+    }
+    if (chestType) {
+      marker.chestType = chestType;
+    }
+    if (tier) {
+      marker.tier = tier;
     }
     if (description) {
       marker.description = description.substring(0, MAX_DESCRIPTION_LENGTH);
@@ -243,6 +258,7 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       `📌 ${mapFilter.title} was added by ${account.name} at [${position}]`
     );
   } catch (error) {
+    console.error(`Error creating marker ${JSON.stringify(req.body)}`);
     next(error);
   }
 });

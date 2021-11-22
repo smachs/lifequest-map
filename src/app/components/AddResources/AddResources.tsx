@@ -18,6 +18,8 @@ export type Details = {
   description?: string;
   name?: string;
   level?: number;
+  chestType?: string;
+  tier?: number;
 };
 
 type AddResourcesProps = {
@@ -44,7 +46,8 @@ function AddResources({ leafletMap, onClose }: AddResourcesProps): JSX.Element {
   const isValid =
     filter &&
     (filter.hasName ? details.name && details.name.length > 0 : true) &&
-    (filter.hasLevel ? details.level && details.level > 0 : true);
+    (filter.hasLevel ? details.level && details.level > 0 : true) &&
+    (filter.category === 'chests' ? details.tier && details.chestType : true);
 
   async function handleSave() {
     if (!isValid) {
