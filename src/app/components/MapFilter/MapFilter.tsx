@@ -100,34 +100,31 @@ function MapFilter(): JSX.Element {
       </div>
       <nav className={styles.nav}>
         <MapSearch className={styles.nav__button} />
-
-        {!isOverwolfApp && (
-          <>
-            <button
-              data-tooltip="Markers"
-              data-tooltip-position="right"
-              className={classNames(
-                styles.nav__button,
-                styles.nav__border,
-                view === 'markers' && styles.nav__active
-              )}
-              onClick={() => handleViewClick('markers')}
-            >
-              <MarkerIcon />
-            </button>
-            <button
-              data-tooltip="Routes"
-              data-tooltip-position="right"
-              className={classNames(
-                styles.nav__button,
-                view === 'markerRoutes' && styles.nav__active
-              )}
-              onClick={() => handleViewClick('markerRoutes')}
-            >
-              <RoutesIcon />
-            </button>
-          </>
-        )}
+        <button
+          disabled={isOverwolfApp}
+          data-tooltip={isOverwolfApp ? 'Not available in app' : 'Markers'}
+          data-tooltip-position="right"
+          className={classNames(
+            styles.nav__button,
+            styles.nav__border,
+            view === 'markers' && styles.nav__active
+          )}
+          onClick={() => handleViewClick('markers')}
+        >
+          <MarkerIcon />
+        </button>
+        <button
+          disabled={isOverwolfApp}
+          data-tooltip={isOverwolfApp ? 'Not available in app' : 'Routes'}
+          data-tooltip-position="right"
+          className={classNames(
+            styles.nav__button,
+            view === 'markerRoutes' && styles.nav__active
+          )}
+          onClick={() => handleViewClick('markerRoutes')}
+        >
+          <RoutesIcon />
+        </button>
         <button
           data-tooltip="Settings"
           data-tooltip-position="right"
