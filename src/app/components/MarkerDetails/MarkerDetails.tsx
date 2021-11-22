@@ -65,15 +65,16 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
     }
   }
 
+  const title = marker.chestType
+    ? `${marker.chestType} Chest T${marker.tier}`
+    : marker.name
+    ? `${marker.name} (${filterItem?.title})`
+    : filterItem?.title;
   return (
     <section className={styles.container}>
       <header className={styles.header}>
         <img className={styles.icon} src={filterItem?.iconUrl} alt="" />
-        <h2>
-          {marker.name
-            ? `${marker.name} (${filterItem?.title})`
-            : filterItem?.title}
-        </h2>
+        <h2>{title}</h2>
       </header>
       <main className={styles.main}>
         <div className={styles.comments}>
