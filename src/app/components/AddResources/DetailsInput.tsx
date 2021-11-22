@@ -58,8 +58,8 @@ function DetailsInput({
                 }
               >
                 <option value="">--Please choose an option--</option>
-                <option value="farmland">Farmland</option>
-                <option value="unknown">Unknown</option>
+                <option value="Farmland">Farmland</option>
+                <option value="Unknown">Unknown</option>
               </select>
             </label>
             <label className={styles.label}>

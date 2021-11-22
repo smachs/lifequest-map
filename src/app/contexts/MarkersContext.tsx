@@ -17,6 +17,8 @@ export type MarkerBasic = {
   type: string;
   position: [number, number, number];
   name?: string;
+  chestType?: string;
+  tier?: number;
   level?: number;
   comments?: number;
   _id: string;

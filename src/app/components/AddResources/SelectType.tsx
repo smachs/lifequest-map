@@ -73,9 +73,7 @@ function SelectType({ onSelect, filter }: SelectTypeType): JSX.Element {
           {!search &&
             lastSearch.map((type) => {
               const filter = filters.find((filter) => filter.type === type);
-              if (filter) {
-                return renderButton(filter);
-              }
+              return filter ? renderButton(filter) : null;
             })}
           {!search && lastSearch.length > 0 && <hr />}
           {filters.map(renderButton)}
