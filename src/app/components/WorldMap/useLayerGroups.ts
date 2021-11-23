@@ -107,7 +107,6 @@ function useLayerGroups({
           const isVisible = markersLayerGroup.hasLayer(
             allLayers[marker._id].layer
           );
-
           if (allLayers[marker._id].hasComments !== Boolean(marker.comments)) {
             markersLayerGroup.removeLayer(allLayers[marker._id].layer);
             delete allLayers[marker._id];

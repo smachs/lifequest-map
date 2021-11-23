@@ -10,17 +10,13 @@ import { patchMarkerRoute, postMarkerRoute } from './api';
 import { useMarkers } from '../../contexts/MarkersContext';
 import type { MarkerRouteItem } from './MarkerRoutes';
 import Button from '../Button/Button';
+import { latestLeafletMap } from '../WorldMap/useWorldMap';
 
 type SelectRouteProps = {
-  leafletMap: leaflet.Map;
   markerRoute?: MarkerRouteItem;
   onClose: () => void;
 };
-function SelectRoute({
-  leafletMap,
-  markerRoute,
-  onClose,
-}: SelectRouteProps): JSX.Element {
+function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
   const [positions, setPositions] = useState<[number, number][]>(
     markerRoute?.positions || []
   );
@@ -64,7 +60,7 @@ function SelectRoute({
 
   useEffect(() => {
     const toggleControls = (editMode: boolean) => {
-      leafletMap.pm.addControls({
+      latestLeafletMap!.pm.addControls({
         position: 'topleft',
         drawCircle: false,
         drawCircleMarker: false,
@@ -82,11 +78,11 @@ function SelectRoute({
     toggleControls(false);
 
     let existingPolyline: leaflet.Polyline | null = null;
-    leafletMap.on('pm:create', (event) => {
+    latestLeafletMap!.on('pm:create', (event) => {
       existingPolyline = event.layer as leaflet.Polyline;
       refreshMarkers(event.layer);
 
-      leafletMap.pm.enableGlobalEditMode();
+      latestLeafletMap!.pm.enableGlobalEditMode();
       toggleControls(true);
 
       event.layer.on('pm:edit', (event) => {
@@ -95,7 +91,7 @@ function SelectRoute({
     });
 
     // listen to vertexes being added to currently drawn layer (called workingLayer)
-    leafletMap.on('pm:drawstart', ({ workingLayer }) => {
+    latestLeafletMap!.on('pm:drawstart', ({ workingLayer }) => {
       if (!existingPolyline) {
         existingPolyline = workingLayer as leaflet.Polyline;
       } else {
@@ -117,12 +113,12 @@ function SelectRoute({
     });
 
     if (markerRoute) {
-      leafletMap.pm.enableGlobalEditMode();
+      latestLeafletMap!.pm.enableGlobalEditMode();
       existingPolyline = leaflet.polyline(markerRoute.positions, {
         pmIgnore: false,
       });
       existingPolyline.pm.toggleEdit();
-      existingPolyline.addTo(leafletMap);
+      existingPolyline.addTo(latestLeafletMap!);
       refreshMarkers(existingPolyline);
       existingPolyline.on('pm:edit', (event) => {
         refreshMarkers(event.layer);
@@ -134,14 +130,14 @@ function SelectRoute({
         }
       }, 100);
     } else {
-      leafletMap.pm.enableDraw('Line');
+      latestLeafletMap!.pm.enableDraw('Line');
     }
 
     return () => {
-      leafletMap.pm.removeControls();
-      leafletMap.pm.disableGlobalEditMode();
-      leafletMap.off('pm:create');
-      leafletMap.off('pm:drawstart');
+      latestLeafletMap!.pm.removeControls();
+      latestLeafletMap!.pm.disableGlobalEditMode();
+      latestLeafletMap!.off('pm:create');
+      latestLeafletMap!.off('pm:drawstart');
 
       if (existingPolyline) {
         existingPolyline.remove();

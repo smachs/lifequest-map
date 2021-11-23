@@ -3,10 +3,9 @@ import leaflet from 'leaflet';
 import type { Map } from 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { LeafIcon } from '../WorldMap/useLayerGroups';
 import type { FilterItem } from '../MapFilter/mapFilters';
-import { useRef } from 'react';
 import type { Details } from './AddResources';
 import { getTooltipContent } from '../WorldMap/tooltips';
 
@@ -32,53 +31,55 @@ function useGeoman({
 }: UseGeomanProps): void {
   const [dragging, setDragging] = useState(false);
 
-  const markerRef = useRef(
-    leaflet.marker([y, x], {
-      icon: unknownMarkerIcon,
-    })
+  const marker = useMemo(
+    () =>
+      leaflet.marker([y, x], {
+        icon: unknownMarkerIcon,
+      }),
+    []
   );
 
   useEffect(() => {
     if (iconUrl) {
-      markerRef.current.setZIndexOffset(10000);
-      markerRef.current.setIcon(new LeafIcon({ iconUrl }));
+      marker.setZIndexOffset(10000);
+      marker.setIcon(new LeafIcon({ iconUrl }));
     }
     if (details && filter) {
-      markerRef.current.bindTooltip(getTooltipContent(details, filter), {
+      marker.bindTooltip(getTooltipContent(details, filter), {
         direction: 'top',
         permanent: true,
       });
     } else {
-      markerRef.current.bindTooltip('Choose marker', {
+      marker.bindTooltip('Choose marker', {
         direction: 'top',
         permanent: true,
       });
     }
     return () => {
-      markerRef.current.unbindTooltip();
+      marker.unbindTooltip();
     };
   }, [details, filter, iconUrl]);
 
   useEffect(() => {
-    markerRef.current.addTo(leafletMap);
+    marker.addTo(leafletMap);
 
     leafletMap.pm.enableGlobalDragMode();
 
-    markerRef.current.on('pm:dragstart', () => {
+    marker.on('pm:dragstart', () => {
       setDragging(true);
     });
 
-    markerRef.current.on('pm:dragend', () => {
+    marker.on('pm:dragend', () => {
       setDragging(false);
     });
 
-    markerRef.current.on('pm:drag', (event) => {
+    marker.on('pm:drag', (event) => {
       // @ts-ignore
       onMove(+event.latlng.lng.toFixed(2), +event.latlng.lat.toFixed(2));
     });
 
     return () => {
-      markerRef.current.remove();
+      marker.remove();
     };
   }, []);
 
@@ -86,12 +87,12 @@ function useGeoman({
     if (dragging) {
       return;
     }
-    const latLng = markerRef.current.getLatLng();
+    const latLng = marker.getLatLng();
     if (latLng.lat !== y || latLng.lng !== x) {
-      markerRef.current.setLatLng([y, x]);
+      marker.setLatLng([y, x]);
       leafletMap.setView([y, x]);
     }
-  }, [markerRef, x, y, dragging]);
+  }, [x, y, dragging]);
 }
 
 export default useGeoman;

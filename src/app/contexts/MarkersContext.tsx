@@ -22,10 +22,17 @@ export type MarkerBasic = {
   level?: number;
   comments?: number;
   _id: string;
+  screenshotFilename?: string;
 };
 
 type MarkersContextProps = {
   markers: MarkerBasic[];
+  setMarkers: (
+    value: MarkerBasic[] | ((value: MarkerBasic[]) => MarkerBasic[])
+  ) => void;
+  setTemporaryHiddenMarkerIDs: (
+    value: string[] | ((value: string[]) => string[])
+  ) => void;
   markerRoutes: MarkerRouteItem[];
   clearMarkerRoutes: () => void;
   toggleMarkerRoute: (markerRoute: MarkerRouteItem) => void;
@@ -38,6 +45,8 @@ type MarkersContextProps = {
 };
 const MarkersContext = createContext<MarkersContextProps>({
   markers: [],
+  setMarkers: () => undefined,
+  setTemporaryHiddenMarkerIDs: () => undefined,
   markerRoutes: [],
   clearMarkerRoutes: () => undefined,
   toggleMarkerRoute: () => undefined,
@@ -73,6 +82,9 @@ export function MarkersProvider({
     []
   );
   const [mode, setMode] = useState<Mode>(null);
+  const [temporaryHiddenMarkerIDs, setTemporaryHiddenMarkerIDs] = useState<
+    string[]
+  >([]);
 
   const [filters, setFilters] = useFilters();
   const user = useUser();
@@ -126,16 +138,14 @@ export function MarkersProvider({
   const hiddenMarkerIds = user?.hiddenMarkerIds || [];
   const visibleMarkers = useMemo(
     () =>
-      filters.includes('hidden')
-        ? markers.filter((marker) =>
-            filters.some((filter) => filter === marker.type)
-          )
-        : markers.filter(
-            (marker) =>
-              filters.some((filter) => filter === marker.type) &&
-              !hiddenMarkerIds.includes(marker._id)
-          ),
-    [filters, markers, hiddenMarkerIds]
+      markers.filter(
+        (marker) =>
+          filters.some((filter) => filter === marker.type) &&
+          !temporaryHiddenMarkerIDs.includes(marker._id) &&
+          (filters.includes('hidden') || !hiddenMarkerIds.includes(marker._id))
+      ),
+
+    [filters, markers, hiddenMarkerIds, temporaryHiddenMarkerIDs]
   );
 
   const toggleMarkerRoute = (markerRoute: MarkerRouteItem) => {
@@ -168,6 +178,8 @@ export function MarkersProvider({
     <MarkersContext.Provider
       value={{
         markers,
+        setMarkers,
+        setTemporaryHiddenMarkerIDs,
         visibleMarkers,
         refresh,
         markerRoutes,

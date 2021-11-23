@@ -1,19 +1,17 @@
 import useGeoman from './useGeoman';
-import type leaflet from 'leaflet';
 import styles from './SelectPosition.module.css';
 import generalStyles from './AddResources.module.css';
 import type { FilterItem } from '../MapFilter/mapFilters';
 import type { Details } from './AddResources';
+import { latestLeafletMap } from '../WorldMap/useWorldMap';
 
 type SelectPositionType = {
-  leafletMap: leaflet.Map;
   details: Details | null;
   filter: FilterItem | null;
   location: [number, number, number];
   onSelectLocation: (position: [number, number, number]) => void;
 };
 function SelectPosition({
-  leafletMap,
   details,
   filter,
   onSelectLocation,
@@ -21,7 +19,7 @@ function SelectPosition({
 }: SelectPositionType): JSX.Element {
   useGeoman({
     details,
-    leafletMap,
+    leafletMap: latestLeafletMap!,
     iconUrl: filter?.iconUrl,
     filter,
     x: location[0],

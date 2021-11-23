@@ -15,15 +15,17 @@ import UploadScreenshot from '../AddResources/UploadScreenshot';
 import { useAccount } from '../../contexts/UserContext';
 import Credit from './Credit';
 import { writeError } from '../../utils/logs';
-import { deleteMarker, patchMarker } from './api';
+import { deleteMarker } from './api';
 import { notify } from '../../utils/notifications';
 import Confirm from '../Confirm/Confirm';
+import { patchMarker } from '../AddResources/api';
 
 type MarkerDetailsProps = {
   marker: MarkerBasic;
+  onEdit: () => void;
 };
 
-function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
+function MarkerDetails({ marker, onEdit }: MarkerDetailsProps): JSX.Element {
   const {
     marker: fullMarker,
     comments,
@@ -34,7 +36,7 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
     (mapFilter) => mapFilter.type === marker.type
   );
   const { addModal, closeLatestModal } = useModal();
-  const { refresh: refreshMarkers } = useMarkers();
+  const { setMarkers } = useMarkers();
   const { account } = useAccount();
 
   async function handleUploadScreenshot(screenshotId?: string) {
@@ -43,11 +45,21 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
       if (!screenshotId || !fullMarker) {
         return;
       }
-      const screenshotFilename = await notify(
-        patchMarker(marker._id, screenshotId)
+      const patchedMarker = await notify(
+        patchMarker(marker._id, { ...fullMarker, screenshotId })
       );
-      fullMarker.screenshotFilename = screenshotFilename;
-      refreshMarkers();
+      fullMarker.screenshotFilename = patchedMarker.screenshotFilename;
+      setMarkers((markers) => {
+        const markersClone = [...markers];
+        const index = markersClone.findIndex(
+          (marker) => marker._id === patchedMarker._id
+        );
+        if (index === -1) {
+          return markers;
+        }
+        markersClone[index] = patchedMarker;
+        return markersClone;
+      });
     } catch (error) {
       writeError(error);
     }
@@ -58,7 +70,9 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
       await notify(deleteMarker(marker._id), {
         success: 'Marker deleted 👌',
       });
-      refreshMarkers();
+      setMarkers((markers) =>
+        markers.filter((existingMarker) => existingMarker._id !== marker._id)
+      );
       closeLatestModal();
     } catch (error) {
       writeError(error);
@@ -89,7 +103,21 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
                 account &&
                   (account.isModerator || account.steamId === comment.userId)
               )}
-              onRemove={() => refresh().then(refreshMarkers)}
+              onRemove={() => {
+                refresh();
+                setMarkers((markers) => {
+                  const markersClone = [...markers];
+                  const index = markersClone.findIndex(
+                    (marker) => marker._id === comment.markerId
+                  );
+                  if (index === -1) {
+                    return markers;
+                  }
+                  markersClone[index].comments =
+                    markersClone[index].comments! - 1;
+                  return markersClone;
+                });
+              }}
             />
           ))}
           {!loading && comments?.length === 0 && (
@@ -104,18 +132,23 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
         <HideMarkerInput markerId={marker._id} onHide={closeLatestModal} />
         {account &&
           (account.isModerator || account.steamId === fullMarker?.userId) && (
-            <button
-              className={styles.button}
-              onClick={() => {
-                addModal({
-                  title: 'Do you really want to delete this marker?',
-                  children: <Confirm onConfirm={handleDelete} />,
-                  fitContent: true,
-                });
-              }}
-            >
-              💀 Remove invalid marker 💀
-            </button>
+            <>
+              <button className={styles.button} onClick={onEdit}>
+                ✍ Edit marker
+              </button>
+              <button
+                className={styles.button}
+                onClick={() => {
+                  addModal({
+                    title: 'Do you really want to delete this marker?',
+                    children: <Confirm onConfirm={handleDelete} />,
+                    fitContent: true,
+                  });
+                }}
+              >
+                💀 Remove invalid marker 💀
+              </button>
+            </>
           )}
         <h3>Screenshot</h3>
         {fullMarker?.screenshotFilename ? (

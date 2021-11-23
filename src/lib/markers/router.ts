@@ -11,6 +11,7 @@ import type { CommentDTO } from '../comments/types';
 import { SCREENSHOTS_PATH } from '../env';
 import { getScreenshotsCollection } from '../screenshots/collection';
 import { ensureAuthenticated } from '../auth/middlewares';
+import type { AccountDTO } from '../auth/types';
 
 const markersRouter = Router();
 
@@ -122,17 +123,10 @@ markersRouter.patch(
     try {
       const account = req.account!;
       const { markerId } = req.params;
-      const { screenshotId } = req.body;
 
-      if (!ObjectId.isValid(screenshotId) || !ObjectId.isValid(markerId)) {
+      const marker = await bodyToMarker(req.body, account);
+      if (!marker) {
         res.status(400).send('Invalid payload');
-        return;
-      }
-      const screenshot = await getScreenshotsCollection().findOne({
-        _id: new ObjectId(screenshotId),
-      });
-      if (!screenshot) {
-        res.status(404).send('Screenshot not found');
         return;
       }
 
@@ -146,16 +140,18 @@ markersRouter.patch(
         ];
       }
 
-      const result = await getMarkersCollection().updateOne(query, {
-        $set: {
-          screenshotFilename: screenshot.filename,
+      const result = await getMarkersCollection().findOneAndUpdate(
+        query,
+        {
+          $set: marker,
         },
-      });
-      if (!result.modifiedCount) {
-        res.status(404).end(`No marker found for id ${markerId}`);
+        { returnDocument: 'after' }
+      );
+      if (!result.ok) {
+        res.status(404).end(`No marker updated for id ${markerId}`);
         return;
       }
-      res.status(200).json(screenshot.filename);
+      res.status(200).json(result.value);
     } catch (error) {
       next(error);
     }
@@ -166,62 +162,12 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
   try {
     const account = req.account!;
 
-    const {
-      type,
-      position,
-      name,
-      level,
-      chestType,
-      tier,
-      description,
-      screenshotId,
-    } = req.body;
-
-    if (typeof type !== 'string' || !Array.isArray(position)) {
+    const marker = await bodyToMarker(req.body, account);
+    if (!marker) {
       res.status(400).send('Invalid payload');
       return;
     }
-    const marker: MarkerDTO = {
-      type,
-      userId: account.steamId,
-      username: account.name,
-      createdAt: new Date(),
-      position: position.map(
-        (part: number) => new Double(+part.toFixed(2))
-      ) as [Double, Double, Double],
-    };
 
-    if (name) {
-      marker.name = name.substring(0, MAX_NAME_LENGTH);
-    }
-    if (level) {
-      marker.level = level;
-    }
-    if (chestType) {
-      marker.chestType = chestType;
-    }
-    if (tier) {
-      marker.tier = tier;
-    }
-    if (description) {
-      marker.description = description.substring(0, MAX_DESCRIPTION_LENGTH);
-    }
-
-    if (ObjectId.isValid(screenshotId)) {
-      const screenshot = await getScreenshotsCollection().findOne({
-        _id: new ObjectId(screenshotId),
-      });
-      if (!screenshot) {
-        res.status(404).send('Screenshot not found');
-        return;
-      }
-      marker.screenshotFilename = screenshot.filename;
-    }
-
-    if (!mapFilters.some((filter) => filter.type === marker.type)) {
-      res.status(400).send(`Unknown type ${marker.type}`);
-      return;
-    }
     const existingMarker = await getMarkersCollection().findOne({
       type: marker.type,
       position: marker.position,
@@ -255,7 +201,7 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
     res.status(200).json(marker);
 
     await postToDiscord(
-      `📌 ${mapFilter.title} was added by ${account.name} at [${position}]`
+      `📌 ${mapFilter.title} was added by ${account.name} at [${marker.position}]`
     );
   } catch (error) {
     console.error(`Error creating marker ${JSON.stringify(req.body)}`);
@@ -319,5 +265,64 @@ markersRouter.post(
     }
   }
 );
+
+async function bodyToMarker(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  body: any,
+  account: AccountDTO
+): Promise<MarkerDTO | false> {
+  const {
+    type,
+    position,
+    name,
+    level,
+    chestType,
+    tier,
+    description,
+    screenshotId,
+  } = body;
+
+  if (typeof type !== 'string' || !Array.isArray(position)) {
+    return false;
+  }
+  const marker: MarkerDTO = {
+    type,
+    userId: account.steamId,
+    username: account.name,
+    createdAt: new Date(),
+    position: position.map((part: number) => new Double(+part.toFixed(2))) as [
+      Double,
+      Double,
+      Double
+    ],
+  };
+  if (!mapFilters.some((filter) => filter.type === marker.type)) {
+    return false;
+  }
+  if (name) {
+    marker.name = name.substring(0, MAX_NAME_LENGTH);
+  }
+  if (level) {
+    marker.level = level;
+  }
+  if (chestType) {
+    marker.chestType = chestType;
+  }
+  if (tier) {
+    marker.tier = tier;
+  }
+  if (description) {
+    marker.description = description.substring(0, MAX_DESCRIPTION_LENGTH);
+  }
+  if (ObjectId.isValid(screenshotId)) {
+    const screenshot = await getScreenshotsCollection().findOne({
+      _id: new ObjectId(screenshotId),
+    });
+    if (screenshot) {
+      marker.screenshotFilename = screenshot.filename;
+    }
+  }
+  return marker;
+}
 
 export default markersRouter;
