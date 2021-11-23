@@ -1,7 +1,7 @@
 import { StrictMode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import './globals.css';
-import { waitForOverwolf } from './utils/overwolf';
+import { isOverwolfApp, waitForOverwolf } from './utils/overwolf';
 import { UserProvider } from './contexts/UserContext';
 import { MarkersProvider } from './contexts/MarkersContext';
 import { PositionProvider } from './contexts/PositionContext';
@@ -18,8 +18,7 @@ import { FiltersProvider } from './contexts/FiltersContext';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { classNames } from './utils/styles';
 import ResizeBorder from './components/ResizeBorder/ResizeBorder';
-import type { Group } from './utils/useReadLivePosition';
-import useGroupPositions from './components/WorldMap/useGroupPositions';
+import useReadLivePosition from './utils/useReadLivePosition';
 
 function Minimap(): JSX.Element {
   const [showSetup, setShowSetup] = useState(false);
@@ -37,8 +36,9 @@ function Minimap(): JSX.Element {
     false
   );
   const [isHovering, setIsHovering] = useState(false);
-  const [group] = usePersistentState<Group>('group', {});
-  useGroupPositions(group);
+  if (!isOverwolfApp) {
+    useReadLivePosition();
+  }
 
   useEffect(() => {
     if (!isHovering) {
