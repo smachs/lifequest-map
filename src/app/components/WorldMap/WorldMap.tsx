@@ -6,6 +6,7 @@ import MarkerDetails from '../MarkerDetails/MarkerDetails';
 import usePlayerPosition from './usePlayerPosition';
 import { classNames } from '../../utils/styles';
 import type { CSSProperties } from 'react';
+import type { MarkerBasic } from '../../contexts/MarkersContext';
 
 type WorldMapProps = {
   hideControls?: boolean;
@@ -14,6 +15,7 @@ type WorldMapProps = {
   className?: string;
   style?: CSSProperties;
   rotate?: boolean;
+  onMarkerEdit?: (marker: MarkerBasic) => void;
 };
 
 function WorldMap({
@@ -23,8 +25,9 @@ function WorldMap({
   alwaysFollowing,
   style,
   rotate,
+  onMarkerEdit,
 }: WorldMapProps): JSX.Element {
-  const { addModal } = useModal();
+  const { addModal, closeLatestModal } = useModal();
 
   const { leafletMap, elementRef } = useWorldMap({
     hideControls,
@@ -33,9 +36,19 @@ function WorldMap({
   useLayerGroups({
     leafletMap,
     onMarkerClick: (marker) => {
-      addModal({
-        children: <MarkerDetails marker={marker} />,
-      });
+      if (onMarkerEdit) {
+        addModal({
+          children: (
+            <MarkerDetails
+              marker={marker}
+              onEdit={() => {
+                onMarkerEdit(marker);
+                closeLatestModal();
+              }}
+            />
+          ),
+        });
+      }
     },
   });
   usePlayerPosition({ leafletMap, alwaysFollowing, rotate });

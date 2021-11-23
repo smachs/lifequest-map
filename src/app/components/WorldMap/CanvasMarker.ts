@@ -7,16 +7,21 @@ type CanvasMarkerOptions = {
     markerId: string;
     type: string;
     borderColor?: string;
-    src?: string;
+    src: string;
     element?: HTMLImageElement;
     comments?: number;
     rotate?: number;
   };
 };
 
+const imageElements: {
+  [src: string]: HTMLImageElement;
+} = {};
 class CanvasMarker extends leaflet.CircleMarker {
   declare options: leaflet.CircleMarkerOptions & CanvasMarkerOptions;
   private _renderer: any;
+  declare imageElement: HTMLImageElement;
+  private _onImageLoad: (() => void) | undefined = undefined;
   declare _point: any;
 
   constructor(
@@ -24,52 +29,53 @@ class CanvasMarker extends leaflet.CircleMarker {
     options: leaflet.CircleMarkerOptions & CanvasMarkerOptions
   ) {
     super(latLng, options);
+
+    if (!imageElements[options.image.src]) {
+      imageElements[options.image.src] = document.createElement('img');
+      imageElements[options.image.src].src = options.image.src;
+    }
+    this.imageElement = imageElements[options.image.src];
+  }
+
+  _redraw(): void {
+    return;
+  }
+
+  _update(): void {
+    return;
   }
 
   _updatePath(): void {
-    if (!this.options.image.element) {
-      if (!this.options.image.src) {
-        return;
-      }
-      const imageElement = document.createElement('img');
-      imageElement.src = this.options.image.src;
-      this.options.image.element = imageElement;
-      imageElement.onload = () => {
-        this.redraw();
-      };
-      imageElement.onerror = () => {
-        this.options.image.element = undefined;
-      };
-    } else {
+    if (this.imageElement.complete) {
       this._renderer!._updateCanvasImg(this);
+    } else if (!this._onImageLoad) {
+      this._onImageLoad = () => {
+        this.imageElement.removeEventListener('load', this._onImageLoad!);
+        this._renderer!._updateCanvasImg(this);
+      };
+      this.imageElement.addEventListener('load', this._onImageLoad);
     }
   }
 }
 
 leaflet.Canvas.include({
   _updateCanvasImg(layer: CanvasMarker) {
-    const { image } = layer.options;
-    if (!image.element) {
+    if (!layer.imageElement.complete) {
       return;
     }
-    const p = layer._point.round();
     const ctx: CanvasRenderingContext2D = this._ctx;
     if (!ctx) {
       return;
     }
-
-    const dx = p.x - image.size[0] / 2;
-    const dy = p.y - image.size[1] / 2;
+    const { image } = layer.options;
+    const p = layer._point.round();
+    const halfWidth = image.size[0] / 2;
+    const halfHeight = halfWidth;
+    const dx = p.x - halfWidth;
+    const dy = p.y - halfHeight;
     if (image.showBackground) {
       ctx.beginPath();
-      ctx.arc(
-        dx + image.size[0] / 2,
-        dy + image.size[1] / 2,
-        image.size[0] / 2,
-        0,
-        Math.PI * 2,
-        true
-      ); // Outer circle
+      ctx.arc(dx + halfWidth, dy + halfHeight, halfWidth, 0, Math.PI * 2, true); // Outer circle
       ctx.fillStyle = 'rgba(30, 30, 30, 0.7)';
       ctx.fill();
       if (image.borderColor) {
@@ -84,23 +90,23 @@ leaflet.Canvas.include({
       ctx.translate(p.x, p.y);
       ctx.rotate((image.rotate * Math.PI) / 180);
       ctx.drawImage(
-        image.element,
-        -image.size[0] / 2,
-        -image.size[1] / 2,
+        layer.imageElement,
+        -halfWidth,
+        -halfHeight,
         image.size[0],
         image.size[1]
       );
       ctx.translate(-p.x, -p.y);
       ctx.restore();
     } else {
-      ctx.drawImage(image.element, dx, dy, image.size[0], image.size[1]);
+      ctx.drawImage(layer.imageElement, dx, dy, image.size[0], image.size[1]);
     }
 
     if (image.comments) {
       ctx.beginPath();
       ctx.arc(
         dx + image.size[0] - 8,
-        dy + image.size[1] / 2 - 8,
+        dy + halfHeight - 8,
         3,
         0,
         Math.PI * 2,

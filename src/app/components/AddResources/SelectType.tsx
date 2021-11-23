@@ -16,8 +16,8 @@ function SelectType({ onSelect, filter }: SelectTypeType): JSX.Element {
   const regExp = new RegExp(search, 'ig');
   const filters = mapFilters.filter((filter) => filter.title.match(regExp));
   const [isFocus, setIsFocus] = useState(false);
-  const [lastSearch, setLastSearch] = usePersistentState<FilterItem[]>(
-    'lastTypeSearch',
+  const [lastSearch, setLastSearch] = usePersistentState<string[]>(
+    'last-type-search',
     []
   );
 
@@ -37,9 +37,9 @@ function SelectType({ onSelect, filter }: SelectTypeType): JSX.Element {
     setSearch('');
     onSelect(filter);
     setLastSearch((lastSearch) =>
-      [filter, ...lastSearch.filter((last) => last.type !== filter.type)].slice(
+      [filter.type, ...lastSearch.filter((last) => last !== filter.type)].slice(
         0,
-        2
+        3
       )
     );
   };
@@ -70,7 +70,11 @@ function SelectType({ onSelect, filter }: SelectTypeType): JSX.Element {
       </label>
       {isFocus && (
         <div className={styles.suggestions}>
-          {!search && lastSearch.map(renderButton)}
+          {!search &&
+            lastSearch.map((type) => {
+              const filter = filters.find((filter) => filter.type === type);
+              return filter ? renderButton(filter) : null;
+            })}
           {!search && lastSearch.length > 0 && <hr />}
           {filters.map(renderButton)}
           {filters.length === 0 && 'No results'}

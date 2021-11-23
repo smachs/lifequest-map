@@ -16,6 +16,8 @@ export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
     },
   });
 
+const canvasRenderer = leaflet.canvas();
+
 function useLayerGroups({
   leafletMap,
   onMarkerClick,
@@ -33,7 +35,6 @@ function useLayerGroups({
       hasComments: boolean;
     };
   }>({});
-  const canvasRendererRef = useRef(leaflet.canvas());
 
   useEffect(() => {
     if (!leafletMap) {
@@ -107,7 +108,6 @@ function useLayerGroups({
           const isVisible = markersLayerGroup.hasLayer(
             allLayers[marker._id].layer
           );
-
           if (allLayers[marker._id].hasComments !== Boolean(marker.comments)) {
             markersLayerGroup.removeLayer(allLayers[marker._id].layer);
             delete allLayers[marker._id];
@@ -133,7 +133,7 @@ function useLayerGroups({
           continue;
         }
         const mapMarker = new CanvasMarker(latLng, {
-          renderer: canvasRendererRef.current,
+          renderer: canvasRenderer,
           radius: 16,
           image: {
             markerId: marker._id,

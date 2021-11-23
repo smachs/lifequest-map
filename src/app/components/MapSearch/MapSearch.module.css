@@ -43,5 +43,5 @@
 }
 
 .button:disabled {
-  color: var(--color-shade-three);
+  color: var(--color-disabled);
 }

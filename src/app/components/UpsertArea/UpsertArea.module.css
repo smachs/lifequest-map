@@ -1,0 +1,9 @@
+.fixed {
+  position: fixed;
+  right: 5px;
+  top: 37px;
+  z-index: 1000;
+  display: grid;
+  gap: 1rem;
+  width: 320px;
+}

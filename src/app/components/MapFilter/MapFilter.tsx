@@ -21,9 +21,6 @@ import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import MapSearch from '../MapSearch/MapSearch';
 import useDebounce from '../../utils/useDebounce';
-import { useState } from 'react';
-import SelectRoute from '../MarkerRoutes/SelectRoute';
-import AddResources from '../AddResources/AddResources';
 import { isOverwolfApp } from '../../utils/overwolf';
 import BroadcastIcon from '../icons/BroadcastIcon';
 import useShareLivePosition from '../../utils/useShareLivePosition';
@@ -32,7 +29,14 @@ import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
 
 type View = 'markers' | 'settings' | 'markerRoutes';
 
-function MapFilter(): JSX.Element {
+type MarkerFilterProps = {
+  onMarkerCreate: () => void;
+  onMarkerRouteUpsert: (target: MarkerRouteItem | true) => void;
+};
+function MapFilter({
+  onMarkerCreate,
+  onMarkerRouteUpsert,
+}: MarkerFilterProps): JSX.Element {
   const { addModal, closeLatestModal } = useModal();
   const [isOpen, setIsOpen] = usePersistentState(
     'aeternum-map-client.sidebar-state',
@@ -44,8 +48,6 @@ function MapFilter(): JSX.Element {
   );
   const { following, toggleFollowing } = usePosition();
   const [showMinimap, setShowMinimap] = useMinimap();
-  const [editRoute, setEditRoute] = useState<MarkerRouteItem | boolean>(false);
-  const [isAddingMarker, setIsAddingMarker] = useState(false);
 
   const [isLive, setIsLive] = isOverwolfApp
     ? useShareLivePosition()
@@ -64,33 +66,12 @@ function MapFilter(): JSX.Element {
 
   return (
     <aside className={classNames(styles.container, isOpen && styles.open)}>
-      <div className={styles.add}>
-        {editRoute && latestLeafletMap && (
-          <SelectRoute
-            leafletMap={latestLeafletMap}
-            onClose={() => setEditRoute(false)}
-            markerRoute={typeof editRoute === 'boolean' ? undefined : editRoute}
-          />
-        )}
-        {isAddingMarker && latestLeafletMap && (
-          <AddResources
-            leafletMap={latestLeafletMap}
-            onClose={() => setIsAddingMarker(false)}
-          />
-        )}
-      </div>
-
       <div className={styles.content}>
         <User />
-        {view === 'markers' && (
-          <MarkersView
-            adding={isAddingMarker}
-            onAdd={() => setIsAddingMarker(true)}
-          />
-        )}
+        {view === 'markers' && <MarkersView onAdd={() => onMarkerCreate()} />}
         {view === 'settings' && <Settings />}
         {view === 'markerRoutes' && (
-          <MarkerRoutes editing={Boolean(editRoute)} onEdit={setEditRoute} />
+          <MarkerRoutes onEdit={onMarkerRouteUpsert} />
         )}
         {isOverwolfApp && (
           <ErrorBoundary>
@@ -100,34 +81,31 @@ function MapFilter(): JSX.Element {
       </div>
       <nav className={styles.nav}>
         <MapSearch className={styles.nav__button} />
-
-        {!isOverwolfApp && (
-          <>
-            <button
-              data-tooltip="Markers"
-              data-tooltip-position="right"
-              className={classNames(
-                styles.nav__button,
-                styles.nav__border,
-                view === 'markers' && styles.nav__active
-              )}
-              onClick={() => handleViewClick('markers')}
-            >
-              <MarkerIcon />
-            </button>
-            <button
-              data-tooltip="Routes"
-              data-tooltip-position="right"
-              className={classNames(
-                styles.nav__button,
-                view === 'markerRoutes' && styles.nav__active
-              )}
-              onClick={() => handleViewClick('markerRoutes')}
-            >
-              <RoutesIcon />
-            </button>
-          </>
-        )}
+        <button
+          disabled={isOverwolfApp}
+          data-tooltip={isOverwolfApp ? 'Not available in app' : 'Markers'}
+          data-tooltip-position="right"
+          className={classNames(
+            styles.nav__button,
+            styles.nav__border,
+            view === 'markers' && styles.nav__active
+          )}
+          onClick={() => handleViewClick('markers')}
+        >
+          <MarkerIcon />
+        </button>
+        <button
+          disabled={isOverwolfApp}
+          data-tooltip={isOverwolfApp ? 'Not available in app' : 'Routes'}
+          data-tooltip-position="right"
+          className={classNames(
+            styles.nav__button,
+            view === 'markerRoutes' && styles.nav__active
+          )}
+          onClick={() => handleViewClick('markerRoutes')}
+        >
+          <RoutesIcon />
+        </button>
         <button
           data-tooltip="Settings"
           data-tooltip-position="right"

@@ -53,7 +53,7 @@
 
 .nav__button:disabled {
   cursor: default;
-  color: var(--color-shade-three);
+  color: var(--color-disabled);
   background: var(--color-shade-one);
 }
 
@@ -70,14 +70,4 @@
 
 .nav__border {
   border-top: 1px solid var(--color-shade-three);
-}
-
-.add {
-  position: fixed;
-  right: 5px;
-  top: 37px;
-  z-index: 1000;
-  display: grid;
-  gap: 1rem;
-  width: 320px;
 }

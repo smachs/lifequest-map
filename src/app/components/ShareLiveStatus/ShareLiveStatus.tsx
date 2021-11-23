@@ -1,5 +1,5 @@
 import { useAccount } from '../../contexts/UserContext';
-import { usePersistentState } from '../../utils/storage';
+import { setJSONItem, usePersistentState } from '../../utils/storage';
 import Button from '../Button/Button';
 import styles from './ShareLiveStatus.module.css';
 import { v4 as uuid } from 'uuid';
@@ -9,6 +9,7 @@ import ShareFromOverwolf from './ShareFromOverwolf';
 import { isOverwolfApp } from '../../utils/overwolf';
 import ShareFromWebsite from './ShareFromWebsite';
 import type { FormEvent } from 'react';
+import { useState } from 'react';
 
 type ShareLiveStatusProps = {
   onActivate: () => void;
@@ -17,6 +18,11 @@ function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
   const { account } = useAccount();
   const [playerToken, setPlayerToken] = usePersistentState('player-token', '');
   const [groupToken, setGroupToken] = usePersistentState('group-token', '');
+  const [lastGroupTokens] = usePersistentState<string[]>(
+    'last-group-tokens',
+    []
+  );
+  const [isGroupInFocus, setIsGroupInFocus] = useState(false);
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -25,6 +31,12 @@ function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
       toast.error('Tokens can not be equal 🙄');
       return;
     }
+    const newLastGroupTokens = [
+      groupToken,
+      ...lastGroupTokens.filter((last) => last !== groupToken),
+    ].slice(0, 2);
+    setJSONItem('last-group-tokens', newLastGroupTokens);
+
     onActivate();
   }
   return (
@@ -75,7 +87,22 @@ function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
             value={groupToken}
             placeholder="Use this token to share with your group..."
             onChange={(event) => setGroupToken(event.target.value)}
+            onFocus={() => setIsGroupInFocus(true)}
+            onBlur={() => setIsGroupInFocus(false)}
           />
+          {isGroupInFocus && lastGroupTokens.length > 0 && (
+            <div className={styles.suggestions}>
+              {lastGroupTokens.map((lastGroupToken) => (
+                <button
+                  key={lastGroupToken}
+                  onMouseDown={() => setGroupToken(lastGroupToken)}
+                  className={styles.suggestion}
+                >
+                  {lastGroupToken}
+                </button>
+              ))}
+            </div>
+          )}
         </label>
         <Button type="button" onClick={() => setGroupToken(uuid())}>
           Create random
