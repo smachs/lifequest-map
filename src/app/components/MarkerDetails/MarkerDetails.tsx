@@ -65,6 +65,16 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
     }
   }
 
+  async function copyCoords(position: [number, number, number]) {
+    try {
+      await notify(navigator.clipboard.writeText(position.join(', ')), {
+        success: 'Copied to clipboard 👌',
+      });
+    } catch (error) {
+      writeError(error);
+    }
+  }
+
   return (
     <section className={styles.container}>
       <header className={styles.header}>
@@ -155,7 +165,19 @@ function MarkerDetails({ marker }: MarkerDetailsProps): JSX.Element {
         {fullMarker?.description && (
           <Markdown>{fullMarker.description}</Markdown>
         )}
-        {marker.position && <p>[{marker.position.join(', ')}]</p>}
+        {marker.position && (
+          <p>
+            [{marker.position.join(', ')}]
+            <button
+              className={styles.paperclip}
+              onClick={() => {
+                copyCoords(marker.position);
+              }}
+            >
+              📎
+            </button>
+          </p>
+        )}
         <small>
           Added {fullMarker && toTimeAgo(new Date(fullMarker.createdAt))}
         </small>

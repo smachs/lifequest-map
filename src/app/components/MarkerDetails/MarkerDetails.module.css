@@ -66,3 +66,7 @@
 .userSelect {
   user-select: all;
 }
+
+.paperclip {
+  font-size: 1.2em;
+}
