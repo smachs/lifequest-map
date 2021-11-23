@@ -29,10 +29,10 @@ function Modal({
   }, []);
 
   return (
-    <section className={styles.backdrop} onClick={onClose}>
+    <section className={styles.backdrop} onMouseDown={onClose}>
       <div
         className={classNames(styles.content, fitContent && styles.fitContent)}
-        onClick={(event) => event.stopPropagation()}
+        onMouseDown={(event) => event.stopPropagation()}
       >
         <header className={styles.header}>
           {title && <h3 className={styles.title}>{title}</h3>}
