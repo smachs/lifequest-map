@@ -37,7 +37,7 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
     <section className={styles.container}>
       <div className={styles.actions}>
         <ActionButton disabled={!account} onClick={onAdd}>
-          {account ? 'Add resource' : 'Login to add route'}
+          {account ? 'Add resource' : 'Login to add resource'}
         </ActionButton>
         <ActionCheckbox
           className={styles.action}
