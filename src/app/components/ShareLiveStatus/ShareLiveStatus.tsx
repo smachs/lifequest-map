@@ -74,7 +74,6 @@ function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
           disabled={!playerToken}
           onClick={() => {
             copyTextToClipboard(playerToken);
-            toast.info(`Copied to clipboard 📝`);
           }}
         >
           Copy to clipboard
@@ -112,7 +111,6 @@ function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
           disabled={!groupToken}
           onClick={() => {
             copyTextToClipboard(groupToken);
-            toast.info(`Copied to clipboard 📝`);
           }}
         >
           Copy to clipboard

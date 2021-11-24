@@ -19,6 +19,7 @@ import { deleteMarker } from './api';
 import { notify } from '../../utils/notifications';
 import Confirm from '../Confirm/Confirm';
 import { patchMarker } from '../AddResources/api';
+import Coordinates from './Coordinates';
 
 type MarkerDetailsProps = {
   marker: MarkerBasic;
@@ -74,16 +75,6 @@ function MarkerDetails({ marker, onEdit }: MarkerDetailsProps): JSX.Element {
         markers.filter((existingMarker) => existingMarker._id !== marker._id)
       );
       closeLatestModal();
-    } catch (error) {
-      writeError(error);
-    }
-  }
-
-  async function copyCoords(position: [number, number, number]) {
-    try {
-      await notify(navigator.clipboard.writeText(position.join(', ')), {
-        success: 'Copied to clipboard 👌',
-      });
     } catch (error) {
       writeError(error);
     }
@@ -200,19 +191,7 @@ function MarkerDetails({ marker, onEdit }: MarkerDetailsProps): JSX.Element {
         {fullMarker?.description && (
           <Markdown>{fullMarker.description}</Markdown>
         )}
-        {marker.position && (
-          <p>
-            [{marker.position.join(', ')}]
-            <button
-              className={styles.paperclip}
-              onClick={() => {
-                copyCoords(marker.position);
-              }}
-            >
-              📎
-            </button>
-          </p>
-        )}
+        {marker.position && <Coordinates position={marker.position} />}
         <small>
           Added {fullMarker && toTimeAgo(new Date(fullMarker.createdAt))}
         </small>
