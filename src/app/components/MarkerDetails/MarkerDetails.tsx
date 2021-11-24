@@ -19,6 +19,7 @@ import { deleteMarker } from './api';
 import { notify } from '../../utils/notifications';
 import Confirm from '../Confirm/Confirm';
 import { patchMarker } from '../AddResources/api';
+import Coordinates from './Coordinates';
 
 type MarkerDetailsProps = {
   marker: MarkerBasic;
@@ -84,6 +85,7 @@ function MarkerDetails({ marker, onEdit }: MarkerDetailsProps): JSX.Element {
     : marker.name
     ? `${marker.name} (${filterItem?.title})`
     : filterItem?.title;
+
   return (
     <section className={styles.container}>
       <header className={styles.header}>
@@ -189,7 +191,7 @@ function MarkerDetails({ marker, onEdit }: MarkerDetailsProps): JSX.Element {
         {fullMarker?.description && (
           <Markdown>{fullMarker.description}</Markdown>
         )}
-        {marker.position && <p>[{marker.position.join(', ')}]</p>}
+        {marker.position && <Coordinates position={marker.position} />}
         <small>
           Added {fullMarker && toTimeAgo(new Date(fullMarker.createdAt))}
         </small>
