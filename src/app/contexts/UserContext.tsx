@@ -41,6 +41,7 @@ export type AccountDTO = {
   sessionId: string;
   isModerator?: boolean;
   favoriteRouteIds?: string[];
+  liveShareToken?: string;
   createdAt: Date;
 };
 

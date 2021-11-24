@@ -134,55 +134,89 @@ authRouter.get(
 authRouter.patch(
   '/favorite-routes/:routeId',
   ensureAuthenticated,
-  async (req, res) => {
-    const { routeId } = req.params;
-    const { isFavorite } = req.body;
+  async (req, res, next) => {
+    try {
+      const { routeId } = req.params;
+      const { isFavorite } = req.body;
 
-    if (!ObjectId.isValid(routeId) || typeof isFavorite !== 'boolean') {
-      res.status(400).send('Invalid payload');
-      return;
-    }
-    const routeObjectId = new ObjectId(routeId);
+      if (!ObjectId.isValid(routeId) || typeof isFavorite !== 'boolean') {
+        res.status(400).send('Invalid payload');
+        return;
+      }
+      const routeObjectId = new ObjectId(routeId);
 
-    let updateAccount: UpdateFilter<AccountDTO>;
-    let updateRoute: UpdateFilter<MarkerRouteDTO>;
-    if (isFavorite) {
-      updateAccount = {
-        $addToSet: {
-          favoriteRouteIds: routeObjectId,
-        },
-      };
-      updateRoute = {
-        $inc: {
-          favorites: 1,
-        },
-      };
-    } else {
-      updateAccount = {
-        $pull: {
-          favoriteRouteIds: routeObjectId,
-        },
-      };
-      updateRoute = {
-        $inc: {
-          favorites: -1,
-        },
-      };
-    }
-    const result = await getAccountCollection().updateOne(
-      { steamId: req.account!.steamId },
-      updateAccount
-    );
-    if (!result.modifiedCount) {
-      res.status(404).end('Account not changed');
-      return;
-    }
-    await getMarkerRoutesCollection().updateOne(
-      { _id: routeObjectId },
-      updateRoute
-    );
+      let updateAccount: UpdateFilter<AccountDTO>;
+      let updateRoute: UpdateFilter<MarkerRouteDTO>;
+      if (isFavorite) {
+        updateAccount = {
+          $addToSet: {
+            favoriteRouteIds: routeObjectId,
+          },
+        };
+        updateRoute = {
+          $inc: {
+            favorites: 1,
+          },
+        };
+      } else {
+        updateAccount = {
+          $pull: {
+            favoriteRouteIds: routeObjectId,
+          },
+        };
+        updateRoute = {
+          $inc: {
+            favorites: -1,
+          },
+        };
+      }
+      const result = await getAccountCollection().updateOne(
+        { steamId: req.account!.steamId },
+        updateAccount
+      );
+      if (!result.modifiedCount) {
+        res.status(404).end('Account not changed');
+        return;
+      }
+      await getMarkerRoutesCollection().updateOne(
+        { _id: routeObjectId },
+        updateRoute
+      );
 
-    res.json(isFavorite);
+      res.json(isFavorite);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+authRouter.patch(
+  '/live-share-token',
+  ensureAuthenticated,
+  async (req, res, next) => {
+    try {
+      const { token } = req.body;
+
+      if (!token) {
+        res.status(400).send('Invalid payload');
+        return;
+      }
+      const result = await getAccountCollection().updateOne(
+        { steamId: req.account!.steamId },
+        {
+          $set: {
+            liveShareToken: token,
+          },
+        }
+      );
+      if (!result.modifiedCount) {
+        res.status(404).end('Account not changed');
+        return;
+      }
+      res.json({ token });
+    } catch (error) {
+      next(error);
+    }
   }
 );
 

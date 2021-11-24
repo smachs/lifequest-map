@@ -2,6 +2,7 @@ import type http from 'http';
 import { Server } from 'socket.io';
 
 type Player = {
+  steamId?: string;
   username: string | null;
   position: { location: [number, number]; rotation: number } | null;
 };
@@ -23,54 +24,53 @@ export function initSocket(server: http.Server) {
 
   io.on('connection', (client) => {
     const { query } = client.handshake;
-    if (!query.playerToken || !query.groupToken) {
+    if (typeof query.token !== 'string') {
       client.disconnect();
       return;
     }
-    const playerToken =
-      typeof query.playerToken === 'string'
-        ? query.playerToken
-        : query.playerToken[0];
-    const groupToken =
-      typeof query.groupToken === 'string'
-        ? query.groupToken
-        : query.groupToken[0];
+    const token = query.token;
+    const isOverwolfApp = query.isOverwolfApp === 'true';
+    const steamId =
+      typeof query.steamId === 'string' && query.steamId !== 'undefined'
+        ? query.steamId
+        : undefined;
+    client.join(token);
 
-    client.join(groupToken);
-
-    if (!activePlayers[groupToken]) {
-      activePlayers[groupToken] = {};
+    if (!activePlayers[token]) {
+      activePlayers[token] = {};
     }
-    if (!activePlayers[groupToken][playerToken]) {
-      activePlayers[groupToken][playerToken] = {
+
+    if (isOverwolfApp && !activePlayers[token][client.id]) {
+      activePlayers[token][client.id] = {
+        steamId,
         username: null,
         position: null,
       };
     }
 
     client.on('status', (callback) => {
-      callback(activePlayers[groupToken]);
+      callback(activePlayers[token]);
     });
 
     client.on('position', (position) => {
-      if (!activePlayers[groupToken][playerToken]) {
+      if (!isOverwolfApp || !activePlayers[token][client.id]) {
         return;
       }
-      activePlayers[groupToken][playerToken].position = position;
-      io!.to(groupToken).emit('update', activePlayers[groupToken]);
+      activePlayers[token][client.id].position = position;
+      io!.to(token).emit('update', activePlayers[token]);
     });
 
     client.on('username', (username) => {
-      if (!activePlayers[groupToken][playerToken]) {
+      if (!isOverwolfApp || !activePlayers[token][client.id]) {
         return;
       }
-      activePlayers[groupToken][playerToken].username = username;
-      io!.to(groupToken).emit('update', activePlayers[groupToken]);
+      activePlayers[token][client.id].username = username;
+      io!.to(token).emit('update', activePlayers[token]);
     });
 
     client.on('disconnect', () => {
-      if (activePlayers[groupToken]?.[playerToken]) {
-        delete activePlayers[groupToken][playerToken];
+      if (activePlayers[token]?.[client.id]) {
+        delete activePlayers[token][client.id];
       }
     });
   });

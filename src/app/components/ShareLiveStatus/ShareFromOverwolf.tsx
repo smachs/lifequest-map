@@ -15,6 +15,7 @@ function ShareFromOverwolf(): JSX.Element {
       </p>
       <ul>
         <li>🚀 Live Tracking of your In-Game position</li>
+        <li>🤗 See your friends by using the same token</li>
         <li>🔀 Farming/Marker Routes</li>
         <li>✅ Check markers as done (like lore documents)</li>
         <li>🗺️ Minimap view</li>

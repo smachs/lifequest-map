@@ -9,92 +9,75 @@ import ShareFromOverwolf from './ShareFromOverwolf';
 import { isOverwolfApp } from '../../utils/overwolf';
 import ShareFromWebsite from './ShareFromWebsite';
 import type { FormEvent } from 'react';
+import { useEffect } from 'react';
 import { useState } from 'react';
+import { patchLiveShareToken } from './api';
 
 type ShareLiveStatusProps = {
   onActivate: () => void;
 };
 function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
-  const { account } = useAccount();
-  const [playerToken, setPlayerToken] = usePersistentState('player-token', '');
-  const [groupToken, setGroupToken] = usePersistentState('group-token', '');
-  const [lastGroupTokens] = usePersistentState<string[]>(
-    'last-group-tokens',
+  const { account, refreshAccount } = useAccount();
+  const [token, setToken] = usePersistentState('live-share-token', '');
+  const [lastTokens] = usePersistentState<string[]>(
+    'last-live-share-tokens',
     []
   );
   const [isGroupInFocus, setIsGroupInFocus] = useState(false);
 
+  useEffect(() => {
+    if (account) {
+      refreshAccount();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (account?.liveShareToken) {
+      setToken(account.liveShareToken);
+    }
+  }, [account?.liveShareToken]);
+
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    if (playerToken === groupToken) {
-      toast.error('Tokens can not be equal 🙄');
+    if (!token) {
+      toast.error('Token is required 🙄');
       return;
     }
     const newLastGroupTokens = [
-      groupToken,
-      ...lastGroupTokens.filter((last) => last !== groupToken),
+      token,
+      ...lastTokens.filter((last) => last !== token),
     ].slice(0, 2);
     setJSONItem('last-group-tokens', newLastGroupTokens);
 
+    if (account && account.liveShareToken !== token) {
+      patchLiveShareToken(token);
+    }
     onActivate();
   }
   return (
     <form onSubmit={handleSubmit} className={styles.container}>
       {isOverwolfApp ? <ShareFromOverwolf /> : <ShareFromWebsite />}
-      <p>
-        If you like to build your own applications based on your live status,
-        make sure to{' '}
-        <a href="https://discord.gg/NTZu8Px" target="_blank">
-          Join Discord Community
-        </a>
-        .
+      <p className={styles.guide}>
+        Use the same token in the app and on the website to share your live
+        status. Connect with your friends by using the same token 🤗.
       </p>
       <div className={styles.tokenContainer}>
         <label className={styles.label}>
-          Player Token
+          Token
           <input
-            value={playerToken}
-            placeholder="Use this token to identify your character..."
-            onChange={(event) => setPlayerToken(event.target.value)}
-          />
-        </label>
-        <Button
-          type="button"
-          disabled={!account}
-          onClick={() => setPlayerToken(account!.steamId)}
-        >
-          Use SteamID
-        </Button>
-        <Button type="button" onClick={() => setPlayerToken(uuid())}>
-          Create random
-        </Button>
-        <Button
-          type="button"
-          disabled={!playerToken}
-          onClick={() => {
-            copyTextToClipboard(playerToken);
-          }}
-        >
-          Copy to clipboard
-        </Button>
-      </div>
-      <div className={styles.tokenContainer}>
-        <label className={styles.label}>
-          Group Token
-          <input
-            value={groupToken}
-            placeholder="Use this token to share with your group..."
-            onChange={(event) => setGroupToken(event.target.value)}
+            value={token}
+            placeholder="Use this token to access your live status..."
+            onChange={(event) => setToken(event.target.value)}
             onFocus={() => setIsGroupInFocus(true)}
             onBlur={() => setIsGroupInFocus(false)}
           />
-          {isGroupInFocus && lastGroupTokens.length > 0 && (
+          {isGroupInFocus && lastTokens.length > 0 && (
             <div className={styles.suggestions}>
-              {lastGroupTokens.map((lastGroupToken) => (
+              {lastTokens.map((lastGroupToken) => (
                 <button
                   key={lastGroupToken}
-                  onMouseDown={() => setGroupToken(lastGroupToken)}
+                  onMouseDown={() => setToken(lastGroupToken)}
                   className={styles.suggestion}
                 >
                   {lastGroupToken}
@@ -103,26 +86,28 @@ function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
             </div>
           )}
         </label>
-        <Button type="button" onClick={() => setGroupToken(uuid())}>
-          Create random
-        </Button>
-        <Button
-          type="button"
-          disabled={!groupToken}
-          onClick={() => {
-            copyTextToClipboard(groupToken);
-          }}
-        >
-          Copy to clipboard
-        </Button>
+        {isOverwolfApp && (
+          <>
+            <Button type="button" onClick={() => setToken(uuid())}>
+              Create random
+            </Button>
+            <Button
+              type="button"
+              disabled={!token}
+              onClick={() => {
+                copyTextToClipboard(token);
+              }}
+            >
+              Copy to clipboard
+            </Button>
+          </>
+        )}
       </div>
       <small>
-        The player token is used to identify your character and should only used
-        by yourself.
-        <br />
-        The group token is used to connect you with friends and companies.
+        Pro tip: Login with Steam in the app and on the website to automatically
+        update the token.
       </small>
-      <Button disabled={!playerToken || !groupToken} type="submit">
+      <Button disabled={!token} type="submit">
         Share Live Status
       </Button>
     </form>

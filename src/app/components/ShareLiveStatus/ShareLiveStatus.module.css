@@ -42,3 +42,7 @@
 .suggestion:hover {
   background: var(--color-shade-two);
 }
+
+.guide {
+  font-size: 0.8em;
+}

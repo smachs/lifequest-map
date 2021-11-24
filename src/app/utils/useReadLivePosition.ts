@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { io } from 'socket.io-client';
-import { useSetUser } from '../contexts/UserContext';
+import { useAccount, useSetUser } from '../contexts/UserContext';
 import { usePosition } from '../contexts/PositionContext';
 import { getJSONItem, usePersistentState } from './storage';
 import { toast } from 'react-toastify';
@@ -8,6 +8,7 @@ import useGroupPositions from '../components/WorldMap/useGroupPositions';
 
 type Position = { location: [number, number]; rotation: number };
 type Player = {
+  steamId?: string;
   username: string | null;
   position: Position | null;
 };
@@ -29,30 +30,38 @@ function useReadLivePosition(): [
   const { setPosition } = usePosition();
   const setUsername = useSetUser();
   const [group, setGroup] = usePersistentState<Group>('group', {});
+  const { account } = useAccount();
 
   useGroupPositions(group);
 
   useEffect(() => {
-    const playerToken = getJSONItem('player-token', null);
-    const groupToken = getJSONItem('group-token', null);
-    if (!playerToken || !groupToken || !isReading) {
+    const token = getJSONItem('live-share-token', null);
+    if (!token || !isReading) {
       return;
     }
     const socket = io(
       typeof VITE_SOCKET_ENDPOINT === 'string' ? VITE_SOCKET_ENDPOINT : '',
       {
         query: {
-          playerToken,
-          groupToken,
+          token,
         },
         upgrade: false,
         transports: ['websocket'],
       }
     );
 
-    socket.emit('status', (group: Group) => {
-      const player = { ...group[playerToken] };
-      delete group[playerToken];
+    const updateStatus = (group: Group) => {
+      const sessionIds = Object.keys(group);
+      const playerSessionId =
+        sessionIds.find((sessionId) => {
+          if (account) {
+            const player = group[sessionId];
+            return player.steamId === account.steamId;
+          }
+          return true;
+        }) || sessionIds[0];
+
+      const player = group[playerSessionId];
       if (player) {
         if (player.username) {
           setUsername(player.username);
@@ -60,9 +69,13 @@ function useReadLivePosition(): [
         if (player.position) {
           setPosition(player.position);
         }
+        delete group[playerSessionId];
       }
       setGroup(group);
-    });
+    };
+
+    socket.emit('status', updateStatus);
+    socket.on('update', updateStatus);
 
     socket.on('connect', () => {
       if (socket.connected) {
@@ -70,26 +83,14 @@ function useReadLivePosition(): [
       }
     });
 
-    socket.on('update', (group: Group) => {
-      const player = { ...group[playerToken] };
-      delete group[playerToken];
-      if (player) {
-        if (player.username) {
-          setUsername(player.username);
-        }
-        if (player.position) {
-          setPosition(player.position);
-        }
-      }
-      setGroup(group);
-    });
-
     return () => {
+      socket.off('connect');
+      socket.off('update');
       socket.close();
       setGroup({});
       toast.info('Stop sharing live status 🛑');
     };
-  }, [isReading]);
+  }, [isReading, account]);
 
   return [isReading, setIsReading];
 }

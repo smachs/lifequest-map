@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import type { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
-import { useUser } from '../contexts/UserContext';
+import { useAccount, useUser } from '../contexts/UserContext';
 import { usePosition } from '../contexts/PositionContext';
 import { getJSONItem, usePersistentState } from './storage';
 import { toast } from 'react-toastify';
@@ -24,19 +24,20 @@ function useShareLivePosition(): [
 
   const user = useUser();
   const { position } = usePosition();
+  const { account } = useAccount();
 
   useEffect(() => {
-    const playerToken = getJSONItem('player-token', null);
-    const groupToken = getJSONItem('group-token', null);
-    if (!playerToken || !groupToken || !isSharing) {
+    const token = getJSONItem('live-share-token', null);
+    if (!token || !isSharing) {
       return;
     }
     const newSocket = io(
       typeof VITE_SOCKET_ENDPOINT === 'string' ? VITE_SOCKET_ENDPOINT : '',
       {
         query: {
-          playerToken,
-          groupToken,
+          token,
+          steamId: account?.steamId,
+          isOverwolfApp: true,
         },
         upgrade: false,
         transports: ['websocket'],
@@ -55,7 +56,7 @@ function useShareLivePosition(): [
       setSocket(null);
       toast.info('Stop sharing live status 🛑');
     };
-  }, [isSharing]);
+  }, [isSharing, account]);
 
   useEffect(() => {
     if (socket) {
