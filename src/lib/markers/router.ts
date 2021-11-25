@@ -152,8 +152,9 @@ markersRouter.patch(
         return;
       }
       res.status(200).json(result.value);
-      let nameType = marker.type;
-      if (marker.name) {nameType = marker.type +' ' + marker.name }
+      const nameType = marker.name
+        ? `${marker.type} ${marker.name}`
+        : marker.type;
       await postToDiscord(
         `📌 ${nameType} was updated by ${account.name} at [${marker.position}]`
       );
