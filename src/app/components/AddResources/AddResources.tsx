@@ -70,19 +70,18 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
     if (!filter) {
       return;
     }
-    setDetails(
-      filter.category === 'chests'
-        ? {
-            chestType: marker?.chestType || 'Supply',
-            tier: marker?.tier || 1,
-            description: marker?.description || '',
-          }
-        : {
-            name: marker?.name || '',
-            description: marker?.description || '',
-            level: marker?.level|| undefined,
-        }
-    );
+    const details: Details = {};
+    if (filter.category === 'chests') {
+      details.chestType = marker?.chestType || 'Supply';
+      details.tier = marker?.tier || 1;
+    }
+    if (filter.hasLevel) {
+      details.level = marker?.level || 1;
+    }
+    if (filter.hasName) {
+      details.name = marker?.name || '';
+    }
+    setDetails(details);
   }, [filter]);
 
   const isValid =
