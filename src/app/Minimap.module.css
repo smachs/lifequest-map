@@ -6,6 +6,7 @@
   transition: 0.2s opacity ease-in;
   display: grid;
   place-items: center;
+  -webkit-app-region: drag;
 }
 
 .hideOnHover:hover {
@@ -60,4 +61,19 @@
 
 .move {
   cursor: move;
+}
+
+.hint {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0%;
+  transition: 0.2s opacity ease-in;
+  pointer-events: none;
+}
+
+.hideOnHover:hover + .hint,
+.hint.visible {
+  opacity: 50%;
 }
