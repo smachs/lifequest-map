@@ -75,8 +75,13 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
         ? {
             chestType: marker?.chestType || 'Supply',
             tier: marker?.tier || 1,
+            description: marker?.description || '',
           }
-        : {}
+        : {
+            name: marker?.name || '',
+            description: marker?.description || '',
+            level: marker?.level|| undefined,
+        }
     );
   }, [filter]);
 
