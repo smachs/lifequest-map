@@ -205,9 +205,11 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       return;
     }
     res.status(200).json(marker);
-
+    const nameType = marker.name
+    ? `${mapFilter.title} ${marker.name}`
+    : mapFilter.title;
     await postToDiscord(
-      `📌 ${mapFilter.title} ${marker.name} was added by ${account.name} at [${marker.position}]`
+      `📌 ${nameType} was added by ${account.name} at [${marker.position}]`
     );
   } catch (error) {
     console.error(`Error creating marker ${JSON.stringify(req.body)}`);
