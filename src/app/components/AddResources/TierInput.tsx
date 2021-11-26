@@ -4,12 +4,16 @@ import styles from './TierInput.module.css';
 type TierInputProps = {
   value: number;
   onChange: (value: number) => void;
+  max: number;
 };
 
-function TierInput({ value, onChange }: TierInputProps): JSX.Element {
+function TierInput({ value, onChange, max }: TierInputProps): JSX.Element {
+  const tiers = Array(max)
+    .fill(null)
+    .map((_, index) => index + 1);
   return (
     <div className={styles.container}>
-      {[1, 2, 3, 4, 5].map((tier) => (
+      {tiers.map((tier) => (
         <label
           key={tier}
           className={classNames(styles.label, value === tier && styles.active)}
@@ -17,7 +21,7 @@ function TierInput({ value, onChange }: TierInputProps): JSX.Element {
           {tier}
           <input
             type="radio"
-            name="tier"
+            name={'tier' + max}
             checked={value === tier}
             onChange={() => onChange(tier)}
           />
