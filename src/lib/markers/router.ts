@@ -206,8 +206,8 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
     }
     res.status(200).json(marker);
     const nameType = marker.name
-    ? `${mapFilter.title} ${marker.name}`
-    : mapFilter.title;
+      ? `${mapFilter.title} ${marker.name}`
+      : mapFilter.title;
     await postToDiscord(
       `📌 ${nameType} was added by ${account.name} at [${marker.position}]`
     );
