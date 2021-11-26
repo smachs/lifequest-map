@@ -2,6 +2,9 @@
 
 Get all the locations, farming spots, resources, lore documents, chests, mobs and more!
 
+- [Website](https://aeternum-map.gg)
+- [Download Overwolf app](https://www.overwolf.com/app/Leon_Machens-Aeternum_Map)
+
 ## Features
 
 - Live Tracking of your In-Game position
