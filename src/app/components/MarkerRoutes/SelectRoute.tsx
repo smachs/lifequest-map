@@ -100,11 +100,11 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
           .flat(999)
           .forEach((latlng) => {
             // @ts-ignore
-            leafletMap.pm.Draw.Line._createVertex({ latlng });
+            latestLeafletMap.pm.Draw.Line._createVertex({ latlng });
           });
         existingPolyline.remove();
         // @ts-ignore
-        existingPolyline = leafletMap.pm.Draw.Line._layer;
+        existingPolyline = latestLeafletMap.pm.Draw.Line._layer;
       }
 
       existingPolyline!.on('pm:vertexadded', () => {

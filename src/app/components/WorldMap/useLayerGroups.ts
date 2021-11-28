@@ -261,16 +261,18 @@ function useLayerGroups({
     if (!leafletMap) {
       return;
     }
-    leafletMap.on('pm:globaldrawmodetoggled', (event) => {
+    leafletMap.on('pm:globaldrawmodetoggled', () => {
+      const pmIgnore = !leafletMap.pm.controlsVisible();
       Object.values(allLayersRef.current).forEach(({ layer }) => {
-        layer.setStyle({ pmIgnore: !event.enabled });
+        layer.setStyle({ pmIgnore });
         leaflet.PM.reInitLayer(layer);
       });
     });
 
-    leafletMap.on('pm:globaleditmodetoggled', (event) => {
+    leafletMap.on('pm:globaleditmodetoggled', () => {
+      const pmIgnore = !leafletMap.pm.controlsVisible();
       Object.values(allLayersRef.current).forEach(({ layer }) => {
-        layer.setStyle({ pmIgnore: !event.enabled });
+        layer.setStyle({ pmIgnore });
         leaflet.PM.reInitLayer(layer);
       });
     });
