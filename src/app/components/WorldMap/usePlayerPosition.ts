@@ -1,6 +1,8 @@
 import leaflet from 'leaflet';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { usePosition } from '../../contexts/PositionContext';
+import { useSettings } from '../../contexts/SettingsContext';
+import { isOverwolfApp } from '../../utils/overwolf';
 import useWindowIsVisible from '../../utils/useWindowIsVisible';
 import type CanvasMarker from './CanvasMarker';
 import { updateRotation } from './rotation';
@@ -14,6 +16,15 @@ const CoordinatesControl = leaflet.Control.extend({
 });
 export const coordinates = new CoordinatesControl({ position: 'bottomright' });
 
+function createTraceDot(latLng: [number, number]) {
+  return leaflet.circle(latLng, {
+    radius: 0,
+    interactive: false,
+    pmIgnore: true,
+    color: '#F78166',
+  });
+}
+
 function usePlayerPosition({
   leafletMap,
   alwaysFollowing,
@@ -26,6 +37,11 @@ function usePlayerPosition({
   const { position, following } = usePosition();
   const [marker, setMarker] = useState<leaflet.Marker | null>(null);
   const windowIsVisible = useWindowIsVisible();
+
+  const traceDotsGroup = useMemo(() => new leaflet.LayerGroup(), []);
+  const traceDots = useMemo<leaflet.Circle[]>(() => [], []);
+
+  const { showTraceLines, maxTraceLines } = useSettings();
 
   useEffect(() => {
     if (!leafletMap) {
@@ -135,12 +151,50 @@ function usePlayerPosition({
         noMoveStart: true,
       });
     }
+
     return () => {
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
     };
   }, [marker, leafletMap, position, isFollowing, rotate, windowIsVisible]);
+
+  useEffect(() => {
+    if (!leafletMap || isOverwolfApp) {
+      return;
+    }
+    const traceDot = createTraceDot(position.location);
+    traceDots.push(traceDot);
+    traceDot.addTo(traceDotsGroup);
+
+    if (traceDots.length > maxTraceLines) {
+      traceDots[traceDots.length - 1 - maxTraceLines]?.remove();
+    }
+  }, [position]);
+
+  useEffect(() => {
+    if (!leafletMap) {
+      return;
+    }
+    if (showTraceLines && !leafletMap.hasLayer(traceDotsGroup)) {
+      traceDotsGroup.addTo(leafletMap);
+    } else if (leafletMap.hasLayer(traceDotsGroup)) {
+      traceDotsGroup.remove();
+    }
+  }, [leafletMap, showTraceLines]);
+
+  useEffect(() => {
+    for (let i = 0; i < traceDots.length; i++) {
+      const traceDot = traceDots[i];
+      if (i < traceDots.length - maxTraceLines) {
+        if (traceDotsGroup.hasLayer(traceDot)) {
+          traceDotsGroup.removeLayer(traceDot);
+        }
+      } else if (!traceDotsGroup.hasLayer(traceDot)) {
+        traceDot.addTo(traceDotsGroup);
+      }
+    }
+  }, [maxTraceLines]);
 }
 
 export default usePlayerPosition;
