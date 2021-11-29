@@ -38,7 +38,7 @@
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-text);
-  opacity: 50%;
+  opacity: 0.5;
 }
 
 :root {
