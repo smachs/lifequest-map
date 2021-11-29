@@ -10,6 +10,10 @@ type SettingsContextValue = {
   setMarkerShowBackground: (markerShowBackground: boolean) => void;
   showRegionBorders: boolean;
   setShowRegionBorders: (markerShowBackground: boolean) => void;
+  maxTraceLines: number;
+  setMaxTraceLines: (maxTraceLines: number) => void;
+  showTraceLines: boolean;
+  setShowTraceLines: (showTraceLines: boolean) => void;
 };
 const SettingsContext = createContext<SettingsContextValue>({
   markerSize: 30,
@@ -18,6 +22,10 @@ const SettingsContext = createContext<SettingsContextValue>({
   setMarkerShowBackground: () => undefined,
   showRegionBorders: true,
   setShowRegionBorders: () => undefined,
+  maxTraceLines: 10,
+  setMaxTraceLines: () => undefined,
+  showTraceLines: false,
+  setShowTraceLines: () => undefined,
 });
 
 type SettingsProviderProps = {
@@ -35,6 +43,14 @@ export function SettingsProvider({
     'showRegionBorders',
     true
   );
+  const [showTraceLines, setShowTraceLines] = usePersistentState(
+    'show-trace-lines',
+    false
+  );
+  const [maxTraceLines, setMaxTraceLines] = usePersistentState(
+    'max-trace-lines',
+    10
+  );
 
   return (
     <SettingsContext.Provider
@@ -45,6 +61,10 @@ export function SettingsProvider({
         setMarkerShowBackground,
         showRegionBorders,
         setShowRegionBorders,
+        maxTraceLines,
+        setMaxTraceLines,
+        showTraceLines,
+        setShowTraceLines,
       }}
     >
       {children}

@@ -18,6 +18,10 @@ function Settings(): JSX.Element {
     setMarkerShowBackground,
     showRegionBorders,
     setShowRegionBorders,
+    maxTraceLines,
+    setMaxTraceLines,
+    showTraceLines,
+    setShowTraceLines,
   } = useSettings();
   const showHideAppBinding = useHotkeyBinding(SHOW_HIDE_APP);
   const setupMinimapBinding = useHotkeyBinding(SETUP_MINIMAP);
@@ -55,6 +59,26 @@ function Settings(): JSX.Element {
           onChange={(event) => setShowRegionBorders(event.target.checked)}
         />
       </label>
+      {!isOverwolfApp && (
+        <>
+          <label className={styles.label}>
+            Show trace line
+            <input
+              type="checkbox"
+              checked={showTraceLines}
+              onChange={(event) => setShowTraceLines(event.target.checked)}
+            />
+          </label>
+          <label className={styles.label}>
+            Trace line length
+            <input
+              type="number"
+              value={maxTraceLines}
+              onChange={(event) => setMaxTraceLines(+event.target.value)}
+            />
+          </label>
+        </>
+      )}
       {isOverwolfApp && (
         <>
           <h3>Hotkeys</h3>
