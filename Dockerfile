@@ -1,4 +1,4 @@
-FROM node:alpine AS deps
+FROM node:lts-alpine AS deps
 RUN apk add --no-cache libc6-compat git
 
 WORKDIR /app
@@ -7,7 +7,7 @@ COPY package.json package-lock.json ./
 RUN npm set-script prepare ""
 RUN npm ci
 
-FROM node:alpine AS builder
+FROM node:lts-alpine AS builder
 WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
@@ -17,7 +17,7 @@ RUN npm run build
 RUN npm set-script prepare ""
 RUN npm ci --production --prefer-offline
 
-FROM node:alpine AS runner
+FROM node:lts-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production

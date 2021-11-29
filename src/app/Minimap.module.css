@@ -10,7 +10,7 @@
 }
 
 .hideOnHover:hover {
-  opacity: 10% !important;
+  opacity: 0.1 !important;
 }
 
 .minimap {
@@ -68,12 +68,12 @@
   inset: 0;
   display: grid;
   place-items: center;
-  opacity: 0%;
+  opacity: 0;
   transition: 0.2s opacity ease-in;
   pointer-events: none;
 }
 
 .hideOnHover:hover + .hint,
 .hint.visible {
-  opacity: 50%;
+  opacity: 0.5;
 }
