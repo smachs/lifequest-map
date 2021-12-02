@@ -1,5 +1,5 @@
 import styles from './MarkersView.module.css';
-import { mapFilters, mapFiltersCategories } from './mapFilters';
+import { mapFiltersCategories } from './mapFilters';
 import MarkerSection from './MarkerSection';
 import { useFilters } from '../../contexts/FiltersContext';
 import ActionButton from '../ActionControl/ActionButton';
@@ -8,7 +8,7 @@ import { usePersistentState } from '../../utils/storage';
 import { useAccount } from '../../contexts/UserContext';
 import SearchInput from '../SearchInput/SearchInput';
 import PresetSelect from '../PresetSelect/PresetSelect';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { Preset } from '../PresetSelect/presets';
 
 type MarkersViewProps = {
@@ -34,13 +34,8 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
     }
     const uniqueFilters = Array.from(new Set(newFilters));
     setFilters(uniqueFilters);
+    setPreset(null);
   }
-
-  useEffect(() => {
-    if (preset) {
-      setFilters(preset.types);
-    }
-  }, [preset]);
 
   return (
     <section className={styles.container}>
@@ -61,31 +56,13 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
           value={search}
           onChange={setSearch}
         />
-        <PresetSelect value={preset} onChange={setPreset} />
-        {/* <ActionButton
-          onClick={() => {
-            handleToggle(
-              mapFilters
-                .filter(searchMapFilter(search))
-                .map((filter) => filter.type),
-              true
-            );
+        <PresetSelect
+          value={preset}
+          onChange={(preset) => {
+            setPreset(preset);
+            setFilters(preset.types);
           }}
-        >
-          Show all
-        </ActionButton>
-        <ActionButton
-          onClick={() => {
-            handleToggle(
-              mapFilters
-                .filter(searchMapFilter(search))
-                .map((filter) => filter.type),
-              false
-            );
-          }}
-        >
-          Hide all
-        </ActionButton> */}
+        />
       </div>
       <div className={styles.list}>
         {mapFiltersCategories.map((mapFilterCategory) => (

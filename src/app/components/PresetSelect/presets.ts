@@ -7,19 +7,11 @@ export type Preset = {
 
 export const staticPresets: Preset[] = [
   {
-    name: 'All',
+    name: 'All markers',
     types: mapFilters.map((filter) => filter.type),
   },
   {
-    name: 'None',
+    name: 'No markers',
     types: [],
-  },
-  {
-    name: 'Harvesting',
-    types: mapFilters
-      .filter((filter) =>
-        ['farming', 'cooking_ingredients'].includes(filter.category)
-      )
-      .map((filter) => filter.type),
   },
 ];

@@ -2,6 +2,15 @@
   position: relative;
 }
 
+.select {
+  border: 1px solid var(--color-shade-three);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  position: relative;
+  height: 2rem;
+}
+
 .list {
   position: absolute;
   z-index: 99000;
@@ -10,6 +19,15 @@
   max-height: 8rem;
   overflow: auto;
   border: 1px solid var(--color-shade-two);
-  padding: 0.5em;
   display: grid;
+}
+
+.option {
+  padding: 0.7em;
+  transition: all 0.2s ease-in;
+}
+
+.option:hover {
+  background: var(--color-shade-two);
+  color: var(--color-primary);
 }

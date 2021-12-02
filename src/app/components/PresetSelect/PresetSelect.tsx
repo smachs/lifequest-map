@@ -8,36 +8,43 @@ type PresetSelectProps = {
   onChange: (value: Preset) => void;
 };
 function PresetSelect({ value, onChange }: PresetSelectProps): JSX.Element {
-  const [newName, setNewName] = useState('');
+  const [search, setSearch] = useState('');
   const [isFocus, setIsFocus] = useState(false);
 
   useEffect(() => {
     if (!isFocus) {
-      setNewName('');
+      setSearch('');
     }
   }, [value, isFocus]);
 
+  const regExp = new RegExp(search, 'ig');
+  const presets = staticPresets.filter((preset) => preset.name.match(regExp));
+
   return (
     <div className={styles.container}>
-      <label>
+      <label className={styles.select}>
         <input
-          value={isFocus ? newName : value?.name || ''}
-          onChange={(event) => setNewName(event.target.value)}
-          placeholder={isFocus ? 'Enter new preset name' : 'Select preset'}
+          value={isFocus ? search : value?.name || ''}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="Select or create preset..."
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
+          maxLength={18}
         />
       </label>
       {isFocus && (
         <div className={styles.list}>
-          {newName ? (
-            <button>➕ {newName}</button>
-          ) : (
-            staticPresets.map((preset) => (
-              <button key={preset.name} onMouseDown={() => onChange(preset)}>
-                {preset.name}
-              </button>
-            ))
+          {presets.map((preset) => (
+            <button
+              key={preset.name}
+              className={styles.option}
+              onMouseDown={() => onChange(preset)}
+            >
+              {preset.name}
+            </button>
+          ))}
+          {search && (
+            <button className={styles.option}>Create "{search}"</button>
           )}
         </div>
       )}
