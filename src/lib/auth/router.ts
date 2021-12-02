@@ -220,4 +220,38 @@ authRouter.patch(
   }
 );
 
+authRouter.patch('/account', ensureAuthenticated, async (req, res, next) => {
+  try {
+    const { presets } = req.body;
+
+    if (!Array.isArray(presets)) {
+      res.status(400).send('Invalid payload');
+      return;
+    }
+    const updatedAccount = await getAccountCollection().findOneAndUpdate(
+      { steamId: req.account!.steamId },
+      {
+        $set: {
+          presets: presets,
+        },
+      },
+      { returnDocument: 'after' }
+    );
+    if (!updatedAccount.ok || !updatedAccount.value) {
+      res.status(404).end('Account not changed');
+      return;
+    }
+    const account = {
+      ...updatedAccount.value,
+      sessionId:
+        updatedAccount.value.sessionIds[
+          updatedAccount.value.sessionIds.length - 1
+        ],
+    };
+    res.json(account);
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default authRouter;

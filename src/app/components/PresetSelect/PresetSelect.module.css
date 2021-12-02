@@ -1,0 +1,45 @@
+.container {
+  position: relative;
+}
+
+.select {
+  border: 1px solid var(--color-shade-three);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  position: relative;
+  height: 2rem;
+}
+
+.list {
+  position: absolute;
+  z-index: 99000;
+  background: var(--color-shade-three);
+  width: 100%;
+  max-height: 20rem;
+  overflow: auto;
+  border: 1px solid var(--color-shade-two);
+  display: grid;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.option {
+  padding: 0.7em;
+  transition: all 0.2s ease-in;
+  text-align: left;
+}
+
+.option:hover {
+  background: var(--color-shade-two);
+  color: var(--color-primary);
+}
+
+.option:disabled {
+  background: var(--color-three);
+  color: var(--color-trivial);
+  cursor: default;
+}

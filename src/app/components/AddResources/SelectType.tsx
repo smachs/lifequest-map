@@ -13,13 +13,13 @@ type SelectTypeType = {
 };
 function SelectType({ onSelect, filter }: SelectTypeType): JSX.Element {
   const [search, setSearch] = useState('');
-  const regExp = new RegExp(search, 'ig');
-  const filters = mapFilters.filter((filter) => filter.title.match(regExp));
   const [isFocus, setIsFocus] = useState(false);
   const [lastSearch, setLastSearch] = usePersistentState<string[]>(
     'last-type-search',
     []
   );
+  const regExp = new RegExp(search, 'ig');
+  const filters = mapFilters.filter((filter) => filter.title.match(regExp));
 
   if (filter) {
     return (

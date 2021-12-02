@@ -1,13 +1,15 @@
 import styles from './MarkersView.module.css';
-import { mapFilters, mapFiltersCategories } from './mapFilters';
+import { mapFiltersCategories } from './mapFilters';
 import MarkerSection from './MarkerSection';
 import { useFilters } from '../../contexts/FiltersContext';
 import ActionButton from '../ActionControl/ActionButton';
 import ActionCheckbox from '../ActionControl/ActionCheckbox';
-import { searchMapFilter } from './searchMapFilter';
 import { usePersistentState } from '../../utils/storage';
 import { useAccount } from '../../contexts/UserContext';
 import SearchInput from '../SearchInput/SearchInput';
+import PresetSelect from '../PresetSelect/PresetSelect';
+import { useState } from 'react';
+import type { Preset } from '../PresetSelect/presets';
 
 type MarkersViewProps = {
   onAdd: () => void;
@@ -15,6 +17,7 @@ type MarkersViewProps = {
 function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
   const [filters, setFilters] = useFilters();
   const [search, setSearch] = usePersistentState('searchMarkerTypes', '');
+  const [preset, setPreset] = useState<Preset | null>(null);
   const { account } = useAccount();
 
   function handleToggle(filterTypes: string[], checked: boolean) {
@@ -31,6 +34,7 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
     }
     const uniqueFilters = Array.from(new Set(newFilters));
     setFilters(uniqueFilters);
+    setPreset(null);
   }
 
   return (
@@ -52,30 +56,15 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
           value={search}
           onChange={setSearch}
         />
-        <ActionButton
-          onClick={() => {
-            handleToggle(
-              mapFilters
-                .filter(searchMapFilter(search))
-                .map((filter) => filter.type),
-              true
-            );
+        <PresetSelect
+          value={preset}
+          onChange={(preset) => {
+            setPreset(preset);
+            if (preset) {
+              setFilters(preset.types);
+            }
           }}
-        >
-          Show all
-        </ActionButton>
-        <ActionButton
-          onClick={() => {
-            handleToggle(
-              mapFilters
-                .filter(searchMapFilter(search))
-                .map((filter) => filter.type),
-              false
-            );
-          }}
-        >
-          Hide all
-        </ActionButton>
+        />
       </div>
       <div className={styles.list}>
         {mapFiltersCategories.map((mapFilterCategory) => (

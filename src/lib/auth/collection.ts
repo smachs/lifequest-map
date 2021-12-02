@@ -48,6 +48,23 @@ function ensureAccountsSchema(): Promise<Document> {
           liveShareToken: {
             bsonType: 'string',
           },
+          presets: {
+            bsonType: 'array',
+            items: {
+              bsonType: 'object',
+              properties: {
+                name: {
+                  bsonType: 'string',
+                },
+                types: {
+                  bsonType: 'array',
+                  items: {
+                    bsonType: 'string',
+                  },
+                },
+              },
+            },
+          },
           createdAt: {
             bsonType: 'date',
           },

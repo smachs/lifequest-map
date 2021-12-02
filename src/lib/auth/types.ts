@@ -7,5 +7,9 @@ export type AccountDTO = {
   isModerator?: boolean;
   favoriteRouteIds?: ObjectId[];
   liveShareToken?: string;
+  presets?: {
+    name: string;
+    types: string[];
+  }[];
   createdAt: Date;
 };
