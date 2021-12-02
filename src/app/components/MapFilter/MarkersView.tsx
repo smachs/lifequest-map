@@ -4,10 +4,12 @@ import MarkerSection from './MarkerSection';
 import { useFilters } from '../../contexts/FiltersContext';
 import ActionButton from '../ActionControl/ActionButton';
 import ActionCheckbox from '../ActionControl/ActionCheckbox';
-import { searchMapFilter } from './searchMapFilter';
 import { usePersistentState } from '../../utils/storage';
 import { useAccount } from '../../contexts/UserContext';
 import SearchInput from '../SearchInput/SearchInput';
+import PresetSelect from '../PresetSelect/PresetSelect';
+import { useEffect, useState } from 'react';
+import type { Preset } from '../PresetSelect/presets';
 
 type MarkersViewProps = {
   onAdd: () => void;
@@ -15,6 +17,7 @@ type MarkersViewProps = {
 function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
   const [filters, setFilters] = useFilters();
   const [search, setSearch] = usePersistentState('searchMarkerTypes', '');
+  const [preset, setPreset] = useState<Preset | null>(null);
   const { account } = useAccount();
 
   function handleToggle(filterTypes: string[], checked: boolean) {
@@ -32,6 +35,12 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
     const uniqueFilters = Array.from(new Set(newFilters));
     setFilters(uniqueFilters);
   }
+
+  useEffect(() => {
+    if (preset) {
+      setFilters(preset.types);
+    }
+  }, [preset]);
 
   return (
     <section className={styles.container}>
@@ -52,7 +61,8 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
           value={search}
           onChange={setSearch}
         />
-        <ActionButton
+        <PresetSelect value={preset} onChange={setPreset} />
+        {/* <ActionButton
           onClick={() => {
             handleToggle(
               mapFilters
@@ -75,7 +85,7 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
           }}
         >
           Hide all
-        </ActionButton>
+        </ActionButton> */}
       </div>
       <div className={styles.list}>
         {mapFiltersCategories.map((mapFilterCategory) => (
