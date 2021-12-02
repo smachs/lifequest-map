@@ -45,11 +45,11 @@ export function SettingsProvider({
   );
   const [showTraceLines, setShowTraceLines] = usePersistentState(
     'show-trace-lines',
-    false
+    true
   );
   const [maxTraceLines, setMaxTraceLines] = usePersistentState(
     'max-trace-lines',
-    10
+    250
   );
 
   return (
