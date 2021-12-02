@@ -60,7 +60,9 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
           value={preset}
           onChange={(preset) => {
             setPreset(preset);
-            setFilters(preset.types);
+            if (preset) {
+              setFilters(preset.types);
+            }
           }}
         />
       </div>

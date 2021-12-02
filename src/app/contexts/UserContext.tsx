@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { createContext, useEffect, useContext } from 'react';
+import type { Preset } from '../components/PresetSelect/presets';
 import { fetchJSON } from '../utils/api';
 import { writeError, writeWarn } from '../utils/logs';
 import { notify } from '../utils/notifications';
@@ -42,6 +43,7 @@ export type AccountDTO = {
   isModerator?: boolean;
   favoriteRouteIds?: string[];
   liveShareToken?: string;
+  presets?: Preset[];
   createdAt: Date;
 };
 
