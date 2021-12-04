@@ -66,7 +66,7 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
       <div className={classes.controls}>
         <button
           className={classNames(classes.button, classes['button--github'])}
-          data-tooltip="Open Source on GitHub"
+          title="Open Source on GitHub"
           onClick={() =>
             openExternalLink('https://github.com/lmachens/aeternum-map')
           }
@@ -75,7 +75,7 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
         </button>
         <button
           className={classes.button}
-          data-tooltip="Join Discord Community"
+          title="Join Discord Community"
           onClick={() => openExternalLink('https://discord.gg/NTZu8Px')}
         >
           <DiscordIcon />
@@ -84,7 +84,7 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
           <button
             className={classes.button}
             onClick={togglePreferedWindow}
-            data-tooltip={'Toggle Desktop/Overlay'}
+            title={'Toggle Desktop/Overlay'}
             disabled={!isNewWorldRunning}
           >
             <MonitorIcon />
@@ -99,7 +99,7 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
                 children: <Changelog />,
               })
             }
-            data-tooltip={'Changelog'}
+            title={'Changelog'}
           >
             <HelpIcon />
           </button>

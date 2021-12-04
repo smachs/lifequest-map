@@ -9,10 +9,7 @@ import { toast } from 'react-toastify';
 
 const { VITE_SOCKET_ENDPOINT } = import.meta.env;
 
-function useShareLivePosition(): [
-  boolean,
-  (value: boolean | ((value: boolean) => boolean)) => void
-] {
+function useShareLivePosition() {
   const [isSharing, setIsSharing] = usePersistentState(
     'share-live-position',
     false
@@ -21,6 +18,8 @@ function useShareLivePosition(): [
     DefaultEventsMap,
     DefaultEventsMap
   > | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [connections, setConnections] = useState<string[]>([]);
 
   const user = useUser();
   const { position } = usePosition();
@@ -36,7 +35,8 @@ function useShareLivePosition(): [
       {
         query: {
           token,
-          steamId: account?.steamId,
+          steamId: account!.steamId,
+          steamName: account!.name,
           isOverwolfApp: true,
         },
         upgrade: false,
@@ -47,13 +47,33 @@ function useShareLivePosition(): [
 
     newSocket.on('connect', () => {
       if (newSocket.connected) {
+        setIsConnected(true);
         toast.success('Sharing live status 👌');
       }
+    });
+
+    newSocket.emit('status', (players, connections) => {
+      console.log(players, connections);
+    });
+
+    newSocket.on('connected', (isOverwolfApp, steamName) => {
+      const message = isOverwolfApp
+        ? `${steamName} connected 🎮`
+        : 'Website connected 👽';
+      toast.info(message);
+    });
+
+    newSocket.on('disconnected', (isOverwolfApp, steamName) => {
+      const message = isOverwolfApp
+        ? `${steamName} disconnected 👋`
+        : 'Website disconnected 👋';
+      toast.info(message);
     });
 
     return () => {
       newSocket.close();
       setSocket(null);
+      setIsConnected(false);
       toast.info('Stop sharing live status 🛑');
     };
   }, [isSharing, account]);
@@ -70,7 +90,7 @@ function useShareLivePosition(): [
     }
   }, [socket, user?.username]);
 
-  return [isSharing, setIsSharing];
+  return { isConnected, isSharing, setIsSharing };
 }
 
 export default useShareLivePosition;

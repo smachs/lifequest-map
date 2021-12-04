@@ -4,13 +4,13 @@ import { StrictMode, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import ReactDOM from 'react-dom';
 import AppHeader from './components/AppHeader/AppHeader';
-import { PositionProvider } from './contexts/PositionContext';
+import type { Position } from './contexts/PositionContext';
 import { SettingsProvider } from './contexts/SettingsContext';
 import type { AccountDTO } from './contexts/UserContext';
 import { useAccount, UserProvider } from './contexts/UserContext';
 import { waitForOverwolf } from './utils/overwolf';
 import styles from './Sender.module.css';
-import { useIsNewWorldRunning } from './utils/games';
+import { getGameInfo, useIsNewWorldRunning } from './utils/games';
 import Ads from './components/Ads/Ads';
 import steamSrc from './components/User/steam.png';
 import { fetchJSON } from './utils/api';
@@ -21,6 +21,11 @@ import { setJSONItem, usePersistentState } from './utils/storage';
 import { patchLiveShareToken } from './components/ShareLiveStatus/api';
 import { copyTextToClipboard } from './utils/clipboard';
 import useShareLivePosition from './utils/useShareLivePosition';
+import { writeError } from './utils/logs';
+import CopyIcon from './components/icons/CopyIcon';
+import RefreshIcon from './components/icons/RefreshIcon';
+import BroadcastIcon from './components/icons/BroadcastIcon';
+import { classNames } from './utils/styles';
 
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
@@ -105,104 +110,206 @@ function Welcome(): JSX.Element {
 
 function Streaming(): JSX.Element {
   const { account, logoutAccount } = useAccount();
-  const isNewWorldRunning = useIsNewWorldRunning();
-  const [isLive, setIsLive] = useShareLivePosition();
+  const { isConnected, isSharing, setIsSharing } = useShareLivePosition();
+  const newWorldIsRunning = useIsNewWorldRunning();
 
   const [token, setToken] = usePersistentState('live-share-token', '');
-  const [lastTokens] = usePersistentState<string[]>(
-    'last-live-share-tokens',
-    []
-  );
-  const [isGroupInFocus, setIsGroupInFocus] = useState(false);
+  const [position, setPosition] = useState<Position | null>(null);
+  const [playerName, setPlayerName] = useState('');
+  const [logs, setLogs] = useState<string[]>(['App started']);
+
+  useEffect(() => {
+    if (newWorldIsRunning) {
+      setLogs((logs) => [...logs, 'New World is connected']);
+    }
+  }, [newWorldIsRunning]);
+
+  useEffect(() => {
+    if (playerName) {
+      setLogs((logs) => [...logs, `Found player name '${playerName}'`]);
+    }
+  }, [playerName]);
+
+  useEffect(() => {
+    if (isConnected) {
+      setLogs((logs) => [...logs, 'Sharing started']);
+    }
+  }, [isConnected]);
+
+  useEffect(() => {
+    if (!newWorldIsRunning) {
+      return;
+    }
+
+    overwolf.games.events.setRequiredFeatures(['game_info'], () => undefined);
+
+    let handler = setTimeout(updatePosition, 50);
+    let active = true;
+
+    let lastLocation: [number, number] | null = null;
+    let lastRotation: number | null = null;
+    let hasError = false;
+    let lastPlayerName = '';
+    async function updatePosition() {
+      try {
+        const gameInfo = await getGameInfo();
+        const { player_name, location: locationList } =
+          gameInfo?.game_info || {};
+        if (locationList) {
+          const location: [number, number] = [
+            +locationList.match(/position.y,(\d+.\d+)/)[1],
+            +locationList.match(/position.x,(\d+.\d+)/)[1],
+          ];
+          const rotation = +locationList.match(/rotation.z,(\d+)/)[1];
+          if (
+            lastLocation?.[0] !== location[0] ||
+            lastLocation?.[1] !== location[1] ||
+            lastRotation !== rotation
+          ) {
+            lastLocation = location;
+            lastRotation = rotation;
+            setPosition({
+              location,
+              rotation,
+            });
+            hasError = false;
+          }
+        }
+        if (player_name && player_name !== lastPlayerName) {
+          lastPlayerName = player_name;
+          setPlayerName(player_name);
+        }
+      } catch (error) {
+        if (!hasError) {
+          writeError(error);
+          hasError = true;
+        }
+      } finally {
+        if (active) {
+          handler = setTimeout(updatePosition, 50);
+        }
+      }
+    }
+
+    return () => {
+      active = false;
+      clearTimeout(handler);
+    };
+  }, [newWorldIsRunning]);
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    if (isLive) {
-      setIsLive(false);
-      return;
-    }
+    try {
+      if (isSharing) {
+        setIsSharing(false);
+        return;
+      }
 
-    if (!token) {
-      toast.error('Token is required 🙄');
-      return;
-    }
-    const newLastGroupTokens = [
-      token,
-      ...lastTokens.filter((last) => last !== token),
-    ].slice(0, 2);
-    setJSONItem('last-group-tokens', newLastGroupTokens);
+      if (!token) {
+        toast.error('Token is required 🙄');
+        return;
+      }
 
-    if (account && account.liveShareToken !== token) {
-      patchLiveShareToken(token);
+      if (account && account.liveShareToken !== token) {
+        patchLiveShareToken(token);
+      }
+      setIsSharing(true);
+    } catch (error) {
+      writeError(error);
     }
-    setIsLive(true);
   }
 
   return (
     <div className={styles.streaming}>
       <p className={styles.user}>
-        Welcome back, {account!.name}!{' '}
+        <p>
+          Welcome back, {account!.name}!<br />
+          {newWorldIsRunning && position && (
+            <small>
+              <span className={styles.success}>Playing</span> as {playerName} at
+              [{position.location[1]}, {position.location[0]}]
+            </small>
+          )}
+          {newWorldIsRunning && !position && (
+            <small>
+              <span className={styles.waiting}>Connected</span> to New World.
+              Waiting for position.
+            </small>
+          )}
+          {!newWorldIsRunning && (
+            <small>
+              <span className={styles.warning}>Not connected</span> to New
+              World. Please run the game first.
+            </small>
+          )}
+        </p>{' '}
         <button onClick={logoutAccount} className={styles.logout}>
           Sign out
         </button>
       </p>
       <form onSubmit={handleSubmit} className={styles.form}>
         <p className={styles.guide}>
-          Use the same token in the app and on the website to share your live
-          status. Connect with your friends by using the same token 🤗.
+          Use the this token here and on{' '}
+          <a href="https://aeternum-map.gg" target="_blank">
+            aeternum-map.gg
+          </a>{' '}
+          to share your live status. You can use any device, even your phone
+          🐱‍💻. Connect with your friends by using the same token 🤗.
         </p>
         <div className={styles.tokenContainer}>
-          <Button type="button" onClick={() => setToken(uuid())}>
-            Create random
-          </Button>
-          <Button
-            type="button"
-            disabled={!token}
-            onClick={() => {
-              copyTextToClipboard(token);
-            }}
-          >
-            Copy to clipboard
-          </Button>
           <label className={styles.label}>
             Token
             <input
               value={token}
               placeholder="Use this token to access your live status..."
               onChange={(event) => setToken(event.target.value)}
-              onFocus={() => setIsGroupInFocus(true)}
-              onBlur={() => setIsGroupInFocus(false)}
             />
-            {isGroupInFocus && lastTokens.length > 0 && (
-              <div className={styles.suggestions}>
-                {lastTokens.map((lastGroupToken) => (
-                  <button
-                    key={lastGroupToken}
-                    onMouseDown={() => setToken(lastGroupToken)}
-                    className={styles.suggestion}
-                  >
-                    {lastGroupToken}
-                  </button>
-                ))}
-              </div>
-            )}
           </label>
+          <Button
+            className={styles.action}
+            type="button"
+            onClick={() => setToken(uuid())}
+            title="Generate Random Token"
+          >
+            <RefreshIcon />
+          </Button>
+          <Button
+            className={styles.action}
+            type="button"
+            disabled={!token}
+            onClick={() => {
+              copyTextToClipboard(token);
+            }}
+            title="Copy Token"
+          >
+            <CopyIcon />
+          </Button>
         </div>
-        <Button disabled={!token} type="submit">
-          {isLive ? 'Stop sharing Live Status' : 'Share Live Status'}
-        </Button>
-        <Button
-          type="button"
-          onClick={() =>
-            overwolf.utils.openUrlInDefaultBrowser('https://aeternum-map.gg')
-          }
-        >
-          Open Website
-        </Button>
+        <div className={styles.status}>
+          <Button
+            disabled={!token}
+            type="submit"
+            className={classNames(
+              styles.submit,
+              isSharing && !isConnected && styles.connecting,
+              isSharing && isConnected && styles.connected
+            )}
+          >
+            <BroadcastIcon />
+            {isSharing && !isConnected && 'Connecting'}
+            {isSharing && isConnected && 'Sharing'}
+            {!isSharing && 'Share'}
+          </Button>
+          <aside>
+            <ul className={styles.logs}>
+              {logs.map((log, index) => (
+                <li key={index}>{log}</li>
+              ))}
+            </ul>
+          </aside>
+        </div>
       </form>
-      {isNewWorldRunning && <p>New World is running</p>}
-      {!isNewWorldRunning && <p>Could not detect New World</p>}
     </div>
   );
 }
@@ -233,9 +340,7 @@ waitForOverwolf().then(() => {
     <StrictMode>
       <SettingsProvider>
         <UserProvider>
-          <PositionProvider>
-            <Sender />
-          </PositionProvider>
+          <Sender />
         </UserProvider>
       </SettingsProvider>
     </StrictMode>,
