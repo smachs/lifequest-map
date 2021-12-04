@@ -5,7 +5,6 @@ function ShareFromOverwolf(): JSX.Element {
         You can share you live status including position and character name with
         other applications 🤘.
       </p>
-      <h4>Applications</h4>
       <p>
         <a href="https://aeternum-map.gg" target="_blank">
           https://aeternum-map.gg
