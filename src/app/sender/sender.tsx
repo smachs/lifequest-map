@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Welcome from './Welcome';
 import Streaming from './Streaming';
+import ErrorBoundary from '../components/ErrorBoundary/ErrorBoundary';
 
 function Sender(): JSX.Element {
   const { account } = useAccount();
@@ -22,7 +23,9 @@ function Sender(): JSX.Element {
       <main className={styles.main}>
         {account ? <Streaming /> : <Welcome />}
       </main>
-      <Ads active />
+      <ErrorBoundary>
+        <Ads active />
+      </ErrorBoundary>
       <ToastContainer
         theme="dark"
         pauseOnHover={false}

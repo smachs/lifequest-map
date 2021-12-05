@@ -5,23 +5,19 @@ import MarkerIcon from '../icons/MarkerIcon';
 import MarkersView from './MarkersView';
 import MenuOpenIcon from '../icons/MenuOpenIcon';
 import { usePosition } from '../../contexts/PositionContext';
-import Ads from '../Ads/Ads';
 import type { MarkerRouteItem } from '../MarkerRoutes/MarkerRoutes';
 import MarkerRoutes from '../MarkerRoutes/MarkerRoutes';
 import User from '../User/User';
 import RoutesIcon from '../icons/RoutesIcon';
 import PlayerIcon from '../icons/PlayerIcon';
 import CompassIcon from '../icons/CompassIcon';
-import useMinimap from '../Minimap/useMinimap';
 import MinimapSetup from '../Minimap/MinimapSetup';
 import usePersistentState from '../../utils/usePersistentState';
 import SettingsIcon from '../icons/SettingsIcon';
 import Settings from '../Settings/Settings';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
-import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import MapSearch from '../MapSearch/MapSearch';
 import useDebounce from '../../utils/useDebounce';
-import { isOverwolfApp } from '../../utils/overwolf';
 import BroadcastIcon from '../icons/BroadcastIcon';
 import useReadLivePosition from '../../utils/useReadLivePosition';
 import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
@@ -41,12 +37,8 @@ function MapFilter({
     'aeternum-map-client.sidebar-state',
     true
   );
-  const [view, setView] = usePersistentState<View>(
-    'sidebar-view',
-    isOverwolfApp ? 'settings' : 'markers'
-  );
+  const [view, setView] = usePersistentState<View>('sidebar-view', 'markers');
   const { following, toggleFollowing } = usePosition();
-  const [showMinimap, setShowMinimap] = useMinimap();
 
   const [isLive, setIsLive] = useReadLivePosition();
 
@@ -70,17 +62,11 @@ function MapFilter({
         {view === 'markerRoutes' && (
           <MarkerRoutes onEdit={onMarkerRouteUpsert} />
         )}
-        {isOverwolfApp && (
-          <ErrorBoundary>
-            <Ads active={isOpen} />
-          </ErrorBoundary>
-        )}
       </div>
       <nav className={styles.nav}>
         <MapSearch className={styles.nav__button} />
         <button
-          disabled={isOverwolfApp}
-          data-tooltip={isOverwolfApp ? 'Not available in app' : 'Markers'}
+          data-tooltip="Markers"
           data-tooltip-position="right"
           className={classNames(
             styles.nav__button,
@@ -92,8 +78,7 @@ function MapFilter({
           <MarkerIcon />
         </button>
         <button
-          disabled={isOverwolfApp}
-          data-tooltip={isOverwolfApp ? 'Not available in app' : 'Routes'}
+          data-tooltip="Routes"
           data-tooltip-position="right"
           className={classNames(
             styles.nav__button,
@@ -145,7 +130,7 @@ function MapFilter({
         <button
           data-tooltip="Follow position"
           data-tooltip-position="right"
-          disabled={!isOverwolfApp && !isLive}
+          disabled={!isLive}
           onClick={() => {
             toggleFollowing();
           }}
@@ -160,21 +145,12 @@ function MapFilter({
           data-tooltip="Show minimap"
           data-tooltip-position="right"
           onClick={() => {
-            if (!showMinimap) {
-              addModal({
-                title: 'Setup minimap',
-                children: <MinimapSetup />,
-              });
-            }
-            if (isOverwolfApp) {
-              setShowMinimap(!showMinimap);
-            }
+            addModal({
+              title: 'Setup minimap',
+              children: <MinimapSetup />,
+            });
           }}
-          className={classNames(
-            styles.nav__button,
-            styles.nav__border,
-            showMinimap && styles.nav__active
-          )}
+          className={classNames(styles.nav__button, styles.nav__border)}
         >
           <CompassIcon />
         </button>

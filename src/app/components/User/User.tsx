@@ -4,7 +4,6 @@ import { fetchJSON } from '../../utils/api';
 import styles from './User.module.css';
 import steamSrc from './steam.png';
 import { useEffect, useState } from 'react';
-import { isOverwolfApp } from '../../utils/overwolf';
 
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
@@ -44,11 +43,7 @@ function User(): JSX.Element {
     const newSessionId = await fetchJSON<string>('/api/auth/session');
 
     const url = `${VITE_API_ENDPOINT}/api/auth/steam?sessionId=${newSessionId}`;
-    if (!isOverwolfApp) {
-      window.open(url, '_blank');
-    } else {
-      overwolf.utils.openUrlInDefaultBrowser(url);
-    }
+    window.open(url, '_blank');
 
     setVerifyingSessionId(newSessionId);
   }
