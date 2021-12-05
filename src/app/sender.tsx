@@ -110,31 +110,13 @@ function Welcome(): JSX.Element {
 
 function Streaming(): JSX.Element {
   const { account, logoutAccount } = useAccount();
-  const { isConnected, isSharing, setIsSharing } = useShareLivePosition();
+  const { status, isConnected, isSharing, setIsSharing } =
+    useShareLivePosition();
   const newWorldIsRunning = useIsNewWorldRunning();
 
   const [token, setToken] = usePersistentState('live-share-token', '');
   const [position, setPosition] = useState<Position | null>(null);
   const [playerName, setPlayerName] = useState('');
-  const [logs, setLogs] = useState<string[]>(['App started']);
-
-  useEffect(() => {
-    if (newWorldIsRunning) {
-      setLogs((logs) => [...logs, 'New World is connected']);
-    }
-  }, [newWorldIsRunning]);
-
-  useEffect(() => {
-    if (playerName) {
-      setLogs((logs) => [...logs, `Found player name '${playerName}'`]);
-    }
-  }, [playerName]);
-
-  useEffect(() => {
-    if (isConnected) {
-      setLogs((logs) => [...logs, 'Sharing started']);
-    }
-  }, [isConnected]);
 
   useEffect(() => {
     if (!newWorldIsRunning) {
@@ -220,6 +202,7 @@ function Streaming(): JSX.Element {
     }
   }
 
+  const players = status ? Object.values(status.group) : [];
   return (
     <div className={styles.streaming}>
       <p className={styles.user}>
@@ -287,6 +270,20 @@ function Streaming(): JSX.Element {
           </Button>
         </div>
         <div className={styles.status}>
+          <aside>
+            <h5>Senders</h5>
+            <ul className={styles.list}>
+              {players.length > 0 ? (
+                players.map((player) => (
+                  <li key={player.username}>
+                    {player.username ? player.username : player.steamName}
+                  </li>
+                ))
+              ) : (
+                <li>No connections</li>
+              )}
+            </ul>
+          </aside>
           <Button
             disabled={!token}
             type="submit"
@@ -301,11 +298,17 @@ function Streaming(): JSX.Element {
             {isSharing && isConnected && 'Sharing'}
             {!isSharing && 'Share'}
           </Button>
+
           <aside>
-            <ul className={styles.logs}>
-              {logs.map((log, index) => (
-                <li key={index}>{log}</li>
-              ))}
+            <h5>Receivers</h5>
+            <ul className={styles.list}>
+              {status?.connections.length ? (
+                status.connections.map((connection) => (
+                  <li key={connection}>Browser</li>
+                ))
+              ) : (
+                <li>No connections</li>
+              )}
             </ul>
           </aside>
         </div>

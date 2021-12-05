@@ -58,7 +58,10 @@ export function initSocket(server: http.Server) {
 
     client.on('status', async (callback) => {
       const roomSockets = await io!.in(token).allSockets();
-      callback(activePlayers[token], roomSockets);
+      const connections = [...roomSockets.values()].filter(
+        (id) => !activePlayers[token][id]
+      );
+      callback(activePlayers[token], connections);
     });
 
     client.on('position', (position) => {

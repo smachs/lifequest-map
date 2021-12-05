@@ -6,6 +6,7 @@ import { useAccount, useUser } from '../contexts/UserContext';
 import { usePosition } from '../contexts/PositionContext';
 import { getJSONItem, usePersistentState } from './storage';
 import { toast } from 'react-toastify';
+import type { Group } from './useReadLivePosition';
 
 const { VITE_SOCKET_ENDPOINT } = import.meta.env;
 
@@ -19,7 +20,10 @@ function useShareLivePosition() {
     DefaultEventsMap
   > | null>(null);
   const [isConnected, setIsConnected] = useState(false);
-  const [connections, setConnections] = useState<string[]>([]);
+  const [status, setStatus] = useState<{
+    group: Group;
+    connections: string[];
+  } | null>(null);
 
   const user = useUser();
   const { position } = usePosition();
@@ -52,15 +56,19 @@ function useShareLivePosition() {
       }
     });
 
-    newSocket.emit('status', (players, connections) => {
-      console.log(players, connections);
-    });
+    const updateStatus = () => {
+      newSocket.emit('status', (group: Group, connections: string[]) => {
+        setStatus({ group, connections });
+      });
+    };
+    updateStatus();
 
     newSocket.on('connected', (isOverwolfApp, steamName) => {
       const message = isOverwolfApp
         ? `${steamName} connected 🎮`
         : 'Website connected 👽';
       toast.info(message);
+      updateStatus();
     });
 
     newSocket.on('disconnected', (isOverwolfApp, steamName) => {
@@ -68,12 +76,14 @@ function useShareLivePosition() {
         ? `${steamName} disconnected 👋`
         : 'Website disconnected 👋';
       toast.info(message);
+      updateStatus();
     });
 
     return () => {
       newSocket.close();
       setSocket(null);
       setIsConnected(false);
+      setStatus(null);
       toast.info('Stop sharing live status 🛑');
     };
   }, [isSharing, account]);
@@ -90,7 +100,7 @@ function useShareLivePosition() {
     }
   }, [socket, user?.username]);
 
-  return { isConnected, isSharing, setIsSharing };
+  return { status, isConnected, isSharing, setIsSharing };
 }
 
 export default useShareLivePosition;
