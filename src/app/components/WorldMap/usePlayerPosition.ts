@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { usePosition } from '../../contexts/PositionContext';
 import { useSettings } from '../../contexts/SettingsContext';
 import { isOverwolfApp } from '../../utils/overwolf';
-import useWindowIsVisible from '../../utils/useWindowIsVisible';
 import type CanvasMarker from './CanvasMarker';
 import { updateRotation } from './rotation';
 import { LeafIcon } from './useLayerGroups';
@@ -36,7 +35,6 @@ function usePlayerPosition({
 }): void {
   const { position, following } = usePosition();
   const [marker, setMarker] = useState<leaflet.Marker | null>(null);
-  const windowIsVisible = useWindowIsVisible();
 
   const traceDotsGroup = useMemo(() => new leaflet.LayerGroup(), []);
   const traceDots = useMemo<leaflet.Circle[]>(() => [], []);
@@ -80,7 +78,7 @@ function usePlayerPosition({
   }, [leafletMap, rotate]);
 
   useEffect(() => {
-    if (!marker || !leafletMap || !windowIsVisible) {
+    if (!marker || !leafletMap) {
       return;
     }
     marker.setLatLng(position.location);
@@ -157,7 +155,7 @@ function usePlayerPosition({
         cancelAnimationFrame(animationFrameId);
       }
     };
-  }, [marker, leafletMap, position, isFollowing, rotate, windowIsVisible]);
+  }, [marker, leafletMap, position, isFollowing, rotate]);
 
   useEffect(() => {
     if (!leafletMap || isOverwolfApp) {

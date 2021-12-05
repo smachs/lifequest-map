@@ -1,7 +1,7 @@
 import '../globals.css';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
-import AppHeader from '../components/AppHeader/AppHeader';
+import AppHeader from './AppHeader';
 import { SettingsProvider } from '../contexts/SettingsContext';
 import { useAccount, UserProvider } from '../contexts/UserContext';
 import { PositionProvider } from '../contexts/PositionContext';
@@ -14,6 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Welcome from './Welcome';
 import Streaming from './Streaming';
 import ErrorBoundary from '../components/ErrorBoundary/ErrorBoundary';
+import { centerWindow } from '../utils/windows';
 
 function Sender(): JSX.Element {
   const { account } = useAccount();
@@ -39,6 +40,7 @@ function Sender(): JSX.Element {
 }
 
 waitForOverwolf().then(() => {
+  centerWindow();
   ReactDOM.render(
     <StrictMode>
       <SettingsProvider>

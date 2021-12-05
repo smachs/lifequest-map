@@ -1,0 +1,66 @@
+.header {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  background-color: var(--color-shade-three);
+  user-select: none;
+  padding-left: 0.5em;
+}
+
+.title {
+  margin: 0;
+  padding: 0.2em 0.5em;
+  font-size: 1em;
+  color: var(--color-text);
+  font-family: var(--font-family-primary);
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+  -webkit-app-region: drag;
+}
+
+.logo {
+  height: 1.7em;
+  width: 1.7em;
+}
+
+.controls {
+  display: flex;
+}
+
+.button {
+  display: inline-flex;
+  background: none;
+  font-size: 1em;
+  height: 2em;
+  width: 2em;
+  padding: 0;
+  color: var(--color-shade-four);
+}
+
+.button:disabled {
+  color: var(--color-disabled);
+}
+
+.button > * {
+  width: 100%;
+  height: 100%;
+}
+
+.button:not(:disabled):hover {
+  background-color: var(--color-shade-two);
+}
+
+.button--danger:hover {
+  background-color: var(--color-alert) !important;
+}
+
+.button--github {
+  padding: 0.45em;
+}
+
+.button--padded {
+  padding: 0.6em;
+}
