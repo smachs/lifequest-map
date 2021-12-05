@@ -14,7 +14,7 @@ import { v4 as uuid } from 'uuid';
 import type { FormEvent } from 'react';
 import { usePosition } from '../contexts/PositionContext';
 import { useEffect, useState } from 'react';
-import { useAccount } from '../contexts/UserContext';
+import { useAccount, useSetUser, useUser } from '../contexts/UserContext';
 import styles from './Streaming.module.css';
 import MenuIcon from '../components/icons/MenuIcon';
 import Settings from './Settings';
@@ -26,7 +26,8 @@ function Streaming(): JSX.Element {
   const newWorldIsRunning = useIsNewWorldRunning();
   const [token, setToken] = usePersistentState('live-share-token', '');
   const { position, setPosition } = usePosition();
-  const [playerName, setPlayerName] = useState('');
+  const user = useUser();
+  const setUser = useSetUser();
   const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
@@ -70,7 +71,7 @@ function Streaming(): JSX.Element {
         }
         if (player_name && player_name !== lastPlayerName) {
           lastPlayerName = player_name;
-          setPlayerName(player_name);
+          setUser(player_name);
         }
       } catch (error) {
         if (!hasError) {
@@ -119,13 +120,13 @@ function Streaming(): JSX.Element {
       <p className={styles.user}>
         <p>
           Welcome back, {account!.name}!<br />
-          {newWorldIsRunning && position && (
+          {newWorldIsRunning && user && position && (
             <small>
-              <span className={styles.success}>Playing</span> as {playerName} at
-              [{position.location[1]}, {position.location[0]}]
+              <span className={styles.success}>Playing</span> as {user.username}{' '}
+              at [{position.location[1]}, {position.location[0]}]
             </small>
           )}
-          {newWorldIsRunning && !position && (
+          {newWorldIsRunning && !user && (
             <small>
               <span className={styles.waiting}>Connected</span> to New World.
               Waiting for position.
