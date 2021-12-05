@@ -103,7 +103,7 @@ authRouter.get(
           $push: {
             sessionIds: {
               $each: [req.session.sessionId!],
-              $slice: -5,
+              $slice: -10,
             },
           },
           $setOnInsert: {
