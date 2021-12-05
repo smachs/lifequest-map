@@ -114,6 +114,10 @@ a {
   font-family: var(--font-family-secondary);
 }
 
+input:disabled {
+  color: var(--color-trivial);
+}
+
 svg {
   fill: currentColor;
 }

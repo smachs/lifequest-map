@@ -21,14 +21,23 @@ import Settings from './Settings';
 
 function Streaming(): JSX.Element {
   const { account } = useAccount();
+  const [token, setToken] = usePersistentState(
+    'live-share-token',
+    account!.liveShareToken || ''
+  );
   const { status, isConnected, isSharing, setIsSharing } =
-    useShareLivePosition();
+    useShareLivePosition(token);
   const newWorldIsRunning = useIsNewWorldRunning();
-  const [token, setToken] = usePersistentState('live-share-token', '');
   const { position, setPosition } = usePosition();
   const user = useUser();
   const setUser = useSetUser();
   const [showSettings, setShowSettings] = useState(false);
+
+  useEffect(() => {
+    if (account?.liveShareToken) {
+      setToken(account.liveShareToken);
+    }
+  }, [account?.liveShareToken]);
 
   useEffect(() => {
     if (!newWorldIsRunning) {
@@ -156,6 +165,7 @@ function Streaming(): JSX.Element {
           <label className={styles.label}>
             Token
             <input
+              disabled={isSharing}
               value={token}
               placeholder="Use this token to access your live status..."
               onChange={(event) => setToken(event.target.value)}

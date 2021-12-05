@@ -4,13 +4,13 @@ import type { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
 import { useAccount, useUser } from '../contexts/UserContext';
 import { usePosition } from '../contexts/PositionContext';
-import { getJSONItem, usePersistentState } from '../utils/storage';
+import { usePersistentState } from '../utils/storage';
 import { toast } from 'react-toastify';
 import type { Group } from '../utils/useReadLivePosition';
 
 const { VITE_SOCKET_ENDPOINT } = import.meta.env;
 
-function useShareLivePosition() {
+function useShareLivePosition(token: string) {
   const [isSharing, setIsSharing] = usePersistentState(
     'share-live-position',
     false
@@ -30,7 +30,6 @@ function useShareLivePosition() {
   const { account } = useAccount();
 
   useEffect(() => {
-    const token = getJSONItem('live-share-token', null);
     if (!token || !isSharing) {
       return;
     }
