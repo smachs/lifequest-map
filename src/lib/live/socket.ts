@@ -65,6 +65,7 @@ export function initSocket(server: http.Server) {
     });
 
     client.on('position', (position) => {
+      console.log({ position });
       if (!isOverwolfApp || !activePlayers[token][client.id]) {
         return;
       }

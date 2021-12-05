@@ -12,7 +12,7 @@ import { getGameInfo, useIsNewWorldRunning } from '../utils/games';
 import { toast } from 'react-toastify';
 import { v4 as uuid } from 'uuid';
 import type { FormEvent } from 'react';
-import type { Position } from '../contexts/PositionContext';
+import { usePosition } from '../contexts/PositionContext';
 import { useEffect, useState } from 'react';
 import { useAccount } from '../contexts/UserContext';
 import styles from './Streaming.module.css';
@@ -25,7 +25,7 @@ function Streaming(): JSX.Element {
     useShareLivePosition();
   const newWorldIsRunning = useIsNewWorldRunning();
   const [token, setToken] = usePersistentState('live-share-token', '');
-  const [position, setPosition] = useState<Position | null>(null);
+  const { position, setPosition } = usePosition();
   const [playerName, setPlayerName] = useState('');
   const [showSettings, setShowSettings] = useState(false);
 

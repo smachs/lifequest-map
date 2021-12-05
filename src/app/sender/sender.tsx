@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import AppHeader from '../components/AppHeader/AppHeader';
 import { SettingsProvider } from '../contexts/SettingsContext';
 import { useAccount, UserProvider } from '../contexts/UserContext';
+import { PositionProvider } from '../contexts/PositionContext';
 import { waitForOverwolf } from '../utils/overwolf';
 import styles from './Sender.module.css';
 import Ads from '../components/Ads/Ads';
@@ -42,7 +43,9 @@ waitForOverwolf().then(() => {
     <StrictMode>
       <SettingsProvider>
         <UserProvider>
-          <Sender />
+          <PositionProvider>
+            <Sender />
+          </PositionProvider>
         </UserProvider>
       </SettingsProvider>
     </StrictMode>,
