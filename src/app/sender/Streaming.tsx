@@ -2,7 +2,7 @@ import Button from '../components/Button/Button';
 import { usePersistentState } from '../utils/storage';
 import { patchLiveShareToken } from '../components/ShareLiveStatus/api';
 import { copyTextToClipboard } from '../utils/clipboard';
-import useShareLivePosition from '../utils/useShareLivePosition';
+import useShareLivePosition from './useShareLivePosition';
 import { writeError } from '../utils/logs';
 import CopyIcon from '../components/icons/CopyIcon';
 import RefreshIcon from '../components/icons/RefreshIcon';

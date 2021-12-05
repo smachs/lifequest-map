@@ -23,7 +23,6 @@ import MapSearch from '../MapSearch/MapSearch';
 import useDebounce from '../../utils/useDebounce';
 import { isOverwolfApp } from '../../utils/overwolf';
 import BroadcastIcon from '../icons/BroadcastIcon';
-import useShareLivePosition from '../../utils/useShareLivePosition';
 import useReadLivePosition from '../../utils/useReadLivePosition';
 import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
 
@@ -49,9 +48,7 @@ function MapFilter({
   const { following, toggleFollowing } = usePosition();
   const [showMinimap, setShowMinimap] = useMinimap();
 
-  const [isLive, setIsLive] = isOverwolfApp
-    ? useShareLivePosition()
-    : useReadLivePosition();
+  const [isLive, setIsLive] = useReadLivePosition();
 
   useDebounce(
     isOpen,

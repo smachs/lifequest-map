@@ -4,9 +4,9 @@ import type { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
 import { useAccount, useUser } from '../contexts/UserContext';
 import { usePosition } from '../contexts/PositionContext';
-import { getJSONItem, usePersistentState } from './storage';
+import { getJSONItem, usePersistentState } from '../utils/storage';
 import { toast } from 'react-toastify';
-import type { Group } from './useReadLivePosition';
+import type { Group } from '../utils/useReadLivePosition';
 
 const { VITE_SOCKET_ENDPOINT } = import.meta.env;
 
