@@ -154,7 +154,7 @@ function Streaming(): JSX.Element {
       </p>
       <form onSubmit={handleSubmit} className={styles.form}>
         <p className={styles.guide}>
-          Use the this token here and on{' '}
+          Use this token here and on{' '}
           <a href="https://aeternum-map.gg" target="_blank">
             aeternum-map.gg
           </a>{' '}
