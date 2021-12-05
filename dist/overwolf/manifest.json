@@ -24,20 +24,24 @@
         "allow_local_file_access": true
       },
       "desktop": {
-        "file": "index.html",
-        "debug_url": "http://localhost:3000",
+        "file": "sender.html",
+        "debug_url": "http://localhost:3000/sender.html",
         "desktop_only": true,
         "native_window": true,
         "resizable": false,
         "transparent": true,
         "override_on_update": false,
         "size": {
-          "width": 1280,
-          "height": 720
+          "width": 400,
+          "height": 620
         },
         "min_size": {
-          "width": 860,
-          "height": 600
+          "width": 400,
+          "height": 620
+        },
+        "max_size": {
+          "width": 400,
+          "height": 620
         },
         "allow_local_file_access": true,
         "popup_blocker": true,
@@ -46,8 +50,8 @@
         "disable_hardware_acceleration": true
       },
       "overlay": {
-        "file": "index.html",
-        "debug_url": "http://localhost:3000",
+        "file": "sender.html",
+        "debug_url": "http://localhost:3000/sender.html",
         "desktop_only": false,
         "in_game_only": true,
         "focus_game_takeover": "ReleaseOnHidden",
@@ -56,12 +60,16 @@
         "transparent": true,
         "override_on_update": false,
         "size": {
-          "width": 1280,
-          "height": 720
+          "width": 400,
+          "height": 620
         },
         "min_size": {
-          "width": 860,
-          "height": 600
+          "width": 400,
+          "height": 620
+        },
+        "max_size": {
+          "width": 400,
+          "height": 620
         },
         "allow_local_file_access": true,
         "popup_blocker": true,

@@ -3,6 +3,7 @@ import { Server } from 'socket.io';
 
 type Player = {
   steamId?: string;
+  steamName?: string;
   username: string | null;
   position: { location: [number, number]; rotation: number } | null;
 };
@@ -34,6 +35,10 @@ export function initSocket(server: http.Server) {
       typeof query.steamId === 'string' && query.steamId !== 'undefined'
         ? query.steamId
         : undefined;
+    const steamName =
+      typeof query.steamName === 'string' && query.steamName !== 'undefined'
+        ? query.steamName
+        : undefined;
     client.join(token);
 
     if (!activePlayers[token]) {
@@ -43,16 +48,24 @@ export function initSocket(server: http.Server) {
     if (isOverwolfApp && !activePlayers[token][client.id]) {
       activePlayers[token][client.id] = {
         steamId,
+        steamName,
         username: null,
         position: null,
       };
     }
 
-    client.on('status', (callback) => {
-      callback(activePlayers[token]);
+    client.to(token).emit('connected', isOverwolfApp, steamName);
+
+    client.on('status', async (callback) => {
+      const roomSockets = await io!.in(token).allSockets();
+      const connections = [...roomSockets.values()].filter(
+        (id) => !activePlayers[token][id]
+      );
+      callback(activePlayers[token], connections);
     });
 
     client.on('position', (position) => {
+      console.log({ position });
       if (!isOverwolfApp || !activePlayers[token][client.id]) {
         return;
       }
@@ -69,6 +82,9 @@ export function initSocket(server: http.Server) {
     });
 
     client.on('disconnect', () => {
+      if (!isOverwolfApp) {
+        client.to(token).emit('disconnected', isOverwolfApp, steamName);
+      }
       if (activePlayers[token]?.[client.id]) {
         delete activePlayers[token][client.id];
       }

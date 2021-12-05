@@ -27,7 +27,7 @@ export default defineConfig({
       input: {
         minimap: resolve(__dirname, 'src/app/minimap.html'),
         background: resolve(__dirname, 'src/app/background.html'),
-        index: resolve(__dirname, 'src/app/index.html'),
+        sender: resolve(__dirname, 'src/app/sender.html'),
       },
     },
   },

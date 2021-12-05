@@ -2,11 +2,7 @@ import { useAccount } from '../../contexts/UserContext';
 import { setJSONItem, usePersistentState } from '../../utils/storage';
 import Button from '../Button/Button';
 import styles from './ShareLiveStatus.module.css';
-import { v4 as uuid } from 'uuid';
-import { copyTextToClipboard } from '../../utils/clipboard';
 import { toast } from 'react-toastify';
-import ShareFromOverwolf from './ShareFromOverwolf';
-import { isOverwolfApp } from '../../utils/overwolf';
 import ShareFromWebsite from './ShareFromWebsite';
 import type { FormEvent } from 'react';
 import { useEffect } from 'react';
@@ -57,7 +53,7 @@ function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
   }
   return (
     <form onSubmit={handleSubmit} className={styles.container}>
-      {isOverwolfApp ? <ShareFromOverwolf /> : <ShareFromWebsite />}
+      <ShareFromWebsite />
       <p className={styles.guide}>
         Use the same token in the app and on the website to share your live
         status. Connect with your friends by using the same token 🤗.
@@ -86,22 +82,6 @@ function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
             </div>
           )}
         </label>
-        {isOverwolfApp && (
-          <>
-            <Button type="button" onClick={() => setToken(uuid())}>
-              Create random
-            </Button>
-            <Button
-              type="button"
-              disabled={!token}
-              onClick={() => {
-                copyTextToClipboard(token);
-              }}
-            >
-              Copy to clipboard
-            </Button>
-          </>
-        )}
       </div>
       <small>
         Pro tip: Login with Steam in the app and on the website to automatically

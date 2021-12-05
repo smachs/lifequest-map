@@ -4,15 +4,13 @@ import type { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
 import { useAccount, useUser } from '../contexts/UserContext';
 import { usePosition } from '../contexts/PositionContext';
-import { getJSONItem, usePersistentState } from './storage';
+import { getJSONItem, usePersistentState } from '../utils/storage';
 import { toast } from 'react-toastify';
+import type { Group } from '../utils/useReadLivePosition';
 
 const { VITE_SOCKET_ENDPOINT } = import.meta.env;
 
-function useShareLivePosition(): [
-  boolean,
-  (value: boolean | ((value: boolean) => boolean)) => void
-] {
+function useShareLivePosition() {
   const [isSharing, setIsSharing] = usePersistentState(
     'share-live-position',
     false
@@ -21,6 +19,11 @@ function useShareLivePosition(): [
     DefaultEventsMap,
     DefaultEventsMap
   > | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [status, setStatus] = useState<{
+    group: Group;
+    connections: string[];
+  } | null>(null);
 
   const user = useUser();
   const { position } = usePosition();
@@ -36,7 +39,8 @@ function useShareLivePosition(): [
       {
         query: {
           token,
-          steamId: account?.steamId,
+          steamId: account!.steamId,
+          steamName: account!.name,
           isOverwolfApp: true,
         },
         upgrade: false,
@@ -47,13 +51,39 @@ function useShareLivePosition(): [
 
     newSocket.on('connect', () => {
       if (newSocket.connected) {
+        setIsConnected(true);
         toast.success('Sharing live status 👌');
       }
+    });
+
+    const updateStatus = () => {
+      newSocket.emit('status', (group: Group, connections: string[]) => {
+        setStatus({ group, connections });
+      });
+    };
+    updateStatus();
+
+    newSocket.on('connected', (isOverwolfApp, steamName) => {
+      const message = isOverwolfApp
+        ? `${steamName} connected 🎮`
+        : 'Website connected 👽';
+      toast.info(message);
+      updateStatus();
+    });
+
+    newSocket.on('disconnected', (isOverwolfApp, steamName) => {
+      const message = isOverwolfApp
+        ? `${steamName} disconnected 👋`
+        : 'Website disconnected 👋';
+      toast.info(message);
+      updateStatus();
     });
 
     return () => {
       newSocket.close();
       setSocket(null);
+      setIsConnected(false);
+      setStatus(null);
       toast.info('Stop sharing live status 🛑');
     };
   }, [isSharing, account]);
@@ -70,7 +100,7 @@ function useShareLivePosition(): [
     }
   }, [socket, user?.username]);
 
-  return [isSharing, setIsSharing];
+  return { status, isConnected, isSharing, setIsSharing };
 }
 
 export default useShareLivePosition;

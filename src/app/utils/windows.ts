@@ -46,16 +46,6 @@ export async function minimizeCurrentWindow(): Promise<void> {
   overwolf.windows.minimize(currentWindow.id);
 }
 
-export async function maximizeCurrentWindow(): Promise<void> {
-  const currentWindow = await getCurrentWindow();
-  overwolf.windows.maximize(currentWindow.id);
-}
-
-export async function restoreCurrentWindow(): Promise<void> {
-  const currentWindow = await getCurrentWindow();
-  overwolf.windows.restore(currentWindow.id);
-}
-
 export async function closeWindow(windowName: string): Promise<void> {
   const backgroundWindow = await obtainDeclaredWindow(windowName);
   overwolf.windows.close(backgroundWindow.id);

@@ -1,0 +1,13 @@
+.container {
+  height: 100vh;
+  max-height: 100vh;
+  background: var(--color-shade-one);
+  display: grid;
+  grid-template-rows: auto 1fr 300px;
+  position: relative;
+}
+
+.main {
+  padding: 0.5em;
+  overflow: auto;
+}

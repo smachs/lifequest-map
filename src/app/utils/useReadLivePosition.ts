@@ -8,7 +8,8 @@ import useGroupPositions from '../components/WorldMap/useGroupPositions';
 
 type Position = { location: [number, number]; rotation: number };
 type Player = {
-  steamId?: string;
+  steamId: string;
+  steamName: string;
   username: string | null;
   position: Position | null;
 };

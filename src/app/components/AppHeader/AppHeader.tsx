@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useModal } from '../../contexts/ModalContext';
 import { isAppUpdated } from '../../utils/extensions';
 import { useIsNewWorldRunning } from '../../utils/games';
-import { SHOW_HIDE_APP, useHotkeyBinding } from '../../utils/hotkeys';
 import { isOverwolfApp } from '../../utils/overwolf';
 import { getJSONItem } from '../../utils/storage';
 import { classNames } from '../../utils/styles';
@@ -10,9 +9,7 @@ import {
   closeMainWindow,
   dragMoveWindow,
   getCurrentWindow,
-  maximizeCurrentWindow,
   minimizeCurrentWindow,
-  restoreCurrentWindow,
   togglePreferedWindow,
   WINDOWS,
 } from '../../utils/windows';
@@ -21,10 +18,8 @@ import CloseIcon from '../icons/CloseIcon';
 import DiscordIcon from '../icons/DiscordIcon';
 import GitHubIcon from '../icons/GitHubIcon';
 import HelpIcon from '../icons/HelpIcon';
-import MaximizeIcon from '../icons/MaximizeIcon';
 import MinimizeIcon from '../icons/MinimizeIcon';
 import MonitorIcon from '../icons/MonitorIcon';
-import RestoreIcon from '../icons/RestoreIcon';
 import classes from './AppHeader.module.css';
 
 type AppHeaderProps = {
@@ -32,9 +27,7 @@ type AppHeaderProps = {
 };
 
 function AppHeader({ className }: AppHeaderProps): JSX.Element {
-  const [isMaximized, setIsMaximized] = useState(false);
   const isNewWorldRunning = useIsNewWorldRunning();
-  const hotkeyBinding = useHotkeyBinding(SHOW_HIDE_APP);
   const { addModal } = useModal();
 
   useEffect(() => {
@@ -47,21 +40,6 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
         });
       }
     });
-  }, []);
-
-  useEffect(() => {
-    getCurrentWindow().then((result) => {
-      setIsMaximized(result.stateEx === 'maximized');
-    });
-    function handleStateChanged(
-      event: overwolf.windows.WindowStateChangedEvent
-    ) {
-      setIsMaximized(event.window_state_ex === 'maximized');
-    }
-    overwolf.windows.onStateChanged.addListener(handleStateChanged);
-    return () => {
-      overwolf.windows.onStateChanged.removeListener(handleStateChanged);
-    };
   }, []);
 
   async function openExternalLink(url: string) {
@@ -81,21 +59,14 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
     <header
       className={classNames(classes.header, className)}
       onMouseDown={dragMoveWindow}
-      onDoubleClick={isMaximized ? restoreCurrentWindow : maximizeCurrentWindow}
     >
       <img src="/icon.png" alt="" className={classes.logo} />
       <h1 className={classes.title}>Aeternum Map</h1>
-      {isOverwolfApp && (
-        <p className={classes.gameInfo}>
-          {isNewWorldRunning
-            ? `${hotkeyBinding} to show/hide app`
-            : 'New World is not running'}
-        </p>
-      )}
+
       <div className={classes.controls}>
         <button
           className={classNames(classes.button, classes['button--github'])}
-          data-tooltip="Open Source on GitHub"
+          title="Open Source on GitHub"
           onClick={() =>
             openExternalLink('https://github.com/lmachens/aeternum-map')
           }
@@ -104,7 +75,7 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
         </button>
         <button
           className={classes.button}
-          data-tooltip="Join Discord Community"
+          title="Join Discord Community"
           onClick={() => openExternalLink('https://discord.gg/NTZu8Px')}
         >
           <DiscordIcon />
@@ -113,24 +84,26 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
           <button
             className={classes.button}
             onClick={togglePreferedWindow}
-            data-tooltip={'Toggle Desktop/Overlay'}
+            title={'Toggle Desktop/Overlay'}
             disabled={!isNewWorldRunning}
           >
             <MonitorIcon />
           </button>
         )}
-        <button
-          className={classes.button}
-          onClick={() =>
-            addModal({
-              title: 'Changelog',
-              children: <Changelog />,
-            })
-          }
-          data-tooltip={'Changelog'}
-        >
-          <HelpIcon />
-        </button>
+        {!isOverwolfApp && (
+          <button
+            className={classes.button}
+            onClick={() =>
+              addModal({
+                title: 'Changelog',
+                children: <Changelog />,
+              })
+            }
+            title={'Changelog'}
+          >
+            <HelpIcon />
+          </button>
+        )}
         {isOverwolfApp && (
           <>
             <button
@@ -139,33 +112,6 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
             >
               <MinimizeIcon />
             </button>
-            {!isMaximized ? (
-              <button
-                className={classNames(
-                  classes.button,
-                  classes['button--padded']
-                )}
-                onClick={() => {
-                  maximizeCurrentWindow();
-                  setIsMaximized(true);
-                }}
-              >
-                <MaximizeIcon />
-              </button>
-            ) : (
-              <button
-                className={classNames(
-                  classes.button,
-                  classes['button--padded']
-                )}
-                onClick={() => {
-                  restoreCurrentWindow();
-                  setIsMaximized(false);
-                }}
-              >
-                <RestoreIcon />
-              </button>
-            )}
             <button
               className={classNames(
                 classes.button,
