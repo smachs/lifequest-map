@@ -1,4 +1,5 @@
 .streaming {
+  position: relative;
   display: grid;
   gap: 1em;
   height: 100%;
@@ -20,10 +21,6 @@
 
 .warning {
   color: lightcoral;
-}
-
-.logout {
-  text-decoration: underline;
 }
 
 .form {

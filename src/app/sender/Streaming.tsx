@@ -16,16 +16,18 @@ import type { Position } from '../contexts/PositionContext';
 import { useEffect, useState } from 'react';
 import { useAccount } from '../contexts/UserContext';
 import styles from './Streaming.module.css';
+import MenuIcon from '../components/icons/MenuIcon';
+import Settings from './Settings';
 
 function Streaming(): JSX.Element {
-  const { account, logoutAccount } = useAccount();
+  const { account } = useAccount();
   const { status, isConnected, isSharing, setIsSharing } =
     useShareLivePosition();
   const newWorldIsRunning = useIsNewWorldRunning();
-
   const [token, setToken] = usePersistentState('live-share-token', '');
   const [position, setPosition] = useState<Position | null>(null);
   const [playerName, setPlayerName] = useState('');
+  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
     if (!newWorldIsRunning) {
@@ -136,8 +138,8 @@ function Streaming(): JSX.Element {
             </small>
           )}
         </p>{' '}
-        <button onClick={logoutAccount} className={styles.logout}>
-          Sign out
+        <button onClick={() => setShowSettings(true)}>
+          <MenuIcon />
         </button>
       </p>
       <form onSubmit={handleSubmit} className={styles.form}>
@@ -222,6 +224,7 @@ function Streaming(): JSX.Element {
           </aside>
         </div>
       </form>
+      {showSettings && <Settings onClose={() => setShowSettings(false)} />}
     </div>
   );
 }
