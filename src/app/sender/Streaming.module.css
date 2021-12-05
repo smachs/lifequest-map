@@ -1,28 +1,29 @@
-.container {
-  height: 100vh;
-  max-height: 100vh;
-  background: var(--color-shade-one);
-  display: grid;
-  grid-template-rows: auto 1fr 300px;
-  position: relative;
-}
-
-.main {
-  padding: 0.5em;
-  overflow: auto;
-}
-
-.welcome {
-  display: grid;
-  align-content: center;
-  justify-content: center;
-}
-
 .streaming {
   display: grid;
   gap: 1em;
   height: 100%;
   grid-template-rows: auto 1fr;
+}
+
+.user {
+  display: flex;
+  justify-content: space-between;
+}
+
+.success {
+  color: #07bc0c;
+}
+
+.waiting {
+  color: lightblue;
+}
+
+.warning {
+  color: lightcoral;
+}
+
+.logout {
+  text-decoration: underline;
 }
 
 .form {
@@ -57,47 +58,6 @@
 .label input {
   border: 1px solid var(--color-shade-three);
   padding: 0.4em;
-}
-
-.suggestions {
-  position: absolute;
-  z-index: 99000;
-  background: var(--color-shade-three);
-  width: 100%;
-  max-height: 8rem;
-  overflow: auto;
-  border: 1px solid var(--color-shade-two);
-  top: 100%;
-}
-
-.suggestion {
-  width: 100%;
-  padding: 0.4em;
-}
-
-.suggestion:hover {
-  background: var(--color-shade-two);
-}
-
-.user {
-  display: flex;
-  justify-content: space-between;
-}
-
-.logout {
-  text-decoration: underline;
-}
-
-.success {
-  color: #07bc0c;
-}
-
-.waiting {
-  color: lightblue;
-}
-
-.warning {
-  color: lightcoral;
 }
 
 .submit {
