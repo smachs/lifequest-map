@@ -57,7 +57,7 @@ function Welcome(): JSX.Element {
   return (
     <div className={styles.welcome}>
       <p>
-        Connect to{' '}
+        Sign in and connect to{' '}
         <a href="https://aeternum-map.gg" target="_blank">
           https://aeternum-map.gg
         </a>
