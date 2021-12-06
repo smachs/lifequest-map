@@ -154,12 +154,13 @@ function Streaming(): JSX.Element {
       </p>
       <form onSubmit={handleSubmit} className={styles.form}>
         <p className={styles.guide}>
-          Use this token here and on{' '}
+          Use the token shown below on{' '}
           <a href="https://aeternum-map.gg" target="_blank">
             aeternum-map.gg
           </a>{' '}
-          to share your live status. You can use any device, even your phone
-          🐱‍💻. Connect with your friends by using the same token 🤗.
+          to see your live location on the map. You can use any device that has
+          a browser, even your phone 🐱‍💻. Share this token with your friends
+          to see each others' location 🤗.
         </p>
         <div className={styles.tokenContainer}>
           <label className={styles.label}>
