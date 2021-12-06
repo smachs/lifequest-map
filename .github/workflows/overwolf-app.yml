@@ -3,7 +3,7 @@ name: Build Overwolf App CI
 on:
   push:
     tags:
-      - v*
+      - v*-overwolf
 
 jobs:
   build:
