@@ -159,8 +159,8 @@ function Streaming(): JSX.Element {
             aeternum-map.gg
           </a>{' '}
           to see your live location on the map. You can use any device that has
-          a browser, even your phone 🐱‍💻. Share this token with your friends
-          to see each others' location 🤗.
+          a browser. Share this token with your friends to see each others'
+          location 🤗.
         </p>
         <div className={styles.tokenContainer}>
           <label className={styles.label}>
