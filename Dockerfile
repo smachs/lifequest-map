@@ -13,7 +13,8 @@ COPY . .
 COPY --from=deps /app/node_modules ./node_modules
 ARG VITE_API_ENDPOINT=
 ARG VITE_SOCKET_ENDPOINT=
-RUN npm run build
+RUN npm run server:build
+RUN npm run client:build
 RUN npm set-script prepare ""
 RUN npm ci --production --prefer-offline
 
