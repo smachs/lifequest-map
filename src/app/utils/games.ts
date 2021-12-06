@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { isOverwolfApp } from './overwolf';
 
 export const NEW_WORLD_CLASS_ID = 21816;
 
@@ -18,6 +19,9 @@ export function useRunningGameInfo():
   >(undefined);
 
   useEffect(() => {
+    if (!isOverwolfApp) {
+      return;
+    }
     function handleGameInfoUpdated(
       event: overwolf.games.GameInfoUpdatedEvent
     ): void {
