@@ -1,7 +1,6 @@
 {
   "name": "aeternum-map",
   "private": true,
-  "version": "0.0.0",
   "scripts": {
     "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
     "overwolf:dev": "vite --config overwolf.config.js",
