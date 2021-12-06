@@ -120,7 +120,7 @@ async function runServer() {
 
     // Serve webversion (only on production)
     if (NODE_ENV === 'production') {
-      app.use(express.static(path.join(__dirname, '../overwolf')));
+      app.use(express.static(path.join(__dirname, 'app')));
     }
 
     await connectToMongoDb(MONGODB_URI!);

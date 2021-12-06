@@ -22,11 +22,12 @@ export default defineConfig({
   publicDir: resolve(__dirname, 'src/app/public'),
   build: {
     target: 'esnext',
-    outDir: resolve(__dirname, 'dist/server/app'),
+    outDir: resolve(__dirname, 'dist/overwolf'),
     rollupOptions: {
       input: {
         minimap: resolve(__dirname, 'src/app/minimap.html'),
-        index: resolve(__dirname, 'src/app/index.html'),
+        background: resolve(__dirname, 'src/app/background.html'),
+        sender: resolve(__dirname, 'src/app/sender.html'),
       },
     },
   },
