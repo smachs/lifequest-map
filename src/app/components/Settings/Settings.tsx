@@ -72,6 +72,8 @@ function Settings(): JSX.Element {
           onChange={(event) => setAlwaysShowDirection(event.target.checked)}
         />
       </label>
+      <h3>Hotkeys</h3>
+      <em>Hotkeys are configured in the Overwolf app</em>
     </div>
   );
 }

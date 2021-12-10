@@ -2,6 +2,7 @@ import leaflet from 'leaflet';
 import { useEffect, useMemo, useState } from 'react';
 import type { Position } from '../../contexts/PositionContext';
 import { useSettings } from '../../contexts/SettingsContext';
+import useEventListener from '../../utils/useEventListener';
 import { latestLeafletMap } from './useWorldMap';
 
 function useDirectionLine(position: Position) {
@@ -17,19 +18,13 @@ function useDirectionLine(position: Position) {
     []
   );
 
-  useEffect(() => {
-    function handleSessionExpired() {
+  useEventListener(
+    'hotkey-show_hide_direction',
+    () => {
       setShowDirection((showDirection) => !showDirection);
-    }
-    window.addEventListener('hotkey-show_hide_direction', handleSessionExpired);
-
-    return () => {
-      window.removeEventListener(
-        'hotkey-show_hide_direction',
-        handleSessionExpired
-      );
-    };
-  }, [showDirection]);
+    },
+    [showDirection]
+  );
 
   useEffect(() => {
     if (showDirection || alwaysShowDirection) {

@@ -138,10 +138,20 @@
         "action-type": "custom",
         "default": "F8"
       },
-      "show_hide_direction": {
-        "title": "Show/Hide Direction",
+      "zoom_in_map": {
+        "title": "Zoom In Map (Website)",
         "action-type": "custom",
         "default": "F9"
+      },
+      "zoom_out_map": {
+        "title": "Zoom Out Map (Website)",
+        "action-type": "custom",
+        "default": "F10"
+      },
+      "show_hide_direction": {
+        "title": "Show/Hide Direction (Website)",
+        "action-type": "custom",
+        "default": "F11"
       }
     },
     "protocol_override_domains": {

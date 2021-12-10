@@ -10,6 +10,8 @@ import {
   useHotkeyBinding,
   ZOOM_IN_MINIMAP,
   ZOOM_OUT_MINIMAP,
+  ZOOM_IN_MAP,
+  ZOOM_OUT_MAP,
 } from '../utils/hotkeys';
 import styles from './Settings.module.css';
 
@@ -25,6 +27,8 @@ function Settings({ onClose }: SettingsProps): JSX.Element {
   const zoomInMinimapBinding = useHotkeyBinding(ZOOM_IN_MINIMAP);
   const zoomOutMinimapBinding = useHotkeyBinding(ZOOM_OUT_MINIMAP);
   const showHideDirectionBinding = useHotkeyBinding(SHOW_HIDE_DIRECTION);
+  const zoomInMapBinding = useHotkeyBinding(ZOOM_IN_MAP);
+  const zoomOutMapBinding = useHotkeyBinding(ZOOM_OUT_MAP);
   const [showMinimap, setShowMinimap] = useMinimap();
 
   const { logoutAccount } = useAccount();
@@ -53,7 +57,26 @@ function Settings({ onClose }: SettingsProps): JSX.Element {
             onChange={(event) => setShowRegionBorders(event.target.checked)}
           />
         </label>
-        <h4>Hotkeys</h4>
+        <h4>Website Hotkeys</h4>
+        <label className={styles.label}>
+          Zoom in Map
+          <a href="overwolf://settings/games-overlay?hotkey=zoom_in_map&gameId=21816">
+            {zoomInMapBinding}
+          </a>
+        </label>
+        <label className={styles.label}>
+          Zoom out Map
+          <a href="overwolf://settings/games-overlay?hotkey=zoom_out_map&gameId=21816">
+            {zoomOutMapBinding}
+          </a>
+        </label>
+        <label className={styles.label}>
+          Show/Hide Direction
+          <a href="overwolf://settings/games-overlay?hotkey=show_hide_direction&gameId=21816">
+            {showHideDirectionBinding}
+          </a>
+        </label>
+        <h4>App Hotkeys</h4>
         <label className={styles.label}>
           Show/Hide App
           <a href="overwolf://settings/games-overlay?hotkey=show_hide_app&gameId=21816">
@@ -70,12 +93,6 @@ function Settings({ onClose }: SettingsProps): JSX.Element {
           Show/Hide Minimap
           <a href="overwolf://settings/games-overlay?hotkey=show_hide_minimap&gameId=21816">
             {showHideMinimapBinding}
-          </a>
-        </label>
-        <label className={styles.label}>
-          Show/Hide Direction
-          <a href="overwolf://settings/games-overlay?hotkey=show_hide_direction&gameId=21816">
-            {showHideDirectionBinding}
           </a>
         </label>
         <label className={styles.label}>
