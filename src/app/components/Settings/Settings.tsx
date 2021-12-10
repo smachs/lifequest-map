@@ -13,6 +13,8 @@ function Settings(): JSX.Element {
     setMaxTraceLines,
     showTraceLines,
     setShowTraceLines,
+    alwaysShowDirection,
+    setAlwaysShowDirection,
   } = useSettings();
 
   return (
@@ -62,6 +64,16 @@ function Settings(): JSX.Element {
           onChange={(event) => setMaxTraceLines(+event.target.value)}
         />
       </label>
+      <label className={styles.label}>
+        Always show direction
+        <input
+          type="checkbox"
+          checked={alwaysShowDirection}
+          onChange={(event) => setAlwaysShowDirection(event.target.checked)}
+        />
+      </label>
+      <h3>Hotkeys</h3>
+      <em>Hotkeys are configured in the Overwolf app</em>
     </div>
   );
 }
