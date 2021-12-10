@@ -14,6 +14,8 @@ type SettingsContextValue = {
   setMaxTraceLines: (maxTraceLines: number) => void;
   showTraceLines: boolean;
   setShowTraceLines: (showTraceLines: boolean) => void;
+  showPlayerNames: boolean;
+  setShowPlayerNames: (showPlayerName: boolean) => void;
   alwaysShowDirection: boolean;
   setAlwaysShowDirection: (alwaysShowDirection: boolean) => void;
 };
@@ -28,6 +30,8 @@ const SettingsContext = createContext<SettingsContextValue>({
   setMaxTraceLines: () => undefined,
   showTraceLines: false,
   setShowTraceLines: () => undefined,
+  showPlayerNames: false,
+  setShowPlayerNames: () => undefined,
   alwaysShowDirection: false,
   setAlwaysShowDirection: () => undefined,
 });
@@ -55,6 +59,10 @@ export function SettingsProvider({
     'max-trace-lines',
     250
   );
+  const [showPlayerNames, setShowPlayerNames] = usePersistentState(
+    'show-player-names',
+    false
+  );
   const [alwaysShowDirection, setAlwaysShowDirection] = usePersistentState(
     'always-show-direction',
     false
@@ -73,6 +81,8 @@ export function SettingsProvider({
         setMaxTraceLines,
         showTraceLines,
         setShowTraceLines,
+        showPlayerNames,
+        setShowPlayerNames,
         alwaysShowDirection,
         setAlwaysShowDirection,
       }}

@@ -3,12 +3,26 @@ import { useEffect, useState } from 'react';
 import type { Group } from '../../utils/useReadLivePosition';
 import { LeafIcon } from './useLayerGroups';
 import { latestLeafletMap } from './useWorldMap';
+import { useSettings } from '../../contexts/SettingsContext';
 
 const icon = new LeafIcon({ iconUrl: '/player.webp' });
 function useGroupPositions(group: Group): void {
   const [playerMarkers, setPlayerMarkers] = useState<{
     [username: string]: leaflet.Marker;
   }>({});
+
+  const { showPlayerNames } = useSettings();
+
+  useEffect(() => {
+    const groupValues = Object.values(group);
+    Object.values(playerMarkers).forEach((marker, index) => {
+      marker.unbindTooltip();
+      marker.bindTooltip(groupValues[index].username!, {
+        direction: 'top',
+        permanent: showPlayerNames,
+      });
+    });
+  }, [showPlayerNames]);
 
   useEffect(() => {
     if (!latestLeafletMap) {
@@ -25,13 +39,18 @@ function useGroupPositions(group: Group): void {
           delete removeablePlayerMarkers[username];
           const existingMarker = playerMarkers[username];
           let marker: leaflet.Marker = playerMarkers[username];
+
           if (!existingMarker) {
             marker = leaflet.marker(player.position!.location, {
               icon,
               zIndexOffset: 8999,
               pmIgnore: true,
             });
-            marker.bindTooltip(username, { direction: 'top' });
+
+            marker.bindTooltip(username, {
+              direction: 'top',
+              permanent: showPlayerNames,
+            });
             marker.addTo(latestLeafletMap!);
             marker.getElement()!.classList.add('leaflet-player-marker');
           }

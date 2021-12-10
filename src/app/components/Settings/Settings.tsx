@@ -13,6 +13,8 @@ function Settings(): JSX.Element {
     setMaxTraceLines,
     showTraceLines,
     setShowTraceLines,
+    showPlayerNames,
+    setShowPlayerNames,
     alwaysShowDirection,
     setAlwaysShowDirection,
   } = useSettings();
@@ -62,6 +64,14 @@ function Settings(): JSX.Element {
           type="number"
           value={maxTraceLines}
           onChange={(event) => setMaxTraceLines(+event.target.value)}
+        />
+      </label>
+      <label className={styles.label}>
+        Show Player Names
+        <input
+          type="checkbox"
+          checked={showPlayerNames}
+          onChange={(event) => setShowPlayerNames(event.target.checked)}
         />
       </label>
       <label className={styles.label}>
