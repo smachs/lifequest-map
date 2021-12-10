@@ -1,11 +1,12 @@
 import leaflet from 'leaflet';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Position } from '../../contexts/PositionContext';
 import { useSettings } from '../../contexts/SettingsContext';
 import { latestLeafletMap } from './useWorldMap';
 
 function useDirectionLine(position: Position) {
   const { alwaysShowDirection } = useSettings();
+  const [showDirection, setShowDirection] = useState(false);
 
   const directionLine = useMemo(
     () =>
@@ -17,14 +18,28 @@ function useDirectionLine(position: Position) {
   );
 
   useEffect(() => {
-    if (alwaysShowDirection) {
+    function handleSessionExpired() {
+      setShowDirection((showDirection) => !showDirection);
+    }
+    window.addEventListener('hotkey-show_hide_direction', handleSessionExpired);
+
+    return () => {
+      window.removeEventListener(
+        'hotkey-show_hide_direction',
+        handleSessionExpired
+      );
+    };
+  }, [showDirection]);
+
+  useEffect(() => {
+    if (showDirection || alwaysShowDirection) {
       directionLine.addTo(latestLeafletMap!);
     }
 
     return () => {
       directionLine.remove();
     };
-  }, [alwaysShowDirection]);
+  }, [showDirection, alwaysShowDirection]);
 
   useEffect(() => {
     const latLng: [number, number] = [

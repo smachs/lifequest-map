@@ -6,6 +6,7 @@ export const SETUP_MINIMAP = 'setup_minimap';
 export const SHOW_HIDE_MINIMAP = 'show_hide_minimap';
 export const ZOOM_IN_MINIMAP = 'zoom_in_minimap';
 export const ZOOM_OUT_MINIMAP = 'zoom_out_minimap';
+export const SHOW_HIDE_DIRECTION = 'show_hide_direction';
 
 export function useHotkeyBinding(name: string): string {
   const [hotkeyBinding, setHotkeyBinding] = useState<string>('');
