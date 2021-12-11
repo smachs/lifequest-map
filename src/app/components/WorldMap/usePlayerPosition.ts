@@ -5,6 +5,7 @@ import { useSettings } from '../../contexts/SettingsContext';
 import { isOverwolfApp } from '../../utils/overwolf';
 import type CanvasMarker from './CanvasMarker';
 import { updateRotation } from './rotation';
+import useAdaptiveZoom from './useAdaptiveZoom';
 import useDirectionLine from './useDirectionLine';
 import { LeafIcon } from './useLayerGroups';
 
@@ -43,6 +44,7 @@ function usePlayerPosition({
   const { showTraceLines, maxTraceLines } = useSettings();
 
   useDirectionLine(position);
+  useAdaptiveZoom(position);
 
   useEffect(() => {
     if (!leafletMap) {

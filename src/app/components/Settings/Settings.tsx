@@ -17,6 +17,8 @@ function Settings(): JSX.Element {
     setShowPlayerNames,
     alwaysShowDirection,
     setAlwaysShowDirection,
+    adaptiveZoom,
+    setAdaptiveZoom,
   } = useSettings();
 
   return (
@@ -80,6 +82,14 @@ function Settings(): JSX.Element {
           type="checkbox"
           checked={alwaysShowDirection}
           onChange={(event) => setAlwaysShowDirection(event.target.checked)}
+        />
+      </label>
+      <label className={styles.label}>
+        Adaptive Zoom
+        <input
+          type="checkbox"
+          checked={adaptiveZoom}
+          onChange={(event) => setAdaptiveZoom(event.target.checked)}
         />
       </label>
       <h3>Hotkeys</h3>
