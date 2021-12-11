@@ -84,7 +84,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
     const map = leaflet.map(mapElement, {
       preferCanvas: true,
       crs: worldCRS,
-      maxZoom: 7,
+      maxZoom: 6,
       minZoom: 0,
       zoom: zoom,
       attributionControl: false,

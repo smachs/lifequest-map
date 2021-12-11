@@ -4,9 +4,10 @@ import { usePosition } from '../../contexts/PositionContext';
 import { useSettings } from '../../contexts/SettingsContext';
 import { isOverwolfApp } from '../../utils/overwolf';
 import type CanvasMarker from './CanvasMarker';
+import PositionMarker from './PositionMarker';
 import { updateRotation } from './rotation';
+import useAdaptiveZoom from './useAdaptiveZoom';
 import useDirectionLine from './useDirectionLine';
-import { LeafIcon } from './useLayerGroups';
 
 const divElement = leaflet.DomUtil.create('div', 'leaflet-player-position');
 const CoordinatesControl = leaflet.Control.extend({
@@ -35,7 +36,7 @@ function usePlayerPosition({
   rotate?: boolean;
 }): void {
   const { position, following } = usePosition();
-  const [marker, setMarker] = useState<leaflet.Marker | null>(null);
+  const [marker, setMarker] = useState<PositionMarker | null>(null);
 
   const traceDotsGroup = useMemo(() => new leaflet.LayerGroup(), []);
   const traceDots = useMemo<leaflet.Circle[]>(() => [], []);
@@ -43,13 +44,14 @@ function usePlayerPosition({
   const { showTraceLines, maxTraceLines } = useSettings();
 
   useDirectionLine(position);
+  useAdaptiveZoom(position);
 
   useEffect(() => {
     if (!leafletMap) {
       return;
     }
-    const icon = new LeafIcon({ iconUrl: '/player.webp' });
-    const newMarker = leaflet.marker(position.location, {
+    const icon = leaflet.icon({ iconUrl: '/player.webp' });
+    const newMarker = new PositionMarker(position.location, {
       icon,
       zIndexOffset: 9000,
       pmIgnore: true,
@@ -84,7 +86,6 @@ function usePlayerPosition({
     if (!marker || !leafletMap) {
       return;
     }
-    marker.setLatLng(position.location);
     const playerImage = marker.getElement();
 
     const leaftletMapContainer = leafletMap.getContainer();
@@ -108,11 +109,8 @@ function usePlayerPosition({
       }
       playerImage.setAttribute('data-rotation', rotation.toString());
       const newRotation = -rotation - 90;
-      playerImage.style.transformOrigin = 'center';
-      playerImage.style.transform = `${playerImage.style.transform.replace(
-        /\srotate.+/g,
-        ''
-      )} rotate(${newRotation}deg)`;
+      marker.rotation = newRotation;
+      marker.setLatLng(position.location);
 
       if (rotate) {
         leaftletMapContainer.style.transform = `rotate(${newRotation * -1}deg)`;

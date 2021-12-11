@@ -18,6 +18,8 @@ type SettingsContextValue = {
   setShowPlayerNames: (showPlayerName: boolean) => void;
   alwaysShowDirection: boolean;
   setAlwaysShowDirection: (alwaysShowDirection: boolean) => void;
+  adaptiveZoom: boolean;
+  setAdaptiveZoom: (adaptiveZoom: boolean) => void;
 };
 const SettingsContext = createContext<SettingsContextValue>({
   markerSize: 30,
@@ -34,6 +36,8 @@ const SettingsContext = createContext<SettingsContextValue>({
   setShowPlayerNames: () => undefined,
   alwaysShowDirection: false,
   setAlwaysShowDirection: () => undefined,
+  adaptiveZoom: false,
+  setAdaptiveZoom: () => undefined,
 });
 
 type SettingsProviderProps = {
@@ -67,6 +71,10 @@ export function SettingsProvider({
     'always-show-direction',
     false
   );
+  const [adaptiveZoom, setAdaptiveZoom] = usePersistentState(
+    'adaptive-zoom',
+    false
+  );
 
   return (
     <SettingsContext.Provider
@@ -85,6 +93,8 @@ export function SettingsProvider({
         setShowPlayerNames,
         alwaysShowDirection,
         setAlwaysShowDirection,
+        adaptiveZoom,
+        setAdaptiveZoom,
       }}
     >
       {children}
