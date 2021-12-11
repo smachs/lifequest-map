@@ -58,14 +58,14 @@ function useAdaptiveZoom(position: Position) {
 
     if (isInside) {
       if (adaptiveZoom) {
-        latestLeafletMap.setZoom(zoomIn);
+        latestLeafletMap.setZoomAround(position.location, zoomIn);
         setZoomOut(zoom);
       } else {
         setZoomIn(zoom);
       }
     } else {
       if (adaptiveZoom) {
-        latestLeafletMap.setZoom(zoomOut);
+        latestLeafletMap.setZoomAround(position.location, zoomOut);
         setZoomIn(zoom);
       } else {
         setZoomOut(zoom);
