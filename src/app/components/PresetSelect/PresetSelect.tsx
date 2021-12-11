@@ -11,6 +11,7 @@ import styles from './PresetSelect.module.css';
 import { toast } from 'react-toastify';
 import { useModal } from '../../contexts/ModalContext';
 import Confirm from '../Confirm/Confirm';
+import { escapeRegExp } from '../../utils/regExp';
 
 type PresetSelectProps = {
   value: Preset | null;
@@ -28,7 +29,7 @@ function PresetSelect({ value, onChange }: PresetSelectProps): JSX.Element {
     }
   }, [value, isFocus]);
 
-  const regExp = new RegExp(search, 'ig');
+  const regExp = new RegExp(escapeRegExp(search), 'ig');
 
   const handleCreateClick = async () => {
     try {

@@ -45,8 +45,9 @@ markerRoutesRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       return;
     }
 
+    const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const existingMarkerRoute = await getMarkerRoutesCollection().findOne({
-      name: new RegExp(`^${name}$`, 'i'),
+      name: new RegExp(`^${escapedName}$`, 'i'),
       username: account.name,
     });
     if (existingMarkerRoute) {

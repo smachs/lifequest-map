@@ -6,6 +6,7 @@ import generalStyles from './AddResources.module.css';
 import CloseIcon from '../icons/CloseIcon';
 import { usePersistentState } from '../../utils/storage';
 import SearchInput from '../SearchInput/SearchInput';
+import { escapeRegExp } from '../../utils/regExp';
 
 type SelectTypeType = {
   onSelect: (filter: FilterItem | null) => void;
@@ -18,7 +19,7 @@ function SelectType({ onSelect, filter }: SelectTypeType): JSX.Element {
     'last-type-search',
     []
   );
-  const regExp = new RegExp(search, 'ig');
+  const regExp = new RegExp(escapeRegExp(search), 'ig');
   const filters = mapFilters.filter((filter) => filter.title.match(regExp));
 
   if (filter) {

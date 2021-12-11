@@ -8,6 +8,7 @@ import { useAccount } from '../../contexts/UserContext';
 import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
 import { calcDistance } from '../../utils/positions';
+import { escapeRegExp } from '../../utils/regExp';
 import { usePersistentState } from '../../utils/storage';
 import ActionButton from '../ActionControl/ActionButton';
 import { mapFilters } from '../MapFilter/mapFilters';
@@ -38,7 +39,7 @@ function handleFilter(
   search: string,
   account: AccountDTO | null
 ) {
-  const regExp = new RegExp(search, 'i');
+  const regExp = new RegExp(escapeRegExp(search), 'i');
   const filterBySearch = (item: MarkerRouteItem) => {
     if (search === '') {
       return true;
