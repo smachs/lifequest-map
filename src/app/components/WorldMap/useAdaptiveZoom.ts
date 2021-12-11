@@ -51,27 +51,18 @@ function useAdaptiveZoom(position: Position) {
       isFirstRender.current = false;
       return;
     }
-    if (!latestLeafletMap) {
+    if (!latestLeafletMap || !adaptiveZoom) {
       return;
     }
     const zoom = latestLeafletMap.getZoom();
-
     if (isInside) {
-      if (adaptiveZoom) {
-        latestLeafletMap.setZoomAround(position.location, zoomIn);
-        setZoomOut(zoom);
-      } else {
-        setZoomIn(zoom);
-      }
+      setZoomOut(zoom);
+      latestLeafletMap.setZoomAround(position.location, zoomIn);
     } else {
-      if (adaptiveZoom) {
-        latestLeafletMap.setZoomAround(position.location, zoomOut);
-        setZoomIn(zoom);
-      } else {
-        setZoomOut(zoom);
-      }
+      setZoomIn(zoom);
+      latestLeafletMap.setZoomAround(position.location, zoomOut);
     }
-  }, [isInside, adaptiveZoom]);
+  }, [isInside]);
 }
 
 export default useAdaptiveZoom;
