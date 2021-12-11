@@ -109,7 +109,6 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
 
       existingPolyline!.on('pm:vertexadded', () => {
         refreshMarkers(existingPolyline!);
-        console.log(existingPolyline);
       });
     });
 
