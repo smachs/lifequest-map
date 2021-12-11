@@ -8,6 +8,7 @@ import PositionMarker from './PositionMarker';
 import { updateRotation } from './rotation';
 import useAdaptiveZoom from './useAdaptiveZoom';
 import useDirectionLine from './useDirectionLine';
+import { LeafIcon } from './useLayerGroups';
 
 const divElement = leaflet.DomUtil.create('div', 'leaflet-player-position');
 const CoordinatesControl = leaflet.Control.extend({
@@ -50,7 +51,7 @@ function usePlayerPosition({
     if (!leafletMap) {
       return;
     }
-    const icon = leaflet.icon({ iconUrl: '/player.webp' });
+    const icon = new LeafIcon({ iconUrl: '/player.webp' });
     const newMarker = new PositionMarker(position.location, {
       icon,
       zIndexOffset: 9000,

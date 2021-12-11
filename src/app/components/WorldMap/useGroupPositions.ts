@@ -1,11 +1,11 @@
-import leaflet from 'leaflet';
 import { useEffect, useState } from 'react';
 import type { Group } from '../../utils/useReadLivePosition';
 import { latestLeafletMap } from './useWorldMap';
 import { useSettings } from '../../contexts/SettingsContext';
 import PositionMarker from './PositionMarker';
+import { LeafIcon } from './useLayerGroups';
 
-const icon = leaflet.icon({ iconUrl: '/player.webp' });
+const icon = new LeafIcon({ iconUrl: '/player.webp' });
 function useGroupPositions(group: Group): void {
   const [playerMarkers, setPlayerMarkers] = useState<{
     [username: string]: PositionMarker;
