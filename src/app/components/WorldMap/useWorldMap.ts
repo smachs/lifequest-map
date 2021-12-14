@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import 'tilelayer-canvas';
 import { coordinates as playerCoordinates } from './usePlayerPosition';
 import { getJSONItem, setJSONItem } from '../../utils/storage';
-import { getRegions } from './regions';
+import { getRegions } from './areas';
 import { useSettings } from '../../contexts/SettingsContext';
 import { defaultPosition } from '../../contexts/PositionContext';
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
@@ -68,9 +68,10 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
       return;
     }
     const regions = getRegions();
-    regions.addTo(leafletMap);
+
+    regions.forEach((region) => region.addTo(leafletMap));
     return () => {
-      regions.removeFrom(leafletMap);
+      regions.forEach((region) => region.removeFrom(leafletMap));
     };
   }, [leafletMap, showRegionBorders]);
 

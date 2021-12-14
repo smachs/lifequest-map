@@ -28,7 +28,7 @@ function Streaming(): JSX.Element {
   const { status, isConnected, isSharing, setIsSharing } =
     useShareLivePosition(token);
   const newWorldIsRunning = useIsNewWorldRunning();
-  const { position } = usePosition();
+  const { position, location, region } = usePosition();
   const user = useUser();
   const [showSettings, setShowSettings] = useState(false);
 
@@ -70,7 +70,11 @@ function Streaming(): JSX.Element {
           {newWorldIsRunning && user && position && (
             <small>
               <span className={styles.success}>Playing</span> as {user.username}{' '}
-              at [{position.location[1]}, {position.location[0]}]
+              at [{position.location[1]}, {position.location[0]}]{' '}
+              <div>
+                {location && region && `(${location}, ${region})`}
+                {!location && region && `(${region})`}
+              </div>
             </small>
           )}
           {newWorldIsRunning && !user && (
@@ -115,6 +119,7 @@ function Streaming(): JSX.Element {
             type="button"
             onClick={() => setToken(uuid())}
             title="Generate Random Token"
+            disabled={isSharing}
           >
             <RefreshIcon />
           </Button>

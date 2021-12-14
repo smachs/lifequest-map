@@ -6,6 +6,8 @@ type Player = {
   steamName?: string;
   username: string | null;
   position: { location: [number, number]; rotation: number } | null;
+  location?: string;
+  region?: string;
 };
 
 export const activePlayers: {
@@ -69,6 +71,22 @@ export function initSocket(server: http.Server) {
         return;
       }
       activePlayers[token][client.id].position = position;
+      client.to(token).emit('update', activePlayers[token]);
+    });
+
+    client.on('location', (location) => {
+      if (!isOverwolfApp || !activePlayers[token][client.id]) {
+        return;
+      }
+      activePlayers[token][client.id].location = location;
+      client.to(token).emit('update', activePlayers[token]);
+    });
+
+    client.on('region', (region) => {
+      if (!isOverwolfApp || !activePlayers[token][client.id]) {
+        return;
+      }
+      activePlayers[token][client.id].region = region;
       client.to(token).emit('update', activePlayers[token]);
     });
 

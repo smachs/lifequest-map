@@ -27,7 +27,7 @@ function useShareLivePosition(token: string) {
   } | null>(null);
 
   const user = useUser();
-  const { position } = usePosition();
+  const { position, location, region } = usePosition();
   const { account } = useAccount();
 
   useShareHotkeys(socket);
@@ -95,6 +95,18 @@ function useShareLivePosition(token: string) {
       socket.emit('position', position);
     }
   }, [socket, position]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.emit('location', location);
+    }
+  }, [socket, location]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.emit('region', region);
+    }
+  }, [socket, region]);
 
   useEffect(() => {
     if (socket) {

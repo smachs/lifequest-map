@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
+import { useMemo } from 'react';
 import { useEffect } from 'react';
 import { createContext, useContext } from 'react';
+import { findRegion, findLocation } from '../components/WorldMap/areas';
 import { getGameInfo, useIsNewWorldRunning } from '../utils/games';
 import { writeError } from '../utils/logs';
 import { usePersistentState } from '../utils/storage';
@@ -12,6 +14,8 @@ type PositionContextProps = {
   setPosition: (value: Position | ((value: Position) => Position)) => void;
   following: boolean;
   toggleFollowing: () => void;
+  location?: string;
+  region?: string;
 };
 
 export const defaultPosition: Position = {
@@ -43,6 +47,9 @@ export function PositionProvider({
   );
   const newWorldIsRunning = useIsNewWorldRunning();
   const setUser = useSetUser();
+
+  const location = useMemo(() => findLocation(position), [position]);
+  const region = useMemo(() => findRegion(position), [position]);
 
   useEffect(() => {
     if (!newWorldIsRunning) {
@@ -110,7 +117,14 @@ export function PositionProvider({
   }
   return (
     <PositionContext.Provider
-      value={{ position, setPosition, following, toggleFollowing }}
+      value={{
+        position,
+        setPosition,
+        following,
+        toggleFollowing,
+        location,
+        region,
+      }}
     >
       {children}
     </PositionContext.Provider>
