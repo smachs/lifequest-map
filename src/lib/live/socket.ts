@@ -69,7 +69,7 @@ export function initSocket(server: http.Server) {
         return;
       }
       activePlayers[token][client.id].position = position;
-      io!.to(token).emit('update', activePlayers[token]);
+      client.to(token).emit('update', activePlayers[token]);
     });
 
     client.on('username', (username) => {
@@ -77,11 +77,11 @@ export function initSocket(server: http.Server) {
         return;
       }
       activePlayers[token][client.id].username = username;
-      io!.to(token).emit('update', activePlayers[token]);
+      client.to(token).emit('update', activePlayers[token]);
     });
 
     client.on('hotkey', (hotkey) => {
-      io!.to(token).emit('hotkey', steamId, hotkey);
+      client.to(token).emit('hotkey', steamId, hotkey);
     });
 
     client.on('disconnect', () => {
