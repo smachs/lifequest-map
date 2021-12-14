@@ -22,12 +22,16 @@ export function setJSONItem<T>(key: string, item: T): void {
 
 export function usePersistentState<T>(
   key: string,
-  initialValue: T,
+  initialValue: T | (() => T),
   listener = true
 ): [T, (value: T | ((value: T) => T)) => void] {
-  const [state, setState] = useState<T>(() =>
-    getJSONItem<T>(key, initialValue)
-  );
+  const [state, setState] = useState<T>(() => {
+    const value =
+      typeof initialValue === 'function'
+        ? (initialValue as () => T)()
+        : initialValue;
+    return getJSONItem<T>(key, value);
+  });
   useDebounce(state, (value) => setJSONItem<T>(key, value));
 
   function setValue(value: T | ((value: T) => T)) {
