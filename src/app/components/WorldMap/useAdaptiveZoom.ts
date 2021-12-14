@@ -1,14 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Position } from '../../contexts/PositionContext';
 import { useSettings } from '../../contexts/SettingsContext';
 import { usePersistentState } from '../../utils/storage';
 import locations from './locations.json';
 import { latestLeafletMap } from './useWorldMap';
 
-function isPointInsidePolygon(
+const checkPointInsidePolygon = (
   point: [number, number],
   polygon: [number, number][]
-) {
+) => {
   const x = point[0];
   const y = point[1];
 
@@ -25,22 +25,26 @@ function isPointInsidePolygon(
   }
 
   return inside;
-}
+};
+
+const checkInside = (position: Position) => {
+  return locations.some((location) =>
+    checkPointInsidePolygon(
+      position.location,
+      location.coordinates as [number, number][]
+    )
+  );
+};
 
 function useAdaptiveZoom(position: Position) {
-  const [isInside, setIsInside] = usePersistentState('is-inside', false);
+  const [isInside, setIsInside] = useState(() => checkInside(position));
   const [zoomIn, setZoomIn] = usePersistentState('adaptive-zoom-in', 6);
   const [zoomOut, setZoomOut] = usePersistentState('adaptive-zoom-out', 4);
   const isFirstRender = useRef(true);
   const { adaptiveZoom } = useSettings();
 
   useEffect(() => {
-    const isInsideLocation = locations.some((location) =>
-      isPointInsidePolygon(
-        position.location,
-        location.coordinates as [number, number][]
-      )
-    );
+    const isInsideLocation = checkInside(position);
     if (isInside !== isInsideLocation) {
       setIsInside(isInsideLocation);
     }

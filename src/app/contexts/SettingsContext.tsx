@@ -73,7 +73,7 @@ export function SettingsProvider({
   );
   const [adaptiveZoom, setAdaptiveZoom] = usePersistentState(
     'adaptive-zoom',
-    false
+    true
   );
 
   return (
