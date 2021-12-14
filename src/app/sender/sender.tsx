@@ -14,7 +14,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import Welcome from './Welcome';
 import Streaming from './Streaming';
 import ErrorBoundary from '../components/ErrorBoundary/ErrorBoundary';
-import { centerWindow } from '../utils/windows';
 
 function Sender(): JSX.Element {
   const { account } = useAccount();
@@ -40,7 +39,6 @@ function Sender(): JSX.Element {
 }
 
 waitForOverwolf().then(() => {
-  centerWindow();
   ReactDOM.render(
     <StrictMode>
       <SettingsProvider>

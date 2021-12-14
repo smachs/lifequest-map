@@ -139,41 +139,6 @@ export function getDisplays(): Promise<overwolf.utils.Display[]> {
   });
 }
 
-export async function centerWindow(): Promise<void> {
-  const currentWindow = await getCurrentWindow();
-  const alreadyCentered = getJSONItem<boolean>(
-    `centered-${currentWindow.name}`,
-    false
-  );
-  if (alreadyCentered) {
-    return;
-  }
-
-  const primaryDisplay = currentWindow.name === WINDOWS.OVERLAY;
-  setJSONItem(`centered-${currentWindow.name}`, true);
-  writeLog(`Window ${currentWindow.name} centered`);
-
-  const monitor = await getMonitor(primaryDisplay);
-  if (!monitor) {
-    return;
-  }
-
-  return new Promise((resolve) => {
-    overwolf.windows.changePosition(
-      currentWindow.name,
-      monitor.x +
-        Math.round(
-          (monitor.width - (currentWindow.width * monitor.dpiX) / 100) / 2
-        ),
-      monitor.y +
-        Math.round(
-          (monitor.height - (currentWindow.height * monitor.dpiY) / 100) / 2
-        ),
-      () => resolve()
-    );
-  });
-}
-
 export async function dragResize(
   edge: overwolf.windows.enums.WindowDragEdge,
   square?: boolean
