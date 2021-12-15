@@ -71,10 +71,7 @@ function Streaming(): JSX.Element {
             <small>
               <span className={styles.success}>Playing</span> as {user.username}{' '}
               at [{position.location[1]}, {position.location[0]}]{' '}
-              <div>
-                {location && region && `(${location}, ${region})`}
-                {!location && region && `(${region})`}
-              </div>
+              <div>{region && `${location || region}`}</div>
             </small>
           )}
           {newWorldIsRunning && !user && (

@@ -27,7 +27,7 @@ function useShareLivePosition(token: string) {
   } | null>(null);
 
   const user = useUser();
-  const { position, location, region } = usePosition();
+  const { position, location, region, worldName, map } = usePosition();
   const { account } = useAccount();
 
   useShareHotkeys(socket);
@@ -71,6 +71,12 @@ function useShareLivePosition(token: string) {
         : 'Website connected 👽';
       toast.info(message);
       updateStatus();
+      newSocket.emit('position', position);
+      newSocket.emit('location', location);
+      newSocket.emit('region', region);
+      newSocket.emit('worldName', worldName);
+      newSocket.emit('map', map);
+      newSocket.emit('username', user?.username);
     });
 
     newSocket.on('disconnected', (isOverwolfApp, steamName) => {
@@ -101,6 +107,18 @@ function useShareLivePosition(token: string) {
       socket.emit('location', location);
     }
   }, [socket, location]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.emit('worldName', worldName);
+    }
+  }, [socket, worldName]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.emit('map', map);
+    }
+  }, [socket, map]);
 
   useEffect(() => {
     if (socket) {

@@ -1,16 +1,18 @@
 import type http from 'http';
 import { Server } from 'socket.io';
 
-type Player = {
+export type Player = {
   steamId?: string;
   steamName?: string;
   username: string | null;
   position: { location: [number, number]; rotation: number } | null;
   location?: string;
   region?: string;
+  worldName?: string;
+  map?: string;
 };
 
-export const activePlayers: {
+export const activeGroups: {
   [groupToken: string]: {
     [playerToken: string]: Player;
   };
@@ -43,12 +45,12 @@ export function initSocket(server: http.Server) {
         : undefined;
     client.join(token);
 
-    if (!activePlayers[token]) {
-      activePlayers[token] = {};
+    if (!activeGroups[token]) {
+      activeGroups[token] = {};
     }
 
-    if (isOverwolfApp && !activePlayers[token][client.id]) {
-      activePlayers[token][client.id] = {
+    if (isOverwolfApp && !activeGroups[token][client.id]) {
+      activeGroups[token][client.id] = {
         steamId,
         steamName,
         username: null,
@@ -61,41 +63,57 @@ export function initSocket(server: http.Server) {
     client.on('status', async (callback) => {
       const roomSockets = await io!.in(token).allSockets();
       const connections = [...roomSockets.values()].filter(
-        (id) => !activePlayers[token][id]
+        (id) => !activeGroups[token][id]
       );
-      callback(activePlayers[token], connections);
+      callback(activeGroups[token], connections);
     });
 
     client.on('position', (position) => {
-      if (!isOverwolfApp || !activePlayers[token][client.id]) {
+      if (!isOverwolfApp || !activeGroups[token][client.id]) {
         return;
       }
-      activePlayers[token][client.id].position = position;
-      client.to(token).emit('update', activePlayers[token]);
+      activeGroups[token][client.id].position = position;
+      client.to(token).emit('update', activeGroups[token]);
     });
 
     client.on('location', (location) => {
-      if (!isOverwolfApp || !activePlayers[token][client.id]) {
+      if (!isOverwolfApp || !activeGroups[token][client.id]) {
         return;
       }
-      activePlayers[token][client.id].location = location;
-      client.to(token).emit('update', activePlayers[token]);
+      activeGroups[token][client.id].location = location;
+      client.to(token).emit('update', activeGroups[token]);
     });
 
     client.on('region', (region) => {
-      if (!isOverwolfApp || !activePlayers[token][client.id]) {
+      if (!isOverwolfApp || !activeGroups[token][client.id]) {
         return;
       }
-      activePlayers[token][client.id].region = region;
-      client.to(token).emit('update', activePlayers[token]);
+      activeGroups[token][client.id].region = region;
+      client.to(token).emit('update', activeGroups[token]);
+    });
+
+    client.on('worldName', (worldName) => {
+      if (!isOverwolfApp || !activeGroups[token][client.id]) {
+        return;
+      }
+      activeGroups[token][client.id].worldName = worldName;
+      client.to(token).emit('update', activeGroups[token]);
+    });
+
+    client.on('map', (map) => {
+      if (!isOverwolfApp || !activeGroups[token][client.id]) {
+        return;
+      }
+      activeGroups[token][client.id].map = map;
+      client.to(token).emit('update', activeGroups[token]);
     });
 
     client.on('username', (username) => {
-      if (!isOverwolfApp || !activePlayers[token][client.id]) {
+      if (!isOverwolfApp || !activeGroups[token][client.id]) {
         return;
       }
-      activePlayers[token][client.id].username = username;
-      client.to(token).emit('update', activePlayers[token]);
+      activeGroups[token][client.id].username = username;
+      client.to(token).emit('update', activeGroups[token]);
     });
 
     client.on('hotkey', (hotkey) => {
@@ -106,14 +124,14 @@ export function initSocket(server: http.Server) {
       if (!isOverwolfApp) {
         client.to(token).emit('disconnected', isOverwolfApp, steamName);
       }
-      if (activePlayers[token]?.[client.id]) {
-        delete activePlayers[token][client.id];
+      if (activeGroups[token]?.[client.id]) {
+        delete activeGroups[token][client.id];
       }
     });
   });
 
   io.of('/').adapter.on('delete-room', (room) => {
-    delete activePlayers[room];
+    delete activeGroups[room];
   });
 }
 

@@ -16,6 +16,8 @@ type PositionContextProps = {
   toggleFollowing: () => void;
   location?: string;
   region?: string;
+  worldName?: string;
+  map?: string;
 };
 
 export const defaultPosition: Position = {
@@ -45,6 +47,8 @@ export function PositionProvider({
     'following',
     true
   );
+  const [worldName, setWorldName] = usePersistentState<string>('worldName', '');
+  const [map, setMap] = usePersistentState<string>('map', '');
   const newWorldIsRunning = useIsNewWorldRunning();
   const setUser = useSetUser();
 
@@ -65,11 +69,17 @@ export function PositionProvider({
     let lastRotation: number | null = null;
     let hasError = false;
     let lastPlayerName = '';
+    let lastWorldName = '';
+    let lastMap = '';
     async function updatePosition() {
       try {
         const gameInfo = await getGameInfo();
-        const { player_name, location: locationList } =
-          gameInfo?.game_info || {};
+        const {
+          player_name: playerName,
+          location: locationList,
+          world_name: worldName,
+          map,
+        } = gameInfo?.game_info || {};
         if (locationList) {
           const location: [number, number] = [
             +locationList.match(/position.y,(\d+.\d+)/)[1],
@@ -90,9 +100,17 @@ export function PositionProvider({
             hasError = false;
           }
         }
-        if (player_name && player_name !== lastPlayerName) {
-          lastPlayerName = player_name;
-          setUser(player_name);
+        if (playerName && playerName !== lastPlayerName) {
+          lastPlayerName = playerName;
+          setUser(playerName);
+        }
+        if (worldName && worldName !== lastWorldName) {
+          lastWorldName = worldName;
+          setWorldName(worldName);
+        }
+        if (map && map !== lastMap) {
+          lastMap = map;
+          setMap(lastMap);
         }
       } catch (error) {
         if (!hasError) {
@@ -124,6 +142,8 @@ export function PositionProvider({
         toggleFollowing,
         location,
         region,
+        map,
+        worldName,
       }}
     >
       {children}
