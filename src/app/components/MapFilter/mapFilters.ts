@@ -12,6 +12,24 @@ export type FilterItem = {
 
 export const mapFilters: FilterItem[] = [
   {
+    category: 'specialEvents',
+    type: 'gleamite',
+    title: i18n('Gleamite'),
+    iconUrl: '/pois/specialEvents/gleamite.webp',
+  },
+  {
+    category: 'specialEvents',
+    type: 'iceCave',
+    title: i18n('Ice Cave'),
+    iconUrl: '/pois/specialEvents/iceCave.webp',
+  },
+  {
+    category: 'specialEvents',
+    type: 'winterVillage',
+    title: i18n('Winter Village'),
+    iconUrl: '/pois/specialEvents/winterVillage.webp',
+  },
+  {
     category: 'locations',
     type: 'expedition',
     title: i18n('Expedition'),
@@ -816,6 +834,13 @@ export type MapFiltersCategory = {
 };
 
 export const mapFiltersCategories: MapFiltersCategory[] = [
+  {
+    value: 'specialEvents',
+    title: i18n('Special Events'),
+    filters: mapFilters.filter(
+      (mapFilter) => mapFilter.category === 'specialEvents'
+    ),
+  },
   {
     value: 'locations',
     title: i18n('Locations'),
