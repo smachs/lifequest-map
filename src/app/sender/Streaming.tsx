@@ -18,6 +18,7 @@ import { useAccount, useUser } from '../contexts/UserContext';
 import styles from './Streaming.module.css';
 import MenuIcon from '../components/icons/MenuIcon';
 import Settings from './Settings';
+import useMinimap from '../components/Minimap/useMinimap';
 
 function Streaming(): JSX.Element {
   const { account } = useAccount();
@@ -31,6 +32,7 @@ function Streaming(): JSX.Element {
   const { position, location, region } = usePosition();
   const user = useUser();
   const [showSettings, setShowSettings] = useState(false);
+  const [showMinimap, setShowMinimap] = useMinimap();
 
   useEffect(() => {
     if (account?.liveShareToken) {
@@ -176,7 +178,13 @@ function Streaming(): JSX.Element {
           </aside>
         </div>
       </form>
-      {showSettings && <Settings onClose={() => setShowSettings(false)} />}
+      {showSettings && (
+        <Settings
+          onClose={() => setShowSettings(false)}
+          showMinimap={showMinimap}
+          onShowMinimap={setShowMinimap}
+        />
+      )}
     </div>
   );
 }

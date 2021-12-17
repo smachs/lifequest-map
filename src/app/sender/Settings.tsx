@@ -1,5 +1,4 @@
 import CloseIcon from '../components/icons/CloseIcon';
-import useMinimap from '../components/Minimap/useMinimap';
 import { useSettings } from '../contexts/SettingsContext';
 import { useAccount } from '../contexts/UserContext';
 import {
@@ -17,9 +16,15 @@ import styles from './Settings.module.css';
 
 type SettingsProps = {
   onClose: () => void;
+  showMinimap: boolean;
+  onShowMinimap: (show: boolean) => void;
 };
 
-function Settings({ onClose }: SettingsProps): JSX.Element {
+function Settings({
+  onClose,
+  showMinimap,
+  onShowMinimap,
+}: SettingsProps): JSX.Element {
   const { showRegionBorders, setShowRegionBorders } = useSettings();
   const showHideAppBinding = useHotkeyBinding(SHOW_HIDE_APP);
   const setupMinimapBinding = useHotkeyBinding(SETUP_MINIMAP);
@@ -29,7 +34,6 @@ function Settings({ onClose }: SettingsProps): JSX.Element {
   const showHideDirectionBinding = useHotkeyBinding(SHOW_HIDE_DIRECTION);
   const zoomInMapBinding = useHotkeyBinding(ZOOM_IN_MAP);
   const zoomOutMapBinding = useHotkeyBinding(ZOOM_OUT_MAP);
-  const [showMinimap, setShowMinimap] = useMinimap();
 
   const { logoutAccount } = useAccount();
 
@@ -46,7 +50,7 @@ function Settings({ onClose }: SettingsProps): JSX.Element {
           <input
             type="checkbox"
             checked={showMinimap}
-            onChange={(event) => setShowMinimap(event.target.checked)}
+            onChange={(event) => onShowMinimap(event.target.checked)}
           />
         </label>
         <label className={styles.label}>
