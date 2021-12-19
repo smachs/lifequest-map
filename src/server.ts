@@ -116,7 +116,13 @@ async function runServer() {
     app.use('/screenshots', express.static(SCREENSHOTS_PATH!));
 
     // Static assets folder
-    app.use('/assets', express.static(path.join(__dirname, 'assets')));
+    app.use(
+      '/assets',
+      express.static(path.join(__dirname, 'assets'), {
+        immutable: true,
+        maxAge: '1d',
+      })
+    );
 
     // Serve webversion (only on production)
     if (NODE_ENV === 'production') {
