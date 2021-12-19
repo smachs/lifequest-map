@@ -1,3 +1,4 @@
+import { trackOutboundLinkClick } from '../../utils/stats';
 import { usePersistentState } from '../../utils/storage';
 import styles from './MinimapSetup.module.css';
 
@@ -20,7 +21,13 @@ function MinimapWebsite(): JSX.Element {
     <>
       <p>
         You can use{' '}
-        <a href="https://github.com/LorenzCK/OnTopReplica" target="_blank">
+        <a
+          href="https://github.com/LorenzCK/OnTopReplica"
+          target="_blank"
+          onClick={() =>
+            trackOutboundLinkClick('https://github.com/LorenzCK/OnTopReplica')
+          }
+        >
           OnTopReplica
         </a>{' '}
         to display a minimap in-game 🤘. Keep in mind, that this is definitly in

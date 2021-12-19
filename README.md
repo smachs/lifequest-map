@@ -50,6 +50,8 @@ The following list shows the variables you need to set:
 | SESSION_SECRET              | Secret used to sign the session cookie                                                                  |
 | NO_SOCKET                   | Run server without Socket for live position. Useful if you run multiple servers. Possible value: "true" |
 | NO_API                      | Run server without API and database. Useful if you run multiple servers. . Possible value: "true"       |
+| VITE_PLAUSIBLE_API_HOST     | Hostname of Plausible service                                                                           |
+| VITE_PLAUSIBLE_DOMAIN       | Name of the website on Plausible                                                                        |
 
 ### Install dependencies
 

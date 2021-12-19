@@ -1,4 +1,5 @@
 import { useModal } from '../../contexts/ModalContext';
+import { trackOutboundLinkClick } from '../../utils/stats';
 import { classNames } from '../../utils/styles';
 import Changelog from '../Changelog/Changelog';
 import DiscordIcon from '../icons/DiscordIcon';
@@ -24,6 +25,9 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
           title="Open Source on GitHub"
           href="https://github.com/lmachens/aeternum-map"
           target="_blank"
+          onClick={() =>
+            trackOutboundLinkClick('https://github.com/lmachens/aeternum-map')
+          }
         >
           <GitHubIcon />
         </a>
@@ -32,6 +36,7 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
           title="Join Discord Community"
           href="https://discord.gg/NTZu8Px"
           target="_blank"
+          onClick={() => trackOutboundLinkClick('https://discord.gg/NTZu8Px')}
         >
           <DiscordIcon />
         </a>

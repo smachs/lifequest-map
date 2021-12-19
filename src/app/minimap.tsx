@@ -21,6 +21,7 @@ import ResizeBorder from './components/ResizeBorder/ResizeBorder';
 import useReadLivePosition from './utils/useReadLivePosition';
 import useEventListener from './utils/useEventListener';
 import { latestLeafletMap } from './components/WorldMap/useWorldMap';
+import { initPlausible } from './utils/stats';
 
 function Minimap(): JSX.Element {
   const [showSetup, setShowSetup] = useState(false);
@@ -207,3 +208,5 @@ waitForOverwolf().then(() => {
     document.querySelector('#root')
   );
 });
+
+initPlausible();

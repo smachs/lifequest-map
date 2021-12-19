@@ -8,6 +8,7 @@ import { MarkersProvider } from './contexts/MarkersContext';
 import { PositionProvider } from './contexts/PositionContext';
 import { FiltersProvider } from './contexts/FiltersContext';
 import { SettingsProvider } from './contexts/SettingsContext';
+import { initPlausible } from './utils/stats';
 
 ReactDOM.render(
   <StrictMode>
@@ -27,3 +28,5 @@ ReactDOM.render(
   </StrictMode>,
   document.querySelector('#root')
 );
+
+initPlausible();
