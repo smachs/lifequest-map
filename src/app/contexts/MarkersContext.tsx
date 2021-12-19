@@ -97,9 +97,13 @@ export function MarkersProvider({
         setMarkerRoutes([]);
       } else {
         notify(
-          fetchJSON<MarkerBasic[]>('/api/markers').then((newMarkers) => {
-            if (JSON.stringify(newMarkers) !== JSON.stringify(markers)) {
-              setMarkers(newMarkers);
+          Promise.all([
+            fetchJSON<MarkerBasic[]>('/api/markers'),
+            fetchJSON<MarkerBasic[]>('/api/auth/markers'),
+          ]).then(([newMarkers, privateMarkers]) => {
+            const allMarkers = newMarkers.concat(privateMarkers);
+            if (JSON.stringify(allMarkers) !== JSON.stringify(markers)) {
+              setMarkers(allMarkers);
             }
           })
         );

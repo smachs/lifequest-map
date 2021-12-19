@@ -12,25 +12,23 @@ import { SCREENSHOTS_PATH } from '../env';
 import { getScreenshotsCollection } from '../screenshots/collection';
 import { ensureAuthenticated } from '../auth/middlewares';
 import type { AccountDTO } from '../auth/types';
+import etag from 'etag';
 
 const markersRouter = Router();
 
 const MAX_NAME_LENGTH = 50;
 const MAX_DESCRIPTION_LENGTH = 200;
 
-markersRouter.get('/', async (req, res, next) => {
-  try {
-    const account = req.account;
-    const query: Filter<MarkerDTO> = account
-      ? {
-          $or: [{ isPrivate: { $ne: true } }, { userId: account.steamId }],
-        }
-      : {
-          isPrivate: { $ne: true },
-        };
+let lastMarkersJSON = '[]';
+let lastETag = '';
 
-    const markers = await getMarkersCollection()
-      .find(query, {
+export const refreshMarkers = async () => {
+  const lastMarkers = await getMarkersCollection()
+    .find(
+      {
+        isPrivate: { $ne: true },
+      },
+      {
         projection: {
           description: 0,
           userId: 0,
@@ -39,9 +37,22 @@ markersRouter.get('/', async (req, res, next) => {
           createdAt: 0,
           isPrivate: 0,
         },
-      })
-      .toArray();
-    res.status(200).json(markers);
+      }
+    )
+    .toArray();
+  lastMarkersJSON = JSON.stringify(lastMarkers);
+  lastETag = etag(lastMarkersJSON);
+};
+
+markersRouter.get('/', async (req, res, next) => {
+  try {
+    if (req.get('If-None-Match') === lastETag) {
+      res.status(304).end();
+      return;
+    }
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('ETag', lastETag);
+    res.status(200).send(lastMarkersJSON);
   } catch (error) {
     next(error);
   }
@@ -120,12 +131,14 @@ markersRouter.delete(
           filename: marker.screenshotFilename,
         });
       }
-
       res.status(200).json({});
-      postToDiscord(
+
+      await postToDiscord(
         `📌💀 Marker from ${marker.username} deleted by ${account.name}`,
         marker.isPrivate
       );
+
+      await refreshMarkers();
     } catch (error) {
       next(error);
     }
@@ -198,6 +211,8 @@ markersRouter.patch(
         `📌 ${nameType} was updated by ${account.name} at [${marker.position}]`,
         !marker.isPrivate
       );
+
+      await refreshMarkers();
     } catch (error) {
       next(error);
     }
@@ -252,6 +267,8 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       `📌 ${nameType} was added by ${account.name} at [${marker.position}]`,
       !marker.isPrivate
     );
+
+    await refreshMarkers();
   } catch (error) {
     console.error(`Error creating marker ${JSON.stringify(req.body)}`);
     next(error);
@@ -310,6 +327,8 @@ markersRouter.post(
         `✍ ${account.name} added a comment for ${marker.type} at [${position}]:\n${comment.message}`,
         !marker.isPrivate
       );
+
+      await refreshMarkers();
     } catch (error) {
       next(error);
     }

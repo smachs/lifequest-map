@@ -20,7 +20,7 @@ import { initMarkerRoutesCollection } from './lib/markerRoutes/collection';
 import { initUsersCollection } from './lib/users/collection';
 import authRouter from './lib/auth/router';
 import commentsRouter from './lib/comments/router';
-import markersRouter from './lib/markers/router';
+import markersRouter, { refreshMarkers } from './lib/markers/router';
 import markerRoutesRouter from './lib/markerRoutes/router';
 import usersRouter from './lib/users/router';
 import screenshotsRouter from './lib/screenshots/router';
@@ -141,6 +141,8 @@ async function runServer() {
       initScreenshotsCollection(),
     ]);
   }
+
+  await refreshMarkers();
 
   if (NO_SOCKET !== 'true') {
     initSocket(server);

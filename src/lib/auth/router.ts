@@ -9,6 +9,7 @@ import { ensureAuthenticated } from './middlewares';
 import type { AccountDTO } from './types';
 import { getMarkerRoutesCollection } from '../markerRoutes/collection';
 import type { MarkerRouteDTO } from '../markerRoutes/types';
+import { getMarkersCollection } from '../markers/collection';
 
 declare module 'express-session' {
   interface SessionData {
@@ -249,6 +250,37 @@ authRouter.patch('/account', ensureAuthenticated, async (req, res, next) => {
         ],
     };
     res.json(account);
+  } catch (error) {
+    next(error);
+  }
+});
+
+authRouter.get('/markers', async (req, res, next) => {
+  try {
+    const account = req.account;
+    if (!account) {
+      res.status(200).json([]);
+      return;
+    }
+    const privateMarkers = await getMarkersCollection()
+      .find(
+        {
+          isPrivate: true,
+          userId: account.steamId,
+        },
+        {
+          projection: {
+            description: 0,
+            userId: 0,
+            username: 0,
+            screenshotFilename: 0,
+            createdAt: 0,
+            isPrivate: 0,
+          },
+        }
+      )
+      .toArray();
+    res.status(200).json(privateMarkers);
   } catch (error) {
     next(error);
   }
