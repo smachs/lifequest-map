@@ -26,6 +26,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         minimap: resolve(__dirname, 'src/app/minimap.html'),
+        privacy: resolve(__dirname, 'src/app/privacy.html'),
         index: resolve(__dirname, 'src/app/index.html'),
       },
     },
