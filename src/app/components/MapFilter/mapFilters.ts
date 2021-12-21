@@ -59,6 +59,12 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'specialEvents',
+    type: 'floatingPresent',
+    title: i18n('Floating present'),
+    iconUrl: '/pois/specialEvents/floatingPresent.webp',
+  },
+  {
+    category: 'specialEvents',
     type: 'winterVillage',
     title: i18n('Winter Village'),
     iconUrl: '/pois/specialEvents/winterVillage.webp',
