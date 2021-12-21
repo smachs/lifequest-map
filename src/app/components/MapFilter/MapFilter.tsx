@@ -21,6 +21,7 @@ import useDebounce from '../../utils/useDebounce';
 import BroadcastIcon from '../icons/BroadcastIcon';
 import useReadLivePosition from '../../utils/useReadLivePosition';
 import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
+import Footer from '../Footer/Footer';
 
 type View = 'markers' | 'settings' | 'markerRoutes';
 
@@ -62,6 +63,7 @@ function MapFilter({
         {view === 'markerRoutes' && (
           <MarkerRoutes onEdit={onMarkerRouteUpsert} />
         )}
+        <Footer />
       </div>
       <nav className={styles.nav}>
         <MapSearch className={styles.nav__button} />
