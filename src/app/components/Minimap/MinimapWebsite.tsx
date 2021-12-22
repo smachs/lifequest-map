@@ -22,30 +22,34 @@ function MinimapWebsite(): JSX.Element {
       <p>
         You can use{' '}
         <a
-          href="https://github.com/LorenzCK/OnTopReplica"
+          href="https://github.com/lmachens/skeleton"
           target="_blank"
           onClick={() =>
-            trackOutboundLinkClick('https://github.com/LorenzCK/OnTopReplica')
+            trackOutboundLinkClick('https://github.com/lmachens/skeleton')
           }
         >
-          OnTopReplica
+          Skeleton
         </a>{' '}
         to display a minimap in-game 🤘. Keep in mind, that this is definitly in
         the grey area of AGS ToS. Use at own risk 💀!
       </p>
       <p>
-        After installing and configurating (Make sure to enable "clickthrough"),
-        open the{' '}
-        <a href="/minimap.html" target="_blank">
-          minimap view
-        </a>
-        .
+        Open{' '}
+        <a href="https://aeternum-map.gg" target="_blank">
+          https://aeternum-map.gg
+        </a>{' '}
+        and{' '}
+        <a href="https://aeternum-map.gg/minimap.html" target="_blank">
+          https://aeternum-map.gg/minimap.html
+        </a>{' '}
+        in Skeleton instead of your normal browser. Make the minimap
+        transparent, always on top, without a frame and clickthroughable.
       </p>
       <h5>Settings</h5>
       <section className={styles.settings}>
         <label>
           URL
-          <input disabled value={`${location.origin}/minimap.html`} />
+          <input disabled value="https://aeternum-map.gg/minimap.html" />
         </label>
         <label>
           Zoom
