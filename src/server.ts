@@ -140,9 +140,9 @@ async function runServer() {
       initUsersCollection(),
       initScreenshotsCollection(),
     ]);
-  }
 
-  await refreshMarkers();
+    await refreshMarkers();
+  }
 
   if (NO_SOCKET !== 'true') {
     initSocket(server);
