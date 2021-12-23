@@ -1,0 +1,12 @@
+.label {
+  color: var(--color-trivial);
+  margin: 0 0.25rem;
+}
+
+.checked {
+  color: var(--color-primary);
+}
+
+.label > input {
+  display: none;
+}

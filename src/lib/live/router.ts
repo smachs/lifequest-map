@@ -7,6 +7,10 @@ const liveRouter = Router();
 const cpu = osUtils.cpu;
 const mem = osUtils.mem;
 
+liveRouter.get('/ping', async (_request, response) => {
+  response.send('OK');
+});
+
 liveRouter.get('/stats', async (_request, response) => {
   const io = getSocketServer();
   const numberOfPlayers = Object.keys(activeGroups).length;

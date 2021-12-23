@@ -48,6 +48,9 @@ function ensureAccountsSchema(): Promise<Document> {
           liveShareToken: {
             bsonType: 'string',
           },
+          liveShareServerUrl: {
+            bsonType: 'string',
+          },
           presets: {
             bsonType: 'array',
             items: {

@@ -1,6 +1,9 @@
 import { fetchJSON } from '../../utils/api';
 
-export function patchLiveShareToken(token: string): Promise<{
+export function patchLiveShareToken(
+  token: string,
+  serverUrl: string
+): Promise<{
   token: string;
 }> {
   return fetchJSON<{ token: string }>('/api/auth/live-share-token', {
@@ -8,6 +11,6 @@ export function patchLiveShareToken(token: string): Promise<{
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ token }),
+    body: JSON.stringify({ token, serverUrl }),
   });
 }

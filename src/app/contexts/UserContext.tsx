@@ -44,6 +44,7 @@ export type AccountDTO = {
   isModerator?: boolean;
   favoriteRouteIds?: string[];
   liveShareToken?: string;
+  liveShareServerUrl?: string;
   presets?: Preset[];
   createdAt: Date;
 };

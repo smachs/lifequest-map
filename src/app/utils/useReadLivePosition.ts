@@ -17,8 +17,6 @@ export type Group = {
   [playerToken: string]: Player;
 };
 
-const { VITE_SOCKET_ENDPOINT } = import.meta.env;
-
 function useReadLivePosition(): [
   boolean,
   (value: boolean | ((value: boolean) => boolean)) => void
@@ -37,19 +35,20 @@ function useReadLivePosition(): [
 
   useEffect(() => {
     const token = getJSONItem('live-share-token', null);
-    if (!token || !isReading) {
+    const serverUrl = getJSONItem(
+      'live-share-server-url',
+      'wss://live.aeternum-map.gg'
+    );
+    if (!token || !isReading || !serverUrl) {
       return;
     }
-    const socket = io(
-      typeof VITE_SOCKET_ENDPOINT === 'string' ? VITE_SOCKET_ENDPOINT : '',
-      {
-        query: {
-          token,
-        },
-        upgrade: false,
-        transports: ['websocket'],
-      }
-    );
+    const socket = io(serverUrl, {
+      query: {
+        token,
+      },
+      upgrade: false,
+      transports: ['websocket'],
+    });
 
     const updateStatus = (group: Group) => {
       const sessionIds = Object.keys(group);

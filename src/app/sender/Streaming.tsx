@@ -19,6 +19,8 @@ import styles from './Streaming.module.css';
 import MenuIcon from '../components/icons/MenuIcon';
 import Settings from './Settings';
 import useMinimap from '../components/Minimap/useMinimap';
+import { liveServers } from '../components/LiveServer/liveServers';
+import ServerRadioButton from '../components/LiveServer/ServerRadioButton';
 
 function Streaming(): JSX.Element {
   const { account } = useAccount();
@@ -26,8 +28,14 @@ function Streaming(): JSX.Element {
     'live-share-token',
     account!.liveShareToken || ''
   );
-  const { status, isConnected, isSharing, setIsSharing } =
-    useShareLivePosition(token);
+  const [serverUrl, setServerUrl] = usePersistentState(
+    'live-share-server-url',
+    account!.liveShareServerUrl || ''
+  );
+  const { status, isConnected, isSharing, setIsSharing } = useShareLivePosition(
+    token,
+    serverUrl
+  );
   const newWorldIsRunning = useIsNewWorldRunning();
   const { position, location, region } = usePosition();
   const user = useUser();
@@ -35,10 +43,13 @@ function Streaming(): JSX.Element {
   const [showMinimap, setShowMinimap] = useMinimap();
 
   useEffect(() => {
-    if (account?.liveShareToken) {
-      setToken(account.liveShareToken);
+    if (account!.liveShareToken) {
+      setToken(account!.liveShareToken);
     }
-  }, [account?.liveShareToken]);
+    if (account!.liveShareServerUrl) {
+      setServerUrl(account!.liveShareServerUrl);
+    }
+  }, [account!.liveShareToken, account!.liveShareServerUrl]);
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -49,13 +60,16 @@ function Streaming(): JSX.Element {
         return;
       }
 
-      if (!token) {
-        toast.error('Token is required 🙄');
+      if (!token || !serverUrl) {
+        toast.error('Token and server are required 🙄');
         return;
       }
 
-      if (account && account.liveShareToken !== token) {
-        patchLiveShareToken(token);
+      if (
+        account!.liveShareToken !== token ||
+        account!.liveShareServerUrl !== serverUrl
+      ) {
+        patchLiveShareToken(token, serverUrl);
       }
       setIsSharing(true);
     } catch (error) {
@@ -100,9 +114,21 @@ function Streaming(): JSX.Element {
             aeternum-map.gg
           </a>{' '}
           to see your live location on the map. You can use any device that has
-          a browser. Share this token with your friends to see each others'
-          location 🤗.
+          a browser. Share this token and server with your friends to see each
+          others' location 🤗.
         </p>
+        <div>
+          Server
+          {liveServers.map((liveServer) => (
+            <ServerRadioButton
+              key={liveServer.name}
+              disabled={isSharing}
+              server={liveServer}
+              checked={serverUrl === liveServer.url}
+              onChange={setServerUrl}
+            />
+          ))}
+        </div>
         <div className={styles.tokenContainer}>
           <label className={styles.label}>
             Token
@@ -125,7 +151,7 @@ function Streaming(): JSX.Element {
           <Button
             className={styles.action}
             type="button"
-            disabled={!token}
+            disabled={!token || !serverUrl}
             onClick={() => {
               copyTextToClipboard(token);
             }}

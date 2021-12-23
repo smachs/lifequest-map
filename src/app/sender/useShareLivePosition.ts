@@ -9,9 +9,7 @@ import { toast } from 'react-toastify';
 import type { Group } from '../utils/useReadLivePosition';
 import useShareHotkeys from './useShareHotkeys';
 
-const { VITE_SOCKET_ENDPOINT } = import.meta.env;
-
-function useShareLivePosition(token: string) {
+function useShareLivePosition(token: string, serverUrl: string) {
   const [isSharing, setIsSharing] = usePersistentState(
     'share-live-position',
     false
@@ -33,22 +31,19 @@ function useShareLivePosition(token: string) {
   useShareHotkeys(socket);
 
   useEffect(() => {
-    if (!token || !isSharing) {
+    if (!token || !isSharing || !serverUrl) {
       return;
     }
-    const newSocket = io(
-      typeof VITE_SOCKET_ENDPOINT === 'string' ? VITE_SOCKET_ENDPOINT : '',
-      {
-        query: {
-          token,
-          steamId: account!.steamId,
-          steamName: account!.name,
-          isOverwolfApp: true,
-        },
-        upgrade: false,
-        transports: ['websocket'],
-      }
-    );
+    const newSocket = io(serverUrl, {
+      query: {
+        token,
+        steamId: account!.steamId,
+        steamName: account!.name,
+        isOverwolfApp: true,
+      },
+      upgrade: false,
+      transports: ['websocket'],
+    });
     setSocket(newSocket);
 
     newSocket.on('connect', () => {

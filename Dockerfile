@@ -12,7 +12,6 @@ WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
 ARG VITE_API_ENDPOINT=
-ARG VITE_SOCKET_ENDPOINT=
 ARG VITE_PLAUSIBLE_API_HOST=
 ARG VITE_PLAUSIBLE_DOMAIN=
 RUN npm run server:build

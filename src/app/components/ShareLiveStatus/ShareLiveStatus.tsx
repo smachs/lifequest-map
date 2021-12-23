@@ -7,13 +7,18 @@ import ShareFromWebsite from './ShareFromWebsite';
 import type { FormEvent } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { patchLiveShareToken } from './api';
+import { liveServers } from '../LiveServer/liveServers';
+import ServerRadioButton from '../LiveServer/ServerRadioButton';
 
 type ShareLiveStatusProps = {
   onActivate: () => void;
 };
 function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
   const { account, refreshAccount } = useAccount();
+  const [serverUrl, setServerUrl] = usePersistentState(
+    'live-share-server-url',
+    ''
+  );
   const [token, setToken] = usePersistentState('live-share-token', '');
   const [lastTokens] = usePersistentState<string[]>(
     'last-live-share-tokens',
@@ -31,13 +36,16 @@ function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
     if (account?.liveShareToken) {
       setToken(account.liveShareToken);
     }
-  }, [account?.liveShareToken]);
+    if (account?.liveShareServerUrl) {
+      setServerUrl(account.liveShareServerUrl);
+    }
+  }, [account?.liveShareToken, account?.liveShareServerUrl]);
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    if (!token) {
-      toast.error('Token is required 🙄');
+    if (!token || !serverUrl) {
+      toast.error('Token and server are required 🙄');
       return;
     }
     const newLastGroupTokens = [
@@ -46,18 +54,27 @@ function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
     ].slice(0, 2);
     setJSONItem('last-group-tokens', newLastGroupTokens);
 
-    if (account && account.liveShareToken !== token) {
-      patchLiveShareToken(token);
-    }
     onActivate();
   }
   return (
     <form onSubmit={handleSubmit} className={styles.container}>
       <ShareFromWebsite />
       <p className={styles.guide}>
-        Use the same token in the app and on the website to share your live
-        status. Connect with your friends by using the same token 🤗.
+        Use the same token and server in the app and on the website to share
+        your live status. Connect with your friends by using the same token 🤗.
       </p>
+      <div>
+        Server
+        {liveServers.map((liveServer) => (
+          <ServerRadioButton
+            key={liveServer.name}
+            disabled={false}
+            server={liveServer}
+            checked={serverUrl === liveServer.url}
+            onChange={setServerUrl}
+          />
+        ))}
+      </div>
       <div className={styles.tokenContainer}>
         <label className={styles.label}>
           Token
@@ -87,7 +104,7 @@ function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
         Pro tip: Login with Steam in the app and on the website to automatically
         update the token.
       </small>
-      <Button disabled={!token} type="submit">
+      <Button disabled={!token || !serverUrl} type="submit">
         Share Live Status
       </Button>
     </form>

@@ -196,7 +196,7 @@ authRouter.patch(
   ensureAuthenticated,
   async (req, res, next) => {
     try {
-      const { token } = req.body;
+      const { token, serverUrl } = req.body;
 
       if (!token) {
         res.status(400).send('Invalid payload');
@@ -207,6 +207,7 @@ authRouter.patch(
         {
           $set: {
             liveShareToken: token,
+            liveShareServerUrl: serverUrl || 'live1.aeternum-map.gg',
           },
         }
       );

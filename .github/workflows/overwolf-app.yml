@@ -25,7 +25,6 @@ jobs:
       - name: Build Overwolf App
         env:
           VITE_API_ENDPOINT: ${{ secrets.VITE_API_ENDPOINT }}
-          VITE_SOCKET_ENDPOINT: ${{ secrets.VITE_SOCKET_ENDPOINT }}
         run: npm run overwolf:build
       - name: Archive Release
         uses: thedoctor0/zip-release@master
