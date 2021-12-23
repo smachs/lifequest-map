@@ -32,7 +32,7 @@ export const ping = async (liveServer: LiveServer) => {
   const now = Date.now();
   try {
     const url = liveServer.url.replace('ws', 'http');
-    await fetch(`${url}/api/ping`);
+    await fetch(`${url}/api/live/ping`);
     return Date.now() - now;
   } catch (error) {
     writeError(error);
