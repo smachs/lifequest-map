@@ -11,9 +11,8 @@ import type { MarkerDTO } from './api';
 import { patchMarker } from './api';
 import { postMarker } from './api';
 import { notify } from '../../utils/notifications';
-import { getJSONItem } from '../../utils/storage';
-import { defaultPosition } from '../../contexts/PositionContext';
 import Button from '../Button/Button';
+import { latestLeafletMap } from '../WorldMap/useWorldMap';
 
 export type Details = {
   description?: string;
@@ -41,15 +40,12 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
     if (marker) {
       return marker.position;
     }
-    const mapPosition = getJSONItem<{
-      y: number;
-      x: number;
-      zoom: number;
-    }>('mapPosition', {
-      y: defaultPosition.location[1],
-      x: defaultPosition.location[0],
-      zoom: 3,
-    });
+    const center = latestLeafletMap!.getCenter();
+    const mapPosition = {
+      x: center.lng,
+      y: center.lat,
+      zoom: latestLeafletMap!.getZoom(),
+    };
     return [mapPosition.x, mapPosition.y, 0];
   });
 
