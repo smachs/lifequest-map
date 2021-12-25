@@ -19,8 +19,8 @@ import styles from './Streaming.module.css';
 import MenuIcon from '../components/icons/MenuIcon';
 import Settings from './Settings';
 import useMinimap from '../components/Minimap/useMinimap';
-import { liveServers } from '../components/LiveServer/liveServers';
 import ServerRadioButton from '../components/LiveServer/ServerRadioButton';
+import useServers from './useServers';
 
 function Streaming(): JSX.Element {
   const { account } = useAccount();
@@ -41,6 +41,19 @@ function Streaming(): JSX.Element {
   const user = useUser();
   const [showSettings, setShowSettings] = useState(false);
   const [showMinimap, setShowMinimap] = useMinimap();
+  const servers = useServers();
+
+  useEffect(() => {
+    if (!serverUrl || !servers.some((server) => server.url === serverUrl)) {
+      const onlineServers = [...servers]
+        .filter((server) => server.delay !== Infinity)
+        .sort((a, b) => a.delay - b.delay);
+      const server = onlineServers[0];
+      if (server) {
+        setServerUrl(server.url);
+      }
+    }
+  }, [servers, serverUrl]);
 
   useEffect(() => {
     if (account!.liveShareToken) {
@@ -119,12 +132,12 @@ function Streaming(): JSX.Element {
         </p>
         <div>
           Server
-          {liveServers.map((liveServer) => (
+          {servers.map((server) => (
             <ServerRadioButton
-              key={liveServer.name}
+              key={server.name}
               disabled={isSharing}
-              server={liveServer}
-              checked={serverUrl === liveServer.url}
+              server={server}
+              checked={serverUrl === server.url}
               onChange={setServerUrl}
             />
           ))}

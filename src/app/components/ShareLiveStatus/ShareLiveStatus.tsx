@@ -7,8 +7,8 @@ import ShareFromWebsite from './ShareFromWebsite';
 import type { FormEvent } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { liveServers } from '../LiveServer/liveServers';
 import ServerRadioButton from '../LiveServer/ServerRadioButton';
+import useServers from '../../sender/useServers';
 
 type ShareLiveStatusProps = {
   onActivate: () => void;
@@ -25,6 +25,7 @@ function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
     []
   );
   const [isGroupInFocus, setIsGroupInFocus] = useState(false);
+  const servers = useServers();
 
   useEffect(() => {
     if (account) {
@@ -65,12 +66,12 @@ function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
       </p>
       <div>
         Server
-        {liveServers.map((liveServer) => (
+        {servers.map((server) => (
           <ServerRadioButton
-            key={liveServer.name}
+            key={server.name}
             disabled={false}
-            server={liveServer}
-            checked={serverUrl === liveServer.url}
+            server={server}
+            checked={serverUrl === server.url}
             onChange={setServerUrl}
           />
         ))}

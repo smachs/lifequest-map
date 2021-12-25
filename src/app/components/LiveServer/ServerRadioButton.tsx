@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
 import { classNames } from '../../utils/styles';
 import type { LiveServer } from './liveServers';
-import { ping } from './liveServers';
 import styles from './ServerRadioButton.module.css';
 
 type ServerRadioButtonProps = {
@@ -16,21 +14,14 @@ function ServerRadioButton({
   disabled,
   onChange,
 }: ServerRadioButtonProps) {
-  const [delay, setDelay] = useState<number | null>(null);
-
-  useEffect(() => {
-    ping(server).then(setDelay);
-
-    const intervalId = setInterval(() => {
-      ping(server).then(setDelay);
-    }, 5000);
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
-
   return (
-    <label className={classNames(styles.label, checked && styles.checked)}>
+    <label
+      className={classNames(
+        styles.label,
+        checked && styles.checked,
+        disabled && styles.disabled
+      )}
+    >
       <input
         disabled={disabled}
         type="radio"
@@ -40,7 +31,7 @@ function ServerRadioButton({
         onChange={(event) => onChange(event.target.value)}
       />{' '}
       {server.name}{' '}
-      {delay && (delay === Infinity ? '(Offline)' : `(${delay}ms)`)}
+      {server.delay === Infinity ? '(Offline)' : `(${server.delay}ms)`}
     </label>
   );
 }

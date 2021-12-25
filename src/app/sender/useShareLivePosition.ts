@@ -31,7 +31,11 @@ function useShareLivePosition(token: string, serverUrl: string) {
   useShareHotkeys(socket);
 
   useEffect(() => {
-    if (!token || !isSharing || !serverUrl) {
+    if (!isSharing) {
+      return;
+    }
+    if (!token || !serverUrl) {
+      setIsSharing(false);
       return;
     }
     const newSocket = io(serverUrl, {
