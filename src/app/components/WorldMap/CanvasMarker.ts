@@ -19,9 +19,11 @@ const imageElements: {
 } = {};
 class CanvasMarker extends leaflet.CircleMarker {
   declare options: leaflet.CircleMarkerOptions & CanvasMarkerOptions;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private _renderer: any;
   declare imageElement: HTMLImageElement;
   private _onImageLoad: (() => void) | undefined = undefined;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   declare _point: any;
 
   constructor(
