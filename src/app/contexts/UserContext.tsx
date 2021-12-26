@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useState } from 'react';
 import { createContext, useEffect, useContext } from 'react';
 import type { Preset } from '../components/PresetSelect/presets';
 import { fetchJSON } from '../utils/api';
@@ -21,7 +22,7 @@ type UserContextValue = {
   account: AccountDTO | null;
   logoutAccount: () => void;
   setAccount: (account: AccountDTO) => void;
-  refreshAccount: () => void;
+  refreshAccount: () => Promise<AccountDTO | null>;
 };
 const UserContext = createContext<UserContextValue>({
   user: null,
@@ -30,7 +31,7 @@ const UserContext = createContext<UserContextValue>({
   account: null,
   logoutAccount: () => undefined,
   setAccount: () => undefined,
-  refreshAccount: () => undefined,
+  refreshAccount: async () => null,
 });
 
 type UserProviderProps = {
@@ -51,10 +52,7 @@ export type AccountDTO = {
 
 export function UserProvider({ children }: UserProviderProps): JSX.Element {
   const [user, setUser] = usePersistentState<User | null>('user', null);
-  const [username, setUsername] = usePersistentState<string | null>(
-    'username',
-    null
-  );
+  const [username, setUsername] = useState<string | null>(null);
   const [account, setAccount] = usePersistentState<AccountDTO | null>(
     'account',
     null
@@ -82,12 +80,14 @@ export function UserProvider({ children }: UserProviderProps): JSX.Element {
     }
   };
 
-  const refreshAccount = async (): Promise<void> => {
+  const refreshAccount = async (): Promise<AccountDTO | null> => {
     try {
       const account = await notify(fetchJSON<AccountDTO>(`/api/auth/account`));
       setAccount(account);
+      return account;
     } catch (error) {
       writeError(error);
+      return null;
     }
   };
 
@@ -109,6 +109,12 @@ export function UserProvider({ children }: UserProviderProps): JSX.Element {
     },
     []
   );
+
+  useEffect(() => {
+    if (account) {
+      refreshAccount();
+    }
+  }, []);
 
   useEffect(() => {
     if (username) {
@@ -133,12 +139,7 @@ export function UserProvider({ children }: UserProviderProps): JSX.Element {
   );
 }
 
-export function useAccount(): {
-  account: AccountDTO | null;
-  refreshAccount: () => void;
-  setAccount: (account: AccountDTO) => void;
-  logoutAccount: () => void;
-} {
+export function useAccount() {
   const { account, refreshAccount, setAccount, logoutAccount } =
     useContext(UserContext);
   return { account, refreshAccount, setAccount, logoutAccount };

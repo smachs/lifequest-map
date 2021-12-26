@@ -21,6 +21,7 @@ import Settings from './Settings';
 import useMinimap from '../components/Minimap/useMinimap';
 import ServerRadioButton from '../components/LiveServer/ServerRadioButton';
 import useServers from './useServers';
+import SyncStatusSender from '../components/SyncStatus/SyncStatusSender';
 
 function Streaming(): JSX.Element {
   const { account } = useAccount();
@@ -91,30 +92,23 @@ function Streaming(): JSX.Element {
   }
 
   const players = status ? Object.values(status.group) : [];
+  const player = user
+    ? {
+        username: user.username,
+        position,
+        region,
+        location,
+      }
+    : null;
   return (
     <div className={styles.streaming}>
       <p className={styles.user}>
         <p>
           Welcome back, {account!.name}!<br />
-          {newWorldIsRunning && user && position && (
-            <small>
-              <span className={styles.success}>Playing</span> as {user.username}{' '}
-              at [{position.location[1]}, {position.location[0]}]{' '}
-              <div>{region && `${location || region}`}</div>
-            </small>
-          )}
-          {newWorldIsRunning && !user && (
-            <small>
-              <span className={styles.waiting}>Connected</span> to New World.
-              Waiting for position.
-            </small>
-          )}
-          {!newWorldIsRunning && (
-            <small>
-              <span className={styles.warning}>Not connected</span> to New
-              World. Please run the game first.
-            </small>
-          )}
+          <SyncStatusSender
+            newWorldIsRunning={newWorldIsRunning}
+            player={player}
+          />
         </p>{' '}
         <button onClick={() => setShowSettings(true)}>
           <MenuIcon />

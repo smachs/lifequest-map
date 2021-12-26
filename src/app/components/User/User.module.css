@@ -5,10 +5,14 @@
   justify-content: stretch;
   padding: 0.5em;
   border-bottom: 1px solid var(--color-shade-three);
-  text-align: center;
+  text-align: left;
 }
 
 .welcome {
   display: flex;
   justify-content: space-between;
+}
+
+.logout {
+  color: lightcoral;
 }

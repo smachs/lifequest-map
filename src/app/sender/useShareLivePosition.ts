@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import type { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
-import { useAccount, useUser } from '../contexts/UserContext';
+import { useAccount } from '../contexts/UserContext';
 import { usePosition } from '../contexts/PositionContext';
 import { usePersistentState } from '../utils/storage';
 import { toast } from 'react-toastify';
@@ -24,8 +24,8 @@ function useShareLivePosition(token: string, serverUrl: string) {
     connections: string[];
   } | null>(null);
 
-  const user = useUser();
-  const { position, location, region, worldName, map } = usePosition();
+  const { position, location, region, worldName, map, username } =
+    usePosition();
   const { account } = useAccount();
 
   useShareHotkeys(socket);
@@ -50,19 +50,19 @@ function useShareLivePosition(token: string, serverUrl: string) {
     });
     setSocket(newSocket);
 
-    newSocket.on('connect', () => {
-      if (newSocket.connected) {
-        setIsConnected(true);
-        toast.success('Sharing live status 👌');
-      }
-    });
-
     const updateStatus = () => {
       newSocket.emit('status', (group: Group, connections: string[]) => {
         setStatus({ group, connections });
       });
     };
-    updateStatus();
+
+    newSocket.on('connect', () => {
+      if (newSocket.connected) {
+        setIsConnected(true);
+        toast.success('Sharing live status 👌');
+        updateStatus();
+      }
+    });
 
     newSocket.on('connected', (isOverwolfApp, steamName) => {
       const message = isOverwolfApp
@@ -70,12 +70,6 @@ function useShareLivePosition(token: string, serverUrl: string) {
         : 'Website connected 👽';
       toast.info(message);
       updateStatus();
-      newSocket.emit('position', position);
-      newSocket.emit('location', location);
-      newSocket.emit('region', region);
-      newSocket.emit('worldName', worldName);
-      newSocket.emit('map', map);
-      newSocket.emit('username', user?.username);
     });
 
     newSocket.on('disconnected', (isOverwolfApp, steamName) => {
@@ -88,12 +82,12 @@ function useShareLivePosition(token: string, serverUrl: string) {
 
     return () => {
       newSocket.close();
-      setSocket(null);
       setIsConnected(false);
+      setSocket(null);
       setStatus(null);
       toast.info('Stop sharing live status 🛑');
     };
-  }, [isSharing, account]);
+  }, [isSharing, account?.steamId]);
 
   useEffect(() => {
     if (socket) {
@@ -127,9 +121,9 @@ function useShareLivePosition(token: string, serverUrl: string) {
 
   useEffect(() => {
     if (socket) {
-      socket.emit('username', user?.username);
+      socket.emit('username', username);
     }
-  }, [socket, user?.username]);
+  }, [socket, username]);
 
   return { status, isConnected, isSharing, setIsSharing };
 }

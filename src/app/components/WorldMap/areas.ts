@@ -44,20 +44,24 @@ export const checkPointInsidePolygon = (
   return inside;
 };
 
-export const findLocation = (position: Position): string | undefined => {
-  return locations.find((location) =>
-    checkPointInsidePolygon(
-      position.location,
-      location.coordinates as [number, number][]
-    )
-  )?.name;
+export const findLocation = (position: Position): string | null => {
+  return (
+    locations.find((location) =>
+      checkPointInsidePolygon(
+        position.location,
+        location.coordinates as [number, number][]
+      )
+    )?.name || null
+  );
 };
 
-export const findRegion = (position: Position): string | undefined => {
-  return regions.find((region) =>
-    checkPointInsidePolygon(
-      position.location,
-      region.coordinates as [number, number][]
-    )
-  )?.name;
+export const findRegion = (position: Position): string | null => {
+  return (
+    regions.find((region) =>
+      checkPointInsidePolygon(
+        position.location,
+        region.coordinates as [number, number][]
+      )
+    )?.name || null
+  );
 };

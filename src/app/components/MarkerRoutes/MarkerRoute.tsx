@@ -4,10 +4,10 @@ import styles from './MarkerRoute.module.css';
 import { classNames } from '../../utils/styles';
 import DeleteButton from '../DeleteButton/DeleteButton';
 import { toTimeAgo } from '../../utils/dates';
-import { usePosition } from '../../contexts/PositionContext';
 import { calcDistance } from '../../utils/positions';
 import EditButton from '../EditButton/EditButton';
 import FavoriteButton from '../FavoriteButton/FavoriteButton';
+import { usePlayer } from '../../contexts/PlayerContext';
 
 type MarkerRouteProps = {
   markerRoute: MarkerRouteItem;
@@ -33,12 +33,11 @@ function MarkerRoute({
   onEdit,
   isOwner,
 }: MarkerRouteProps): JSX.Element {
-  const { position } = usePosition();
+  const { player } = usePlayer();
 
-  const distance: number = calcDistance(
-    markerRoute.positions[0],
-    position.location
-  );
+  const distance: number = player?.position
+    ? calcDistance(markerRoute.positions[0], player.position.location)
+    : Infinity;
 
   return (
     <article

@@ -1,8 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { useFilters } from '../../contexts/FiltersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
-import type { Position } from '../../contexts/PositionContext';
-import { usePosition } from '../../contexts/PositionContext';
+import { usePlayer } from '../../contexts/PlayerContext';
 import type { AccountDTO } from '../../contexts/UserContext';
 import { useAccount } from '../../contexts/UserContext';
 import { writeError } from '../../utils/logs';
@@ -10,6 +9,7 @@ import { notify } from '../../utils/notifications';
 import { calcDistance } from '../../utils/positions';
 import { escapeRegExp } from '../../utils/regExp';
 import { usePersistentState } from '../../utils/storage';
+import type { Position } from '../../utils/useReadLivePosition';
 import ActionButton from '../ActionControl/ActionButton';
 import { mapFilters } from '../MapFilter/mapFilters';
 import SearchInput from '../SearchInput/SearchInput';
@@ -64,7 +64,11 @@ function handleFilter(
   return (item: MarkerRouteItem) => filterBySearch(item);
 }
 
-function handleSort(sortBy: SortBy, filters: string[], position: Position) {
+function handleSort(
+  sortBy: SortBy,
+  filters: string[],
+  position?: Position | null
+) {
   if (sortBy === 'favorites') {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
       (b.favorites || 0) - (a.favorites || 0);
@@ -75,8 +79,10 @@ function handleSort(sortBy: SortBy, filters: string[], position: Position) {
   }
   if (sortBy === 'distance') {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
-      calcDistance(position.location, a.positions[0]) -
-      calcDistance(position.location, b.positions[0]);
+      position?.location
+        ? calcDistance(position.location, a.positions[0]) -
+          calcDistance(position.location, b.positions[0])
+        : 0;
   }
   if (sortBy === 'name') {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
@@ -119,7 +125,7 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
   );
   const [search, setSearch] = usePersistentState('searchRoutes', '');
   const [filters, setFilters] = useFilters();
-  const { position } = usePosition();
+  const { player } = usePlayer();
 
   useEffect(() => {
     refreshMarkerRoutes();
@@ -175,8 +181,8 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
     () =>
       allMarkerRoutes
         .filter(handleFilter(filter, search, account))
-        .sort(handleSort(sortBy, filters, position)),
-    [sortBy, allMarkerRoutes, filters, position, filter, search]
+        .sort(handleSort(sortBy, filters, player?.position)),
+    [sortBy, allMarkerRoutes, filters, player?.position, filter, search]
   );
 
   function handleEdit(markerRoute: MarkerRouteItem) {

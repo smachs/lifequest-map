@@ -13,6 +13,7 @@ import { postMarker } from './api';
 import { notify } from '../../utils/notifications';
 import Button from '../Button/Button';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
+import { usePlayer } from '../../contexts/PlayerContext';
 
 export type Details = {
   description?: string;
@@ -35,18 +36,18 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
   );
 
   const [details, setDetails] = useState<Details>({});
+  const { player, following } = usePlayer();
 
   const [location, setLocation] = useState<[number, number, number]>(() => {
     if (marker) {
       return marker.position;
     }
+    if (following && player?.position) {
+      const location = player.position.location;
+      return [location[1], location[0], 0];
+    }
     const center = latestLeafletMap!.getCenter();
-    const mapPosition = {
-      x: center.lng,
-      y: center.lat,
-      zoom: latestLeafletMap!.getZoom(),
-    };
-    return [mapPosition.x, mapPosition.y, 0];
+    return [center.lng, center.lat, 0];
   });
 
   useEffect(() => {

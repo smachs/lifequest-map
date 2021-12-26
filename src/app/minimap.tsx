@@ -22,6 +22,7 @@ import useReadLivePosition from './utils/useReadLivePosition';
 import useEventListener from './utils/useEventListener';
 import { latestLeafletMap } from './components/WorldMap/useWorldMap';
 import { initPlausible } from './utils/stats';
+import { PlayerProvider } from './contexts/PlayerContext';
 
 function Minimap(): JSX.Element {
   const [showSetup, setShowSetup] = useState(false);
@@ -128,8 +129,8 @@ function Minimap(): JSX.Element {
         }}
       >
         <WorldMap
+          isMinimap
           hideControls
-          alwaysFollowing
           initialZoom={minimapZoom}
           className={styles.minimap}
           rotate={rotateMinimap}
@@ -197,9 +198,15 @@ waitForOverwolf().then(() => {
         <UserProvider>
           <FiltersProvider>
             <MarkersProvider readonly>
-              <PositionProvider>
-                <Minimap />
-              </PositionProvider>
+              {isOverwolfApp ? (
+                <PositionProvider>
+                  <Minimap />
+                </PositionProvider>
+              ) : (
+                <PlayerProvider>
+                  <Minimap />
+                </PlayerProvider>
+              )}
             </MarkersProvider>
           </FiltersProvider>
         </UserProvider>

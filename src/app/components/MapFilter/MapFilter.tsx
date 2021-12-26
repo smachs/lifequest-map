@@ -4,7 +4,6 @@ import styles from './MapFilter.module.css';
 import MarkerIcon from '../icons/MarkerIcon';
 import MarkersView from './MarkersView';
 import MenuOpenIcon from '../icons/MenuOpenIcon';
-import { usePosition } from '../../contexts/PositionContext';
 import type { MarkerRouteItem } from '../MarkerRoutes/MarkerRoutes';
 import MarkerRoutes from '../MarkerRoutes/MarkerRoutes';
 import User from '../User/User';
@@ -22,6 +21,7 @@ import BroadcastIcon from '../icons/BroadcastIcon';
 import useReadLivePosition from '../../utils/useReadLivePosition';
 import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
 import Footer from '../Footer/Footer';
+import { usePlayer } from '../../contexts/PlayerContext';
 
 type View = 'markers' | 'settings' | 'markerRoutes';
 
@@ -39,7 +39,7 @@ function MapFilter({
     true
   );
   const [view, setView] = usePersistentState<View>('sidebar-view', 'markers');
-  const { following, toggleFollowing } = usePosition();
+  const { following, toggleFollowing } = usePlayer();
 
   const [isLive, setIsLive] = useReadLivePosition();
 

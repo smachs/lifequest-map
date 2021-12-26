@@ -5,7 +5,7 @@ import { useSettings } from '../../contexts/SettingsContext';
 import useEventListener from '../../utils/useEventListener';
 import { latestLeafletMap } from './useWorldMap';
 
-function useDirectionLine(position: Position) {
+function useDirectionLine(position?: Position | null) {
   const { alwaysShowDirection } = useSettings();
   const [showDirection, setShowDirection] = useState(false);
 
@@ -37,6 +37,10 @@ function useDirectionLine(position: Position) {
   }, [showDirection, alwaysShowDirection]);
 
   useEffect(() => {
+    if (!position) {
+      return;
+    }
+
     const latLng: [number, number] = [
       position.location[0] +
         Math.sin((position.rotation * Math.PI) / 180) * 500,

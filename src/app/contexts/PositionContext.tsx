@@ -1,34 +1,29 @@
 import type { ReactNode } from 'react';
+import { useState } from 'react';
 import { useMemo } from 'react';
 import { useEffect } from 'react';
 import { createContext, useContext } from 'react';
 import { findRegion, findLocation } from '../components/WorldMap/areas';
 import { getGameInfo, useIsNewWorldRunning } from '../utils/games';
 import { writeError } from '../utils/logs';
-import { usePersistentState } from '../utils/storage';
-import { useSetUser } from './UserContext';
 
 export type Position = { location: [number, number]; rotation: number };
 type PositionContextProps = {
-  position: Position;
-  setPosition: (value: Position | ((value: Position) => Position)) => void;
-  following: boolean;
-  toggleFollowing: () => void;
-  location?: string;
-  region?: string;
-  worldName?: string;
-  map?: string;
+  position: Position | null;
+  location: string | null;
+  region: string | null;
+  worldName: string | null;
+  map: string | null;
+  username: string | null;
 };
 
-export const defaultPosition: Position = {
-  location: [325, 9750],
-  rotation: 90,
-};
 const PositionContext = createContext<PositionContextProps>({
-  position: defaultPosition,
-  setPosition: () => undefined,
-  following: true,
-  toggleFollowing: () => undefined,
+  position: null,
+  location: null,
+  region: null,
+  worldName: null,
+  map: null,
+  username: null,
 });
 
 type PositionProviderProps = {
@@ -38,22 +33,17 @@ type PositionProviderProps = {
 export function PositionProvider({
   children,
 }: PositionProviderProps): JSX.Element {
-  const [position, setPosition] = usePersistentState<Position>(
-    'position',
-    defaultPosition,
-    false
-  );
-  const [following, setFollowing] = usePersistentState<boolean>(
-    'following',
-    true
-  );
-  const [worldName, setWorldName] = usePersistentState<string>('worldName', '');
-  const [map, setMap] = usePersistentState<string>('map', '');
+  const [position, setPosition] = useState<Position | null>(null);
+  const [worldName, setWorldName] = useState<string | null>(null);
+  const [map, setMap] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
   const newWorldIsRunning = useIsNewWorldRunning();
-  const setUser = useSetUser();
 
-  const location = useMemo(() => findLocation(position), [position]);
-  const region = useMemo(() => findRegion(position), [position]);
+  const location = useMemo(
+    () => position && findLocation(position),
+    [position]
+  );
+  const region = useMemo(() => position && findRegion(position), [position]);
 
   useEffect(() => {
     if (!newWorldIsRunning) {
@@ -102,7 +92,7 @@ export function PositionProvider({
         }
         if (playerName && playerName !== lastPlayerName) {
           lastPlayerName = playerName;
-          setUser(playerName);
+          setUsername(playerName);
         }
         if (worldName && worldName !== lastWorldName) {
           lastWorldName = worldName;
@@ -130,20 +120,15 @@ export function PositionProvider({
     };
   }, [newWorldIsRunning]);
 
-  function toggleFollowing() {
-    setFollowing(!following);
-  }
   return (
     <PositionContext.Provider
       value={{
         position,
-        setPosition,
-        following,
-        toggleFollowing,
         location,
         region,
         map,
         worldName,
+        username,
       }}
     >
       {children}

@@ -1,0 +1,11 @@
+.success {
+  color: #07bc0c;
+}
+
+.waiting {
+  color: lightblue;
+}
+
+.warning {
+  color: lightcoral;
+}

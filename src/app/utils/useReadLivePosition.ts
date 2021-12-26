@@ -1,47 +1,49 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
-import { useAccount, useSetUser } from '../contexts/UserContext';
-import { usePosition } from '../contexts/PositionContext';
-import { getJSONItem, usePersistentState } from './storage';
+import { useAccount } from '../contexts/UserContext';
+import { getJSONItem } from './storage';
 import { toast } from 'react-toastify';
 import useGroupPositions from '../components/WorldMap/useGroupPositions';
+import { usePlayer } from '../contexts/PlayerContext';
 
-type Position = { location: [number, number]; rotation: number };
-type Player = {
+export type Position = { location: [number, number]; rotation: number };
+export type Player = {
   steamId: string;
   steamName: string;
   username: string | null;
   position: Position | null;
+  location: string | null;
+  region: string | null;
+  worldName: string | null;
+  map: string | null;
 };
 export type Group = {
   [playerToken: string]: Player;
 };
 
-function useReadLivePosition(): [
-  boolean,
-  (value: boolean | ((value: boolean) => boolean)) => void
-] {
-  const [isReading, setIsReading] = usePersistentState(
-    'read-live-position',
-    false
-  );
-
-  const { setPosition } = usePosition();
-  const setUsername = useSetUser();
-  const [group, setGroup] = usePersistentState<Group>('group', {});
+function useReadLivePosition(): [boolean, (value: boolean) => void] {
+  const { setPlayer, isSyncing, setIsSyncing } = usePlayer();
+  const [group, setGroup] = useState<Group>({});
   const { account } = useAccount();
 
   useGroupPositions(group);
 
   useEffect(() => {
-    const token = getJSONItem('live-share-token', null);
-    const serverUrl = getJSONItem(
-      'live-share-server-url',
-      'wss://live.aeternum-map.gg'
-    );
-    if (!token || !isReading || !serverUrl) {
+    if (!isSyncing) {
       return;
     }
+    const token =
+      account?.liveShareToken ||
+      getJSONItem<string | null>('live-share-token', null);
+    const serverUrl =
+      account?.liveShareServerUrl ||
+      getJSONItem<string | null>('live-share-server-url', null);
+
+    if (!token || !serverUrl) {
+      setIsSyncing(false);
+      return;
+    }
+
     const socket = io(serverUrl, {
       query: {
         token,
@@ -62,15 +64,8 @@ function useReadLivePosition(): [
         }) || sessionIds[0];
 
       const player = group[playerSessionId];
-      if (player) {
-        if (player.username) {
-          setUsername(player.username);
-        }
-        if (player.position) {
-          setPosition(player.position);
-        }
-        delete group[playerSessionId];
-      }
+      setPlayer(player);
+      delete group[playerSessionId];
       setGroup(group);
     };
 
@@ -101,9 +96,14 @@ function useReadLivePosition(): [
       setGroup({});
       toast.info('Stop sharing live status 🛑');
     };
-  }, [isReading, account]);
+  }, [
+    account?.liveShareToken,
+    account?.liveShareServerUrl,
+    isSyncing,
+    account?.steamId,
+  ]);
 
-  return [isReading, setIsReading];
+  return [isSyncing, setIsSyncing];
 }
 
 export default useReadLivePosition;

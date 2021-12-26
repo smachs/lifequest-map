@@ -6,7 +6,6 @@ import { coordinates as playerCoordinates } from './usePlayerPosition';
 import { getJSONItem, setJSONItem } from '../../utils/storage';
 import { getRegions } from './areas';
 import { useSettings } from '../../contexts/SettingsContext';
-import { defaultPosition } from '../../contexts/PositionContext';
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 function toThreeDigits(number: number): string {
@@ -99,16 +98,14 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
       y: number;
       x: number;
       zoom: number;
-    }>('mapPosition', {
-      y: defaultPosition.location[0],
-      x: defaultPosition.location[1],
-      zoom: zoom,
-    });
+    } | null>('mapPosition', null);
 
-    map.setView(
-      [mapPosition.y, mapPosition.x],
-      initialZoom || mapPosition.zoom
-    );
+    if (mapPosition) {
+      map.setView(
+        [mapPosition.y, mapPosition.x],
+        initialZoom || mapPosition.zoom
+      );
+    }
 
     if (!hideControls) {
       leaflet.control.zoom({ position: 'topleft' }).addTo(map);

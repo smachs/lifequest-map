@@ -7,11 +7,12 @@ import usePlayerPosition from './usePlayerPosition';
 import { classNames } from '../../utils/styles';
 import type { CSSProperties } from 'react';
 import type { MarkerBasic } from '../../contexts/MarkersContext';
+import { isOverwolfApp } from '../../utils/overwolf';
 
 type WorldMapProps = {
+  isMinimap?: boolean;
   hideControls?: boolean;
   initialZoom?: number;
-  alwaysFollowing?: boolean;
   className?: string;
   style?: CSSProperties;
   rotate?: boolean;
@@ -19,10 +20,10 @@ type WorldMapProps = {
 };
 
 function WorldMap({
+  isMinimap,
   className,
   hideControls,
   initialZoom,
-  alwaysFollowing,
   style,
   rotate,
   onMarkerEdit,
@@ -33,25 +34,27 @@ function WorldMap({
     hideControls,
     initialZoom,
   });
-  useLayerGroups({
-    leafletMap,
-    onMarkerClick: (marker) => {
-      if (onMarkerEdit) {
-        addModal({
-          children: (
-            <MarkerDetails
-              marker={marker}
-              onEdit={() => {
-                onMarkerEdit(marker);
-                closeLatestModal();
-              }}
-            />
-          ),
-        });
-      }
-    },
-  });
-  usePlayerPosition({ leafletMap, alwaysFollowing, rotate });
+  if (!isOverwolfApp) {
+    useLayerGroups({
+      leafletMap,
+      onMarkerClick: (marker) => {
+        if (onMarkerEdit) {
+          addModal({
+            children: (
+              <MarkerDetails
+                marker={marker}
+                onEdit={() => {
+                  onMarkerEdit(marker);
+                  closeLatestModal();
+                }}
+              />
+            ),
+          });
+        }
+      },
+    });
+  }
+  usePlayerPosition({ isMinimap, leafletMap, rotate });
 
   return (
     <div

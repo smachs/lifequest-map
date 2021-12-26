@@ -5,7 +5,7 @@ import App from './App';
 import { UserProvider } from './contexts/UserContext';
 import { ModalProvider } from './contexts/ModalContext';
 import { MarkersProvider } from './contexts/MarkersContext';
-import { PositionProvider } from './contexts/PositionContext';
+import { PlayerProvider } from './contexts/PlayerContext';
 import { FiltersProvider } from './contexts/FiltersContext';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { initPlausible } from './utils/stats';
@@ -16,11 +16,11 @@ ReactDOM.render(
       <UserProvider>
         <FiltersProvider>
           <MarkersProvider>
-            <PositionProvider>
+            <PlayerProvider>
               <ModalProvider>
                 <App />
               </ModalProvider>
-            </PositionProvider>
+            </PlayerProvider>
           </MarkersProvider>
         </FiltersProvider>
       </UserProvider>

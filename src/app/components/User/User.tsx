@@ -1,14 +1,14 @@
 import type { AccountDTO } from '../../contexts/UserContext';
-import { useAccount, useUser } from '../../contexts/UserContext';
+import { useAccount } from '../../contexts/UserContext';
 import { fetchJSON } from '../../utils/api';
 import styles from './User.module.css';
 import steamSrc from './steam.png';
 import { useEffect, useState } from 'react';
+import SyncStatusReceiver from '../SyncStatus/SyncStatusReceiver';
 
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 function User(): JSX.Element {
-  const user = useUser();
   const { account, setAccount, logoutAccount } = useAccount();
 
   const [verifyingSessionId, setVerifyingSessionId] = useState('');
@@ -57,14 +57,12 @@ function User(): JSX.Element {
       ) : (
         <p className={styles.welcome}>
           Welcome back, {account.name}!{' '}
-          <button onClick={logoutAccount}>Sign out</button>
+          <button className={styles.logout} onClick={logoutAccount}>
+            Sign out
+          </button>
         </p>
       )}
-      {user ? (
-        <small>Playing as {user.username}</small>
-      ) : (
-        <small>Could not detect New World character</small>
-      )}
+      <SyncStatusReceiver />
     </section>
   );
 }

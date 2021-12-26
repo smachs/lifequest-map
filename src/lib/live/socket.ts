@@ -127,6 +127,7 @@ export function initSocket(server: http.Server) {
       if (activeGroups[token]?.[client.id]) {
         delete activeGroups[token][client.id];
       }
+      client.to(token).emit('update', activeGroups[token]);
     });
   });
 
