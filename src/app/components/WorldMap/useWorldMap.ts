@@ -81,6 +81,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
     }
 
     const zoom = initialZoom || 4;
+    const maxBounds = leaflet.latLngBounds([-10000, -7000], [20000, 25000]);
     const map = leaflet.map(mapElement, {
       preferCanvas: true,
       crs: worldCRS,
@@ -89,7 +90,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
       zoom: zoom,
       attributionControl: false,
       zoomControl: false,
-      maxBounds: leaflet.latLngBounds([-10000, -7000], [20000, 25000]),
+      maxBounds: maxBounds,
     });
     latestLeafletMap = map;
     setLeafletMap(map);
@@ -105,6 +106,8 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
         [mapPosition.y, mapPosition.x],
         initialZoom || mapPosition.zoom
       );
+    } else {
+      map.fitBounds(maxBounds);
     }
 
     if (!hideControls) {
