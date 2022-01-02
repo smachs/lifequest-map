@@ -97,7 +97,10 @@ function useReadLivePosition(): [boolean, (value: boolean) => void] {
         toast.success('Sharing live status 👌');
 
         peer?.destroy();
-        peer = new Peer(socket.id, { secure: false, debug: 2 });
+        peer = new Peer(socket.id.replace(/[^a-zA-Z ]/g, ''), {
+          secure: false,
+          debug: 2,
+        });
 
         peer.on('connection', (conn) => {
           socket.off('update');

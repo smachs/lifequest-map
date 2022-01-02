@@ -85,7 +85,9 @@ function useShareLivePosition(token: string, serverUrl: string) {
       updateStatus();
 
       if (peer) {
-        peerConnections[clientId] = peer.connect(clientId);
+        peerConnections[clientId] = peer.connect(
+          clientId.replace(/[^a-zA-Z ]/g, '')
+        );
       }
     });
 
