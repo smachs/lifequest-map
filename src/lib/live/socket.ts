@@ -57,8 +57,7 @@ export function initSocket(server: http.Server) {
         position: null,
       };
     }
-
-    client.to(token).emit('connected', isOverwolfApp, steamName);
+    client.to(token).emit('connected', isOverwolfApp, steamName, client.id);
 
     client.on('status', async (callback) => {
       const roomSockets = await io!.in(token).allSockets();
@@ -122,12 +121,15 @@ export function initSocket(server: http.Server) {
 
     client.on('disconnect', () => {
       if (!isOverwolfApp) {
-        client.to(token).emit('disconnected', isOverwolfApp, steamName);
+        client
+          .to(token)
+          .emit('disconnected', isOverwolfApp, steamName, client.id);
+        return;
       }
       if (activeGroups[token]?.[client.id]) {
         delete activeGroups[token][client.id];
       }
-      client.to(token).emit('update', activeGroups[token]);
+      client.to(token).emit('status', activeGroups[token]);
     });
   });
 

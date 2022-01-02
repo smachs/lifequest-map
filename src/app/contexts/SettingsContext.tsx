@@ -22,6 +22,8 @@ type SettingsContextValue = {
   setAdaptiveZoom: (adaptiveZoom: boolean) => void;
   traceLineColor: string;
   setTraceLineColor: (traceLineColor: string) => void;
+  peerToPeer: boolean;
+  setPeerToPeer: (peerToPeer: boolean) => void;
 };
 const SettingsContext = createContext<SettingsContextValue>({
   markerSize: 30,
@@ -42,6 +44,8 @@ const SettingsContext = createContext<SettingsContextValue>({
   setAdaptiveZoom: () => undefined,
   traceLineColor: '#F78166',
   setTraceLineColor: () => undefined,
+  peerToPeer: true,
+  setPeerToPeer: () => undefined,
 });
 
 type SettingsProviderProps = {
@@ -83,6 +87,7 @@ export function SettingsProvider({
     'trace-line-color',
     '#F78166'
   );
+  const [peerToPeer, setPeerToPeer] = usePersistentState('peer-to-peer', true);
 
   return (
     <SettingsContext.Provider
@@ -105,6 +110,8 @@ export function SettingsProvider({
         setAdaptiveZoom,
         traceLineColor,
         setTraceLineColor,
+        peerToPeer,
+        setPeerToPeer,
       }}
     >
       {children}

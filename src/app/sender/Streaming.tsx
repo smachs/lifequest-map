@@ -33,10 +33,8 @@ function Streaming(): JSX.Element {
     'live-share-server-url',
     account!.liveShareServerUrl || ''
   );
-  const { status, isConnected, isSharing, setIsSharing } = useShareLivePosition(
-    token,
-    serverUrl
-  );
+  const { status, isConnected, isSharing, setIsSharing, peerConnections } =
+    useShareLivePosition(token, serverUrl);
   const newWorldIsRunning = useIsNewWorldRunning();
   const { position, location, region } = usePosition();
   const user = useUser();
@@ -202,7 +200,12 @@ function Streaming(): JSX.Element {
             <ul className={styles.list}>
               {status?.connections.length ? (
                 status.connections.map((connection) => (
-                  <li key={connection}>Browser</li>
+                  <li key={connection}>
+                    Browser{' '}
+                    {peerConnections[connection]?.open
+                      ? '(Direct)'
+                      : '(Socket)'}
+                  </li>
                 ))
               ) : (
                 <li>No connections</li>

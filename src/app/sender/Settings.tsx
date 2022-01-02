@@ -25,7 +25,8 @@ function Settings({
   showMinimap,
   onShowMinimap,
 }: SettingsProps): JSX.Element {
-  const { showRegionBorders, setShowRegionBorders } = useSettings();
+  const { showRegionBorders, setShowRegionBorders, peerToPeer, setPeerToPeer } =
+    useSettings();
   const showHideAppBinding = useHotkeyBinding(SHOW_HIDE_APP);
   const setupMinimapBinding = useHotkeyBinding(SETUP_MINIMAP);
   const showHideMinimapBinding = useHotkeyBinding(SHOW_HIDE_MINIMAP);
@@ -110,6 +111,15 @@ function Settings({
           <a href="overwolf://settings/games-overlay?hotkey=zoom_out_minimap&gameId=21816">
             {zoomOutMinimapBinding}
           </a>
+        </label>
+        <h4>Connection</h4>
+        <label className={styles.label}>
+          Peer to peer
+          <input
+            type="checkbox"
+            checked={peerToPeer}
+            onChange={(event) => setPeerToPeer(event.target.checked)}
+          />
         </label>
         <button onClick={logoutAccount} className={styles.logout}>
           Sign out
