@@ -4,10 +4,8 @@ import styles from './MarkerRoute.module.css';
 import { classNames } from '../../utils/styles';
 import DeleteButton from '../DeleteButton/DeleteButton';
 import { toTimeAgo } from '../../utils/dates';
-import { calcDistance } from '../../utils/positions';
 import EditButton from '../EditButton/EditButton';
 import FavoriteButton from '../FavoriteButton/FavoriteButton';
-import { usePlayer } from '../../contexts/PlayerContext';
 
 type MarkerRouteProps = {
   markerRoute: MarkerRouteItem;
@@ -33,39 +31,29 @@ function MarkerRoute({
   onEdit,
   isOwner,
 }: MarkerRouteProps): JSX.Element {
-  const { player } = usePlayer();
-
-  const distance: number = player?.position
-    ? calcDistance(markerRoute.positions[0], player.position.location)
-    : Infinity;
-
   return (
     <article
       key={markerRoute.name}
       className={classNames(styles.container, selected && styles.selected)}
       onClick={onClick}
     >
-      <h4 className={styles.info} title={markerRoute.name}>
+      <h4 className={styles.title} title={markerRoute.name}>
         {markerRoute.name}
       </h4>
+      <div className={styles.regions}>{markerRoute.regions?.join(', ')}</div>
       <small className={styles.info}>
-        Added {toTimeAgo(new Date(markerRoute.createdAt))} by{' '}
+        {toTimeAgo(new Date(markerRoute.createdAt))} by{' '}
         <span className={classNames(isOwner ? styles.owner : styles.notOwner)}>
           {markerRoute.username}
         </span>
+        <span
+          className={classNames(isPublic ? styles.public : styles.private)}
+          title={isPublic ? 'Visible for everyone' : 'Only visible for you'}
+        >
+          {isPublic ? ' (Public)' : ' (Private)'}
+        </span>
       </small>
       <MarkerTypes markersByType={markerRoute.markersByType} />
-      {distance && (
-        <div className={styles.distance}>
-          Distance: {distance}{' '}
-          <span
-            className={classNames(isPublic ? styles.public : styles.private)}
-            title={isPublic ? 'Visible for everyone' : 'Only visible for you'}
-          >
-            {isPublic ? 'Public' : 'Private'}
-          </span>
-        </div>
-      )}
       <div className={styles.actions}>
         <FavoriteButton
           onClick={onFavorite}

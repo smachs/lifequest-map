@@ -43,6 +43,7 @@
 
 :root {
   --color-primary: #ffb10f;
+  --color-secondary: lightblue;
   --color-text: #b2b2b2;
   --color-trivial: #888;
   --color-shade-one: #232220;

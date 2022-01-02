@@ -5,6 +5,7 @@ import { Double, ObjectId } from 'mongodb';
 import { getMarkerRoutesCollection } from './collection';
 import { postToDiscord } from '../discord';
 import { ensureAuthenticated } from '../auth/middlewares';
+import { findRegions } from '../../app/components/WorldMap/areas';
 
 const markerRoutesRouter = Router();
 
@@ -23,27 +24,25 @@ markerRoutesRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       return;
     }
 
+    if (positions.length === 0 || !Array.isArray(positions)) {
+      res.status(400).send('Invalid payload');
+      return;
+    }
+
     const now = new Date();
     const markerRoute: MarkerRouteDTO = {
       name,
       userId: account.steamId,
       username: account.name,
-      positions,
+      positions: positions.map((position) =>
+        position.map((part: number) => new Double(part))
+      ) as [Double, Double][],
+      regions: findRegions(positions),
       markersByType,
       isPublic: Boolean(isPublic),
       createdAt: now,
       updatedAt: now,
     };
-    if (Array.isArray(positions)) {
-      markerRoute.positions = positions.map((position) =>
-        position.map((part: number) => new Double(part))
-      ) as [Double, Double][];
-    }
-
-    if (markerRoute.positions.length === 0) {
-      res.status(400).send('Invalid payload');
-      return;
-    }
 
     const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const existingMarkerRoute = await getMarkerRoutesCollection().findOne({
@@ -196,6 +195,7 @@ markerRoutesRouter.patch(
         markerRoute.isPublic = isPublic;
       }
       if (Array.isArray(positions)) {
+        markerRoute.regions = findRegions(positions);
         markerRoute.positions = positions.map((position) =>
           position.map((part: number) => new Double(part))
         ) as [Double, Double][];

@@ -16,7 +16,7 @@
 }
 
 .waiting {
-  color: lightblue;
+  color: var(--color-secondary);
 }
 
 .warning {
@@ -83,8 +83,8 @@
 }
 
 .submit.connecting {
-  color: lightblue;
-  border-color: lightblue;
+  color: var(--color-secondary);
+  border-color: var(--color-secondary);
 }
 
 .submit:hover,

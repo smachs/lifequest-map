@@ -4,8 +4,8 @@ import 'leaflet/dist/leaflet.css';
 import 'tilelayer-canvas';
 import { coordinates as playerCoordinates } from './usePlayerPosition';
 import { getJSONItem, setJSONItem } from '../../utils/storage';
-import { getRegions } from './areas';
 import { useSettings } from '../../contexts/SettingsContext';
+import useRegionBorders from './useRegionBorders';
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 function toThreeDigits(number: number): string {
@@ -62,17 +62,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
     }
   }, [leafletMap, initialZoom]);
 
-  useEffect(() => {
-    if (!leafletMap || !showRegionBorders) {
-      return;
-    }
-    const regions = getRegions();
-
-    regions.forEach((region) => region.addTo(leafletMap));
-    return () => {
-      regions.forEach((region) => region.removeFrom(leafletMap));
-    };
-  }, [leafletMap, showRegionBorders]);
+  useRegionBorders(showRegionBorders, leafletMap);
 
   useEffect(() => {
     const mapElement = elementRef.current;

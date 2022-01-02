@@ -1,21 +1,5 @@
-import leaflet from 'leaflet';
-import type { Position } from '../../contexts/PositionContext';
 import locations from './locations.json';
 import regions from './regions.json';
-
-const COLOR = 'rgb(200 200 200)';
-
-export function getRegions() {
-  return regions.map((region) =>
-    leaflet.polygon(region.coordinates as [number, number][], {
-      color: COLOR,
-      fill: false,
-      weight: 1.2,
-      interactive: false,
-      pmIgnore: true,
-    })
-  );
-}
 
 export type Area = {
   name: string;
@@ -44,24 +28,36 @@ export const checkPointInsidePolygon = (
   return inside;
 };
 
-export const findLocation = (position: Position): string | null => {
+export const findLocation = (position: [number, number]): string | null => {
   return (
     locations.find((location) =>
       checkPointInsidePolygon(
-        position.location,
+        position,
         location.coordinates as [number, number][]
       )
     )?.name || null
   );
 };
 
-export const findRegion = (position: Position): string | null => {
+export const findRegion = (position: [number, number]): string | null => {
   return (
     regions.find((region) =>
       checkPointInsidePolygon(
-        position.location,
+        position,
         region.coordinates as [number, number][]
       )
     )?.name || null
   );
 };
+
+export const findRegions = (positions: [number, number][]): string[] => {
+  const regions = positions.map(
+    (position) => findRegion(position) || 'Unknown'
+  );
+  const uniqueRegions = regions.filter(
+    (region, index) => regions.indexOf(region) === index
+  );
+  return uniqueRegions;
+};
+
+export const regionNames = regions.map((region) => region.name);

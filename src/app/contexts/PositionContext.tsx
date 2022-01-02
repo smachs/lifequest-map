@@ -40,10 +40,13 @@ export function PositionProvider({
   const newWorldIsRunning = useIsNewWorldRunning();
 
   const location = useMemo(
-    () => position && findLocation(position),
+    () => position && findLocation(position.location),
     [position]
   );
-  const region = useMemo(() => position && findRegion(position), [position]);
+  const region = useMemo(
+    () => position && findRegion(position.location),
+    [position]
+  );
 
   useEffect(() => {
     if (!newWorldIsRunning) {

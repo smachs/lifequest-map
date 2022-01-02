@@ -3,7 +3,7 @@
 }
 
 .waiting {
-  color: lightblue;
+  color: var(--color-secondary);
 }
 
 .warning {

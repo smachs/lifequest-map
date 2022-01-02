@@ -5,6 +5,7 @@
   text-transform: uppercase;
   transition: 0.2s background-color ease-in;
   position: relative;
+  border-left: 2px solid transparent;
 }
 
 .container:hover {
@@ -12,16 +13,21 @@
   background-color: var(--color-shade-three);
 }
 
-.distance {
+.regions {
   font-size: 0.8em;
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
+  color: var(--color-secondary);
 }
 
 .selected {
-  color: var(--color-primary);
+  border-color: var(--color-primary);
   background-color: var(--color-shade-two);
+}
+
+.title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--color-primary);
 }
 
 .info {
@@ -40,7 +46,7 @@
 }
 
 .public {
-  color: lightblue;
+  color: var(--color-secondary);
 }
 
 .private {

@@ -11,6 +11,7 @@ import { useMarkers } from '../../contexts/MarkersContext';
 import type { MarkerRouteItem } from './MarkerRoutes';
 import Button from '../Button/Button';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
+import { findRegions } from '../WorldMap/areas';
 
 type SelectRouteProps = {
   markerRoute?: MarkerRouteItem;
@@ -24,6 +25,7 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
     [type: string]: number;
   }>({});
   const [name, setName] = useState(markerRoute?.name || '');
+  const [regions, setRegions] = useState<string[]>([]);
   const [isPublic, setIsPublic] = useState(markerRoute?.isPublic || false);
   const { markers, toggleMarkerRoute, refreshMarkerRoutes } = useMarkers();
 
@@ -54,6 +56,7 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
         number
       ][];
       setPositions(positions);
+      setRegions(findRegions(positions));
     },
     [markers]
   );
@@ -176,7 +179,7 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
         />
       </label>
       <label className={styles.label}>
-        Make it available for everyone
+        Make it available for everyone'
         <input
           type="checkbox"
           onChange={(event) => setIsPublic(event.target.checked)}
@@ -184,6 +187,7 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
         />
       </label>
       <MarkerTypes markersByType={markersByType} />
+      <div className={styles.regions}>{regions.join(', ')}</div>
       <Button onClick={handleSave} disabled={!name || positions.length === 0}>
         Save Route {!name && '(Name missing)'}
       </Button>

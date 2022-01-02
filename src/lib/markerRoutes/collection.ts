@@ -50,6 +50,12 @@ function ensureMarkerRoutesSchema(): Promise<Document> {
               },
             },
           },
+          regions: {
+            bsonType: 'array',
+            items: {
+              bsonType: 'string',
+            },
+          },
           markersByType: {
             bsonType: 'object',
           },

@@ -1,18 +1,16 @@
 import { useEffect, useMemo } from 'react';
 import { useFilters } from '../../contexts/FiltersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
-import { usePlayer } from '../../contexts/PlayerContext';
 import type { AccountDTO } from '../../contexts/UserContext';
 import { useAccount } from '../../contexts/UserContext';
 import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
-import { calcDistance } from '../../utils/positions';
 import { escapeRegExp } from '../../utils/regExp';
 import { usePersistentState } from '../../utils/storage';
-import type { Position } from '../../utils/useReadLivePosition';
 import ActionButton from '../ActionControl/ActionButton';
 import { mapFilters } from '../MapFilter/mapFilters';
 import SearchInput from '../SearchInput/SearchInput';
+import { regionNames } from '../WorldMap/areas';
 import { deleteMarkerRoute, patchFavoriteMarkerRoute } from './api';
 import MarkerRoute from './MarkerRoute';
 import styles from './MarkerRoutes.module.css';
@@ -24,6 +22,7 @@ export type MarkerRouteItem = {
   username: string;
   isPublic: boolean;
   positions: [number, number][];
+  regions: string[];
   markersByType: {
     [type: string]: number;
   };
@@ -31,8 +30,8 @@ export type MarkerRouteItem = {
   createdAt: string;
 };
 
-type SortBy = 'match' | 'favorites' | 'distance' | 'date' | 'name' | 'username';
-type Filter = 'all' | 'myRoutes' | 'favorites';
+type SortBy = 'match' | 'favorites' | 'date' | 'name' | 'username';
+type Filter = 'all' | 'myRoutes' | 'favorites' | string;
 
 function handleFilter(
   filter: Filter,
@@ -61,14 +60,13 @@ function handleFilter(
     return (item: MarkerRouteItem) =>
       item.userId === account?.steamId && filterBySearch(item);
   }
+  if (regionNames.includes(filter)) {
+    return (item: MarkerRouteItem) => item.regions?.includes(filter);
+  }
   return (item: MarkerRouteItem) => filterBySearch(item);
 }
 
-function handleSort(
-  sortBy: SortBy,
-  filters: string[],
-  position?: Position | null
-) {
+function handleSort(sortBy: SortBy, filters: string[]) {
   if (sortBy === 'favorites') {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
       (b.favorites || 0) - (a.favorites || 0);
@@ -76,13 +74,6 @@ function handleSort(
   if (sortBy === 'date') {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
       b.createdAt.localeCompare(a.createdAt);
-  }
-  if (sortBy === 'distance') {
-    return (a: MarkerRouteItem, b: MarkerRouteItem) =>
-      position?.location
-        ? calcDistance(position.location, a.positions[0]) -
-          calcDistance(position.location, b.positions[0])
-        : 0;
   }
   if (sortBy === 'name') {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
@@ -125,7 +116,6 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
   );
   const [search, setSearch] = usePersistentState('searchRoutes', '');
   const [filters, setFilters] = useFilters();
-  const { player } = usePlayer();
 
   useEffect(() => {
     refreshMarkerRoutes();
@@ -181,8 +171,8 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
     () =>
       allMarkerRoutes
         .filter(handleFilter(filter, search, account))
-        .sort(handleSort(sortBy, filters, player?.position)),
-    [sortBy, allMarkerRoutes, filters, player?.position, filter, search]
+        .sort(handleSort(sortBy, filters)),
+    [sortBy, allMarkerRoutes, filters, filter, search]
   );
 
   function handleEdit(markerRoute: MarkerRouteItem) {
@@ -226,7 +216,6 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
         >
           <option value="match">By match</option>
           <option value="favorites">By favorites</option>
-          <option value="distance">By distance</option>
           <option value="date">By date</option>
           <option value="name">By name</option>
           <option value="username">By username</option>
@@ -238,6 +227,12 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
           <option value="all">All</option>
           <option value="favorites">Favorites</option>
           <option value="myRoutes">My routes</option>
+          <option value="" disabled></option>
+          {regionNames.map((regionName) => (
+            <option key={regionName} value={regionName}>
+              {regionName}
+            </option>
+          ))}
         </select>
       </div>
       <div className={styles.items}>
