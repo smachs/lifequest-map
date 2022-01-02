@@ -14,7 +14,7 @@ import { v4 as uuid } from 'uuid';
 import type { FormEvent } from 'react';
 import { usePosition } from '../contexts/PositionContext';
 import { useEffect, useState } from 'react';
-import { useAccount, useUser } from '../contexts/UserContext';
+import { useAccount } from '../contexts/UserContext';
 import styles from './Streaming.module.css';
 import MenuIcon from '../components/icons/MenuIcon';
 import Settings from './Settings';
@@ -36,8 +36,7 @@ function Streaming(): JSX.Element {
   const { status, isConnected, isSharing, setIsSharing, peerConnections } =
     useShareLivePosition(token, serverUrl);
   const newWorldIsRunning = useIsNewWorldRunning();
-  const { position, location, region } = usePosition();
-  const user = useUser();
+  const { position, location, region, username } = usePosition();
   const [showSettings, setShowSettings] = useState(false);
   const [showMinimap, setShowMinimap] = useMinimap();
   const servers = useServers();
@@ -90,14 +89,12 @@ function Streaming(): JSX.Element {
   }
 
   const players = status ? Object.values(status.group) : [];
-  const player = user
-    ? {
-        username: user.username,
-        position,
-        region,
-        location,
-      }
-    : null;
+  const player = {
+    username,
+    position,
+    region,
+    location,
+  };
   return (
     <div className={styles.streaming}>
       <p className={styles.user}>
