@@ -107,7 +107,7 @@ function useReadLivePosition(): [boolean, (value: boolean) => void] {
 
           conn.on('data', (data) => {
             if (data.group) {
-              updateStatus(group);
+              updateStatus(data.group);
               return;
             }
             const { steamId, ...partialPlayer } = data;
