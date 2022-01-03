@@ -117,8 +117,13 @@ function useReadLivePosition(): [boolean, (value: boolean) => void] {
                 setPlayer({ ...latestPlayer });
               }
             } else if (latestGroup) {
-              Object.assign(latestGroup[steamId], partialPlayer);
-              setGroup({ ...latestGroup });
+              const player = Object.values(latestGroup).find(
+                (player) => player.steamId === steamId
+              );
+              if (player) {
+                Object.assign(player, partialPlayer);
+                setGroup({ ...latestGroup });
+              }
             }
           });
         });
