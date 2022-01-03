@@ -77,10 +77,7 @@ function useReadLivePosition(): [boolean, (value: boolean) => void] {
 
     socket.emit('status', updateStatus);
     socket.on('status', updateStatus);
-    socket.on('update', (data) => {
-      console.log('update', data);
-      updateStatus(data);
-    });
+    socket.on('update', updateStatus);
 
     const handleHotkey = (steamId: string, hotkey: string) => {
       if (steamId !== account?.steamId) {
@@ -111,11 +108,9 @@ function useReadLivePosition(): [boolean, (value: boolean) => void] {
               return;
             }
             const { steamId, ...partialPlayer } = data;
-            if (steamId === account?.steamId) {
-              if (latestPlayer) {
-                Object.assign(latestPlayer, partialPlayer);
-                setPlayer({ ...latestPlayer });
-              }
+            if (latestPlayer && latestPlayer.steamId === steamId) {
+              Object.assign(latestPlayer, partialPlayer);
+              setPlayer({ ...latestPlayer });
             } else if (latestGroup) {
               const player = Object.values(latestGroup).find(
                 (player) => player.steamId === steamId
