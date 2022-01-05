@@ -72,6 +72,9 @@ function ensureMarkersSchema(): Promise<Document> {
           isPrivate: {
             bsonType: 'bool',
           },
+          updatedAt: {
+            bsonType: 'date',
+          },
           createdAt: {
             bsonType: 'date',
           },

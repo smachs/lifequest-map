@@ -13,5 +13,6 @@ export type MarkerDTO = {
   screenshotFilename?: string;
   comments?: number;
   isPrivate?: boolean;
+  updatedAt?: Date;
   createdAt: Date;
 };

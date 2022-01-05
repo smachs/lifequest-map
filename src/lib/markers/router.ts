@@ -11,7 +11,6 @@ import type { CommentDTO } from '../comments/types';
 import { SCREENSHOTS_PATH } from '../env';
 import { getScreenshotsCollection } from '../screenshots/collection';
 import { ensureAuthenticated } from '../auth/middlewares';
-import type { AccountDTO } from '../auth/types';
 import etag from 'etag';
 
 const markersRouter = Router();
@@ -153,7 +152,7 @@ markersRouter.patch(
       const account = req.account!;
       const { markerId } = req.params;
 
-      const marker = await bodyToMarker(req.body, account);
+      const marker = await bodyToMarker(req.body);
       if (!marker) {
         res.status(400).send('Invalid payload');
         return;
@@ -191,6 +190,7 @@ markersRouter.patch(
       }
 
       marker.isPrivate = mapFilter.category === 'private';
+      marker.updatedAt = new Date();
       const result = await getMarkersCollection().findOneAndUpdate(
         query,
         {
@@ -223,11 +223,21 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
   try {
     const account = req.account!;
 
-    const marker = await bodyToMarker(req.body, account);
-    if (!marker) {
+    const partialMarker = await bodyToMarker(req.body);
+    if (!partialMarker || !partialMarker.type || !partialMarker.position) {
       res.status(400).send('Invalid payload');
       return;
     }
+    const now = new Date();
+    const marker: MarkerDTO = {
+      createdAt: now,
+      updatedAt: now,
+      userId: account.steamId,
+      username: account.name,
+      type: partialMarker.type,
+      position: partialMarker.position,
+      ...partialMarker,
+    };
 
     const existingMarker = await getMarkersCollection().findOne({
       type: marker.type,
@@ -337,9 +347,8 @@ markersRouter.post(
 
 async function bodyToMarker(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  body: any,
-  account: AccountDTO
-): Promise<MarkerDTO | false> {
+  body: any
+): Promise<Partial<MarkerDTO> | false> {
   const {
     type,
     position,
@@ -351,23 +360,20 @@ async function bodyToMarker(
     screenshotId,
   } = body;
 
-  if (typeof type !== 'string' || !Array.isArray(position)) {
-    return false;
+  const marker: Partial<MarkerDTO> = {};
+  if (
+    typeof type === 'string' &&
+    mapFilters.some((filter) => filter.type === type)
+  ) {
+    marker.type = type;
   }
-  const marker: MarkerDTO = {
-    type,
-    userId: account.steamId,
-    username: account.name,
-    createdAt: new Date(),
-    position: position.map((part: number) => new Double(+part.toFixed(2))) as [
-      Double,
-      Double,
-      Double
-    ],
-  };
-  if (!mapFilters.some((filter) => filter.type === marker.type)) {
-    return false;
+
+  if (Array.isArray(position)) {
+    marker.position = position.map(
+      (part: number) => new Double(+part.toFixed(2))
+    ) as [Double, Double, Double];
   }
+
   if (name) {
     marker.name = name.substring(0, MAX_NAME_LENGTH);
   }
