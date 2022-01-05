@@ -134,7 +134,7 @@ markersRouter.delete(
 
       await postToDiscord(
         `📌💀 Marker from ${marker.username} deleted by ${account.name}`,
-        marker.isPrivate
+        !marker.isPrivate
       );
 
       await refreshMarkers();
