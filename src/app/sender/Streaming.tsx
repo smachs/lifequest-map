@@ -98,13 +98,13 @@ function Streaming(): JSX.Element {
   return (
     <div className={styles.streaming}>
       <p className={styles.user}>
-        <p>
+        <span>
           Welcome back, {account!.name}!<br />
           <SyncStatusSender
             newWorldIsRunning={newWorldIsRunning}
             player={player}
           />
-        </p>{' '}
+        </span>{' '}
         <button onClick={() => setShowSettings(true)}>
           <MenuIcon />
         </button>

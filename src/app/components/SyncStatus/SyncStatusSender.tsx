@@ -17,7 +17,9 @@ function SyncStatusSender({ newWorldIsRunning, player }: SyncStatusProps) {
         <small>
           <span className={styles.success}>Playing</span> as {player.username}{' '}
           at [{player.position.location[1]}, {player.position.location[0]}]{' '}
-          <div>{player.region && `${player.location || player.region}`}</div>
+          <span className={styles.region}>
+            {player.region && `${player.location || player.region}`}
+          </span>
         </small>
       )}
       {newWorldIsRunning && !player?.position && (

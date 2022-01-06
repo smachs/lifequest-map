@@ -9,3 +9,7 @@
 .warning {
   color: lightcoral;
 }
+
+.region {
+  display: block;
+}

@@ -51,7 +51,7 @@ authRouter.get('/logout', ensureAuthenticated, async (req, res) => {
     { $unset: { sessionId: true } }
   );
   if (!result.modifiedCount) {
-    res.status(404).end(`No account found`);
+    res.status(304).end(`No account found`);
     return;
   }
   res.status(200).json('Signed out');
@@ -176,7 +176,7 @@ authRouter.patch(
         updateAccount
       );
       if (!result.modifiedCount) {
-        res.status(404).end('Account not changed');
+        res.status(304).end('Account not changed');
         return;
       }
       await getMarkerRoutesCollection().updateOne(
@@ -202,7 +202,7 @@ authRouter.patch(
         res.status(400).send('Invalid payload');
         return;
       }
-      const result = await getAccountCollection().updateOne(
+      await getAccountCollection().updateOne(
         { steamId: req.account!.steamId },
         {
           $set: {
@@ -211,10 +211,7 @@ authRouter.patch(
           },
         }
       );
-      if (!result.modifiedCount) {
-        res.status(404).end('Account not changed');
-        return;
-      }
+
       res.json({ token });
     } catch (error) {
       next(error);

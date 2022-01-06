@@ -13,6 +13,14 @@ import { useSettings } from '../contexts/SettingsContext';
 
 const peerConnections: { [key: string]: Peer.DataConnection } = {};
 
+const sendToPeers = (data: unknown) => {
+  Object.values(peerConnections).forEach((peerConnection) => {
+    if (peerConnection.open) {
+      peerConnection.send(data);
+    }
+  });
+};
+
 function useShareLivePosition(token: string, serverUrl: string) {
   const { peerToPeer } = useSettings();
   const [isSharing, setIsSharing] = usePersistentState(
@@ -46,7 +54,14 @@ function useShareLivePosition(token: string, serverUrl: string) {
       return;
     }
 
-    const peer = peerToPeer ? new Peer() : null;
+    const peer = peerToPeer ? new Peer(undefined, { debug: 2 }) : null;
+
+    const openPromise = new Promise((resolve) => {
+      peer?.on('open', (id) => {
+        console.log('My peer ID is: ' + id);
+        resolve(id);
+      });
+    });
 
     const newSocket = io(serverUrl, {
       query: {
@@ -63,32 +78,47 @@ function useShareLivePosition(token: string, serverUrl: string) {
     const updateStatus = () => {
       newSocket.emit('status', (group: Group, connections: string[]) => {
         setStatus({ group, connections });
-        Object.values(peerConnections).forEach((peerConnection) =>
-          peerConnection.send({ group })
-        );
+        sendToPeers({ group });
+
+        if (peer) {
+          connections.forEach(async (connection) => {
+            await openPromise;
+            if (!peerConnections[connection]) {
+              const peerId = connection.replace(/[^a-zA-Z ]/g, '');
+              console.log(`Connect to ${peerId}`);
+              peerConnections[connection] = peer.connect(peerId);
+
+              peerConnections[connection].on('error', (error) => {
+                console.error('Peer error', error);
+              });
+
+              peerConnections[connection].on('open', () => {
+                console.log('Peer opened');
+                peerConnections[connection].send({ group });
+              });
+
+              peerConnections[connection].on('close', () => {
+                console.log('Peer closed');
+                delete peerConnections[connection];
+              });
+            }
+          });
+        }
       });
     };
 
     newSocket.on('connect', () => {
-      if (newSocket.connected) {
-        setIsConnected(true);
-        toast.success('Sharing live status 👌');
-        updateStatus();
-      }
+      setIsConnected(true);
+      toast.success('Sharing live status 👌');
+      updateStatus();
     });
 
-    newSocket.on('connected', (isOverwolfApp, steamName, clientId) => {
+    newSocket.on('connected', (isOverwolfApp, steamName) => {
       const message = isOverwolfApp
         ? `${steamName} connected 🎮`
         : 'Website connected 👽';
       toast.info(message);
       updateStatus();
-
-      if (peer) {
-        peerConnections[clientId] = peer.connect(
-          clientId.replace(/[^a-zA-Z ]/g, '')
-        );
-      }
     });
 
     newSocket.on('disconnected', (isOverwolfApp, steamName, clientId) => {
@@ -103,8 +133,14 @@ function useShareLivePosition(token: string, serverUrl: string) {
 
     return () => {
       newSocket.close();
+
+      Object.entries(peerConnections).forEach(([clientId, peerConnection]) => {
+        peerConnection.close();
+        delete peerConnections[clientId];
+      });
+
       peer?.destroy();
-      setIsConnected(false);
+
       setSocket(null);
       setStatus(null);
       toast.info('Stop sharing live status 🛑');
@@ -113,54 +149,42 @@ function useShareLivePosition(token: string, serverUrl: string) {
 
   useEffect(() => {
     if (socket) {
-      Object.values(peerConnections).forEach((peerConnection) =>
-        peerConnection.send({ steamId, position })
-      );
+      sendToPeers({ steamId, position });
       socket.emit('position', position);
     }
   }, [socket, position]);
 
   useEffect(() => {
     if (socket) {
-      Object.values(peerConnections).forEach((peerConnection) =>
-        peerConnection.send({ steamId, location })
-      );
+      sendToPeers({ steamId, location });
       socket.emit('location', location);
     }
   }, [socket, location]);
 
   useEffect(() => {
     if (socket) {
-      Object.values(peerConnections).forEach((peerConnection) =>
-        peerConnection.send({ steamId, worldName })
-      );
+      sendToPeers({ steamId, worldName });
       socket.emit('worldName', worldName);
     }
   }, [socket, worldName]);
 
   useEffect(() => {
     if (socket) {
-      Object.values(peerConnections).forEach((peerConnection) =>
-        peerConnection.send({ steamId, map })
-      );
+      sendToPeers({ steamId, map });
       socket.emit('map', map);
     }
   }, [socket, map]);
 
   useEffect(() => {
     if (socket) {
-      Object.values(peerConnections).forEach((peerConnection) =>
-        peerConnection.send({ steamId, region })
-      );
+      sendToPeers({ steamId, region });
       socket.emit('region', region);
     }
   }, [socket, region]);
 
   useEffect(() => {
     if (socket) {
-      Object.values(peerConnections).forEach((peerConnection) =>
-        peerConnection.send({ steamId, username })
-      );
+      sendToPeers({ steamId, username });
       socket.emit('username', username);
     }
   }, [socket, username]);

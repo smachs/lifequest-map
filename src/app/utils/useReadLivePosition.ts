@@ -77,7 +77,34 @@ function useReadLivePosition(): [boolean, (value: boolean) => void] {
 
     socket.emit('status', updateStatus);
     socket.on('status', updateStatus);
-    socket.on('update', updateStatus);
+
+    const peerConnectedSteamIds: string[] = [];
+
+    const updateData = (data: Partial<Player>) => {
+      const { steamId, ...partialPlayer } = data;
+      if (!steamId) {
+        return;
+      }
+      if (latestPlayer && latestPlayer.steamId === steamId) {
+        Object.assign(latestPlayer, partialPlayer);
+        setPlayer({ ...latestPlayer });
+      } else if (latestGroup) {
+        const player = Object.values(latestGroup).find(
+          (player) => player.steamId === steamId
+        );
+        if (player) {
+          Object.assign(player, partialPlayer);
+          setGroup({ ...latestGroup });
+        }
+      }
+    };
+
+    socket.on('data', (data: Partial<Player>) => {
+      if (!data.steamId || peerConnectedSteamIds.includes(data.steamId)) {
+        return;
+      }
+      updateData(data);
+    });
 
     const handleHotkey = (steamId: string, hotkey: string) => {
       if (steamId !== account?.steamId) {
@@ -90,39 +117,51 @@ function useReadLivePosition(): [boolean, (value: boolean) => void] {
 
     let peer: Peer | null = null;
     socket.on('connect', () => {
-      if (socket.connected) {
-        toast.success('Sharing live status 👌');
+      toast.success('Sharing live status 👌');
 
-        peer?.destroy();
-        peer = new Peer(socket.id.replace(/[^a-zA-Z ]/g, ''), {
-          secure: false,
-          debug: 2,
+      peer = new Peer(socket.id.replace(/[^a-zA-Z ]/g, ''), {
+        debug: 2,
+      });
+      peer.on('error', (error) => {
+        console.error('Peer error', error);
+      });
+      peer.on('open', (id) => {
+        console.log('My peer ID is: ' + id);
+      });
+      peer.on('connection', (conn) => {
+        let connSteamId: string | null = null;
+        conn.on('open', () => {
+          console.log('Peer opened');
+          socket.emit('status', updateStatus);
         });
 
-        peer.on('connection', (conn) => {
-          socket.off('update');
-
-          conn.on('data', (data) => {
-            if (data.group) {
-              updateStatus(data.group);
-              return;
-            }
-            const { steamId, ...partialPlayer } = data;
-            if (latestPlayer && latestPlayer.steamId === steamId) {
-              Object.assign(latestPlayer, partialPlayer);
-              setPlayer({ ...latestPlayer });
-            } else if (latestGroup) {
-              const player = Object.values(latestGroup).find(
-                (player) => player.steamId === steamId
-              );
-              if (player) {
-                Object.assign(player, partialPlayer);
-                setGroup({ ...latestGroup });
-              }
-            }
-          });
+        conn.on('error', (error) => {
+          console.log('Peer error', error);
         });
-      }
+
+        conn.on('close', () => {
+          console.log('Peer closed');
+          if (connSteamId) {
+            const index = peerConnectedSteamIds.indexOf(connSteamId);
+            if (index !== -1) {
+              peerConnectedSteamIds.splice(index, 1);
+            }
+          }
+        });
+
+        conn.on('data', (data) => {
+          if (data.group) {
+            updateStatus(data.group);
+            return;
+          }
+          if (data.steamId && !peerConnectedSteamIds.includes(data.steamId)) {
+            peerConnectedSteamIds.push(data.steamId);
+            connSteamId = data.steamId;
+          }
+
+          updateData(data);
+        });
+      });
     });
 
     return () => {

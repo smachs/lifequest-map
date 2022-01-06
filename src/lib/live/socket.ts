@@ -56,6 +56,7 @@ export function initSocket(server: http.Server) {
         username: null,
         position: null,
       };
+      client.to(token).emit('status', activeGroups[token]);
     }
     client.to(token).emit('connected', isOverwolfApp, steamName, client.id);
 
@@ -72,7 +73,10 @@ export function initSocket(server: http.Server) {
         return;
       }
       activeGroups[token][client.id].position = position;
-      client.to(token).emit('update', activeGroups[token]);
+      client.to(token).emit('data', {
+        steamId: activeGroups[token][client.id].steamId,
+        position,
+      });
     });
 
     client.on('location', (location) => {
@@ -80,7 +84,10 @@ export function initSocket(server: http.Server) {
         return;
       }
       activeGroups[token][client.id].location = location;
-      client.to(token).emit('update', activeGroups[token]);
+      client.to(token).emit('data', {
+        steamId: activeGroups[token][client.id].steamId,
+        location,
+      });
     });
 
     client.on('region', (region) => {
@@ -88,7 +95,10 @@ export function initSocket(server: http.Server) {
         return;
       }
       activeGroups[token][client.id].region = region;
-      client.to(token).emit('update', activeGroups[token]);
+      client.to(token).emit('data', {
+        steamId: activeGroups[token][client.id].steamId,
+        region,
+      });
     });
 
     client.on('worldName', (worldName) => {
@@ -96,7 +106,10 @@ export function initSocket(server: http.Server) {
         return;
       }
       activeGroups[token][client.id].worldName = worldName;
-      client.to(token).emit('update', activeGroups[token]);
+      client.to(token).emit('data', {
+        steamId: activeGroups[token][client.id].steamId,
+        worldName,
+      });
     });
 
     client.on('map', (map) => {
@@ -104,7 +117,9 @@ export function initSocket(server: http.Server) {
         return;
       }
       activeGroups[token][client.id].map = map;
-      client.to(token).emit('update', activeGroups[token]);
+      client
+        .to(token)
+        .emit('data', { steamId: activeGroups[token][client.id].steamId, map });
     });
 
     client.on('username', (username) => {
@@ -112,7 +127,10 @@ export function initSocket(server: http.Server) {
         return;
       }
       activeGroups[token][client.id].username = username;
-      client.to(token).emit('update', activeGroups[token]);
+      client.to(token).emit('data', {
+        steamId: activeGroups[token][client.id].steamId,
+        username,
+      });
     });
 
     client.on('hotkey', (hotkey) => {
