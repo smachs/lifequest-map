@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import type { TileLayer } from 'leaflet';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'tilelayer-canvas';
@@ -6,6 +7,9 @@ import { coordinates as playerCoordinates } from './usePlayerPosition';
 import { getJSONItem, setJSONItem } from '../../utils/storage';
 import { useSettings } from '../../contexts/SettingsContext';
 import useRegionBorders from './useRegionBorders';
+import { DEFAULT_MAP_NAME, findMapDetails } from './maps';
+import { useFilters } from '../../contexts/FiltersContext';
+
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 function toThreeDigits(number: number): string {
@@ -22,26 +26,28 @@ const worldCRS = leaflet.extend({}, leaflet.CRS.Simple, {
   transformation: new leaflet.Transformation(1 / 16, 0, -1 / 16, 0),
 });
 
-// @ts-ignore
-const WorldTiles = leaflet.TileLayer.Canvas.extend({
-  getTileUrl(coords: { x: number; y: number; z: number }) {
-    const zoom = 8 - coords.z - 1;
-    const multiplicators = [1, 2, 4, 8, 16, 32, 64];
-    const x = coords.x * multiplicators[zoom - 1];
-    const y = (-coords.y - 1) * multiplicators[zoom - 1];
-
-    if (x < 0 || y < 0 || y >= 64 || x >= 64) {
-      return `${VITE_API_ENDPOINT}/assets/map/empty.webp`;
-    }
-    // return `/map/map_l1_y000_x024.webp`;
-    return `${VITE_API_ENDPOINT}/assets/map/map_l${zoom}_y${toThreeDigits(
-      y
-    )}_x${toThreeDigits(x)}.webp`;
-  },
-  getTileSize() {
-    return { x: 1024, y: 1024 };
-  },
-});
+const WorldTiles = (map: string): new () => TileLayer =>
+  // @ts-ignore
+  leaflet.TileLayer.Canvas.extend({
+    options: {
+      errorTileUrl: `${VITE_API_ENDPOINT}/assets/map/empty.webp`,
+    },
+    getTileUrl(coords: { x: number; y: number; z: number }) {
+      const zoom = 8 - coords.z - 1;
+      const multiplicators = [1, 2, 4, 8, 16, 32, 64];
+      const x = coords.x * multiplicators[zoom - 1];
+      const y = (-coords.y - 1) * multiplicators[zoom - 1];
+      if (x < 0 || y < 0 || y >= 64 || x >= 64) {
+        return `${VITE_API_ENDPOINT}/assets/map/empty.webp`;
+      }
+      return `${VITE_API_ENDPOINT}/assets/${map}/map_l${zoom}_y${toThreeDigits(
+        y
+      )}_x${toThreeDigits(x)}.webp`;
+    },
+    getTileSize() {
+      return { x: 1024, y: 1024 };
+    },
+  });
 
 type UseWorldMapProps = {
   hideControls?: boolean;
@@ -55,6 +61,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const [leafletMap, setLeafletMap] = useState<leaflet.Map | null>(null);
   const { showRegionBorders } = useSettings();
+  const { map } = useFilters();
 
   useEffect(() => {
     if (leafletMap && initialZoom) {
@@ -62,46 +69,66 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
     }
   }, [leafletMap, initialZoom]);
 
-  useRegionBorders(showRegionBorders, leafletMap);
+  useRegionBorders(showRegionBorders, leafletMap, map === DEFAULT_MAP_NAME);
 
   useEffect(() => {
     const mapElement = elementRef.current;
-    if (!mapElement) {
+    const mapDetail = findMapDetails(map);
+    if (!mapElement || !mapDetail) {
       return;
     }
+    const latLngBounds = leaflet.latLngBounds(mapDetail.maxBounds);
 
-    const zoom = initialZoom || 4;
-    const maxBounds = leaflet.latLngBounds([-10000, -7000], [20000, 25000]);
-    const map = leaflet.map(mapElement, {
-      preferCanvas: true,
-      crs: worldCRS,
-      maxZoom: 6,
-      minZoom: 0,
-      zoom: zoom,
-      attributionControl: false,
-      zoomControl: false,
-      maxBounds: maxBounds,
-    });
-    latestLeafletMap = map;
-    setLeafletMap(map);
+    const setView = (leafletMap: leaflet.Map) => {
+      const mapPosition = getJSONItem<{
+        y: number;
+        x: number;
+        zoom: number;
+      } | null>(`mapPosition-${map}`, null);
+      if (mapPosition) {
+        leafletMap.setView(
+          [mapPosition.y, mapPosition.x],
+          initialZoom || mapPosition.zoom,
+          { animate: false }
+        );
+      } else {
+        leafletMap.fitBounds(latLngBounds, { animate: false });
+      }
+    };
 
-    const mapPosition = getJSONItem<{
-      y: number;
-      x: number;
-      zoom: number;
-    } | null>('mapPosition', null);
+    if (latestLeafletMap) {
+      const leafletMap = latestLeafletMap;
+      const worldTiles = new (WorldTiles(mapDetail.folder))();
+      worldTiles.addTo(leafletMap);
+      leafletMap.setMaxZoom(mapDetail.maxZoom);
+      leafletMap.setMinZoom(mapDetail.minZoom);
+      leafletMap.setMaxBounds(latLngBounds);
+      setView(leafletMap);
 
-    if (mapPosition) {
-      map.setView(
-        [mapPosition.y, mapPosition.x],
-        initialZoom || mapPosition.zoom
-      );
-    } else {
-      map.fitBounds(maxBounds);
+      return () => {
+        worldTiles.remove();
+      };
     }
 
+    const leafletMap = leaflet.map(mapElement, {
+      preferCanvas: true,
+      crs: worldCRS,
+      maxZoom: mapDetail.maxZoom,
+      minZoom: mapDetail.minZoom,
+      attributionControl: false,
+      zoomControl: false,
+      zoom: initialZoom || 4,
+      maxBounds: latLngBounds,
+      zoomSnap: 0,
+    });
+
+    setLeafletMap(leafletMap);
+
+    latestLeafletMap = leafletMap;
+    setView(leafletMap);
+
     if (!hideControls) {
-      leaflet.control.zoom({ position: 'topleft' }).addTo(map);
+      leaflet.control.zoom({ position: 'topleft' }).addTo(leafletMap);
 
       const divElement = leaflet.DomUtil.create('div', 'leaflet-position');
       const handleMouseMove = (event: leaflet.LeafletMouseEvent) => {
@@ -126,18 +153,17 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
       });
 
       const coordinates = new CoordinatesControl({ position: 'bottomright' });
-      playerCoordinates.addTo(map);
+      playerCoordinates.addTo(leafletMap);
 
-      coordinates.addTo(map);
+      coordinates.addTo(leafletMap);
     }
-    const worldTiles = new WorldTiles();
-    worldTiles.addTo(map);
+    const worldTiles = new (WorldTiles(mapDetail.folder))();
+    worldTiles.addTo(leafletMap);
 
     return () => {
-      setLeafletMap(null);
-      map.remove();
+      worldTiles.remove();
     };
-  }, [elementRef]);
+  }, [elementRef, map]);
 
   useEffect(() => {
     if (!leafletMap) {
@@ -148,7 +174,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
         const center = leafletMap.getCenter();
-        setJSONItem('mapPosition', {
+        setJSONItem(`mapPosition-${map}`, {
           x: center.lng,
           y: center.lat,
           zoom: leafletMap.getZoom(),
@@ -160,7 +186,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
     return () => {
       leafletMap.off('moveend', handleMoveEnd);
     };
-  }, [leafletMap]);
+  }, [leafletMap, map]);
 
   return { elementRef, leafletMap };
 }
