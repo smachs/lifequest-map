@@ -5,7 +5,6 @@ import {
   STEAM_API_KEY,
   SESSION_SECRET,
   VITE_API_ENDPOINT,
-  NODE_ENV,
   NO_API,
   NO_SOCKET,
 } from './lib/env';
@@ -115,6 +114,9 @@ async function runServer() {
     // Static screenshots folder
     app.use('/screenshots', express.static(SCREENSHOTS_PATH!));
 
+    // Serve webversion (only on production)
+    app.use(express.static(path.join(__dirname, 'app')));
+
     // Static assets folder
     app.use(
       '/assets',
@@ -124,14 +126,9 @@ async function runServer() {
         fallthrough: true,
       })
     );
-    app.use('/assets/*', (_req, res) => {
-      res.sendFile(path.join(__dirname, 'assets/map/empty.webp'));
+    app.use('/assets', (_req, res) => {
+      res.redirect('/assets/map/empty.webp');
     });
-
-    // Serve webversion (only on production)
-    if (NODE_ENV === 'production') {
-      app.use(express.static(path.join(__dirname, 'app')));
-    }
 
     await connectToMongoDb(MONGODB_URI!);
 
