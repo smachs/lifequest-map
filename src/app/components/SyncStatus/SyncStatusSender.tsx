@@ -13,7 +13,7 @@ type SyncStatusProps = {
 function SyncStatusSender({ newWorldIsRunning, player }: SyncStatusProps) {
   return (
     <>
-      {newWorldIsRunning && player?.position && (
+      {newWorldIsRunning && player?.username && player?.position && (
         <small>
           <span className={styles.success}>Playing</span> as {player.username}{' '}
           at [{player.position.location[1]}, {player.position.location[0]}]{' '}
@@ -22,10 +22,14 @@ function SyncStatusSender({ newWorldIsRunning, player }: SyncStatusProps) {
           </span>
         </small>
       )}
-      {newWorldIsRunning && !player?.position && (
+      {newWorldIsRunning && (!player?.position || !player?.username) && (
         <small>
           <span className={styles.waiting}>Connected</span> to New World.
           Waiting for position.
+          <br />
+          <span className={styles.warning}>
+            Make sure to run Overwolf before New World.
+          </span>
         </small>
       )}
       {!newWorldIsRunning && (
