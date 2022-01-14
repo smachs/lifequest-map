@@ -1,3 +1,4 @@
+import useOverlayActivated from '../../sender/useOverlayActivated';
 import type { Position } from '../../utils/useReadLivePosition';
 import styles from './SyncStatus.module.css';
 
@@ -11,6 +12,25 @@ type SyncStatusProps = {
   } | null;
 };
 function SyncStatusSender({ newWorldIsRunning, player }: SyncStatusProps) {
+  const activated = useOverlayActivated();
+
+  if (!activated) {
+    return (
+      <small>
+        <span className={styles.warning}>Overlay is disabled!</span>
+        <br />
+        Open <a href="overwolf://settings">Overwolf settings</a> and{' '}
+        <a
+          href="https://support.overwolf.com/en/support/solutions/articles/9000178795-overwolf-game-settings"
+          target="_blank"
+          rel="noreferrer"
+        >
+          read more
+        </a>{' '}
+        for more details.
+      </small>
+    );
+  }
   return (
     <>
       {newWorldIsRunning && player?.username && player?.position && (
