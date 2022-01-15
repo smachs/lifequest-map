@@ -68,7 +68,7 @@ export const mapDetails: Map[] = [
     ],
   },
   {
-    name: 'NW_Dungeon_Restlessshores_01',
+    name: 'NW_Dungeon_RestlessShores_01',
     title: 'The Depths',
     folder: 'nw_dungeon_restlessshores_01',
     maxZoom: 6,
