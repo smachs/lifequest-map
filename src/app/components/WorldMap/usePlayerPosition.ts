@@ -52,17 +52,21 @@ function usePlayerPosition({
   let playerMap: string | null = null;
   if (!isOverwolfApp) {
     const { player, following } = usePlayer();
-    useDirectionLine(player?.position);
+    useDirectionLine(player?.username ? player.position : null);
     if (!isMinimap) {
-      useAdaptiveZoom(player);
+      useAdaptiveZoom(player?.username ? player : null);
     }
-    playerPosition = player?.position || null;
-    playerMap = player?.map || null;
+    if (player?.username) {
+      playerPosition = player.position;
+      playerMap = player.map;
+    }
     isFollowing = following;
   } else {
-    const { position, map: positionMap } = usePosition();
-    playerPosition = position;
-    playerMap = positionMap;
+    const { position, map: positionMap, username } = usePosition();
+    if (username) {
+      playerPosition = position;
+      playerMap = positionMap;
+    }
     isFollowing = true;
   }
 
