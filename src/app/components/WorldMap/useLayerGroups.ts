@@ -7,6 +7,8 @@ import { useMarkers } from '../../contexts/MarkersContext';
 import CanvasMarker from './CanvasMarker';
 import { useSettings } from '../../contexts/SettingsContext';
 import { writeError } from '../../utils/logs';
+import { useFilters } from '../../contexts/FiltersContext';
+import { DEFAULT_MAP_NAME } from './maps';
 
 export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
   leaflet.Icon.extend({
@@ -35,6 +37,7 @@ function useLayerGroups({
       hasComments: boolean;
     };
   }>({});
+  const { map } = useFilters();
 
   useEffect(() => {
     if (!leafletMap) {
@@ -234,6 +237,9 @@ function useLayerGroups({
 
     for (let i = 0; i < markerRoutes.length; i++) {
       const markerRoute = markerRoutes[i];
+      if (map !== (markerRoute.map || DEFAULT_MAP_NAME)) {
+        continue;
+      }
       const startHereCircle = leaflet.circle(markerRoute.positions[0], {
         pmIgnore: true,
       });
@@ -246,7 +252,7 @@ function useLayerGroups({
     return () => {
       layerGroup.remove();
     };
-  }, [leafletMap, markerRoutes]);
+  }, [leafletMap, markerRoutes, map]);
 
   useEffect(() => {
     return () => {

@@ -74,10 +74,15 @@ function usePlayerPosition({
 
   useEffect(() => {
     if (playerMap) {
-      traceDotsGroup.clearLayers();
       setMap(playerMap);
     }
   }, [playerMap]);
+
+  useEffect(() => {
+    if (map) {
+      traceDotsGroup.clearLayers();
+    }
+  }, [map]);
 
   useEffect(() => {
     if (!leafletMap || !playerPosition || !isOnSameWorld) {
