@@ -34,10 +34,12 @@ function usePlayerPosition({
   isMinimap,
   leafletMap,
   rotate,
+  isEditing,
 }: {
   isMinimap?: boolean;
   leafletMap: leaflet.Map | null;
   rotate?: boolean;
+  isEditing?: boolean;
 }): void {
   const [marker, setMarker] = useState<PositionMarker | null>(null);
 
@@ -68,6 +70,9 @@ function usePlayerPosition({
       playerMap = positionMap;
     }
     isFollowing = true;
+  }
+  if (isEditing) {
+    isFollowing = false;
   }
 
   const isOnSameWorld = playerMap === map;

@@ -17,6 +17,7 @@ type WorldMapProps = {
   className?: string;
   style?: CSSProperties;
   rotate?: boolean;
+  isEditing?: boolean;
   onMarkerEdit?: (marker: MarkerBasic) => void;
 };
 
@@ -27,6 +28,7 @@ function WorldMap({
   initialZoom,
   style,
   rotate,
+  isEditing,
   onMarkerEdit,
 }: WorldMapProps): JSX.Element {
   const { addModal, closeLatestModal } = useModal();
@@ -57,7 +59,7 @@ function WorldMap({
       },
     });
   }
-  usePlayerPosition({ isMinimap, leafletMap, rotate });
+  usePlayerPosition({ isMinimap, leafletMap, rotate, isEditing });
 
   return (
     <div

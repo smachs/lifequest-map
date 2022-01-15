@@ -55,7 +55,10 @@ function App(): JSX.Element {
         onMarkerCreate={() => setTargetMarker(true)}
         onMarkerRouteUpsert={setTargetMarkerRoute}
       />
-      <WorldMap onMarkerEdit={setTargetMarker} />
+      <WorldMap
+        onMarkerEdit={setTargetMarker}
+        isEditing={Boolean(targetMarker || targetMarkerRoute)}
+      />
       <ToastContainer theme="dark" pauseOnFocusLoss={false} />
       <UpsertArea
         marker={targetMarker}
