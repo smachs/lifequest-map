@@ -70,11 +70,12 @@ function useGeoman({
     });
 
     marker.on('pm:dragend', () => {
+      const latLng = marker.getLatLng();
+      onMove(+latLng.lng.toFixed(2), +latLng.lat.toFixed(2));
       setDragging(false);
     });
 
     marker.on('pm:drag', (event) => {
-      // @ts-ignore
       onMove(+event.latlng.lng.toFixed(2), +event.latlng.lat.toFixed(2));
     });
 
@@ -90,8 +91,8 @@ function useGeoman({
     const latLng = marker.getLatLng();
     if (latLng.lat !== y || latLng.lng !== x) {
       marker.setLatLng([y, x]);
-      leafletMap.setView([y, x]);
     }
+    leafletMap.setView([y, x]);
   }, [x, y, dragging]);
 }
 
