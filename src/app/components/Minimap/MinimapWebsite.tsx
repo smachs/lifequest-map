@@ -58,6 +58,7 @@ function MinimapWebsite(): JSX.Element {
             value={minimapZoom}
             min={0}
             max={6}
+            step={0.5}
             onMouseDown={(event) => event.stopPropagation()}
             onChange={(event) => setMinimapZoom(+event.target.value)}
           />

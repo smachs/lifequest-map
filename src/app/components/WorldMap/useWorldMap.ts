@@ -119,7 +119,9 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
       zoomControl: false,
       zoom: initialZoom || 4,
       maxBounds: latLngBounds,
-      zoomSnap: 0,
+      zoomSnap: 0.5,
+      zoomDelta: 0.5,
+      wheelPxPerZoomLevel: 120,
     });
 
     setLeafletMap(leafletMap);

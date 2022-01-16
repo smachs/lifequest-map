@@ -100,9 +100,9 @@ function Minimap(): JSX.Element {
       if (event.name === SETUP_MINIMAP) {
         setShowSetup(!showSetup);
       } else if (event.name === ZOOM_IN_MINIMAP) {
-        setMinimapZoom((minimapZoom) => Math.min(minimapZoom + 1, 6));
+        setMinimapZoom((minimapZoom) => Math.min(minimapZoom + 0.5, 6));
       } else if (event.name === ZOOM_OUT_MINIMAP) {
-        setMinimapZoom((minimapZoom) => Math.max(minimapZoom - 1, 0));
+        setMinimapZoom((minimapZoom) => Math.max(minimapZoom - 0.5, 0));
       }
     }
     overwolf.settings.hotkeys.onPressed.addListener(handleHotkeyPressed);
@@ -142,6 +142,7 @@ function Minimap(): JSX.Element {
                 value={minimapZoom}
                 min={0}
                 max={6}
+                step={0.5}
                 onMouseDown={(event) => event.stopPropagation()}
                 onChange={(event) => setMinimapZoom(+event.target.value)}
               />
