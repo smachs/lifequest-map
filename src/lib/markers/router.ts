@@ -136,8 +136,11 @@ markersRouter.delete(
       }
       res.status(200).json({});
 
+      const nameType = marker.name
+        ? `${marker.type} ${marker.name}`
+        : marker.type;
       await postToDiscord(
-        `📌💀 Marker from ${marker.username} deleted by ${account.name}`,
+        `📌💀 ${nameType} from ${marker.username} at [${marker.position}] was deleted by ${account.name}`,
         !marker.isPrivate
       );
 
