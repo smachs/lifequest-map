@@ -1,9 +1,7 @@
 import { writeLog } from './logs';
-import { getJSONItem, setJSONItem } from './storage';
 
 export const WINDOWS = {
   DESKTOP: 'desktop',
-  OVERLAY: 'overlay',
   BACKGROUND: 'background',
   MINIMAP: 'minimap',
 };
@@ -56,18 +54,6 @@ export async function closeMainWindow(): Promise<void> {
   return closeWindow(WINDOWS.BACKGROUND);
 }
 
-export async function getPreferedWindowName(): Promise<string> {
-  const preferedWindowName = getJSONItem<string | undefined>(
-    'preferedWindowName',
-    undefined
-  );
-  if (preferedWindowName) {
-    return preferedWindowName;
-  }
-  const secondScreen = await getMonitor(false);
-  return secondScreen ? WINDOWS.DESKTOP : WINDOWS.OVERLAY;
-}
-
 export async function restoreWindow(windowName: string): Promise<string> {
   const declaredWindow = await obtainDeclaredWindow(windowName);
 
@@ -99,21 +85,6 @@ export async function toggleWindow(windowName: string): Promise<void> {
   } else {
     restoreWindow(window.name);
   }
-}
-
-export async function togglePreferedWindow(): Promise<void> {
-  const preferedWindowName = getJSONItem<string>(
-    'preferedWindowName',
-    WINDOWS.DESKTOP
-  );
-  setJSONItem(
-    'preferedWindowName',
-    preferedWindowName === WINDOWS.DESKTOP ? WINDOWS.OVERLAY : WINDOWS.DESKTOP
-  );
-  await restoreWindow(
-    preferedWindowName === WINDOWS.DESKTOP ? WINDOWS.OVERLAY : WINDOWS.DESKTOP
-  );
-  await closeWindow(preferedWindowName);
 }
 
 export async function getMonitor(

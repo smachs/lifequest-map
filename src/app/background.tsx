@@ -5,8 +5,6 @@ import { waitForOverwolf } from './utils/overwolf';
 import { getJSONItem } from './utils/storage';
 import {
   closeMainWindow,
-  closeWindow,
-  getPreferedWindowName,
   restoreWindow,
   toggleWindow,
   WINDOWS,
@@ -17,8 +15,7 @@ writeLog('Starting background process');
 async function openApp() {
   const newWorldIsRunning = await isNewWorldRunning();
   if (newWorldIsRunning) {
-    const preferedWindowName = await getPreferedWindowName();
-    restoreWindow(preferedWindowName);
+    restoreWindow(WINDOWS.DESKTOP);
     if (getJSONItem('showMinimap', false)) {
       restoreWindow(WINDOWS.MINIMAP);
     }
@@ -32,8 +29,7 @@ async function handleHotkeyPressed(
   event: overwolf.settings.hotkeys.OnPressedEvent
 ) {
   if (event.name === SHOW_HIDE_APP) {
-    const preferedWindowName = await getPreferedWindowName();
-    toggleWindow(preferedWindowName);
+    toggleWindow(WINDOWS.DESKTOP);
   }
 }
 overwolf.settings.hotkeys.onPressed.addListener(handleHotkeyPressed);
@@ -45,15 +41,8 @@ overwolf.extensions.onAppLaunchTriggered.addListener(handleAppLaunch);
 
 overwolf.games.onGameInfoUpdated.addListener(async (event) => {
   if (event.runningChanged && event.gameInfo?.classId === NEW_WORLD_CLASS_ID) {
-    const preferedWindowName = await getPreferedWindowName();
     if (event.gameInfo.isRunning) {
-      if (preferedWindowName === WINDOWS.OVERLAY) {
-        restoreWindow(WINDOWS.OVERLAY);
-        closeWindow(WINDOWS.DESKTOP);
-      } else {
-        restoreWindow(WINDOWS.DESKTOP);
-        closeWindow(WINDOWS.OVERLAY);
-      }
+      restoreWindow(WINDOWS.DESKTOP);
       if (getJSONItem('showMinimap', false)) {
         restoreWindow(WINDOWS.MINIMAP);
       }
