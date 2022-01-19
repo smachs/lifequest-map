@@ -13,7 +13,7 @@ import { mapFilters } from '../MapFilter/mapFilters';
 import SelectMap from '../MapFilter/SelectMap';
 import SearchInput from '../SearchInput/SearchInput';
 import { regionNames } from '../WorldMap/areas';
-import { deleteMarkerRoute, patchFavoriteMarkerRoute } from './api';
+import { patchFavoriteMarkerRoute, postMarkerRoute } from './api';
 import MarkerRoute from './MarkerRoute';
 import styles from './MarkerRoutes.module.css';
 
@@ -30,6 +30,7 @@ export type MarkerRouteItem = {
     [type: string]: number;
   };
   favorites?: number;
+  forks?: number;
   createdAt: string;
 };
 
@@ -129,28 +130,6 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
     setLimit(10);
   }, [sortBy, filter, search]);
 
-  async function handleRemove(markerRouteId: string): Promise<void> {
-    if (!account) {
-      return;
-    }
-    try {
-      await notify(deleteMarkerRoute(markerRouteId), {
-        success: 'Route deleted 👌',
-      });
-
-      const markerRoute = markerRoutes.find(
-        (markerRoute) => markerRoute._id == markerRouteId
-      );
-      if (markerRoute) {
-        toggleMarkerRoute(markerRoute);
-      }
-
-      refreshMarkerRoutes();
-    } catch (error) {
-      writeError(error);
-    }
-  }
-
   async function handleFavorite(markerRouteId: string): Promise<void> {
     if (!account) {
       return;
@@ -183,19 +162,36 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
     [sortBy, visibleMarkerRoutes, filters, filter, search]
   );
   function handleEdit(markerRoute: MarkerRouteItem) {
-    if (
-      markerRoutes.some(
-        (selectedMarkerRoute) => selectedMarkerRoute.name == markerRoute.name
-      )
-    ) {
-      toggleMarkerRoute(markerRoute);
-    }
+    toggleMarkerRoute(markerRoute, false);
     const types = Object.keys(markerRoute.markersByType);
     setFilters((filters) => [
       ...filters,
       ...types.filter((type) => !filters.includes(type)),
     ]);
     onEdit(markerRoute);
+  }
+
+  async function handleFork(markerRoute: MarkerRouteItem, name: string) {
+    try {
+      const newMarkerRoute = {
+        name: name,
+        isPublic: false,
+        positions: markerRoute.positions,
+        markersByType: markerRoute.markersByType,
+        map: markerRoute.map,
+        origin: markerRoute._id,
+      };
+
+      toggleMarkerRoute(markerRoute, false);
+      const forkedMarkerRoute = await notify(postMarkerRoute(newMarkerRoute), {
+        success: 'Fork added 👌',
+      });
+
+      await refreshMarkerRoutes();
+      onEdit(forkedMarkerRoute);
+    } catch (error) {
+      writeError(error);
+    }
   }
 
   return (
@@ -257,7 +253,6 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
             )}
             editable={isEditable(markerRoute)}
             onClick={() => toggleMarkerRoute(markerRoute)}
-            onRemove={() => handleRemove(markerRoute._id)}
             isFavorite={Boolean(
               account?.favoriteRouteIds?.some(
                 (routeId) => markerRoute._id === routeId
@@ -265,6 +260,7 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
             )}
             onFavorite={() => handleFavorite(markerRoute._id)}
             onEdit={() => handleEdit(markerRoute)}
+            onFork={(name) => handleFork(markerRoute, name)}
           />
         ))}
         {sortedMarkerRoutes.length > limit && (

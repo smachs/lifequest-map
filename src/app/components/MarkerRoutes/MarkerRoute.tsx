@@ -2,10 +2,10 @@ import type { MarkerRouteItem } from './MarkerRoutes';
 import MarkerTypes from './MarkerTypes';
 import styles from './MarkerRoute.module.css';
 import { classNames } from '../../utils/styles';
-import DeleteButton from '../DeleteButton/DeleteButton';
 import { toTimeAgo } from '../../utils/dates';
 import EditButton from '../EditButton/EditButton';
 import FavoriteButton from '../FavoriteButton/FavoriteButton';
+import ForkButton from '../ForkButton/ForkButton';
 
 type MarkerRouteProps = {
   markerRoute: MarkerRouteItem;
@@ -13,9 +13,9 @@ type MarkerRouteProps = {
   isPublic: boolean;
   editable: boolean;
   onClick: () => void;
-  onRemove: () => void;
   isFavorite: boolean;
   onFavorite: () => void;
+  onFork: (name: string) => void;
   onEdit: () => void;
   isOwner: boolean;
 };
@@ -25,9 +25,9 @@ function MarkerRoute({
   isPublic,
   editable,
   onClick,
-  onRemove,
   onFavorite,
   isFavorite,
+  onFork,
   onEdit,
   isOwner,
 }: MarkerRouteProps): JSX.Element {
@@ -59,13 +59,12 @@ function MarkerRoute({
           isFavorite={isFavorite}
           favorites={markerRoute.favorites || 0}
         />
+        <ForkButton
+          onFork={onFork}
+          originalName={markerRoute.name}
+          forked={markerRoute.forks || 0}
+        />
         {editable && <EditButton onClick={onEdit} />}
-        {editable && (
-          <DeleteButton
-            onClick={onRemove}
-            title={`Do you really want to delete ${markerRoute.name}?`}
-          />
-        )}
       </div>
     </article>
   );
