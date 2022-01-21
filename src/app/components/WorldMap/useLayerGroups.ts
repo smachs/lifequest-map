@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import leaflet from 'leaflet';
 import { mapFilters, mapFiltersCategories } from '../MapFilter/mapFilters';
 import type { MarkerBasic } from '../../contexts/MarkersContext';
@@ -9,6 +9,13 @@ import { useSettings } from '../../contexts/SettingsContext';
 import { writeError } from '../../utils/logs';
 import { useFilters } from '../../contexts/FiltersContext';
 import { DEFAULT_MAP_NAME } from './maps';
+import useEventListener from '../../utils/useEventListener';
+import { calcDistance } from '../../utils/positions';
+import { usePlayer } from '../../contexts/PlayerContext';
+import { useRefreshUser, useUser } from '../../contexts/UserContext';
+import { notify } from '../../utils/notifications';
+import { patchUser } from '../MarkerDetails/api';
+import { toast } from 'react-toastify';
 
 export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
   leaflet.Icon.extend({
@@ -19,6 +26,7 @@ export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
   });
 
 const canvasRenderer = leaflet.canvas();
+const markersLayerGroup = leaflet.layerGroup();
 
 function useLayerGroups({
   leafletMap,
@@ -30,7 +38,6 @@ function useLayerGroups({
   const { visibleMarkers, markerRoutes } = useMarkers();
   const { markerSize, markerShowBackground } = useSettings();
   const isFirstRender = useRef(true);
-  const markersLayerGroupRef = useRef(leaflet.layerGroup());
   const allLayersRef = useRef<{
     [id: string]: {
       layer: CanvasMarker;
@@ -38,14 +45,53 @@ function useLayerGroups({
     };
   }>({});
   const { map } = useFilters();
+  const { player } = usePlayer();
+  const user = useUser();
+  const refreshUser = useRefreshUser();
+
+  const onMarkerAction = useCallback(async () => {
+    const playerLocation = player?.position?.location;
+    if (!playerLocation || !user) {
+      return;
+    }
+    const markers = markersLayerGroup.getLayers() as CanvasMarker[];
+    const marker = markers.find((marker) => {
+      if (marker.options.image.type !== 'lore_note') {
+        return false;
+      }
+      const latLng = marker.getLatLng();
+      const distance = calcDistance([latLng.lat, latLng.lng], playerLocation);
+      return distance < 5;
+    });
+    if (marker) {
+      const markerId = marker.options.image.markerId;
+      const hiddenMarkerIds = [...user.hiddenMarkerIds];
+      let message: string;
+      if (hiddenMarkerIds.indexOf(markerId) === -1) {
+        hiddenMarkerIds.push(markerId);
+        message = 'Lore note is hidden';
+      } else {
+        hiddenMarkerIds.splice(hiddenMarkerIds.indexOf(markerId), 1);
+        message = 'Lore note is not hidden anymore';
+      }
+      await notify(patchUser(user.username, hiddenMarkerIds), {
+        success: message,
+      });
+      refreshUser();
+    } else {
+      toast.warn('Can not find near lore note');
+    }
+  }, [player?.position, user]);
+
+  useEventListener('hotkey-marker_action', onMarkerAction, [onMarkerAction]);
 
   useEffect(() => {
     if (!leafletMap) {
       return;
     }
-    markersLayerGroupRef.current.addTo(leafletMap);
+    markersLayerGroup.addTo(leafletMap);
     // @ts-ignore
-    leafletMap.markersLayerGroup = markersLayerGroupRef.current;
+    leafletMap.markersLayerGroup = markersLayerGroup;
   }, [leafletMap]);
 
   useEffect(() => {
@@ -55,7 +101,6 @@ function useLayerGroups({
     }
 
     const handle = setTimeout(() => {
-      const markersLayerGroup = markersLayerGroupRef.current;
       const allLayers = allLayersRef.current;
       const allMarkers = Object.values(allLayers);
       if (allMarkers.length === 0 || !leafletMap) {
@@ -89,7 +134,6 @@ function useLayerGroups({
     if (!leafletMap) {
       return;
     }
-    const markersLayerGroup = markersLayerGroupRef.current;
     const allLayers = allLayersRef.current;
     const removableMarkers = Object.keys(allLayers);
     const mapBounds = leafletMap.getBounds();

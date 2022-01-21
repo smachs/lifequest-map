@@ -11,6 +11,7 @@ import {
   ZOOM_OUT_MINIMAP,
   ZOOM_IN_MAP,
   ZOOM_OUT_MAP,
+  MARKER_ACTION,
 } from '../utils/hotkeys';
 import styles from './Settings.module.css';
 
@@ -35,6 +36,7 @@ function Settings({
   const showHideDirectionBinding = useHotkeyBinding(SHOW_HIDE_DIRECTION);
   const zoomInMapBinding = useHotkeyBinding(ZOOM_IN_MAP);
   const zoomOutMapBinding = useHotkeyBinding(ZOOM_OUT_MAP);
+  const markerActionBinding = useHotkeyBinding(MARKER_ACTION);
 
   const { logoutAccount } = useAccount();
 
@@ -73,6 +75,12 @@ function Settings({
           Zoom out Map
           <a href="overwolf://settings/games-overlay?hotkey=zoom_out_map&gameId=21816">
             {zoomOutMapBinding}
+          </a>
+        </label>
+        <label className={styles.label}>
+          Hide close lore note
+          <a href="overwolf://settings/games-overlay?hotkey=marker_action&gameId=21816">
+            {markerActionBinding}
           </a>
         </label>
         <label className={styles.label}>

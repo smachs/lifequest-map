@@ -9,6 +9,7 @@ export const ZOOM_OUT_MINIMAP = 'zoom_out_minimap';
 export const ZOOM_IN_MAP = 'zoom_in_map';
 export const ZOOM_OUT_MAP = 'zoom_out_map';
 export const SHOW_HIDE_DIRECTION = 'show_hide_direction';
+export const MARKER_ACTION = 'marker_action';
 
 export function useHotkeyBinding(name: string): string {
   const [hotkeyBinding, setHotkeyBinding] = useState<string>('');

@@ -91,33 +91,38 @@
         "action-type": "custom",
         "default": "F4"
       },
-      "setup_minimap": {
-        "title": "Setup Minimap",
-        "action-type": "custom",
-        "default": "F5"
-      },
       "show_hide_minimap": {
         "title": "Show/Hide Minimap",
         "action-type": "custom",
-        "default": "F6"
+        "default": "F5"
+      },
+      "setup_minimap": {
+        "title": "Setup Minimap",
+        "action-type": "custom",
+        "default": "Ctrl+F5"
       },
       "zoom_in_minimap": {
         "title": "Zoom In Minimap",
         "action-type": "custom",
-        "default": "F7"
+        "default": "F6"
       },
       "zoom_out_minimap": {
         "title": "Zoom Out Minimap",
         "action-type": "custom",
-        "default": "F8"
+        "default": "F7"
       },
       "zoom_in_map": {
         "title": "Zoom In Map (Website)",
         "action-type": "custom",
-        "default": "F9"
+        "default": "F8"
       },
       "zoom_out_map": {
         "title": "Zoom Out Map (Website)",
+        "action-type": "custom",
+        "default": "F9"
+      },
+      "marker_action": {
+        "title": "Hide close lore note (Website)",
         "action-type": "custom",
         "default": "F10"
       },
