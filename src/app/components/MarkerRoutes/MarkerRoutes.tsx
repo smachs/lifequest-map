@@ -65,7 +65,8 @@ function handleFilter(
       item.userId === account?.steamId && filterBySearch(item);
   }
   if (regionNames.includes(filter)) {
-    return (item: MarkerRouteItem) => item.regions?.includes(filter);
+    return (item: MarkerRouteItem) =>
+      item.regions?.includes(filter) && filterBySearch(item);
   }
   return (item: MarkerRouteItem) => filterBySearch(item);
 }
