@@ -7,11 +7,11 @@ import { useSettings } from '../../contexts/SettingsContext';
 import { isOverwolfApp } from '../../utils/overwolf';
 import type { Position } from '../../utils/useReadLivePosition';
 import type CanvasMarker from './CanvasMarker';
+import { createPlayerIcon } from './playerIcon';
 import PositionMarker from './PositionMarker';
 import { updateRotation } from './rotation';
 import useAdaptiveZoom from './useAdaptiveZoom';
 import useDirectionLine from './useDirectionLine';
-import { LeafIcon } from './useLayerGroups';
 
 const divElement = leaflet.DomUtil.create('div', 'leaflet-player-position');
 const CoordinatesControl = leaflet.Control.extend({
@@ -93,7 +93,7 @@ function usePlayerPosition({
     if (!leafletMap || !playerPosition || !isOnSameWorld) {
       return;
     }
-    const icon = new LeafIcon({ iconUrl: '/player.webp' });
+    const icon = createPlayerIcon();
     const newMarker = new PositionMarker(playerPosition.location, {
       icon,
       zIndexOffset: 9000,

@@ -12,7 +12,7 @@ function SyncStatusReceiver() {
     return (
       <small>
         <span className={styles.warning}>Not syncing</span>. Please{' '}
-        <button
+        <a
           onClick={() => {
             addModal({
               title: 'Share Live Status',
@@ -28,7 +28,7 @@ function SyncStatusReceiver() {
           }}
         >
           share live status
-        </button>
+        </a>
         .
       </small>
     );
