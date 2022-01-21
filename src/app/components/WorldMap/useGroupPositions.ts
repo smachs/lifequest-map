@@ -3,10 +3,12 @@ import type { Group } from '../../utils/useReadLivePosition';
 import { latestLeafletMap } from './useWorldMap';
 import { useSettings } from '../../contexts/SettingsContext';
 import PositionMarker from './PositionMarker';
-import { LeafIcon } from './useLayerGroups';
 import { useFilters } from '../../contexts/FiltersContext';
+import { createPlayerIcon } from './playerIcon';
+import ColorHash from 'color-hash';
 
-const icon = new LeafIcon({ iconUrl: '/player.webp' });
+const colorHash = new ColorHash();
+
 function useGroupPositions(group: Group): void {
   const [playerMarkers, setPlayerMarkers] = useState<{
     [username: string]: PositionMarker;
@@ -46,7 +48,7 @@ function useGroupPositions(group: Group): void {
 
           if (!existingMarker) {
             marker = new PositionMarker(player.position!.location, {
-              icon,
+              icon: createPlayerIcon(colorHash.hex(username)),
               zIndexOffset: 8999,
               pmIgnore: true,
             });
