@@ -80,3 +80,22 @@
   background: #a50000 !important;
 }
 /* stylelint-enable */
+
+.respawn > :not(:first-child) {
+  display: none;
+}
+
+.respawn > :first-child {
+  background: none;
+  box-shadow: none;
+  pointer-events: none;
+  padding: 0;
+}
+
+.respawn > :first-child > :first-child {
+  margin: 0;
+  color: white;
+  text-shadow: 0 0 2px black, 0 0 3px black;
+  font-size: 1rem;
+  text-align: center;
+}

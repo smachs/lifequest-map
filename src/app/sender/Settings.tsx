@@ -78,7 +78,7 @@ function Settings({
           </a>
         </label>
         <label className={styles.label}>
-          Hide close lore note
+          Interact with near marker
           <a href="overwolf://settings/games-overlay?hotkey=marker_action&gameId=21816">
             {markerActionBinding}
           </a>

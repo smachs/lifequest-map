@@ -13,9 +13,8 @@ import useEventListener from '../../utils/useEventListener';
 import { calcDistance } from '../../utils/positions';
 import { usePlayer } from '../../contexts/PlayerContext';
 import { useRefreshUser, useUser } from '../../contexts/UserContext';
-import { notify } from '../../utils/notifications';
-import { patchUser } from '../MarkerDetails/api';
 import { toast } from 'react-toastify';
+import { getAction } from './actions';
 
 export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
   leaflet.Icon.extend({
@@ -56,7 +55,8 @@ function useLayerGroups({
     }
     const markers = markersLayerGroup.getLayers() as CanvasMarker[];
     const marker = markers.find((marker) => {
-      if (marker.options.image.type !== 'lore_note') {
+      const action = getAction(marker.options.image.type);
+      if (!action) {
         return false;
       }
       const latLng = marker.getLatLng();
@@ -64,22 +64,10 @@ function useLayerGroups({
       return distance < 5;
     });
     if (marker) {
-      const markerId = marker.options.image.markerId;
-      const hiddenMarkerIds = [...user.hiddenMarkerIds];
-      let message: string;
-      if (hiddenMarkerIds.indexOf(markerId) === -1) {
-        hiddenMarkerIds.push(markerId);
-        message = 'Lore note is hidden';
-      } else {
-        hiddenMarkerIds.splice(hiddenMarkerIds.indexOf(markerId), 1);
-        message = 'Lore note is not hidden anymore';
-      }
-      await notify(patchUser(user.username, hiddenMarkerIds), {
-        success: message,
-      });
-      refreshUser();
+      const action = getAction(marker.options.image.type);
+      action(marker, user, refreshUser);
     } else {
-      toast.warn('Can not find near lore note');
+      toast.warn('Can not find near interactable marker');
     }
   }, [player?.position, user]);
 
