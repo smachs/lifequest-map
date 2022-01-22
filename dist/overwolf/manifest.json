@@ -4,7 +4,7 @@
   "meta": {
     "name": "Aeternum Map",
     "author": "Leon Machens",
-    "version": "2.10.0",
+    "version": "2.11.0",
     "minimum-overwolf-version": "0.169.0",
     "description": "New World Interactive Map",
     "dock_button_title": "Aeternum Map",
@@ -122,7 +122,7 @@
         "default": "F9"
       },
       "marker_action": {
-        "title": "Hide close lore note (Website)",
+        "title": "Interact with near marker (Website)",
         "action-type": "custom",
         "default": "F10"
       },

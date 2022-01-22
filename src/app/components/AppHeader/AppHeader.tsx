@@ -17,7 +17,7 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
   return (
     <header className={classNames(classes.header, className)}>
       <img src="/icon.png" alt="" className={classes.logo} />
-      <h1 className={classes.title}>Aeternum Map</h1>
+      <h1 className={classes.title}>Aeternum-Map.gg</h1>
 
       <div className={classes.controls}>
         <a

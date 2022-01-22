@@ -25,6 +25,8 @@ class CanvasMarker extends leaflet.CircleMarker {
   private _onImageLoad: (() => void) | undefined = undefined;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   declare _point: any;
+  public actionHandle?: NodeJS.Timeout;
+  public popup?: leaflet.Popup;
 
   constructor(
     latLng: leaflet.LatLngExpression,
