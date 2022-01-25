@@ -5,7 +5,7 @@ Don't get lost and use Aeternum Map to display your position on a pure map on se
 ## Features
 
 - AGS ToS accepted
-- Share live status with other applications or websites like [https://aeternum-map.gg](https://aeternum-map.gg] 
+- Share live status with other applications or websites like [https://aeternum-map.gg](https://aeternum-map.gg)
 - Live Tracking of your In-Game position
 - Minimap
 - Automatic detection of your In-Game character
