@@ -12,64 +12,6 @@ export type FilterItem = {
 
 export const mapFilters: FilterItem[] = [
   {
-    category: 'private',
-    type: 'generic',
-    title: i18n('Generic'),
-    iconUrl: '/pois/private/generic.webp',
-    hasName: true,
-  },
-  {
-    category: 'private',
-    type: 'Main Quest',
-    title: i18n('Main Quest'),
-    iconUrl: '/pois/private/mainQuest.webp',
-    hasName: true,
-  },
-  {
-    category: 'private',
-    type: 'Side Quest',
-    title: i18n('Side Quest'),
-    iconUrl: '/pois/private/sideQuest.webp',
-    hasName: true,
-  },
-  {
-    category: 'private',
-    type: 'faction-quest',
-    title: i18n('Faction Quest'),
-    iconUrl: '/pois/private/factionQuest.webp',
-    hasName: true,
-  },
-  {
-    category: 'specialEvents',
-    type: 'gleamite',
-    title: i18n('Gleamite'),
-    iconUrl: '/pois/specialEvents/gleamite.webp',
-  },
-  {
-    category: 'specialEvents',
-    type: 'iceCave',
-    title: i18n('Ice Cave'),
-    iconUrl: '/pois/specialEvents/iceCave.webp',
-  },
-  {
-    category: 'specialEvents',
-    type: 'lostPresent',
-    title: i18n('Lost present'),
-    iconUrl: '/pois/specialEvents/lostPresent.webp',
-  },
-  {
-    category: 'specialEvents',
-    type: 'floatingPresent',
-    title: i18n('Floating present'),
-    iconUrl: '/pois/specialEvents/floatingPresent.webp',
-  },
-  {
-    category: 'specialEvents',
-    type: 'winterVillage',
-    title: i18n('Winter Village'),
-    iconUrl: '/pois/specialEvents/winterVillage.webp',
-  },
-  {
     category: 'locations',
     type: 'expedition',
     title: i18n('Expedition'),
@@ -864,6 +806,34 @@ export const mapFilters: FilterItem[] = [
     title: i18n('Miscellaneous'),
     iconUrl: '/pois/other.webp',
   },
+  {
+    category: 'private',
+    type: 'generic',
+    title: i18n('Generic'),
+    iconUrl: '/pois/private/generic.webp',
+    hasName: true,
+  },
+  {
+    category: 'private',
+    type: 'Main Quest',
+    title: i18n('Main Quest'),
+    iconUrl: '/pois/private/mainQuest.webp',
+    hasName: true,
+  },
+  {
+    category: 'private',
+    type: 'Side Quest',
+    title: i18n('Side Quest'),
+    iconUrl: '/pois/private/sideQuest.webp',
+    hasName: true,
+  },
+  {
+    category: 'private',
+    type: 'faction-quest',
+    title: i18n('Faction Quest'),
+    iconUrl: '/pois/private/factionQuest.webp',
+    hasName: true,
+  },
 ];
 
 export type MapFiltersCategory = {
@@ -874,18 +844,6 @@ export type MapFiltersCategory = {
 };
 
 export const mapFiltersCategories: MapFiltersCategory[] = [
-  {
-    value: 'private',
-    title: i18n('Private (only visible to you)'),
-    filters: mapFilters.filter((mapFilter) => mapFilter.category === 'private'),
-  },
-  {
-    value: 'specialEvents',
-    title: i18n('Special Events'),
-    filters: mapFilters.filter(
-      (mapFilter) => mapFilter.category === 'specialEvents'
-    ),
-  },
   {
     value: 'chests',
     title: i18n('Chests'),
@@ -976,6 +934,11 @@ export const mapFiltersCategories: MapFiltersCategory[] = [
     filters: mapFilters.filter(
       (mapFilter) => mapFilter.category === 'locations'
     ),
+  },
+  {
+    value: 'private',
+    title: i18n('Private (only visible to you)'),
+    filters: mapFilters.filter((mapFilter) => mapFilter.category === 'private'),
   },
   {
     value: 'other',
