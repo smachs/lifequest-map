@@ -195,6 +195,17 @@ function useLayerGroups({
             onMarkerClick(marker);
           }
         });
+        mapMarker.on('contextmenu', () => {
+          if (
+            user &&
+            (!leafletMap.pm ||
+              (!leafletMap.pm.globalEditModeEnabled() &&
+                !leafletMap.pm.globalDrawModeEnabled()))
+          ) {
+            const action = getAction(mapMarker.options.image.type);
+            action(mapMarker, user, refreshUser);
+          }
+        });
         allLayers[marker._id] = {
           layer: mapMarker,
           hasComments: Boolean(marker.comments),
@@ -211,6 +222,7 @@ function useLayerGroups({
       const layerCache = allLayers[markerId];
       if (layerCache) {
         markersLayerGroup.removeLayer(layerCache.layer);
+        allLayers[markerId].layer.popup?.remove();
         delete allLayers[markerId];
       }
     });

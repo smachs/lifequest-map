@@ -22,7 +22,9 @@ const respawnAction =
     marker.popup = leaflet
       .popup({
         autoPan: false,
+        autoClose: false,
         closeButton: false,
+        closeOnClick: false,
         keepInView: false,
         className: styles.respawn,
       })
@@ -35,7 +37,7 @@ const respawnAction =
         return;
       }
       const timeLeft = Math.round((respawnAt - Date.now()) / 1000);
-      marker.popup.setContent(`${timeLeft}s`);
+      marker.popup.setContent(`${timeLeft}`);
       if (timeLeft > 0) {
         marker.actionHandle = setTimeout(updateTimer, 1000);
       } else {
@@ -44,7 +46,6 @@ const respawnAction =
       }
     };
     updateTimer();
-    toast.success('Started respawn timer');
   };
 
 const actions: {
@@ -157,6 +158,10 @@ const actions: {
   fish_hotspot3: respawnAction(5400),
 };
 
+const notFoundAction = () => {
+  toast.warning(`No action for marker found`);
+};
+
 export const getAction = (type: string) => {
-  return actions[type];
+  return actions[type] || notFoundAction;
 };

@@ -124,6 +124,10 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
       wheelPxPerZoomLevel: 120,
     });
 
+    leafletMap.on('contextmenu', () => {
+      // Disable default context menu
+    });
+
     setLeafletMap(leafletMap);
 
     latestLeafletMap = leafletMap;
