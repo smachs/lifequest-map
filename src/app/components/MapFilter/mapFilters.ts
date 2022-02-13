@@ -724,6 +724,12 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'service',
+    type: 'service_gypsum_kiln',
+    title: i18n('Gypsum Kiln'),
+    iconUrl: '/pois/service_gypsum_kiln.webp',
+  },
+  {
+    category: 'service',
     type: 'service_kitchen',
     title: i18n('Kitchen'),
     iconUrl: '/pois/service_kitchen.webp',
