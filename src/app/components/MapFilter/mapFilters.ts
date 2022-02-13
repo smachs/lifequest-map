@@ -48,6 +48,12 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'chests',
+    type: 'expeditionChest',
+    title: i18n('Expedition Chest'),
+    iconUrl: '/pois/chest_expedition.webp',
+  },
+  {
+    category: 'chests',
     type: 'chestsEliteAncient',
     title: i18n('Elite Ancient Chest'),
     iconUrl: '/pois/chest_elite2.webp',
