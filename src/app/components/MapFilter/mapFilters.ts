@@ -13,16 +13,16 @@ export type FilterItem = {
 export const mapFilters: FilterItem[] = [
   {
     category: 'locations',
-    type: 'expedition',
-    title: i18n('Expedition'),
-    iconUrl: '/pois/expedition.webp',
+    type: 'arena',
+    title: i18n('Arena'),
+    iconUrl: '/pois/arena.webp',
     hasName: true,
   },
   {
     category: 'locations',
-    type: 'fort',
-    title: i18n('Fort'),
-    iconUrl: '/pois/fort.webp',
+    type: 'expedition',
+    title: i18n('Expedition'),
+    iconUrl: '/pois/expedition.webp',
     hasName: true,
   },
   {
@@ -826,24 +826,31 @@ export const mapFilters: FilterItem[] = [
     hasName: true,
   },
   {
-    category: 'private',
-    type: 'Main Quest',
-    title: i18n('Main Quest'),
-    iconUrl: '/pois/private/mainQuest.webp',
+    category: 'factionQuests',
+    type: 'infiltrate',
+    title: i18n('Infiltrate'),
+    iconUrl: '/pois/infiltrate.webp',
     hasName: true,
   },
   {
-    category: 'private',
-    type: 'Side Quest',
-    title: i18n('Side Quest'),
-    iconUrl: '/pois/private/sideQuest.webp',
+    category: 'factionQuests',
+    type: 'enemyIntelligence',
+    title: i18n('Enemy Intelligence'),
+    iconUrl: '/pois/enemyIntelligence.webp',
     hasName: true,
   },
   {
-    category: 'private',
-    type: 'faction-quest',
-    title: i18n('Faction Quest'),
-    iconUrl: '/pois/private/factionQuest.webp',
+    category: 'factionQuests',
+    type: 'fort',
+    title: i18n('Control Point'),
+    iconUrl: '/pois/fort.webp',
+    hasName: true,
+  },
+  {
+    category: 'factionQuests',
+    type: 'showOfStrength',
+    title: i18n('Show of Strength'),
+    iconUrl: '/pois/showOfStrength.webp',
     hasName: true,
   },
 ];
@@ -946,6 +953,14 @@ export const mapFiltersCategories: MapFiltersCategory[] = [
     filters: mapFilters.filter(
       (mapFilter) => mapFilter.category === 'locations'
     ),
+  },
+  {
+    value: 'factionQuests',
+    title: i18n('Faction Quests'),
+    filters: mapFilters.filter(
+      (mapFilter) => mapFilter.category === 'factionQuests'
+    ),
+    borderColor: 'rgba(230, 15, 55, 0.7)',
   },
   {
     value: 'private',
