@@ -72,6 +72,9 @@ function ensureMarkersSchema(): Promise<Document> {
           comments: {
             bsonType: 'int',
           },
+          issues: {
+            bsonType: 'int',
+          },
           isPrivate: {
             bsonType: 'bool',
           },

@@ -10,6 +10,7 @@ type CanvasMarkerOptions = {
     src: string;
     element?: HTMLImageElement;
     comments?: number;
+    issues?: number;
     rotate?: number;
   };
 };
@@ -117,6 +118,22 @@ leaflet.Canvas.include({
         true
       ); // Outer circle
       ctx.fillStyle = '#3791F9';
+      ctx.fill();
+      ctx.strokeStyle = '#333';
+      ctx.stroke();
+    }
+    if (image.issues) {
+      ctx.beginPath();
+      const offsetY = image.comments ? 4 : 0;
+      ctx.arc(
+        dx + image.size[0] - 8,
+        dy + halfHeight - 8 + offsetY,
+        3,
+        0,
+        Math.PI * 2,
+        true
+      ); // Outer circle
+      ctx.fillStyle = '#ff5722';
       ctx.fill();
       ctx.strokeStyle = '#333';
       ctx.stroke();

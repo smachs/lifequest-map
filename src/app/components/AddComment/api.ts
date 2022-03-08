@@ -2,6 +2,7 @@ import { fetchJSON } from '../../utils/api';
 
 type CommentDTO = {
   message: string;
+  isIssue?: boolean;
 };
 
 export function postComment(markerId: string, comment: CommentDTO) {

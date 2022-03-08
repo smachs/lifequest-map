@@ -9,6 +9,7 @@ export type Comment = {
   userId: string;
   username: string;
   message: string;
+  isIssue?: boolean;
 };
 
 export type MarkerFull = {

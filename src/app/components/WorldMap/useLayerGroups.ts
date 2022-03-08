@@ -41,6 +41,7 @@ function useLayerGroups({
     [id: string]: {
       layer: CanvasMarker;
       hasComments: boolean;
+      hasIssues: boolean;
     };
   }>({});
   const { map } = useFilters();
@@ -143,7 +144,10 @@ function useLayerGroups({
           const isVisible = markersLayerGroup.hasLayer(
             allLayers[marker._id].layer
           );
-          if (allLayers[marker._id].hasComments !== Boolean(marker.comments)) {
+          if (
+            allLayers[marker._id].hasComments !== Boolean(marker.comments) ||
+            allLayers[marker._id].hasIssues !== Boolean(marker.issues)
+          ) {
             markersLayerGroup.removeLayer(allLayers[marker._id].layer);
             delete allLayers[marker._id];
           } else {
@@ -178,6 +182,7 @@ function useLayerGroups({
             borderColor: filterCategory.borderColor,
             size: [markerSize, markerSize],
             comments: marker.comments,
+            issues: marker.issues,
           },
           pmIgnore:
             !leafletMap.pm ||
@@ -209,6 +214,7 @@ function useLayerGroups({
         allLayers[marker._id] = {
           layer: mapMarker,
           hasComments: Boolean(marker.comments),
+          hasIssues: Boolean(marker.issues),
         };
         if (shouldBeVisible) {
           markersLayerGroup.addLayer(allLayers[marker._id].layer);
