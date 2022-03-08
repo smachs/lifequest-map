@@ -4,6 +4,7 @@ import { ObjectId } from 'mongodb';
 import { ensureAuthenticated } from '../auth/middlewares';
 import { postToDiscord } from '../discord';
 import { getMarkersCollection } from '../markers/collection';
+import { refreshMarkers } from '../markers/router';
 import { getCommentsCollection } from './collection';
 import type { CommentDTO } from './types';
 
@@ -37,13 +38,18 @@ commentsRouter.delete('/:commentId', ensureAuthenticated, async (req, res) => {
     return;
   }
 
+  const comments = await getCommentsCollection()
+    .find({
+      markerId: new ObjectId(comment.markerId),
+    })
+    .toArray();
+
   await getMarkersCollection().updateOne(
     { _id: new ObjectId(comment.markerId) },
     {
       $set: {
-        comments: await getCommentsCollection()
-          .find({ markerId: new ObjectId(comment.markerId) })
-          .count(),
+        comments: comments.filter((comment) => !comment.isIssue).length,
+        issues: comments.filter((comment) => comment.isIssue).length,
       },
     }
   );
@@ -56,11 +62,18 @@ commentsRouter.delete('/:commentId', ensureAuthenticated, async (req, res) => {
     return;
   }
 
+  await refreshMarkers();
   res.status(200).json({});
   const position = marker.position.join(', ');
-  postToDiscord(
-    `✍💀 ${account.name} deleted a comment for ${marker.type} at [${position}]:\n${comment.message}`
-  );
+  if (comment.isIssue) {
+    postToDiscord(
+      `⚠️💀 ${account.name} deleted an issue for ${marker.type} at [${position}]:\n${comment.message}`
+    );
+  } else {
+    postToDiscord(
+      `✍💀 ${account.name} deleted a comment for ${marker.type} at [${position}]:\n${comment.message}`
+    );
+  }
 });
 
 export default commentsRouter;

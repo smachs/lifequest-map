@@ -20,6 +20,7 @@ import { notify } from '../../utils/notifications';
 import Confirm from '../Confirm/Confirm';
 import { patchMarker } from '../AddResources/api';
 import Coordinates from './Coordinates';
+import ReportIssue from '../AddComment/ReportIssue';
 
 type MarkerDetailsProps = {
   marker: MarkerBasic;
@@ -74,6 +75,7 @@ function MarkerDetails({ marker, onEdit }: MarkerDetailsProps): JSX.Element {
       setMarkers((markers) =>
         markers.filter((existingMarker) => existingMarker._id !== marker._id)
       );
+      refresh();
       closeLatestModal();
     } catch (error) {
       writeError(error);
@@ -101,6 +103,7 @@ function MarkerDetails({ marker, onEdit }: MarkerDetailsProps): JSX.Element {
               username={comment.username}
               message={comment.message}
               createdAt={comment.createdAt}
+              isIssue={comment.isIssue}
               removable={Boolean(
                 account &&
                   (account.isModerator || account.steamId === comment.userId)
@@ -132,6 +135,27 @@ function MarkerDetails({ marker, onEdit }: MarkerDetailsProps): JSX.Element {
       <aside className={styles.more}>
         <h3>Actions</h3>
         <HideMarkerInput markerId={marker._id} onHide={closeLatestModal} />
+        <button
+          className={styles.button}
+          onClick={() =>
+            addModal({
+              title: 'Report an issue',
+              children: (
+                <ReportIssue
+                  markerId={marker._id}
+                  onAdd={() => {
+                    refresh();
+                    closeLatestModal();
+                  }}
+                />
+              ),
+              fitContent: true,
+            })
+          }
+          disabled={!account}
+        >
+          ⚠️ {account ? 'Report an issue' : 'Login to report an issue'}
+        </button>
         {account &&
           (account.isModerator || account.steamId === fullMarker?.userId) && (
             <>

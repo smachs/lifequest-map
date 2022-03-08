@@ -36,6 +36,9 @@ function ensureCommentsSchema(): Promise<Document> {
           createdAt: {
             bsonType: 'date',
           },
+          isIssue: {
+            bsonType: 'bool',
+          },
         },
         additionalProperties: false,
         required: ['markerId', 'username', 'message', 'createdAt'],

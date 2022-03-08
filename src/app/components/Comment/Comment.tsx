@@ -12,6 +12,7 @@ type CommentProps = {
   createdAt: Date;
   message: string;
   removable: boolean;
+  isIssue?: boolean;
   onRemove: () => void;
 };
 
@@ -21,6 +22,7 @@ function Comment({
   createdAt,
   message,
   removable,
+  isIssue,
   onRemove,
 }: CommentProps): JSX.Element {
   async function handleRemove(): Promise<void> {
@@ -37,6 +39,7 @@ function Comment({
       <p className={styles.name}>{username}</p>
       <small className={styles.createdAt}>{toTimeAgo(createdAt)}</small>
       <div className={styles.message}>
+        {isIssue && <div className={styles.issue}>⚠️ Reported this issue:</div>}
         <Markdown>{message}</Markdown>
       </div>
       <div className={styles.actions}>

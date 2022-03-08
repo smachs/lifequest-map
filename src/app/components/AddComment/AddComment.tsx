@@ -16,6 +16,7 @@ function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
   const { account } = useAccount();
   const [message, setMessage] = useState('');
   const { refresh: refreshMarkers } = useMarkers();
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event?: FormEvent) {
     if (event) {
@@ -29,12 +30,15 @@ function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
     }
 
     try {
+      setLoading(true);
       await notify(postComment(markerId, { message }));
       onAdd();
       setMessage('');
       refreshMarkers();
     } catch (error) {
       writeError(error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -60,7 +64,7 @@ function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
       <input
         type="submit"
         value="Send"
-        disabled={message.trim().length === 0 || !account}
+        disabled={message.trim().length === 0 || !account || loading}
       />
       <small className={styles.hint}>
         <a

@@ -6,4 +6,5 @@ export type CommentDTO = {
   username: string;
   message: string;
   createdAt: Date;
+  isIssue?: boolean;
 };

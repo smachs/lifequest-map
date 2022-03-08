@@ -50,9 +50,16 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
           title="Show Hidden"
         />
         <ActionCheckbox
-          onChange={(checked) => handleToggle(['only-with-comment'], checked)}
-          checked={filters.includes('only-with-comment')}
-          title="Only with comment"
+          onChange={(checked) =>
+            handleToggle(['hide-without-comment'], checked)
+          }
+          checked={filters.includes('hide-without-comment')}
+          title="Hide without comment"
+        />
+        <ActionCheckbox
+          onChange={(checked) => handleToggle(['hide-without-issue'], checked)}
+          checked={filters.includes('hide-without-issue')}
+          title="Hide without issue"
         />
       </div>
       <div className={styles.actions}>

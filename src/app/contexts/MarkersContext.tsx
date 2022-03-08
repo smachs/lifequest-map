@@ -23,6 +23,7 @@ export type MarkerBasic = {
   tier?: number;
   level?: number;
   comments?: number;
+  issues?: number;
   _id: string;
   screenshotFilename?: string;
 };
@@ -156,7 +157,10 @@ export function MarkersProvider({
       if (temporaryHiddenMarkerIDs.includes(marker._id)) {
         return false;
       }
-      if (filters.includes('only-with-comment') && !marker.comments) {
+      if (filters.includes('hide-without-comment') && !marker.comments) {
+        return false;
+      }
+      if (filters.includes('hide-without-issue') && !marker.issues) {
         return false;
       }
       if (!filters.includes('hidden') && hiddenMarkerIds.includes(marker._id)) {

@@ -299,7 +299,7 @@ markersRouter.post(
     try {
       const account = req.account!;
       const { markerId } = req.params;
-      const { message } = req.body;
+      const { message, isIssue } = req.body;
 
       if (typeof message !== 'string' || !ObjectId.isValid(markerId)) {
         res.status(400).send('Invalid payload');
@@ -312,6 +312,7 @@ markersRouter.post(
         username: account.name,
         message,
         createdAt: new Date(),
+        isIssue: Boolean(isIssue),
       };
 
       const marker = await getMarkersCollection().findOne({
@@ -327,25 +328,36 @@ markersRouter.post(
         return;
       }
 
+      const comments = await getCommentsCollection()
+        .find({
+          markerId: new ObjectId(markerId),
+        })
+        .toArray();
+
       await getMarkersCollection().updateOne(
         { _id: new ObjectId(markerId) },
         {
           $set: {
-            comments: await getCommentsCollection()
-              .find({ markerId: new ObjectId(markerId) })
-              .count(),
+            comments: comments.filter((comment) => !comment.isIssue).length,
+            issues: comments.filter((comment) => comment.isIssue).length,
           },
         }
       );
 
+      await refreshMarkers();
       res.status(200).json(comment);
       const position = marker.position ? marker.position.join(', ') : 'unknown';
-      await postToDiscord(
-        `✍ ${account.name} added a comment for ${marker.type} at [${position}]:\n${comment.message}`,
-        !marker.isPrivate
-      );
-
-      await refreshMarkers();
+      if (comment.isIssue) {
+        await postToDiscord(
+          `⚠️ ${account.name} added an issue for ${marker.type} at [${position}]:\n${comment.message}`,
+          !marker.isPrivate
+        );
+      } else {
+        await postToDiscord(
+          `✍ ${account.name} added a comment for ${marker.type} at [${position}]:\n${comment.message}`,
+          !marker.isPrivate
+        );
+      }
     } catch (error) {
       next(error);
     }
