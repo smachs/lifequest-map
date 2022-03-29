@@ -826,7 +826,7 @@ export const mapFilters: FilterItem[] = [
   {
     category: 'factionQuests',
     type: 'fort',
-    title: 'Control Point',
+    title: 'Conquer',
     iconUrl: '/pois/fort.webp',
     hasName: true,
   },
