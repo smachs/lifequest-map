@@ -22,7 +22,7 @@ type FiltersProviderProps = {
   children: ReactNode;
 };
 
-const defaultFilters = mapFilters
+export const allFilters = mapFilters
   .map((filter) => {
     if (filter.category === 'chests') {
       const tierTypes = Array(filter.maxTier || 5)
@@ -38,7 +38,7 @@ export function FiltersProvider({
 }: FiltersProviderProps): JSX.Element {
   const [filters, setFilters] = usePersistentState<string[]>(
     'filters',
-    defaultFilters
+    allFilters
   );
   const [map, setMap] = useState(DEFAULT_MAP_NAME);
 

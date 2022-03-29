@@ -1,4 +1,4 @@
-import { mapFilters } from '../MapFilter/mapFilters';
+import { allFilters } from '../../contexts/FiltersContext';
 
 export type Preset = {
   name: string;
@@ -8,7 +8,7 @@ export type Preset = {
 export const staticPresets: Preset[] = [
   {
     name: 'All markers',
-    types: mapFilters.map((filter) => filter.type),
+    types: allFilters,
   },
   {
     name: 'No markers',
