@@ -46,7 +46,7 @@ function PresetSelect({ value, onChange }: PresetSelectProps): JSX.Element {
       }
       const newPreset: Preset = {
         name: search,
-        types: getJSONItem('filters', []),
+        types: getJSONItem('selected-filters', []),
       };
       presets.push(newPreset);
 

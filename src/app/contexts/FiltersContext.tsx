@@ -37,7 +37,7 @@ export function FiltersProvider({
   children,
 }: FiltersProviderProps): JSX.Element {
   const [filters, setFilters] = usePersistentState<string[]>(
-    'filters',
+    'selected-filters',
     allFilters
   );
   const [map, setMap] = useState(DEFAULT_MAP_NAME);

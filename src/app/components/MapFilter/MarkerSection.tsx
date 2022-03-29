@@ -30,12 +30,28 @@ function MarkerSection({
       <Checkbox
         onChange={(checked) =>
           onToggle(
-            categories.map((filter) => filter.type),
+            categories
+              .map((filter) => {
+                if (filter.category === 'chests') {
+                  const tierTypes = Array(filter.maxTier || 5)
+                    .fill(null)
+                    .map((_, index) => `${filter.type}-${index + 1}`);
+                  return tierTypes;
+                }
+                return filter.type;
+              })
+              .flat(),
             checked
           )
         }
         checked={filters.some((filter) =>
-          categories.some((categoryFilter) => categoryFilter.type === filter)
+          mapFilterCategory.value === 'chests'
+            ? categories.some((categoryFilter) =>
+                filter.startsWith(categoryFilter.type)
+              )
+            : categories.some(
+                (categoryFilter) => categoryFilter.type === filter
+              )
         )}
         title={mapFilterCategory.title}
         className={styles.category}
