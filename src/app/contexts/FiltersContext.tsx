@@ -22,7 +22,17 @@ type FiltersProviderProps = {
   children: ReactNode;
 };
 
-const defaultFilters = mapFilters.map((filter) => filter.type);
+const defaultFilters = mapFilters
+  .map((filter) => {
+    if (filter.category === 'chests') {
+      const tierTypes = Array(filter.maxTier || 5)
+        .fill(null)
+        .map((_, index) => `${filter.type}-${index + 1}`);
+      return tierTypes;
+    }
+    return filter.type;
+  })
+  .flat();
 export function FiltersProvider({
   children,
 }: FiltersProviderProps): JSX.Element {

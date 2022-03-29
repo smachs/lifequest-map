@@ -1,0 +1,26 @@
+.container {
+  display: flex;
+  column-gap: 0.5em;
+  align-items: center;
+  margin-left: 1em;
+}
+
+.label {
+  filter: grayscale() brightness(0.5);
+  width: 1.2em;
+  height: 1.2em;
+  text-align: center;
+  cursor: pointer;
+  padding: 0.1em;
+  background-color: var(--color-shade-two);
+  transition: 0.2s ease-in;
+}
+
+.label > input {
+  display: none;
+}
+
+.active {
+  filter: none;
+  color: var(--color-primary);
+}
