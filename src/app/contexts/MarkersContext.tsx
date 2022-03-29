@@ -151,7 +151,13 @@ export function MarkersProvider({
         return false;
       }
 
-      if (!filters.some((filter) => filter === marker.type)) {
+      if (marker.tier) {
+        if (
+          !filters.some((filter) => filter === `${marker.type}-${marker.tier}`)
+        ) {
+          return false;
+        }
+      } else if (!filters.some((filter) => filter === marker.type)) {
         return false;
       }
       if (temporaryHiddenMarkerIDs.includes(marker._id)) {
