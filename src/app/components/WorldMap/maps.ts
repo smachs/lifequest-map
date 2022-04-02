@@ -78,6 +78,17 @@ export const mapDetails: Map[] = [
       [1400, 1250],
     ],
   },
+  {
+    name: 'NW_Dungeon_ShatterMtn_00',
+    title: "Tempest's Heart",
+    folder: 'nw_dungeon_shattermtn_00',
+    maxZoom: 6,
+    minZoom: 3,
+    maxBounds: [
+      [300, 220],
+      [1970, 2150],
+    ],
+  },
 ];
 
 export const findMapDetails = (map: string) => {
