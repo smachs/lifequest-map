@@ -45,6 +45,13 @@ export const mapFilters: FilterItem[] = [
     hasName: true,
   },
   {
+    category: 'locations',
+    type: 'vistaView',
+    title: 'Vista View',
+    iconUrl: '/pois/vista_view.webp',
+    hasName: true,
+  },
+  {
     category: 'chests',
     type: 'expeditionChest',
     title: 'Expedition Chest',
