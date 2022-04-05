@@ -150,6 +150,13 @@ export const mapFilters: FilterItem[] = [
     hasLevel: true,
   },
   {
+    category: 'enemies',
+    type: 'rafflebones',
+    title: 'Rafflebones',
+    iconUrl: '/pois/rafflebones.webp',
+    hasLevel: true,
+  },
+  {
     category: 'skinning',
     type: 'alligator',
     title: 'Alligator',
