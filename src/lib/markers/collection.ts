@@ -57,6 +57,9 @@ function ensureMarkersSchema(): Promise<Document> {
           tier: {
             bsonType: 'int',
           },
+          size: {
+            bsonType: 'string',
+          },
           description: {
             bsonType: 'string',
           },

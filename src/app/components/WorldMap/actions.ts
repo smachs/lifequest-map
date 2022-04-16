@@ -48,6 +48,23 @@ const respawnAction =
     updateTimer();
   };
 
+const sizes = {
+  S: 0,
+  M: 1,
+  L: 2,
+  '?': 0,
+};
+
+const respawnSizeAction =
+  (timers: [number, number, number]) => (marker: CanvasMarker) => {
+    if (!marker.options.image.markerSize) {
+      return;
+    }
+    const size = sizes[marker.options.image.markerSize];
+    const timer = timers[size];
+    return respawnAction(timer)(marker);
+  };
+
 const actions: {
   [type: string]: (
     marker: CanvasMarker,
@@ -86,24 +103,23 @@ const actions: {
   chestsCommonAncient: respawnAction(600),
   chestsCommonProvisions: respawnAction(600),
   chestsCommonSupplies: respawnAction(600),
-  crystal: respawnAction(1680),
-  gold: respawnAction(960),
-  iron: respawnAction(900),
-  lodestone: respawnAction(960),
-  oil: respawnAction(900),
-  orichalcum: respawnAction(1800),
-  platinum: respawnAction(3840),
-  saltpeter: respawnAction(600),
-  silver: respawnAction(900),
-  starmetal: respawnAction(1350),
-  ironwood: respawnAction(600),
-  wyrdwood: respawnAction(600),
+  gold: respawnSizeAction([1080, 1350, 1530]),
+  iron: respawnSizeAction([720, 900, 1020]),
+  lodestone: respawnSizeAction([1080, 1350, 1530]),
+  oil: respawnSizeAction([720, 900, 1020]),
+  orichalcum: respawnSizeAction([1440, 1800, 2040]),
+  platinum: respawnSizeAction([3540, 3840, 4140]),
+  saltpeter: respawnSizeAction([540, 710, 885]),
+  silver: respawnSizeAction([720, 900, 1020]),
+  starmetal: respawnSizeAction([1080, 1350, 1530]),
+  ironwood: respawnSizeAction([1080, 1350, 1530]),
+  wyrdwood: respawnSizeAction([1440, 1800, 2040]),
   azoth_spring: respawnAction(600),
   fungus: respawnAction(600),
-  hemp: respawnAction(600),
-  herb: respawnAction(600),
-  silkweed: respawnAction(600),
-  wirefiber: respawnAction(600),
+  hemp: respawnSizeAction([720, 900, 1020]),
+  herb: respawnSizeAction([720, 900, 1020]),
+  silkweed: respawnSizeAction([720, 900, 1020]),
+  wirefiber: respawnSizeAction([720, 900, 1020]),
   barley: respawnAction(600),
   berry: respawnAction(600),
   blueberry: respawnAction(600),

@@ -1,5 +1,6 @@
 import type { Double } from 'mongodb';
 
+export type MarkerSize = 'S' | 'M' | 'L' | '?';
 export type MarkerDTO = {
   type: string;
   map?: string;
@@ -8,6 +9,7 @@ export type MarkerDTO = {
   level?: number;
   chestType?: string;
   tier?: number;
+  size?: MarkerSize;
   description?: string;
   userId?: string;
   username: string;

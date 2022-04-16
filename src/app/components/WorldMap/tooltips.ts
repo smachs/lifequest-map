@@ -31,6 +31,10 @@ export function getTooltipContent(
     let tooltipContent = markerOrDetails.name
       ? `${markerOrDetails.name} (${mapFilter.title})`
       : mapFilter.title;
+    if (markerOrDetails.size) {
+      tooltipContent += ` (${markerOrDetails.size})`;
+    }
+
     if (markerOrDetails.level) {
       tooltipContent += `<br/>Level ${markerOrDetails.level}`;
     }

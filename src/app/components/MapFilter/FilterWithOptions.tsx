@@ -1,49 +1,52 @@
 import Checkbox from './Checkbox';
 import type { FilterItem } from './mapFilters';
-import styles from './ChestFilter.module.css';
+import styles from './FilterWithOptions.module.css';
 import { classNames } from '../../utils/styles';
 
-type ChestFilterProps = {
+type FilterWithOptionsProps = {
+  options: string[];
   filter: FilterItem;
   filters: string[];
   onToggle: (filterTypes: string[], checked: boolean) => void;
 };
-const ChestFilter = ({ filter, filters, onToggle }: ChestFilterProps) => {
-  const tiers = Array(filter.maxTier || 5)
-    .fill(null)
-    .map((_, index) => index + 1);
 
+const FilterWithOptions = ({
+  options,
+  filter,
+  filters,
+  onToggle,
+}: FilterWithOptionsProps) => {
   return (
     <>
       <Checkbox
         onChange={(checked) =>
           onToggle(
-            tiers.map((tier) => `${filter.type}-${tier}`),
+            options.map((option) => `${filter.type}-${option}`),
             checked
           )
         }
         checked={filters.some((activeFilter) =>
-          tiers.some((tier) => `${filter.type}-${tier}` === activeFilter)
+          options.some((option) => `${filter.type}-${option}` === activeFilter)
         )}
         imgSrc={filter.iconUrl}
         title={filter.title}
         countType={filter.type}
       />
       <div className={styles.container}>
-        {tiers.map((tier) => (
+        {options.map((option) => (
           <label
-            key={tier}
+            key={option}
             className={classNames(
               styles.label,
-              filters.includes(`${filter.type}-${tier}`) && styles.active
+              filters.includes(`${filter.type}-${option}`) && styles.active
             )}
           >
-            {tier}
+            {option}
             <input
               type="checkbox"
-              checked={filters.includes(`${filter.type}-${tier}`)}
+              checked={filters.includes(`${filter.type}-${option}`)}
               onChange={(event) =>
-                onToggle([`${filter.type}-${tier}`], event.target.checked)
+                onToggle([`${filter.type}-${option}`], event.target.checked)
               }
             />
           </label>
@@ -53,4 +56,4 @@ const ChestFilter = ({ filter, filters, onToggle }: ChestFilterProps) => {
   );
 };
 
-export default ChestFilter;
+export default FilterWithOptions;

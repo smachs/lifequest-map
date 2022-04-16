@@ -1,6 +1,6 @@
-import { Fragment } from 'react';
+import { sizes } from '../AddResources/SizeInput';
 import Checkbox from './Checkbox';
-import ChestFilter from './ChestFilter';
+import FilterSelection from './FilterSelection';
 import type { MapFiltersCategory } from './mapFilters';
 import styles from './MarkerSection.module.css';
 import { searchMapFilter } from './searchMapFilter';
@@ -38,6 +38,9 @@ function MarkerSection({
                     .map((_, index) => `${filter.type}-${index + 1}`);
                   return tierTypes;
                 }
+                if (filter.hasSize) {
+                  return sizes.map((size) => `${filter.type}-${size}`);
+                }
                 return filter.type;
               })
               .flat(),
@@ -45,36 +48,21 @@ function MarkerSection({
           )
         }
         checked={filters.some((filter) =>
-          mapFilterCategory.value === 'chests'
-            ? categories.some((categoryFilter) =>
-                filter.startsWith(categoryFilter.type)
-              )
-            : categories.some(
-                (categoryFilter) => categoryFilter.type === filter
-              )
+          categories.some((categoryFilter) =>
+            filter.startsWith(categoryFilter.type)
+          )
         )}
         title={mapFilterCategory.title}
         className={styles.category}
       />
       <div className={styles.items}>
         {categories.map((filter) => (
-          <Fragment key={filter.type}>
-            {filter.category === 'chests' ? (
-              <ChestFilter
-                filters={filters}
-                filter={filter}
-                onToggle={onToggle}
-              />
-            ) : (
-              <Checkbox
-                onChange={(checked) => onToggle([filter.type], checked)}
-                checked={filters.includes(filter.type)}
-                imgSrc={filter.iconUrl}
-                title={filter.title}
-                countType={filter.type}
-              />
-            )}
-          </Fragment>
+          <FilterSelection
+            key={filter.type}
+            filter={filter}
+            filters={filters}
+            onToggle={onToggle}
+          />
         ))}
       </div>
     </section>
