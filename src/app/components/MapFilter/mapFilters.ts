@@ -267,12 +267,6 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'mining',
-    type: 'crystal',
-    title: 'Crystal',
-    iconUrl: '/pois/crystal.webp',
-  },
-  {
-    category: 'mining',
     type: 'gold',
     title: 'Gold',
     iconUrl: '/pois/gold.webp',
