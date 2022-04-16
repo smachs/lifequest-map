@@ -6,6 +6,7 @@ export type FilterItem = {
   hasName?: boolean;
   hasLevel?: boolean;
   maxTier?: number;
+  hasSize?: boolean;
 };
 
 export const mapFilters: FilterItem[] = [
@@ -270,42 +271,49 @@ export const mapFilters: FilterItem[] = [
     type: 'gold',
     title: 'Gold',
     iconUrl: '/pois/gold.webp',
+    hasSize: true,
   },
   {
     category: 'mining',
     type: 'iron',
     title: 'Iron',
     iconUrl: '/pois/iron.webp',
+    hasSize: true,
   },
   {
     category: 'mining',
     type: 'lodestone',
     title: 'Lodestone',
     iconUrl: '/pois/lodestone.webp',
+    hasSize: true,
   },
   {
     category: 'mining',
     type: 'oil',
     title: 'Seeping Stone (Oil)',
     iconUrl: '/pois/oil.webp',
+    hasSize: true,
   },
   {
     category: 'mining',
     type: 'orichalcum',
     title: 'Orichalcum',
     iconUrl: '/pois/orichalcum.webp',
+    hasSize: true,
   },
   {
     category: 'mining',
     type: 'platinum',
     title: 'Platinum',
     iconUrl: '/pois/platinum.webp',
+    hasSize: true,
   },
   {
     category: 'mining',
     type: 'saltpeter',
     title: 'Saltpeter',
     iconUrl: '/pois/saltpeter.webp',
+    hasSize: true,
   },
 
   {
@@ -313,12 +321,14 @@ export const mapFilters: FilterItem[] = [
     type: 'silver',
     title: 'Silver',
     iconUrl: '/pois/silver.webp',
+    hasSize: true,
   },
   {
     category: 'mining',
     type: 'starmetal',
     title: 'Starmetal',
     iconUrl: '/pois/starmetal.webp',
+    hasSize: true,
   },
   {
     category: 'fishing',
@@ -343,12 +353,14 @@ export const mapFilters: FilterItem[] = [
     type: 'ironwood',
     title: 'Ironwood Tree',
     iconUrl: '/pois/ironwood_compass.webp',
+    hasSize: true,
   },
   {
     category: 'logging',
     type: 'wyrdwood',
     title: 'Wyrdwood Tree',
     iconUrl: '/pois/wyrdwood_compass.webp',
+    hasSize: true,
   },
   {
     category: 'farming',
@@ -367,24 +379,28 @@ export const mapFilters: FilterItem[] = [
     type: 'hemp',
     title: 'Hemp',
     iconUrl: '/pois/hemp_compass.webp',
+    hasSize: true,
   },
   {
     category: 'farming',
     type: 'herb',
     title: 'Herb',
     iconUrl: '/pois/herbs.webp',
+    hasSize: true,
   },
   {
     category: 'farming',
     type: 'silkweed',
     title: 'Silkweed',
     iconUrl: '/pois/silkweed.webp',
+    hasSize: true,
   },
   {
     category: 'farming',
     type: 'wirefiber',
     title: 'Wirefiber',
     iconUrl: '/pois/wirefiber.webp',
+    hasSize: true,
   },
   {
     category: 'cooking_ingredients',

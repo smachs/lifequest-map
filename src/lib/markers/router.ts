@@ -376,6 +376,7 @@ async function bodyToMarker(
     level,
     chestType,
     tier,
+    size,
     description,
     screenshotId,
   } = body;
@@ -413,6 +414,9 @@ async function bodyToMarker(
   }
   if (tier) {
     marker.tier = tier;
+  }
+  if (size) {
+    marker.size = size;
   }
   if (description) {
     marker.description = description.substring(0, MAX_DESCRIPTION_LENGTH);

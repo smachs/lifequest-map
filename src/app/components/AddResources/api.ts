@@ -1,3 +1,4 @@
+import type { MarkerSize } from '../../../lib/markers/types';
 import type { MarkerBasic } from '../../contexts/MarkersContext';
 import { fetchJSON } from '../../utils/api';
 
@@ -10,6 +11,7 @@ export type MarkerDTO = {
   level?: number;
   chestType?: string;
   tier?: number;
+  size?: MarkerSize;
   description?: string;
   screenshotId?: string;
 };

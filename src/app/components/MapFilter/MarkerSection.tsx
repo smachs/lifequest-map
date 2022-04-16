@@ -1,6 +1,5 @@
-import { Fragment } from 'react';
 import Checkbox from './Checkbox';
-import ChestFilter from './ChestFilter';
+import FilterSelection from './FilterSelection';
 import type { MapFiltersCategory } from './mapFilters';
 import styles from './MarkerSection.module.css';
 import { searchMapFilter } from './searchMapFilter';
@@ -58,23 +57,12 @@ function MarkerSection({
       />
       <div className={styles.items}>
         {categories.map((filter) => (
-          <Fragment key={filter.type}>
-            {filter.category === 'chests' ? (
-              <ChestFilter
-                filters={filters}
-                filter={filter}
-                onToggle={onToggle}
-              />
-            ) : (
-              <Checkbox
-                onChange={(checked) => onToggle([filter.type], checked)}
-                checked={filters.includes(filter.type)}
-                imgSrc={filter.iconUrl}
-                title={filter.title}
-                countType={filter.type}
-              />
-            )}
-          </Fragment>
+          <FilterSelection
+            key={filter.type}
+            filter={filter}
+            filters={filters}
+            onToggle={onToggle}
+          />
         ))}
       </div>
     </section>

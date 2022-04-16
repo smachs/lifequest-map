@@ -1,5 +1,5 @@
 import { classNames } from '../../utils/styles';
-import styles from './TierInput.module.css';
+import styles from './Input.module.css';
 
 type TierInputProps = {
   value: number;

@@ -16,6 +16,7 @@ import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import { usePlayer } from '../../contexts/PlayerContext';
 import { useFilters } from '../../contexts/FiltersContext';
 import { DEFAULT_MAP_NAME } from '../WorldMap/maps';
+import type { MarkerSize } from '../../../lib/markers/types';
 
 export type Details = {
   description?: string;
@@ -23,6 +24,7 @@ export type Details = {
   level?: number;
   chestType?: string;
   tier?: number;
+  size?: MarkerSize;
 };
 
 type AddResourcesProps = {
@@ -75,6 +77,9 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
       details.chestType = marker?.chestType || 'Supply';
       details.tier = marker?.tier || 1;
     }
+    if (filter.hasSize) {
+      details.size = marker?.size || 'S';
+    }
     if (filter.hasLevel) {
       details.level = marker?.level || 1;
     }
@@ -88,7 +93,8 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
     filter &&
     (filter.hasName ? details.name && details.name.length > 0 : true) &&
     (filter.hasLevel ? details.level && details.level > 0 : true) &&
-    (filter.category === 'chests' ? details.tier && details.chestType : true);
+    (filter.category === 'chests' ? details.tier && details.chestType : true) &&
+    (filter.hasSize ? Boolean(details.size) : true);
 
   async function handleSave() {
     if (!isValid) {

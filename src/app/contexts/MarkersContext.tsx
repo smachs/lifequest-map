@@ -13,6 +13,7 @@ import { isOverwolfApp } from '../utils/overwolf';
 import { usePersistentState } from '../utils/storage';
 import { useFilters } from './FiltersContext';
 import { useUser } from './UserContext';
+import type { MarkerSize } from '../../lib/markers/types';
 
 export type MarkerBasic = {
   type: string;
@@ -23,6 +24,7 @@ export type MarkerBasic = {
   tier?: number;
   level?: number;
   comments?: number;
+  size?: MarkerSize;
   issues?: number;
   _id: string;
   screenshotFilename?: string;
@@ -154,6 +156,12 @@ export function MarkersProvider({
       if (marker.tier) {
         if (
           !filters.some((filter) => filter === `${marker.type}-${marker.tier}`)
+        ) {
+          return false;
+        }
+      } else if (marker.size) {
+        if (
+          !filters.some((filter) => filter === `${marker.type}-${marker.size}`)
         ) {
           return false;
         }

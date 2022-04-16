@@ -3,6 +3,7 @@ import type { Details } from './AddResources';
 import styles from './DetailsInput.module.css';
 import generalStyles from './AddResources.module.css';
 import TierInput from './TierInput';
+import SizeInput from './SizeInput';
 
 type DetailsInputProps = {
   filter: FilterItem | null;
@@ -75,6 +76,15 @@ function DetailsInput({
               onChange={(tier) => onChange({ ...details, tier })}
               value={details.tier || 0}
               max={filter.maxTier || 5}
+            />
+          </label>
+        )}
+        {filter?.hasSize && (
+          <label className={styles.label}>
+            <span className={generalStyles.key}>Size</span>
+            <SizeInput
+              onChange={(size) => onChange({ ...details, size })}
+              value={details.size || 'S'}
             />
           </label>
         )}
