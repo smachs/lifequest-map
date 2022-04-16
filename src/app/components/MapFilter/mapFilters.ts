@@ -315,7 +315,6 @@ export const mapFilters: FilterItem[] = [
     iconUrl: '/pois/saltpeter.webp',
     hasSize: true,
   },
-
   {
     category: 'mining',
     type: 'silver',

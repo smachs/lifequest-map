@@ -1,8 +1,10 @@
 import leaflet from 'leaflet';
+import type { MarkerSize } from '../../../lib/markers/types';
 
 type CanvasMarkerOptions = {
   image: {
     size: [number, number];
+    markerSize?: MarkerSize;
     showBackground: boolean;
     markerId: string;
     type: string;

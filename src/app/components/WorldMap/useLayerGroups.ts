@@ -177,6 +177,7 @@ function useLayerGroups({
           image: {
             markerId: marker._id,
             type: marker.type,
+            markerSize: marker.size,
             src: mapFilter.iconUrl,
             showBackground: markerShowBackground,
             borderColor: filterCategory.borderColor,
