@@ -136,9 +136,12 @@ markersRouter.delete(
       }
       res.status(200).json({});
 
-      const nameType = marker.name
+      let nameType = marker.name
         ? `${marker.type} ${marker.name}`
         : marker.type;
+      if (marker.size) {
+        nameType += ` (${marker.size})`;
+      }
       await postToDiscord(
         `📌💀 ${nameType} from ${marker.username} at [${marker.position}] was deleted by ${account.name}`,
         !marker.isPrivate
@@ -211,9 +214,12 @@ markersRouter.patch(
         return;
       }
       res.status(200).json(result.value);
-      const nameType = marker.name
+      let nameType = marker.name
         ? `${marker.type} ${marker.name}`
         : marker.type;
+      if (marker.size) {
+        nameType += ` (${marker.size})`;
+      }
       await postToDiscord(
         `📌 ${nameType} was updated by ${account.name} at [${marker.position}]`,
         !marker.isPrivate
@@ -277,9 +283,12 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       return;
     }
     res.status(200).json(marker);
-    const nameType = marker.name
+    let nameType = marker.name
       ? `${mapFilter.title} ${marker.name}`
       : mapFilter.title;
+    if (marker.size) {
+      nameType += ` (${marker.size})`;
+    }
     await postToDiscord(
       `📌 ${nameType} was added by ${account.name} at [${marker.position}]`,
       !marker.isPrivate
