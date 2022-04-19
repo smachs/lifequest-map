@@ -185,10 +185,7 @@ function useLayerGroups({
             comments: marker.comments,
             issues: marker.issues,
           },
-          pmIgnore:
-            !leafletMap.pm ||
-            (!leafletMap.pm.globalDrawModeEnabled() &&
-              !leafletMap.pm.globalEditModeEnabled()),
+          pmIgnore: false,
         }).bindTooltip(getTooltipContent(marker, mapFilter), {
           direction: 'top',
         });
@@ -230,6 +227,8 @@ function useLayerGroups({
       if (layerCache) {
         markersLayerGroup.removeLayer(layerCache.layer);
         allLayers[markerId].layer.popup?.remove();
+        allLayers[markerId].layer.off();
+        allLayers[markerId].layer.remove();
         delete allLayers[markerId];
       }
     });
@@ -301,6 +300,7 @@ function useLayerGroups({
     layerGroup.addTo(leafletMap);
 
     return () => {
+      layerGroup.off();
       layerGroup.remove();
     };
   }, [leafletMap, markerRoutes, map]);
@@ -308,32 +308,12 @@ function useLayerGroups({
   useEffect(() => {
     return () => {
       Object.values(allLayersRef.current).forEach(({ layer }) => {
+        layer.off();
         layer.remove();
       });
       allLayersRef.current = {};
     };
   }, []);
-
-  useEffect(() => {
-    if (!leafletMap) {
-      return;
-    }
-    leafletMap.on('pm:globaldrawmodetoggled', () => {
-      const pmIgnore = !leafletMap.pm.controlsVisible();
-      Object.values(allLayersRef.current).forEach(({ layer }) => {
-        layer.setStyle({ pmIgnore });
-        leaflet.PM.reInitLayer(layer);
-      });
-    });
-
-    leafletMap.on('pm:globaleditmodetoggled', () => {
-      const pmIgnore = !leafletMap.pm.controlsVisible();
-      Object.values(allLayersRef.current).forEach(({ layer }) => {
-        layer.setStyle({ pmIgnore });
-        leaflet.PM.reInitLayer(layer);
-      });
-    });
-  }, [leafletMap]);
 }
 
 export default useLayerGroups;

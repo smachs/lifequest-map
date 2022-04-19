@@ -3,6 +3,7 @@ import type { FilterItem } from '../MapFilter/mapFilters';
 import { mapFilters } from '../MapFilter/mapFilters';
 import { useFilters } from '../../contexts/FiltersContext';
 import { classNames } from '../../utils/styles';
+import { useMemo } from 'react';
 
 type MarkerTypesProps = {
   markersByType: {
@@ -13,15 +14,18 @@ type MarkerTypesProps = {
 function MarkerTypes({ markersByType }: MarkerTypesProps): JSX.Element {
   const { filters } = useFilters();
 
-  const markerMapFilters: FilterItem[] = [];
-  Object.keys(markersByType).forEach((markerType) => {
-    const mapFilter = mapFilters.find(
-      (mapFilter) => mapFilter.type === markerType
-    );
-    if (mapFilter) {
-      markerMapFilters.push(mapFilter);
-    }
-  });
+  const markerMapFilters: FilterItem[] = useMemo(() => {
+    const result: FilterItem[] = [];
+    Object.keys(markersByType).forEach((markerType) => {
+      const mapFilter = mapFilters.find(
+        (mapFilter) => mapFilter.type === markerType
+      );
+      if (mapFilter) {
+        result.push(mapFilter);
+      }
+    });
+    return result;
+  }, [markersByType]);
 
   return (
     <section className={styles.container}>
@@ -32,7 +36,9 @@ function MarkerTypes({ markersByType }: MarkerTypesProps): JSX.Element {
             key={markerMapFilter.type}
             className={classNames(
               styles.marker,
-              !filters.includes(markerMapFilter.type) && styles.unchecked
+              !filters.some((filter) =>
+                filter.startsWith(markerMapFilter.type)
+              ) && styles.unchecked
             )}
             title={markerMapFilter.title}
           >

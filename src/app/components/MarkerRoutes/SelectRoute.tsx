@@ -66,6 +66,9 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
   );
 
   useEffect(() => {
+    // @ts-ignore
+    latestLeafletMap!.pm.setGlobalOptions({ snappable: true });
+
     const toggleControls = (editMode: boolean) => {
       latestLeafletMap!.pm.addControls({
         position: 'topleft',
@@ -89,7 +92,9 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
       existingPolyline = event.layer as leaflet.Polyline;
       refreshMarkers(event.layer);
 
-      latestLeafletMap!.pm.enableGlobalEditMode();
+      if (!latestLeafletMap!.pm.globalEditModeEnabled) {
+        latestLeafletMap!.pm.enableGlobalEditMode();
+      }
       toggleControls(true);
 
       event.layer.on('pm:edit', (event) => {
@@ -120,7 +125,9 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
     });
 
     if (markerRoute) {
-      latestLeafletMap!.pm.enableGlobalEditMode();
+      if (!latestLeafletMap!.pm.globalEditModeEnabled) {
+        latestLeafletMap!.pm.enableGlobalEditMode();
+      }
       existingPolyline = leaflet.polyline(markerRoute.positions, {
         pmIgnore: false,
       });
@@ -147,6 +154,7 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
       latestLeafletMap!.off('pm:drawstart');
 
       if (existingPolyline) {
+        existingPolyline.off();
         existingPolyline.remove();
       }
     };
