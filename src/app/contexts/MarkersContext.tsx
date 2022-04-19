@@ -14,6 +14,7 @@ import { usePersistentState } from '../utils/storage';
 import { useFilters } from './FiltersContext';
 import { useUser } from './UserContext';
 import type { MarkerSize } from '../../lib/markers/types';
+import { mapFilters } from '../components/MapFilter/mapFilters';
 
 export type MarkerBasic = {
   type: string;
@@ -193,10 +194,24 @@ export function MarkersProvider({
       markerRoutesClone.splice(index, 1);
     } else if (force !== false) {
       const types = Object.keys(markerRoute.markersByType);
-      setFilters((filters) => [
-        ...filters,
-        ...types.filter((type) => !filters.includes(type)),
-      ]);
+
+      const requiredFilters: string[] = [];
+      types.forEach((markerType) => {
+        const mapFilter = mapFilters.find(
+          (mapFilter) => mapFilter.type === markerType
+        );
+        if (mapFilter) {
+          if (mapFilter.sizes) {
+            requiredFilters.push(
+              ...mapFilter.sizes.map((size) => `${mapFilter.type}-${size}`)
+            );
+          } else {
+            requiredFilters.push(mapFilter.type);
+          }
+        }
+      });
+
+      setFilters((filters) => [...filters, ...requiredFilters]);
       markerRoutesClone.push(markerRoute);
       if (latestLeafletMap) {
         latestLeafletMap.fitBounds(markerRoute.positions);

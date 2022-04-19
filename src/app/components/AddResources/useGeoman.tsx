@@ -35,6 +35,7 @@ function useGeoman({
     () =>
       leaflet.marker([y, x], {
         icon: unknownMarkerIcon,
+        pmIgnore: false,
       }),
     []
   );
@@ -62,9 +63,10 @@ function useGeoman({
 
   useEffect(() => {
     marker.addTo(leafletMap);
-
-    leafletMap.pm.enableGlobalDragMode();
-
+    // @ts-ignore
+    leafletMap.pm.setGlobalOptions({ snappable: false });
+    // @ts-ignore
+    marker.pm.enableLayerDrag();
     marker.on('pm:dragstart', () => {
       setDragging(true);
     });
@@ -80,6 +82,7 @@ function useGeoman({
     });
 
     return () => {
+      marker.off();
       marker.remove();
     };
   }, []);
