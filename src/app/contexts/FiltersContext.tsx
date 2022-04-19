@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { createContext, useContext } from 'react';
-import { sizes } from '../components/AddResources/SizeInput';
 import { mapFilters } from '../components/MapFilter/mapFilters';
 import { DEFAULT_MAP_NAME } from '../components/WorldMap/maps';
 import { usePersistentState } from '../utils/storage';
@@ -31,8 +30,8 @@ export const allFilters = mapFilters
         .map((_, index) => `${filter.type}-${index + 1}`);
       return tierTypes;
     }
-    if (filter.hasSize) {
-      return sizes.map((size) => `${filter.type}-${size}`);
+    if (filter.sizes) {
+      return filter.sizes.map((size) => `${filter.type}-${size}`);
     }
     return filter.type;
   })

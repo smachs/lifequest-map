@@ -4,11 +4,11 @@ import styles from './Input.module.css';
 
 type SizeInputProps = {
   value: MarkerSize;
+  sizes: MarkerSize[];
   onChange: (value: MarkerSize) => void;
 };
 
-export const sizes: MarkerSize[] = ['S', 'M', 'L', '?'];
-function SizeInput({ value, onChange }: SizeInputProps): JSX.Element {
+function SizeInput({ value, onChange, sizes }: SizeInputProps): JSX.Element {
   return (
     <div className={styles.container}>
       {sizes.map((size) => (

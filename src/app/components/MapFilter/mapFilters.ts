@@ -1,3 +1,8 @@
+import type { MarkerSize } from '../../../lib/markers/types';
+
+export const defaultSizes: MarkerSize[] = ['S', 'M', 'L', '?'];
+export const treeSizes: MarkerSize[] = ['XS', 'S', 'M', 'L', 'XL', '?'];
+
 export type FilterItem = {
   type: string;
   category: string;
@@ -6,7 +11,7 @@ export type FilterItem = {
   hasName?: boolean;
   hasLevel?: boolean;
   maxTier?: number;
-  hasSize?: boolean;
+  sizes?: MarkerSize[];
 };
 
 export const mapFilters: FilterItem[] = [
@@ -271,63 +276,63 @@ export const mapFilters: FilterItem[] = [
     type: 'gold',
     title: 'Gold',
     iconUrl: '/pois/gold.webp',
-    hasSize: true,
+    sizes: defaultSizes,
   },
   {
     category: 'mining',
     type: 'iron',
     title: 'Iron',
     iconUrl: '/pois/iron.webp',
-    hasSize: true,
+    sizes: defaultSizes,
   },
   {
     category: 'mining',
     type: 'lodestone',
     title: 'Lodestone',
     iconUrl: '/pois/lodestone.webp',
-    hasSize: true,
+    sizes: defaultSizes,
   },
   {
     category: 'mining',
     type: 'oil',
     title: 'Seeping Stone (Oil)',
     iconUrl: '/pois/oil.webp',
-    hasSize: true,
+    sizes: defaultSizes,
   },
   {
     category: 'mining',
     type: 'orichalcum',
     title: 'Orichalcum',
     iconUrl: '/pois/orichalcum.webp',
-    hasSize: true,
+    sizes: defaultSizes,
   },
   {
     category: 'mining',
     type: 'platinum',
     title: 'Platinum',
     iconUrl: '/pois/platinum.webp',
-    hasSize: true,
+    sizes: defaultSizes,
   },
   {
     category: 'mining',
     type: 'saltpeter',
     title: 'Saltpeter',
     iconUrl: '/pois/saltpeter.webp',
-    hasSize: true,
+    sizes: defaultSizes,
   },
   {
     category: 'mining',
     type: 'silver',
     title: 'Silver',
     iconUrl: '/pois/silver.webp',
-    hasSize: true,
+    sizes: defaultSizes,
   },
   {
     category: 'mining',
     type: 'starmetal',
     title: 'Starmetal',
     iconUrl: '/pois/starmetal.webp',
-    hasSize: true,
+    sizes: defaultSizes,
   },
   {
     category: 'fishing',
@@ -352,14 +357,14 @@ export const mapFilters: FilterItem[] = [
     type: 'ironwood',
     title: 'Ironwood Tree',
     iconUrl: '/pois/ironwood_compass.webp',
-    hasSize: true,
+    sizes: treeSizes,
   },
   {
     category: 'logging',
     type: 'wyrdwood',
     title: 'Wyrdwood Tree',
     iconUrl: '/pois/wyrdwood_compass.webp',
-    hasSize: true,
+    sizes: treeSizes,
   },
   {
     category: 'farming',
@@ -378,28 +383,28 @@ export const mapFilters: FilterItem[] = [
     type: 'hemp',
     title: 'Hemp',
     iconUrl: '/pois/hemp_compass.webp',
-    hasSize: true,
+    sizes: defaultSizes,
   },
   {
     category: 'farming',
     type: 'herb',
     title: 'Herb',
     iconUrl: '/pois/herbs.webp',
-    hasSize: true,
+    sizes: defaultSizes,
   },
   {
     category: 'farming',
     type: 'silkweed',
     title: 'Silkweed',
     iconUrl: '/pois/silkweed.webp',
-    hasSize: true,
+    sizes: defaultSizes,
   },
   {
     category: 'farming',
     type: 'wirefiber',
     title: 'Wirefiber',
     iconUrl: '/pois/wirefiber.webp',
-    hasSize: true,
+    sizes: defaultSizes,
   },
   {
     category: 'cooking_ingredients',

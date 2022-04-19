@@ -79,12 +79,13 @@ function DetailsInput({
             />
           </label>
         )}
-        {filter?.hasSize && (
+        {filter?.sizes && (
           <label className={styles.label}>
             <span className={generalStyles.key}>Size</span>
             <SizeInput
               onChange={(size) => onChange({ ...details, size })}
               value={details.size || 'S'}
+              sizes={filter.sizes}
             />
           </label>
         )}

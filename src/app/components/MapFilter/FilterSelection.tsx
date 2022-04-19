@@ -1,7 +1,6 @@
 import Checkbox from './Checkbox';
 import type { FilterItem } from './mapFilters';
 import FilterWithOptions from './FilterWithOptions';
-import { sizes } from '../AddResources/SizeInput';
 
 type FilterSectionProps = {
   filters: string[];
@@ -24,10 +23,10 @@ const FilterSelection = ({ filter, filters, onToggle }: FilterSectionProps) => {
       />
     );
   }
-  if (filter.hasSize) {
+  if (filter.sizes) {
     return (
       <FilterWithOptions
-        options={sizes}
+        options={filter.sizes}
         filters={filters}
         filter={filter}
         onToggle={onToggle}
