@@ -1,4 +1,3 @@
-import { sizes } from '../AddResources/SizeInput';
 import Checkbox from './Checkbox';
 import FilterSelection from './FilterSelection';
 import type { MapFiltersCategory } from './mapFilters';
@@ -38,8 +37,8 @@ function MarkerSection({
                     .map((_, index) => `${filter.type}-${index + 1}`);
                   return tierTypes;
                 }
-                if (filter.hasSize) {
-                  return sizes.map((size) => `${filter.type}-${size}`);
+                if (filter.sizes) {
+                  return filter.sizes.map((size) => `${filter.type}-${size}`);
                 }
                 return filter.type;
               })

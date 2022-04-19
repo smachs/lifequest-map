@@ -6,6 +6,7 @@ import styles from './WorldMap.module.css';
 import { toast } from 'react-toastify';
 import leaflet from 'leaflet';
 import { latestLeafletMap } from './useWorldMap';
+import type { MarkerSize } from '../../../lib/markers/types';
 
 const respawnAction =
   (respawnTimer: number) => async (marker: CanvasMarker) => {
@@ -48,15 +49,20 @@ const respawnAction =
     updateTimer();
   };
 
-const sizes = {
-  S: 0,
-  M: 1,
-  L: 2,
-  '?': 0,
+const sizes: {
+  [key in MarkerSize]: number;
+} = {
+  XS: 0,
+  S: 1,
+  M: 2,
+  L: 3,
+  XL: 4,
+  '?': 1,
 };
 
 const respawnSizeAction =
-  (timers: [number, number, number]) => (marker: CanvasMarker) => {
+  (timers: [number, number, number, number, number]) =>
+  (marker: CanvasMarker) => {
     if (!marker.options.image.markerSize) {
       return;
     }
@@ -103,23 +109,23 @@ const actions: {
   chestsCommonAncient: respawnAction(600),
   chestsCommonProvisions: respawnAction(600),
   chestsCommonSupplies: respawnAction(600),
-  gold: respawnSizeAction([1080, 1350, 1530]),
-  iron: respawnSizeAction([720, 900, 1020]),
-  lodestone: respawnSizeAction([1080, 1350, 1530]),
-  oil: respawnSizeAction([720, 900, 1020]),
-  orichalcum: respawnSizeAction([1440, 1800, 2040]),
-  platinum: respawnSizeAction([3540, 3840, 4140]),
-  saltpeter: respawnSizeAction([540, 710, 885]),
-  silver: respawnSizeAction([720, 900, 1020]),
-  starmetal: respawnSizeAction([1080, 1350, 1530]),
-  ironwood: respawnSizeAction([1080, 1350, 1530]),
-  wyrdwood: respawnSizeAction([1440, 1800, 2040]),
+  gold: respawnSizeAction([0, 1080, 1350, 1530, 0]),
+  iron: respawnSizeAction([0, 720, 900, 1020, 0]),
+  lodestone: respawnSizeAction([0, 1080, 1350, 1530, 0]),
+  oil: respawnSizeAction([0, 720, 900, 1020, 0]),
+  orichalcum: respawnSizeAction([0, 1440, 1800, 2040, 0]),
+  platinum: respawnSizeAction([0, 3540, 3840, 4140, 0]),
+  saltpeter: respawnSizeAction([0, 540, 710, 885, 0]),
+  silver: respawnSizeAction([0, 720, 900, 1020, 0]),
+  starmetal: respawnSizeAction([0, 1080, 1350, 1530, 0]),
+  ironwood: respawnSizeAction([900, 1080, 1350, 1530, 1800]),
+  wyrdwood: respawnSizeAction([1200, 1440, 1800, 2040, 2400]),
   azoth_spring: respawnAction(600),
   fungus: respawnAction(600),
-  hemp: respawnSizeAction([720, 900, 1020]),
-  herb: respawnSizeAction([720, 900, 1020]),
-  silkweed: respawnSizeAction([720, 900, 1020]),
-  wirefiber: respawnSizeAction([720, 900, 1020]),
+  hemp: respawnSizeAction([0, 720, 900, 1020, 0]),
+  herb: respawnSizeAction([0, 720, 900, 1020, 0]),
+  silkweed: respawnSizeAction([0, 720, 900, 1020, 0]),
+  wirefiber: respawnSizeAction([0, 720, 900, 1020, 0]),
   barley: respawnAction(600),
   berry: respawnAction(600),
   blueberry: respawnAction(600),
