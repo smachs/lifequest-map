@@ -68,6 +68,7 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
   useEffect(() => {
     // @ts-ignore
     latestLeafletMap!.pm.setGlobalOptions({ snappable: true });
+    let existingPolyline: leaflet.Polyline | null = null;
 
     const toggleControls = (editMode: boolean) => {
       latestLeafletMap!.pm.addControls({
@@ -82,19 +83,27 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
         cutPolygon: false,
         removalMode: false,
         drawPolyline: true,
-        editMode: editMode,
+        editMode: false,
       });
+      if (editMode) {
+        // @ts-ignore
+        if (!latestLeafletMap!.pm.Toolbar.buttons['EditRoute']) {
+          latestLeafletMap!.pm.Toolbar.createCustomControl({
+            name: 'EditRoute',
+            block: 'custom',
+            title: 'Edit Route',
+            className: 'leaflet-pm-icon-edit',
+            toggle: false,
+          });
+        }
+      }
     };
     toggleControls(false);
 
-    let existingPolyline: leaflet.Polyline | null = null;
     latestLeafletMap!.on('pm:create', (event) => {
       existingPolyline = event.layer as leaflet.Polyline;
       refreshMarkers(event.layer);
 
-      if (!latestLeafletMap!.pm.globalEditModeEnabled) {
-        latestLeafletMap!.pm.enableGlobalEditMode();
-      }
       toggleControls(true);
 
       event.layer.on('pm:edit', (event) => {
@@ -124,14 +133,16 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
       });
     });
 
-    if (markerRoute) {
-      if (!latestLeafletMap!.pm.globalEditModeEnabled) {
-        latestLeafletMap!.pm.enableGlobalEditMode();
+    latestLeafletMap!.on('pm:buttonclick', ({ btnName }) => {
+      if (btnName === 'EditRoute' && existingPolyline) {
+        existingPolyline.pm.toggleEdit();
       }
+    });
+
+    if (markerRoute) {
       existingPolyline = leaflet.polyline(markerRoute.positions, {
         pmIgnore: false,
       });
-      existingPolyline.pm.toggleEdit();
       existingPolyline.addTo(latestLeafletMap!);
       refreshMarkers(existingPolyline);
       existingPolyline.on('pm:edit', (event) => {
@@ -143,6 +154,7 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
           refreshMarkers(existingPolyline);
         }
       }, 100);
+      existingPolyline.pm.enable();
     } else {
       latestLeafletMap!.pm.enableDraw('Line');
     }
@@ -215,7 +227,7 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
         />
       </label>
       <label className={styles.label}>
-        Make it available for everyone'
+        Make it available for everyone
         <input
           type="checkbox"
           onChange={(event) => setIsPublic(event.target.checked)}
