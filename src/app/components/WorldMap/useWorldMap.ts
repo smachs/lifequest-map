@@ -134,7 +134,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
     setView(leafletMap);
 
     if (!hideControls) {
-      leaflet.control.zoom({ position: 'topleft' }).addTo(leafletMap);
+      leaflet.control.zoom({ position: 'bottomleft' }).addTo(leafletMap);
 
       const divElement = leaflet.DomUtil.create('div', 'leaflet-position');
       const handleMouseMove = (event: leaflet.LeafletMouseEvent) => {
