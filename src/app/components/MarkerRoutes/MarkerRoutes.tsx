@@ -92,9 +92,13 @@ function handleSort(sortBy: SortBy, filters: string[]) {
     const typesA = Object.keys(a.markersByType);
     const typesB = Object.keys(b.markersByType);
     const matchA =
-      typesA.length / typesA.filter((type) => filters.includes(type)).length;
+      typesA.length /
+      typesA.filter((type) => filters.some((filter) => filter.startsWith(type)))
+        .length;
     const matchB =
-      typesB.length / typesB.filter((type) => filters.includes(type)).length;
+      typesB.length /
+      typesB.filter((type) => filters.some((filter) => filter.startsWith(type)))
+        .length;
     return matchA - matchB;
   };
 }
