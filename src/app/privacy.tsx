@@ -142,6 +142,8 @@ ReactDOM.render(
 
     <h2>CCPA Privacy Rights (Do Not Sell My Personal Information)</h2>
 
+    <span data-ccpa-link="1"></span>
+
     <p>
       Under the CCPA, among other rights, California consumers have the right
       to:
