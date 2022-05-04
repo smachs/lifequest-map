@@ -15,3 +15,11 @@
 .label input {
   padding: 0;
 }
+
+.link button {
+  padding: 0;
+}
+
+.link button:hover {
+  color: var(--color-primary);
+}

@@ -114,6 +114,10 @@ async function runServer() {
     // Static screenshots folder
     app.use('/screenshots', express.static(SCREENSHOTS_PATH!));
 
+    app.get('/ads.txt', (_request, response) => {
+      response.redirect(301, 'https://api.nitropay.com/v1/ads-1042.txt');
+    });
+
     // Serve webversion (only on production)
     app.use(express.static(path.join(__dirname, 'app')));
 

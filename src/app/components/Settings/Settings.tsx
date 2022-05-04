@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useSettings } from '../../contexts/SettingsContext';
 import styles from './Settings.module.css';
 
@@ -22,6 +23,14 @@ function Settings(): JSX.Element {
     traceLineColor,
     setTraceLineColor,
   } = useSettings();
+
+  useEffect(() => {
+    // @ts-ignore
+    if (window['__cmp']) {
+      // @ts-ignore
+      window['__cmp']('addConsentLink');
+    }
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -104,6 +113,8 @@ function Settings(): JSX.Element {
       </label>
       <h3>Hotkeys</h3>
       <em>Hotkeys are configured in the Overwolf app</em>
+      <h3>GDPR</h3>
+      <span id="ncmp-consent-link" className={styles.link} />
     </div>
   );
 }

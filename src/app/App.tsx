@@ -11,6 +11,7 @@ import type { MarkerRouteItem } from './components/MarkerRoutes/MarkerRoutes';
 import useEventListener from './utils/useEventListener';
 import { latestLeafletMap } from './components/WorldMap/useWorldMap';
 import { useFilters } from './contexts/FiltersContext';
+import NitroPay from './components/NitroPay/NitroPay';
 
 function App(): JSX.Element {
   const [targetMarker, setTargetMarker] = useState<
@@ -66,6 +67,7 @@ function App(): JSX.Element {
         onMarkerClose={() => setTargetMarker(undefined)}
         onRouteClose={() => setTargetMarkerRoute(undefined)}
       />
+      <NitroPay />
     </div>
   );
 }
