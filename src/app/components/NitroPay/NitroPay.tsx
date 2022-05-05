@@ -6,7 +6,9 @@ const NitroPay = () => {
     // @ts-ignore
     window['nitroAds'].createAd('nitro', {
       format: 'video-nc',
-      video: {},
+      video: {
+        float: 'always',
+      },
     });
   }, []);
 
