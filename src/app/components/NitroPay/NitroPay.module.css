@@ -2,4 +2,12 @@
   position: fixed;
   right: 8px;
   bottom: 8px;
+  width: 300px;
+  height: 200px;
+  pointer-events: none;
+  z-index: 999;
+}
+
+.container > * {
+  pointer-events: all;
 }
