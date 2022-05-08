@@ -48,6 +48,7 @@ export type AccountDTO = {
   liveShareServerUrl?: string;
   presets?: Preset[];
   createdAt: Date;
+  hideAds?: boolean;
 };
 
 export function UserProvider({ children }: UserProviderProps): JSX.Element {
