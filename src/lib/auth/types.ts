@@ -13,4 +13,5 @@ export type AccountDTO = {
     types: string[];
   }[];
   createdAt: Date;
+  hideAds?: boolean;
 };
