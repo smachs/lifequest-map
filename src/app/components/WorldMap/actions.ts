@@ -8,6 +8,15 @@ import leaflet from 'leaflet';
 import { latestLeafletMap } from './useWorldMap';
 import type { MarkerSize } from '../../../lib/markers/types';
 
+const formatTimer = (seconds: number) => {
+  const format = (value: number) => `0${Math.floor(value)}`.slice(-2);
+  const hours = seconds / 3600;
+  const minutes = (seconds % 3600) / 60;
+  if (hours >= 1) {
+    return [hours, minutes, seconds % 60].map(format).join(':');
+  }
+  return [minutes, seconds % 60].map(format).join(':');
+};
 const respawnAction =
   (respawnTimer: number) => async (marker: CanvasMarker) => {
     if (marker.actionHandle) {
@@ -30,7 +39,7 @@ const respawnAction =
         className: styles.respawn,
       })
       .setLatLng(marker.getLatLng())
-      .setContent(`${respawnTimer}s`);
+      .setContent(`${formatTimer(respawnTimer)}`);
     latestLeafletMap!.addLayer(marker.popup);
 
     const updateTimer = () => {
@@ -38,7 +47,7 @@ const respawnAction =
         return;
       }
       const timeLeft = Math.round((respawnAt - Date.now()) / 1000);
-      marker.popup.setContent(`${timeLeft}`);
+      marker.popup.setContent(`${formatTimer(timeLeft)}`);
       if (timeLeft > 0) {
         marker.actionHandle = setTimeout(updateTimer, 1000);
       } else {
@@ -74,11 +83,14 @@ const respawnSizeAction =
 const actions: {
   [type: string]: (
     marker: CanvasMarker,
-    user: User,
+    user: User | null,
     refreshUser: () => void
   ) => void;
 } = {
   lore_note: async (marker, user, refreshUser) => {
+    if (!user) {
+      return;
+    }
     const markerId = marker.options.image.markerId;
     const hiddenMarkerIds = [...user.hiddenMarkerIds];
     let message: string;
