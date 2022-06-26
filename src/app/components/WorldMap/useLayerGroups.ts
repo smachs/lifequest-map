@@ -200,10 +200,9 @@ function useLayerGroups({
         });
         mapMarker.on('contextmenu', () => {
           if (
-            user &&
-            (!leafletMap.pm ||
-              (!leafletMap.pm.globalEditModeEnabled() &&
-                !leafletMap.pm.globalDrawModeEnabled()))
+            !leafletMap.pm ||
+            (!leafletMap.pm.globalEditModeEnabled() &&
+              !leafletMap.pm.globalDrawModeEnabled())
           ) {
             const action = getAction(mapMarker.options.image.type);
             action(mapMarker, user, refreshUser);
