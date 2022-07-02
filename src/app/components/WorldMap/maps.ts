@@ -35,6 +35,17 @@ export const mapDetails: Map[] = [
     ],
   },
   {
+    name: 'NW_Dungeon_CutlassKeys_00',
+    title: 'Barnacles & Black Powder',
+    folder: 'nw_dungeon_cutlasskeys_00',
+    maxZoom: 6,
+    minZoom: 3,
+    maxBounds: [
+      [700, 182],
+      [1600, 870],
+    ],
+  },
+  {
     name: 'NW_Dungeon_Edengrove_00',
     title: 'Garden of Genesis',
     folder: 'nw_dungeon_edengrove_00',
