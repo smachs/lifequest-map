@@ -879,6 +879,18 @@ export const mapFilters: FilterItem[] = [
     iconUrl: '/pois/showOfStrength.webp',
     hasName: true,
   },
+  {
+    category: 'events',
+    type: 'medleyfairHotspot',
+    title: 'Medleyfair Hotspot',
+    iconUrl: '/pois/medleyfairHotspot.webp',
+  },
+  {
+    category: 'events',
+    type: 'maudlinbugSwarm',
+    title: 'Maudlinbug Swarm',
+    iconUrl: '/pois/maudlinbugSwarm.webp',
+  },
 ];
 
 export type MapFiltersCategory = {
@@ -889,6 +901,12 @@ export type MapFiltersCategory = {
 };
 
 export const mapFiltersCategories: MapFiltersCategory[] = [
+  {
+    value: 'events',
+    title: 'Events',
+    filters: mapFilters.filter((mapFilter) => mapFilter.category === 'events'),
+    borderColor: 'rgba(246, 177, 66, 0.7)',
+  },
   {
     value: 'chests',
     title: 'Chests',
