@@ -11,7 +11,6 @@ export const initPlausible = () => {
     plausible = Plausible({
       domain: VITE_PLAUSIBLE_DOMAIN,
       apiHost: VITE_PLAUSIBLE_API_HOST,
-      trackLocalhost: true,
     });
     plausible.enableAutoPageviews();
   }

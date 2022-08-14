@@ -25,6 +25,8 @@ jobs:
       - name: Build Overwolf App
         env:
           VITE_API_ENDPOINT: ${{ secrets.VITE_API_ENDPOINT }}
+          VITE_PLAUSIBLE_API_HOST: 'https://apps.machens.dev'
+          VITE_PLAUSIBLE_DOMAIN: 'aeternum-map.gg-app'
         run: npm run overwolf:build
       - name: Archive Release
         uses: thedoctor0/zip-release@master
