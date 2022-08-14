@@ -2,6 +2,7 @@ import { isNewWorldRunning, NEW_WORLD_CLASS_ID } from './utils/games';
 import { SHOW_HIDE_APP } from './utils/hotkeys';
 import { writeLog } from './utils/logs';
 import { waitForOverwolf } from './utils/overwolf';
+import { initPlausible } from './utils/stats';
 import { getJSONItem } from './utils/storage';
 import {
   closeMainWindow,
@@ -51,3 +52,5 @@ overwolf.games.onGameInfoUpdated.addListener(async (event) => {
     }
   }
 });
+
+initPlausible();

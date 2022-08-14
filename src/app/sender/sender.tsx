@@ -14,6 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Welcome from './Welcome';
 import Streaming from './Streaming';
 import ErrorBoundary from '../components/ErrorBoundary/ErrorBoundary';
+import { initPlausible } from '../utils/stats';
 
 function Sender(): JSX.Element {
   const { account } = useAccount();
@@ -52,3 +53,5 @@ waitForOverwolf().then(() => {
     document.querySelector('#root')
   );
 });
+
+initPlausible();

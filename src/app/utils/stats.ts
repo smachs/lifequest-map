@@ -6,7 +6,8 @@ export const initPlausible = () => {
   const { VITE_PLAUSIBLE_API_HOST, VITE_PLAUSIBLE_DOMAIN } = import.meta.env;
   if (
     typeof VITE_PLAUSIBLE_DOMAIN === 'string' &&
-    typeof VITE_PLAUSIBLE_API_HOST === 'string'
+    typeof VITE_PLAUSIBLE_API_HOST === 'string' &&
+    !plausible
   ) {
     plausible = Plausible({
       domain: VITE_PLAUSIBLE_DOMAIN,
