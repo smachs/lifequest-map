@@ -322,6 +322,13 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'mining',
+    type: 'sandstone',
+    title: 'Sandstone',
+    iconUrl: '/pois/sandstone.webp',
+    sizes: defaultSizes,
+  },
+  {
+    category: 'mining',
     type: 'silver',
     title: 'Silver',
     iconUrl: '/pois/silver.webp',
@@ -477,6 +484,12 @@ export const mapFilters: FilterItem[] = [
     type: 'potato',
     title: 'Potato',
     iconUrl: '/pois/potato.webp',
+  },
+  {
+    category: 'cooking_ingredients',
+    type: 'pricklyPearCactus',
+    title: 'Prickly Pear Cactus',
+    iconUrl: '/pois/pricklyPearCactus.webp',
   },
   {
     category: 'cooking_ingredients',
@@ -693,6 +706,12 @@ export const mapFilters: FilterItem[] = [
     type: 'pigment_cyan_primsabloom',
     title: 'Cyan Prismabloom',
     iconUrl: '/pois/pigment_cyan.webp',
+  },
+  {
+    category: 'pigment',
+    type: 'pigment_desert_rose_primsabloom',
+    title: 'Desert Rose Prismabloom',
+    iconUrl: '/pois/pigment_desert_rose.webp',
   },
   {
     category: 'pigment',
