@@ -898,18 +898,6 @@ export const mapFilters: FilterItem[] = [
     iconUrl: '/pois/showOfStrength.webp',
     hasName: true,
   },
-  {
-    category: 'events',
-    type: 'medleyfairHotspot',
-    title: 'Medleyfair Hotspot',
-    iconUrl: '/pois/medleyfairHotspot.webp',
-  },
-  {
-    category: 'events',
-    type: 'maudlinbugSwarm',
-    title: 'Maudlinbug Swarm',
-    iconUrl: '/pois/maudlinbugSwarm.webp',
-  },
 ];
 
 export type MapFiltersCategory = {
