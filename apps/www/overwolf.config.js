@@ -18,16 +18,16 @@ export default defineConfig({
       },
     },
   },
-  root: resolve(__dirname, 'src/app'),
-  publicDir: resolve(__dirname, 'src/app/public'),
+  root: resolve(__dirname, 'src'),
+  publicDir: resolve(__dirname, 'src/public'),
   build: {
     target: 'esnext',
-    outDir: resolve(__dirname, 'dist/overwolf'),
+    outDir: resolve(__dirname, '../../dist/overwolf'),
     rollupOptions: {
       input: {
-        minimap: resolve(__dirname, 'src/app/minimap.html'),
-        background: resolve(__dirname, 'src/app/background.html'),
-        sender: resolve(__dirname, 'src/app/sender.html'),
+        minimap: resolve(__dirname, 'src/minimap.html'),
+        background: resolve(__dirname, 'src/background.html'),
+        sender: resolve(__dirname, 'src/sender.html'),
       },
     },
   },

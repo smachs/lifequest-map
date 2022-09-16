@@ -10,10 +10,10 @@
     "overwolf:dev": "cd apps/www && npm run dev && cd ../..",
     "client:dev": "cd apps/www && npm run dev && cd ../..",
     "server:dev": "cd apps/api && npm run dev && cd ../..",
-    "overwolf:build": "cd apps/www && vite build --config overwolf.config.js && cd ../..",
-    "client:build": "cd apps/www && vite build && cd ../..",
+    "overwolf:build": "cd apps/www && npm run overwolf:build && cd ../..",
+    "client:build": "cd apps/www && npm run build && cd ../..",
+    "server:build": "cd apps/api && npm run build && cd ../..",
     "build": "npm run server:build && npm run client:build && npm run overwolf:build",
-    "serve": "vite preview",
     "prepare": "husky install",
     "test": "tsc && prettier --check . && eslint . && stylelint \"**/*.css\"",
     "test:fix": "tsc && prettier --write . && eslint --fix . && stylelint \"**/*.css\" --fix"
