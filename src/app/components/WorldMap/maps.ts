@@ -15,7 +15,7 @@ export const mapDetails: Map[] = [
   {
     name: 'NewWorld_VitaeEterna',
     title: 'Aeternum',
-    folder: 'map',
+    folder: 'newworld_vitaeeterna',
     maxZoom: 6,
     minZoom: 0,
     maxBounds: [
