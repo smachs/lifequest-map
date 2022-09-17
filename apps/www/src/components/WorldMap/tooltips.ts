@@ -1,6 +1,6 @@
 import type { MarkerBasic } from '../../contexts/MarkersContext';
 import type { Details } from '../AddResources/AddResources';
-import type { FilterItem } from '../MapFilter/mapFilters';
+import type { FilterItem } from 'lib/mapFilters';
 
 export function getTooltipContent(
   markerOrDetails: MarkerBasic | Details,

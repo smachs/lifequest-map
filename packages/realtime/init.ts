@@ -73,7 +73,8 @@ export const init = ({
         }
       });
 
-      conn.on('data', (data: { group?: Group; steamId?: string }) => {
+      // @ts-ignore
+      conn.on('data', (data: { group: Group } & Partial<Player>) => {
         if (data.group) {
           onGroup(data.group);
           return;
@@ -83,7 +84,7 @@ export const init = ({
           connSteamId = data.steamId;
         }
 
-        onPlayer(data);
+        onPlayer(data as Partial<Player>);
       });
     });
   });

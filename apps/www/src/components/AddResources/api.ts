@@ -1,4 +1,4 @@
-import type { MarkerSize } from '../../../lib/markers/types';
+import type { MarkerSize } from 'lib/types';
 import type { MarkerBasic } from '../../contexts/MarkersContext';
 import { fetchJSON } from '../../utils/api';
 

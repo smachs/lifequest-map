@@ -1,4 +1,4 @@
-import type { MarkerSize } from '../../../lib/markers/types';
+import type { MarkerSize } from 'lib/types';
 import { classNames } from '../../utils/styles';
 import styles from './Input.module.css';
 

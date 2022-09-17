@@ -11,7 +11,7 @@ import useShareHotkeys from './useShareHotkeys';
 import Peer from 'peerjs';
 import { useSettings } from '../contexts/SettingsContext';
 
-const peerConnections: { [key: string]: Peer.DataConnection } = {};
+const peerConnections: { [key: string]: any } = {};
 
 const sendToPeers = (data: unknown) => {
   Object.values(peerConnections).forEach((peerConnection) => {
@@ -54,7 +54,7 @@ function useShareLivePosition(token: string, serverUrl: string) {
       return;
     }
 
-    const peer = peerToPeer ? new Peer(undefined, { debug: 2 }) : null;
+    const peer = peerToPeer ? new Peer({ debug: 2 }) : null;
 
     const openPromise = new Promise((resolve) => {
       peer?.on('open', (id) => {
@@ -88,7 +88,7 @@ function useShareLivePosition(token: string, serverUrl: string) {
               console.log(`Connect to ${peerId}`);
               peerConnections[connection] = peer.connect(peerId);
 
-              peerConnections[connection].on('error', (error) => {
+              peerConnections[connection].on('error', (error: Error) => {
                 console.error('Peer error', error);
               });
 

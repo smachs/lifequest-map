@@ -4,6 +4,8 @@ Client library for Aeternum Map's live location sharing
 
 ## Usage
 
+See [StackBlitz](https://stackblitz.com/edit/aeternum-map-realtime?file=src%2Fmain.ts) for an example.
+
 ```js
 import { servers, init } from 'aeternum-map-realtime';
 

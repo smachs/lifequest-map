@@ -1,5 +1,5 @@
 import leaflet from 'leaflet';
-import type { MarkerSize } from '../../../lib/markers/types';
+import type { MarkerSize } from 'lib/types';
 
 type CanvasMarkerOptions = {
   image: {

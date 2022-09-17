@@ -15,9 +15,10 @@
     "jsx": "react-jsx",
     "allowJs": false,
     "isolatedModules": false,
-    "skipLibCheck": false,
     "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
+  "exclude": ["node_modules"],
   "include": ["./src"]
 }
