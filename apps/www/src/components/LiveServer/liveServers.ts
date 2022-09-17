@@ -7,17 +7,7 @@ export type LiveServer = {
   delay?: number;
 };
 
-export const liveServers: LiveServer[] = [
-  ...servers,
-  {
-    name: 'Europe',
-    url: 'wss://live1.aeternum-map.gg',
-  },
-  {
-    name: 'US',
-    url: 'wss://live2.aeternum-map.gg',
-  },
-];
+export const liveServers: LiveServer[] = [...servers];
 
 const { VITE_API_ENDPOINT } = import.meta.env;
 

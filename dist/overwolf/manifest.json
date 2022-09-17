@@ -19,13 +19,13 @@
     "windows": {
       "background": {
         "file": "background.html",
-        "debug_url": "http://localhost:3000/background.html",
+        "debug_url": "http://localhost:5173/background.html",
         "is_background_page": true,
         "allow_local_file_access": true
       },
       "desktop": {
         "file": "sender.html",
-        "debug_url": "http://localhost:3000/sender.html",
+        "debug_url": "http://localhost:5173/sender.html",
         "desktop_only": true,
         "native_window": true,
         "resizable": false,
@@ -51,7 +51,7 @@
       },
       "minimap": {
         "file": "minimap.html",
-        "debug_url": "http://localhost:3000/minimap.html",
+        "debug_url": "http://localhost:5173/minimap.html",
         "desktop_only": false,
         "in_game_only": true,
         "style": "inputPassThrough",
@@ -136,7 +136,7 @@
       "googlesyndication": "http"
     },
     "externally_connectable": {
-      "matches": ["http://localhost:6006", "http://localhost:3000", "https://aeternum-map.gg"]
+      "matches": ["http://localhost:6006", "http://localhost:5173", "https://aeternum-map.gg"]
     },
     "force_browser": "user",
     "developer": {

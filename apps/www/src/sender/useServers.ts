@@ -19,7 +19,7 @@ function useServers() {
     };
 
     pingAll();
-    const intervalId = setInterval(pingAll, 5000);
+    const intervalId = setInterval(pingAll, 10000);
     return () => {
       clearInterval(intervalId);
     };
