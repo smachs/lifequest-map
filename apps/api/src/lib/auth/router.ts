@@ -3,13 +3,13 @@ import passport from 'passport';
 import type { UpdateFilter } from 'mongodb';
 import { ObjectId } from 'mongodb';
 import { v4 as uuid, validate as validateUUID } from 'uuid';
-import { postToDiscord } from '../discord';
-import { getAccountCollection } from './collection';
-import { ensureAuthenticated } from './middlewares';
-import type { AccountDTO } from './types';
-import { getMarkerRoutesCollection } from '../markerRoutes/collection';
-import type { MarkerRouteDTO } from '../markerRoutes/types';
-import { getMarkersCollection } from '../markers/collection';
+import { postToDiscord } from '../discord.js';
+import { getAccountCollection } from './collection.js';
+import { ensureAuthenticated } from './middlewares.js';
+import type { AccountDTO } from './types.js';
+import { getMarkerRoutesCollection } from '../markerRoutes/collection.js';
+import type { MarkerRouteDTO } from '../markerRoutes/types.js';
+import { getMarkersCollection } from '../markers/collection.js';
 
 declare module 'express-session' {
   interface SessionData {

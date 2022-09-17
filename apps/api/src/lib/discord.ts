@@ -1,5 +1,8 @@
 import fetch from 'isomorphic-fetch';
-import { DISCORD_PUBLIC_WEBHOOK_URL, DISCORD_PRIVATE_WEBHOOK_URL } from './env';
+import {
+  DISCORD_PUBLIC_WEBHOOK_URL,
+  DISCORD_PRIVATE_WEBHOOK_URL,
+} from './env.js';
 
 const MAX_DISCORD_MESSAGE_LENGTH = 2000;
 export function postToDiscord(

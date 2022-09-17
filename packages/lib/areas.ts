@@ -1,6 +1,6 @@
-import locations from './locations.json';
-import regions from './regions.json';
-import { DEFAULT_MAP_NAME, findMapDetails } from './maps';
+import locations from './locations.json' assert { type: 'json' };
+import regions from './regions.json' assert { type: 'json' };
+import { DEFAULT_MAP_NAME, findMapDetails } from './maps.js';
 
 export type Area = {
   name: string;

@@ -1,6 +1,6 @@
 import type { Collection, Document } from 'mongodb';
-import { getCollection, getDb } from '../db';
-import type { AccountDTO } from './types';
+import { getCollection, getDb } from '../db.js';
+import type { AccountDTO } from './types.js';
 
 export function getAccountCollection(): Collection<AccountDTO> {
   return getCollection<AccountDTO>('accounts');

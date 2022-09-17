@@ -1,6 +1,6 @@
 import type { Collection, Document } from 'mongodb';
-import { getCollection, getDb } from '../db';
-import type { MarkerRouteDTO } from './types';
+import { getCollection, getDb } from '../db.js';
+import type { MarkerRouteDTO } from './types.js';
 
 export function getMarkerRoutesCollection(): Collection<MarkerRouteDTO> {
   return getCollection<MarkerRouteDTO>('marker-routes');

@@ -1,4 +1,4 @@
-import type { Collection, Db } from 'mongodb';
+import type { Collection, Db, Document } from 'mongodb';
 import { MongoClient } from 'mongodb';
 
 let db: Db | null = null;
@@ -19,6 +19,8 @@ export function getDb(): Db {
   return db;
 }
 
-export function getCollection<DocType>(name: string): Collection<DocType> {
+export function getCollection<DocType extends Document>(
+  name: string
+): Collection<DocType> {
   return getDb().collection<DocType>(name);
 }

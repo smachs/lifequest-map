@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 import { validate as validateUUID } from 'uuid';
-import { getAccountCollection } from './collection';
+import { getAccountCollection } from './collection.js';
 
 export async function readAccount(
   req: Request,

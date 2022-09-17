@@ -7,32 +7,36 @@ import {
   VITE_API_ENDPOINT,
   NO_API,
   NO_SOCKET,
-} from './lib/env';
+} from './lib/env.js';
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
-import { connectToMongoDb } from './lib/db';
+import { connectToMongoDb } from './lib/db.js';
 import path from 'path';
-import { initCommentsCollection } from './lib/comments/collection';
-import { initMarkersCollection } from './lib/markers/collection';
-import { initMarkerRoutesCollection } from './lib/markerRoutes/collection';
-import { initUsersCollection } from './lib/users/collection';
-import authRouter from './lib/auth/router';
-import commentsRouter from './lib/comments/router';
-import markersRouter, { refreshMarkers } from './lib/markers/router';
-import markerRoutesRouter from './lib/markerRoutes/router';
-import usersRouter from './lib/users/router';
-import screenshotsRouter from './lib/screenshots/router';
+import { fileURLToPath } from 'url';
+import { initCommentsCollection } from './lib/comments/collection.js';
+import { initMarkersCollection } from './lib/markers/collection.js';
+import { initMarkerRoutesCollection } from './lib/markerRoutes/collection.js';
+import { initUsersCollection } from './lib/users/collection.js';
+import authRouter from './lib/auth/router.js';
+import commentsRouter from './lib/comments/router.js';
+import markersRouter, { refreshMarkers } from './lib/markers/router.js';
+import markerRoutesRouter from './lib/markerRoutes/router.js';
+import usersRouter from './lib/users/router.js';
+import screenshotsRouter from './lib/screenshots/router.js';
 import compression from 'compression';
-import { initScreenshotsCollection } from './lib/screenshots/collection';
+import { initScreenshotsCollection } from './lib/screenshots/collection.js';
 import session from 'express-session';
 import passport from 'passport';
 // @ts-ignore
 import SteamStrategy from 'passport-steam';
-import { readAccount } from './lib/auth/middlewares';
-import { initSocket } from './lib/live/socket';
-import { initAccountsCollection } from './lib/auth/collection';
-import liveRouter from './lib/live/router';
+import { readAccount } from './lib/auth/middlewares.js';
+import { initSocket } from './lib/live/socket.js';
+import { initAccountsCollection } from './lib/auth/collection.js';
+import liveRouter from './lib/live/router.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 if (typeof PORT !== 'string') {
   throw new Error('PORT is not set');

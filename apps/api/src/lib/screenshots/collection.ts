@@ -1,6 +1,6 @@
 import type { Collection, Document } from 'mongodb';
-import { getCollection, getDb } from '../db';
-import type { ScreenshotDTO } from './types';
+import { getCollection, getDb } from '../db.js';
+import type { ScreenshotDTO } from './types.js';
 
 export function getScreenshotsCollection(): Collection<ScreenshotDTO> {
   return getCollection<ScreenshotDTO>('screenshots');

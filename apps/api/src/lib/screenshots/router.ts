@@ -2,9 +2,9 @@ import { Router } from 'express';
 import sharp from 'sharp';
 import fs from 'fs/promises';
 import multer from 'multer';
-import { SCREENSHOTS_PATH } from '../env';
-import { getScreenshotsCollection } from './collection';
-import { ensureAuthenticated } from '../auth/middlewares';
+import { SCREENSHOTS_PATH } from '../env.js';
+import { getScreenshotsCollection } from './collection.js';
+import { ensureAuthenticated } from '../auth/middlewares.js';
 
 const screenshotsUpload = multer({ dest: SCREENSHOTS_PATH });
 

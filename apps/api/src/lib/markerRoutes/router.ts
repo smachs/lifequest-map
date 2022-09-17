@@ -1,10 +1,10 @@
 import type { Filter } from 'mongodb';
 import { Router } from 'express';
-import type { MarkerRouteDTO } from './types';
+import type { MarkerRouteDTO } from './types.js';
 import { Double, ObjectId } from 'mongodb';
-import { getMarkerRoutesCollection } from './collection';
-import { postToDiscord } from '../discord';
-import { ensureAuthenticated } from '../auth/middlewares';
+import { getMarkerRoutesCollection } from './collection.js';
+import { postToDiscord } from '../discord.js';
+import { ensureAuthenticated } from '../auth/middlewares.js';
 import { findRegions, DEFAULT_MAP_NAME, findMapDetails } from 'lib';
 
 const markerRoutesRouter = Router();

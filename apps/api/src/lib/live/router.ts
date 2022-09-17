@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import type { Player } from './socket';
-import { activeGroups, getSocketServer } from './socket';
+import type { Player } from './socket.js';
+import { activeGroups, getSocketServer } from './socket.js';
 import osUtils from 'node-os-utils';
 
 const liveRouter = Router();

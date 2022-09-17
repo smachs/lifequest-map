@@ -1,0 +1,6 @@
+{
+  "watch": ["src", "../../packages/lib"],
+  "execMap": {
+    "ts": "ts-node --esm"
+  }
+}

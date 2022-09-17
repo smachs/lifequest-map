@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
 import { useAccount } from '../contexts/UserContext';
 import { getJSONItem } from './storage';
 import { toast } from 'react-toastify';
 import useGroupPositions from '../components/WorldMap/useGroupPositions';
 import { usePlayer } from '../contexts/PlayerContext';
-import Peer from 'peerjs';
+import { init } from 'realtime';
 
 export type Position = { location: [number, number]; rotation: number };
 export type Player = {
@@ -49,14 +48,6 @@ function useReadLivePosition() {
       return;
     }
 
-    const socket = io(serverUrl, {
-      query: {
-        token,
-      },
-      upgrade: false,
-      transports: ['websocket'],
-    });
-
     const updateStatus = (group: Group) => {
       const sessionIds = Object.keys(group);
       const playerSessionId =
@@ -74,11 +65,6 @@ function useReadLivePosition() {
       latestGroup = group;
       setGroup(group);
     };
-
-    socket.emit('status', updateStatus);
-    socket.on('status', updateStatus);
-
-    const peerConnectedSteamIds: string[] = [];
 
     const updateData = (data: Partial<Player>) => {
       const { steamId, ...partialPlayer } = data;
@@ -99,13 +85,6 @@ function useReadLivePosition() {
       }
     };
 
-    socket.on('data', (data: Partial<Player>) => {
-      if (!data.steamId || peerConnectedSteamIds.includes(data.steamId)) {
-        return;
-      }
-      updateData(data);
-    });
-
     const handleHotkey = (steamId: string, hotkey: string) => {
       if (steamId !== account?.steamId) {
         return;
@@ -113,64 +92,18 @@ function useReadLivePosition() {
       const event = new CustomEvent(`hotkey-${hotkey}`);
       window.dispatchEvent(event);
     };
-    socket.on('hotkey', handleHotkey);
 
-    let peer: Peer | null = null;
-    socket.on('connect', () => {
-      toast.success('Sharing live status 👌');
-
-      peer = new Peer(socket.id.replace(/[^a-zA-Z ]/g, ''), {
-        debug: 2,
-      });
-      peer.on('error', (error) => {
-        console.error('Peer error', error);
-      });
-      peer.on('open', (id) => {
-        console.log('My peer ID is: ' + id);
-      });
-      peer.on('connection', (conn) => {
-        let connSteamId: string | null = null;
-        conn.on('open', () => {
-          console.log('Peer opened');
-          socket.emit('status', updateStatus);
-        });
-
-        conn.on('error', (error) => {
-          console.log('Peer error', error);
-        });
-
-        conn.on('close', () => {
-          console.log('Peer closed');
-          if (connSteamId) {
-            const index = peerConnectedSteamIds.indexOf(connSteamId);
-            if (index !== -1) {
-              peerConnectedSteamIds.splice(index, 1);
-            }
-          }
-        });
-
-        conn.on('data', (data) => {
-          if (data.group) {
-            updateStatus(data.group);
-            return;
-          }
-          if (data.steamId && !peerConnectedSteamIds.includes(data.steamId)) {
-            peerConnectedSteamIds.push(data.steamId);
-            connSteamId = data.steamId;
-          }
-
-          updateData(data);
-        });
-      });
+    const { destroy } = init({
+      serverUrl,
+      token,
+      onStatus: updateStatus,
+      onData: updateData,
+      onHotkey: handleHotkey,
+      onConnect: () => toast.success('Sharing live status 👌'),
     });
 
     return () => {
-      socket.off('connect');
-      socket.off('update');
-      socket.off('hotkey');
-      peer?.destroy();
-
-      socket.close();
+      destroy();
       setGroup({});
       toast.info('Stop sharing live status 🛑');
     };

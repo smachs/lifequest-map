@@ -1,6 +1,6 @@
 import type { Collection, Document } from 'mongodb';
 import type { MarkerDTO } from 'lib';
-import { getCollection, getDb } from '../db';
+import { getCollection, getDb } from '../db.js';
 
 export function getMarkersCollection(): Collection<MarkerDTO> {
   return getCollection<MarkerDTO>('markers');

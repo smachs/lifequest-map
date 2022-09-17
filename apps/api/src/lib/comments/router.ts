@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import type { Filter } from 'mongodb';
 import { ObjectId } from 'mongodb';
-import { ensureAuthenticated } from '../auth/middlewares';
-import { postToDiscord } from '../discord';
-import { getMarkersCollection } from '../markers/collection';
-import { refreshMarkers } from '../markers/router';
-import { getCommentsCollection } from './collection';
-import type { CommentDTO } from './types';
+import { ensureAuthenticated } from '../auth/middlewares.js';
+import { postToDiscord } from '../discord.js';
+import { getMarkersCollection } from '../markers/collection.js';
+import { refreshMarkers } from '../markers/router.js';
+import { getCommentsCollection } from './collection.js';
+import type { CommentDTO } from './types.js';
 
 const commentsRouter = Router();
 

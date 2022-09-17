@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { postToDiscord } from '../discord';
-import { getUsersCollection } from './collection';
+import { postToDiscord } from '../discord.js';
+import { getUsersCollection } from './collection.js';
 import { ObjectId } from 'mongodb';
-import { getMarkerRoutesCollection } from '../markerRoutes/collection';
-import { getMarkersCollection } from '../markers/collection';
-import { getCommentsCollection } from '../comments/collection';
-import type { UserDTO } from './types';
+import { getMarkerRoutesCollection } from '../markerRoutes/collection.js';
+import { getMarkersCollection } from '../markers/collection.js';
+import { getCommentsCollection } from '../comments/collection.js';
+import type { UserDTO } from './types.js';
 
 const usersRouter = Router();
 

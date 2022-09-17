@@ -1,4 +1,4 @@
-import type { MarkerSize } from './types';
+import type { MarkerSize } from './types.js';
 
 export const defaultSizes: MarkerSize[] = ['S', 'M', 'L', '?'];
 export const treeSizes: MarkerSize[] = ['XS', 'S', 'M', 'L', 'XL', '?'];
