@@ -1,0 +1,20 @@
+{
+  "name": "aeternum-map-realtime",
+  "author": "Leon Machens",
+  "license": "MIT",
+  "description": "Client library for Aeternum Map's live location sharing",
+  "version": "0.0.0",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "peerjs": "1.4.7",
+    "socket.io-client": "4.5.2"
+  },
+  "devDependencies": {
+    "typescript": "4.8.3"
+  }
+}

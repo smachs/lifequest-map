@@ -1,0 +1,124 @@
+.streaming {
+  position: relative;
+  display: grid;
+  gap: 1em;
+  height: 100%;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+}
+
+.user {
+  display: flex;
+  justify-content: space-between;
+}
+
+.success {
+  color: #07bc0c;
+}
+
+.waiting {
+  color: var(--color-secondary);
+}
+
+.warning {
+  color: lightcoral;
+}
+
+.form {
+  display: grid;
+  row-gap: 0.8rem;
+}
+
+.guide {
+  font-size: 0.8em;
+}
+
+.tokenContainer {
+  display: flex;
+  gap: 0.5em;
+}
+
+.action svg {
+  height: 1.2em;
+  width: 1.2em;
+}
+
+.label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75em;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+.label input {
+  border: 1px solid var(--color-shade-three);
+  padding: 0.4em;
+}
+
+.submit {
+  border: 1px solid var(--color-shade-two);
+  border-radius: 50%;
+  justify-self: center;
+  width: 7em;
+  height: 7em;
+  transition: all 0.2s ease-in;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.5em;
+  background: var(--color-shade-two);
+}
+
+.submit:disabled {
+  color: var(--color-disabled);
+  cursor: default;
+  background: var(--color-shade-one);
+  border-color: var(--color-shade-three);
+}
+
+.submit.connected {
+  color: #07bc0c;
+  border-color: #07bc0c;
+}
+
+.submit.connecting {
+  color: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
+
+.submit:hover,
+.submit.connected:hover,
+.submit.connecting:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.status {
+  display: grid;
+  grid-template-columns: repeat(3, calc(100% / 3));
+  text-align: center;
+  height: 7em;
+}
+
+.status h5 {
+  margin-bottom: 0.5em;
+}
+
+.list {
+  display: grid;
+  gap: 0.5em;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: 5em;
+}
+
+.list li {
+  font-size: 0.75em;
+}
