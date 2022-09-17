@@ -1,21 +1,21 @@
 import { writeError } from '../../utils/logs';
+import { servers } from 'realtime';
 
 export type LiveServer = {
   name: string;
   url: string;
-  delay: number;
+  delay?: number;
 };
 
 export const liveServers: LiveServer[] = [
+  ...servers,
   {
     name: 'Europe',
     url: 'wss://live1.aeternum-map.gg',
-    delay: Infinity,
   },
   {
     name: 'US',
     url: 'wss://live2.aeternum-map.gg',
-    delay: Infinity,
   },
 ];
 
@@ -28,7 +28,6 @@ if (
   liveServers.push({
     name: 'dev',
     url: VITE_API_ENDPOINT.replace('http', 'ws'),
-    delay: Infinity,
   });
 }
 
@@ -40,6 +39,6 @@ export const ping = async (liveServer: LiveServer) => {
     return Date.now() - now;
   } catch (error) {
     writeError(error);
-    return Infinity;
+    return undefined;
   }
 };

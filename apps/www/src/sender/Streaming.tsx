@@ -43,8 +43,8 @@ function Streaming(): JSX.Element {
   useEffect(() => {
     if (!serverUrl || !servers.some((server) => server.url === serverUrl)) {
       const onlineServers = [...servers]
-        .filter((server) => server.delay !== Infinity)
-        .sort((a, b) => a.delay - b.delay);
+        .filter((server) => server.delay)
+        .sort((a, b) => a.delay! - b.delay!);
       const server = onlineServers[0];
       if (server) {
         setServerUrl(server.url);

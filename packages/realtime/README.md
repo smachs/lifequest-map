@@ -5,14 +5,28 @@ Client library for Aeternum Map's live location sharing
 ## Usage
 
 ```js
+import { servers, init } from '@lmachens/aeternum-map-realtime';
+
+// `servers` is an array of all available servers
+const europeServer = servers.find((server) => server.name === 'Europe');
+
 const { destroy } = init({
-  serverUrl: 'wss://live1.aeternum-map.gg',
+  // Select one of the official servers or run your own
+  serverUrl: europeServer.url,
+  // You generate this token in the Overwolf app
   token: 'TOKEN_FROM_OVERWOLF_APP',
-  onStatus: (group) => console.log(group),
-  onData: (partialPlayer) => console.log(partialPlayer),
+  // Fired, on start and everytime a user is joined or left
+  onGroup: (group) => console.log(group),
+  // Includes updates for a player
+  onPlayer: (partialPlayer) => console.log(partialPlayer),
+  // Fired, if a player uses an hotkey in-game
   onHotkey: (steamId, hotkey) => console.log(steamId, hotkey),
+  // The connection to the server established
   onConnect: () => console.log('Connected'),
 });
+
+// Call `destory` if you like to end the connection
+destroy();
 ```
 
 ## Aeternum Map

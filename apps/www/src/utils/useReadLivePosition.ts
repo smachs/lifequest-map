@@ -96,8 +96,8 @@ function useReadLivePosition() {
     const { destroy } = init({
       serverUrl,
       token,
-      onStatus: updateStatus,
-      onData: updateData,
+      onGroup: updateStatus,
+      onPlayer: updateData,
       onHotkey: handleHotkey,
       onConnect: () => toast.success('Sharing live status 👌'),
     });

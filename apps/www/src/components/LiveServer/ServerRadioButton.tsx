@@ -30,8 +30,7 @@ function ServerRadioButton({
         checked={checked}
         onChange={(event) => onChange(event.target.value)}
       />{' '}
-      {server.name}{' '}
-      {server.delay === Infinity ? '(Offline)' : `(${server.delay}ms)`}
+      {server.name} {!server.delay ? '(Offline)' : `(${server.delay}ms)`}
     </label>
   );
 }
