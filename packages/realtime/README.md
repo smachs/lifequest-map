@@ -1,11 +1,11 @@
-# @lmachens/aeternum-map-realtime
+# aeternum-map-realtime
 
 Client library for Aeternum Map's live location sharing
 
 ## Usage
 
 ```js
-import { servers, init } from '@lmachens/aeternum-map-realtime';
+import { servers, init } from 'aeternum-map-realtime';
 
 // `servers` is an array of all available servers
 const europeServer = servers.find((server) => server.name === 'Europe');
