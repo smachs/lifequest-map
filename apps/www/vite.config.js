@@ -11,6 +11,7 @@ const { PORT = 3001 } = process.env;
 export default defineConfig({
   plugins: [reactRefresh()],
   server: {
+    port: 5174,
     proxy: {
       '/api': {
         target: `http://localhost:${PORT}`,
