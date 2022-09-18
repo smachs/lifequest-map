@@ -14,8 +14,8 @@ COPY --from=deps /app/node_modules ./node_modules
 ARG VITE_API_ENDPOINT=
 ARG VITE_PLAUSIBLE_API_HOST=
 ARG VITE_PLAUSIBLE_DOMAIN=
-RUN npm run server:build
-RUN npm run client:build
+RUN npm run build -- --filter=api
+RUN npm run build -- --filter=www
 RUN npm set-script prepare ""
 RUN npm ci --production --prefer-offline
 
