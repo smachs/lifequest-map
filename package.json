@@ -6,21 +6,14 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
-    "overwolf:dev": "cd apps/www && npm run dev && cd ../..",
-    "client:dev": "cd apps/www && npm run dev && cd ../..",
-    "server:dev": "cd apps/api && npm run dev && cd ../..",
-    "overwolf:build": "cd apps/www && npm run overwolf:build && cd ../..",
-    "client:build": "cd apps/www && npm run build && cd ../..",
-    "server:build": "cd apps/api && npm run build && cd ../..",
-    "build": "npm run server:build && npm run client:build && npm run overwolf:build",
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
     "prepare": "husky install",
     "test": "prettier --check . && eslint . && stylelint \"**/*.css\" && cd apps/api && npm run lint && cd ../www && npm run lint"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.8.0",
     "@typescript-eslint/parser": "^5.8.0",
-    "concurrently": "^6.5.1",
     "eslint": "^8.5.0",
     "eslint-config-prettier": "^8.3.0",
     "husky": "^7.0.4",
@@ -29,6 +22,7 @@
     "stylelint": "^14.2.0",
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-standard": "^24.0.0",
+    "turbo": "^1.4.7",
     "typescript": "4.8.3"
   },
   "engines": {
