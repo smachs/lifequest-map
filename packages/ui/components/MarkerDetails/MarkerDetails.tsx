@@ -21,6 +21,7 @@ import Confirm from '../Confirm/Confirm';
 import { patchMarker } from '../AddResources/api';
 import Coordinates from './Coordinates';
 import ReportIssue from '../AddComment/ReportIssue';
+import Loot from './Loot/Loot';
 
 type MarkerDetailsProps = {
   marker: MarkerBasic;
@@ -95,42 +96,49 @@ function MarkerDetails({ marker, onEdit }: MarkerDetailsProps): JSX.Element {
         <h2>{title}</h2>
       </header>
       <main className={styles.main}>
-        <div className={styles.comments}>
-          {comments?.map((comment) => (
-            <Comment
-              key={comment._id}
-              id={comment._id}
-              username={comment.username}
-              message={comment.message}
-              createdAt={comment.createdAt}
-              isIssue={comment.isIssue}
-              removable={Boolean(
-                account &&
-                  (account.isModerator || account.steamId === comment.userId)
-              )}
-              onRemove={() => {
-                refresh();
-                setMarkers((markers) => {
-                  const markersClone = [...markers];
-                  const index = markersClone.findIndex(
-                    (marker) => marker._id === comment.markerId
-                  );
-                  if (index === -1) {
-                    return markers;
-                  }
-                  markersClone[index].comments =
-                    markersClone[index].comments! - 1;
-                  return markersClone;
-                });
-              }}
-            />
-          ))}
-          {!loading && comments?.length === 0 && (
-            <div className={styles.empty}>Be the first to write a comment</div>
-          )}
+        {['boss', 'bossElite'].includes(marker.type) && (
+          <Loot name={marker.name!} className={styles.loot} />
+        )}
+        <div className={styles.grow}>
+          <div className={styles.comments}>
+            {comments?.map((comment) => (
+              <Comment
+                key={comment._id}
+                id={comment._id}
+                username={comment.username}
+                message={comment.message}
+                createdAt={comment.createdAt}
+                isIssue={comment.isIssue}
+                removable={Boolean(
+                  account &&
+                    (account.isModerator || account.steamId === comment.userId)
+                )}
+                onRemove={() => {
+                  refresh();
+                  setMarkers((markers) => {
+                    const markersClone = [...markers];
+                    const index = markersClone.findIndex(
+                      (marker) => marker._id === comment.markerId
+                    );
+                    if (index === -1) {
+                      return markers;
+                    }
+                    markersClone[index].comments =
+                      markersClone[index].comments! - 1;
+                    return markersClone;
+                  });
+                }}
+              />
+            ))}
+            {!loading && comments?.length === 0 && (
+              <div className={styles.empty}>
+                Be the first to write a comment
+              </div>
+            )}
+          </div>
+          {loading && <Loading />}
+          <AddComment markerId={marker._id} onAdd={refresh} />
         </div>
-        {loading && <Loading />}
-        <AddComment markerId={marker._id} onAdd={refresh} />
       </main>
       <aside className={styles.more}>
         <h3>Actions</h3>

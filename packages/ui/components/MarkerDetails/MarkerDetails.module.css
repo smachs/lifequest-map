@@ -37,18 +37,31 @@
 
 .main {
   display: grid;
-  grid-template-rows: 1fr auto;
   overflow: hidden;
 }
 
-.comments {
+.grow {
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+
+.loot {
+  height: 240px;
   overflow: auto;
+  border-bottom: 1px solid var(--color-shade-three);
+  padding-right: 1rem;
+}
+
+.comments {
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column-reverse;
 }
 
 .empty {
-  margin: auto;
+  margin: 1rem auto;
 }
 
 .aside {
