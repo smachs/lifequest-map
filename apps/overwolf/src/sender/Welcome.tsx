@@ -1,7 +1,7 @@
-import type { AccountDTO } from '../contexts/UserContext';
-import { useAccount } from '../contexts/UserContext';
-import steamSrc from '../components/User/steam.png';
-import { fetchJSON } from '../utils/api';
+import type { AccountDTO } from 'ui/contexts/UserContext';
+import { useAccount } from 'ui/contexts/UserContext';
+import steamSrc from 'ui/components/User/steam.png';
+import { fetchJSON } from 'ui/utils/api';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from './Welcome.module.css';

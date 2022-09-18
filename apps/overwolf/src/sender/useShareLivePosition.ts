@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import type { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import type { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
-import { useAccount } from '../contexts/UserContext';
-import { usePosition } from '../contexts/PositionContext';
-import { usePersistentState } from '../utils/storage';
+import { useAccount } from 'ui/contexts/UserContext';
+import { usePosition } from 'ui/contexts/PositionContext';
+import { usePersistentState } from 'ui/utils/storage';
 import { toast } from 'react-toastify';
-import type { Group } from '../utils/useReadLivePosition';
+import type { Group } from 'ui/utils/useReadLivePosition';
 import useShareHotkeys from './useShareHotkeys';
 import Peer from 'peerjs';
-import { useSettings } from '../contexts/SettingsContext';
+import { useSettings } from 'ui/contexts/SettingsContext';
 
 const peerConnections: { [key: string]: any } = {};
 

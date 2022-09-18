@@ -1,4 +1,4 @@
-import useOverlayActivated from '../../sender/useOverlayActivated';
+import useOverlayActivated from './useOverlayActivated';
 import type { Position } from '../../utils/useReadLivePosition';
 import styles from './SyncStatus.module.css';
 

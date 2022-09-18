@@ -1,27 +1,27 @@
 import { StrictMode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import './globals.css';
-import { isOverwolfApp, waitForOverwolf } from './utils/overwolf';
-import { UserProvider } from './contexts/UserContext';
-import { MarkersProvider } from './contexts/MarkersContext';
-import { PositionProvider } from './contexts/PositionContext';
-import WorldMap from './components/WorldMap/WorldMap';
+import { isOverwolfApp, waitForOverwolf } from 'ui/utils/overwolf';
+import { UserProvider } from 'ui/contexts/UserContext';
+import { MarkersProvider } from 'ui/contexts/MarkersContext';
+import { PositionProvider } from 'ui/contexts/PositionContext';
+import WorldMap from 'ui/components/WorldMap/WorldMap';
 import styles from './Minimap.module.css';
-import { dragMoveWindow, WINDOWS } from './utils/windows';
+import { dragMoveWindow, WINDOWS } from 'ui/utils/windows';
 import {
   SETUP_MINIMAP,
   ZOOM_IN_MINIMAP,
   ZOOM_OUT_MINIMAP,
-} from './utils/hotkeys';
-import { usePersistentState } from './utils/storage';
-import { FiltersProvider } from './contexts/FiltersContext';
-import { SettingsProvider } from './contexts/SettingsContext';
-import { classNames } from './utils/styles';
-import ResizeBorder from './components/ResizeBorder/ResizeBorder';
-import useEventListener from './utils/useEventListener';
-import { latestLeafletMap } from './components/WorldMap/useWorldMap';
-import { initPlausible } from './utils/stats';
-import { PlayerProvider } from './contexts/PlayerContext';
+} from 'ui/utils/hotkeys';
+import { usePersistentState } from 'ui/utils/storage';
+import { FiltersProvider } from 'ui/contexts/FiltersContext';
+import { SettingsProvider } from 'ui/contexts/SettingsContext';
+import { classNames } from 'ui/utils/styles';
+import ResizeBorder from 'ui/components/ResizeBorder/ResizeBorder';
+import useEventListener from 'ui/utils/useEventListener';
+import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
+import { initPlausible } from 'ui/utils/stats';
+import { PlayerProvider } from 'ui/contexts/PlayerContext';
 
 function Minimap(): JSX.Element {
   const [showSetup, setShowSetup] = useState(false);

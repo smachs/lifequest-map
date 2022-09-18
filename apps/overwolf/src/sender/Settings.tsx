@@ -1,6 +1,6 @@
-import CloseIcon from '../components/icons/CloseIcon';
-import { useSettings } from '../contexts/SettingsContext';
-import { useAccount } from '../contexts/UserContext';
+import CloseIcon from 'ui/components/icons/CloseIcon';
+import { useSettings } from 'ui/contexts/SettingsContext';
+import { useAccount } from 'ui/contexts/UserContext';
 import {
   SETUP_MINIMAP,
   SHOW_HIDE_DIRECTION,
@@ -12,7 +12,7 @@ import {
   ZOOM_IN_MAP,
   ZOOM_OUT_MAP,
   MARKER_ACTION,
-} from '../utils/hotkeys';
+} from 'ui/utils/hotkeys';
 import styles from './Settings.module.css';
 
 type SettingsProps = {

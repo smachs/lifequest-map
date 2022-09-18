@@ -1,13 +1,13 @@
-import { classNames } from '../utils/styles';
+import { classNames } from 'ui/utils/styles';
 import {
   closeMainWindow,
   dragMoveWindow,
   minimizeCurrentWindow,
-} from '../utils/windows';
-import CloseIcon from '../components/icons/CloseIcon';
-import DiscordIcon from '../components/icons/DiscordIcon';
-import GitHubIcon from '../components/icons/GitHubIcon';
-import MinimizeIcon from '../components/icons/MinimizeIcon';
+} from 'ui/utils/windows';
+import CloseIcon from 'ui/components/icons/CloseIcon';
+import DiscordIcon from 'ui/components/icons/DiscordIcon';
+import GitHubIcon from 'ui/components/icons/GitHubIcon';
+import MinimizeIcon from 'ui/components/icons/MinimizeIcon';
 import classes from './AppHeader.module.css';
 
 function AppHeader(): JSX.Element {
