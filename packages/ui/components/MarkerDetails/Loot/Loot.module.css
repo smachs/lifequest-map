@@ -1,0 +1,54 @@
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notFound {
+  text-align: center;
+  margin: 1rem auto;
+}
+
+.item {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.25rem 0;
+  padding: 0.25rem;
+  align-items: center;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  padding: 5px;
+  filter: drop-shadow(0 0 2px white);
+}
+
+.name {
+  flex-grow: 1;
+}
+
+.common {
+  color: #c3c3c3;
+  background-image: url('https://cdn.newworldfans.com//db_images/backgrounds/common.png');
+}
+
+.uncommon {
+  color: #34bf48;
+  background-image: url('https://cdn.newworldfans.com//db_images/backgrounds/uncommon.png');
+}
+
+.rare {
+  color: #28bfd0;
+  background-image: url('https://cdn.newworldfans.com//db_images/backgrounds/rare.png');
+}
+
+.epic {
+  color: #e72fe5;
+  background-image: url('https://cdn.newworldfans.com//db_images/backgrounds/epic.png');
+}
+
+.legendary {
+  color: #c76b2a;
+  background-image: url('https://cdn.newworldfans.com//db_images/backgrounds/legendary.png');
+}
