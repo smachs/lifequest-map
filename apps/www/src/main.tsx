@@ -2,13 +2,13 @@ import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import './globals.css';
 import App from './App';
-import { UserProvider } from './contexts/UserContext';
-import { ModalProvider } from './contexts/ModalContext';
-import { MarkersProvider } from './contexts/MarkersContext';
-import { PlayerProvider } from './contexts/PlayerContext';
-import { FiltersProvider } from './contexts/FiltersContext';
-import { SettingsProvider } from './contexts/SettingsContext';
-import { initPlausible } from './utils/stats';
+import { UserProvider } from 'ui/contexts/UserContext';
+import { ModalProvider } from 'ui/contexts/ModalContext';
+import { MarkersProvider } from 'ui/contexts/MarkersContext';
+import { PlayerProvider } from 'ui/contexts/PlayerContext';
+import { FiltersProvider } from 'ui/contexts/FiltersContext';
+import { SettingsProvider } from 'ui/contexts/SettingsContext';
+import { initPlausible } from 'ui/utils/stats';
 
 ReactDOM.render(
   <StrictMode>

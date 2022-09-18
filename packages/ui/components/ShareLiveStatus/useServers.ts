@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { LiveServer } from '../components/LiveServer/liveServers';
-import { liveServers, ping } from '../components/LiveServer/liveServers';
+import type { LiveServer } from 'ui/components/LiveServer/liveServers';
+import { liveServers, ping } from 'ui/components/LiveServer/liveServers';
 
 function useServers() {
   const [servers, setServers] = useState<LiveServer[]>(liveServers);

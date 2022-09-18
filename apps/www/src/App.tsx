@@ -1,17 +1,17 @@
 import { ToastContainer } from 'react-toastify';
 import styles from './App.module.css';
-import AppHeader from './components/AppHeader/AppHeader';
-import MapFilter from './components/MapFilter/MapFilter';
-import WorldMap from './components/WorldMap/WorldMap';
+import AppHeader from 'ui/components/AppHeader/AppHeader';
+import MapFilter from 'ui/components/MapFilter/MapFilter';
+import WorldMap from 'ui/components/WorldMap/WorldMap';
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, useState } from 'react';
-import type { MarkerBasic } from './contexts/MarkersContext';
-import UpsertArea from './components/UpsertArea/UpsertArea';
-import type { MarkerRouteItem } from './components/MarkerRoutes/MarkerRoutes';
-import useEventListener from './utils/useEventListener';
-import { latestLeafletMap } from './components/WorldMap/useWorldMap';
-import { useFilters } from './contexts/FiltersContext';
-import NitroPay from './components/NitroPay/NitroPay';
+import type { MarkerBasic } from 'ui/contexts/MarkersContext';
+import UpsertArea from 'ui/components/UpsertArea/UpsertArea';
+import type { MarkerRouteItem } from 'ui/components/MarkerRoutes/MarkerRoutes';
+import useEventListener from 'ui/utils/useEventListener';
+import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
+import { useFilters } from 'ui/contexts/FiltersContext';
+import NitroPay from 'ui/components/NitroPay/NitroPay';
 
 function App(): JSX.Element {
   const [targetMarker, setTargetMarker] = useState<

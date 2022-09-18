@@ -2,19 +2,19 @@ import '../globals.css';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import AppHeader from './AppHeader';
-import { SettingsProvider } from '../contexts/SettingsContext';
-import { useAccount, UserProvider } from '../contexts/UserContext';
-import { PositionProvider } from '../contexts/PositionContext';
-import { waitForOverwolf } from '../utils/overwolf';
+import { SettingsProvider } from 'ui/contexts/SettingsContext';
+import { useAccount, UserProvider } from 'ui/contexts/UserContext';
+import { PositionProvider } from 'ui/contexts/PositionContext';
+import { waitForOverwolf } from 'ui/utils/overwolf';
 import styles from './Sender.module.css';
-import Ads from '../components/Ads/Ads';
+import Ads from 'ui/components/Ads/Ads';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Welcome from './Welcome';
 import Streaming from './Streaming';
-import ErrorBoundary from '../components/ErrorBoundary/ErrorBoundary';
-import { initPlausible } from '../utils/stats';
+import ErrorBoundary from 'ui/components/ErrorBoundary/ErrorBoundary';
+import { initPlausible } from 'ui/utils/stats';
 
 function Sender(): JSX.Element {
   const { account } = useAccount();

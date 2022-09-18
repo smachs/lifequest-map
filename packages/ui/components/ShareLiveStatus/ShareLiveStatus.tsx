@@ -8,7 +8,7 @@ import type { FormEvent } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import ServerRadioButton from '../LiveServer/ServerRadioButton';
-import useServers from '../../sender/useServers';
+import useServers from './useServers';
 
 type ShareLiveStatusProps = {
   onActivate: () => void;

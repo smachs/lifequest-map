@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-import { initPlausible } from './utils/stats';
+import { initPlausible } from 'ui/utils/stats';
 
 ReactDOM.render(
   <main>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NEW_WORLD_CLASS_ID } from '../utils/games';
+import { NEW_WORLD_CLASS_ID } from 'ui/utils/games';
 
 const useOverlayActivated = () => {
   const [isActivated, setIsActivated] = useState(true);
