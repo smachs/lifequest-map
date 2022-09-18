@@ -1,7 +1,8 @@
-import ReactDOM from 'react-dom';
 import { initPlausible } from 'ui/utils/stats';
+import { createRoot } from 'react-dom/client';
 
-ReactDOM.render(
+const root = createRoot(document.querySelector('#root')!);
+root.render(
   <main>
     <h1>Privacy Policy</h1>
 
@@ -218,8 +219,7 @@ ReactDOM.render(
       encourage you to contact us immediately and we will do our best efforts to
       promptly remove such information from our records.
     </p>
-  </main>,
-  document.querySelector('#root')
+  </main>
 );
 
 initPlausible();
