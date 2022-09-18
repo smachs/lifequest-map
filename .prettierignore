@@ -8,3 +8,5 @@ dist-ssr
 *.local
 .eslintcache
 /data
+*.js
+*.d.ts
