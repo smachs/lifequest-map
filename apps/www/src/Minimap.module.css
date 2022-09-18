@@ -1,0 +1,79 @@
+.container {
+  position: relative;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  transition: 0.2s opacity ease-in;
+  display: grid;
+  place-items: center;
+  -webkit-app-region: drag;
+}
+
+.hideOnHover:hover {
+  opacity: 0.1 !important;
+}
+
+.minimap {
+  height: 150%;
+  width: 150%;
+  pointer-events: none !important;
+}
+
+.minimap * {
+  pointer-events: none !important;
+}
+
+.setup {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
+.toolbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.5em;
+  background: #000000a6;
+  display: grid;
+  font-size: 0.8rem;
+  overflow: auto;
+}
+
+.toolbar label {
+  display: grid;
+  gap: 0.2em;
+  grid-template-columns: 50% 50%;
+  align-items: center;
+}
+
+.toolbar input {
+  width: 100%;
+}
+
+.bottomRightBorder {
+  cursor: se-resize;
+  color: white;
+  height: 2rem;
+  width: 2rem;
+}
+
+.move {
+  cursor: move;
+}
+
+.hint {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transition: 0.2s opacity ease-in;
+  pointer-events: none;
+}
+
+.hideOnHover:hover + .hint,
+.hint.visible {
+  opacity: 0.5;
+}
