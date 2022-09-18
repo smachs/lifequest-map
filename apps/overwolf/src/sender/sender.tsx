@@ -1,6 +1,5 @@
 import '../globals.css';
 import { StrictMode } from 'react';
-import ReactDOM from 'react-dom';
 import AppHeader from './AppHeader';
 import { SettingsProvider } from 'ui/contexts/SettingsContext';
 import { useAccount, UserProvider } from 'ui/contexts/UserContext';
@@ -15,6 +14,9 @@ import Welcome from './Welcome';
 import Streaming from './Streaming';
 import ErrorBoundary from 'ui/components/ErrorBoundary/ErrorBoundary';
 import { initPlausible } from 'ui/utils/stats';
+import { createRoot } from 'react-dom/client';
+
+const root = createRoot(document.querySelector('#root')!);
 
 function Sender(): JSX.Element {
   const { account } = useAccount();
@@ -40,7 +42,7 @@ function Sender(): JSX.Element {
 }
 
 waitForOverwolf().then(() => {
-  ReactDOM.render(
+  root.render(
     <StrictMode>
       <SettingsProvider>
         <UserProvider>
@@ -49,8 +51,7 @@ waitForOverwolf().then(() => {
           </PositionProvider>
         </UserProvider>
       </SettingsProvider>
-    </StrictMode>,
-    document.querySelector('#root')
+    </StrictMode>
   );
 });
 

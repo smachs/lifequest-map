@@ -1,5 +1,4 @@
 import { StrictMode } from 'react';
-import ReactDOM from 'react-dom';
 import './globals.css';
 import App from './App';
 import { UserProvider } from 'ui/contexts/UserContext';
@@ -9,8 +8,10 @@ import { PlayerProvider } from 'ui/contexts/PlayerContext';
 import { FiltersProvider } from 'ui/contexts/FiltersContext';
 import { SettingsProvider } from 'ui/contexts/SettingsContext';
 import { initPlausible } from 'ui/utils/stats';
+import { createRoot } from 'react-dom/client';
 
-ReactDOM.render(
+const root = createRoot(document.querySelector('#root')!);
+root.render(
   <StrictMode>
     <SettingsProvider>
       <UserProvider>
@@ -25,8 +26,7 @@ ReactDOM.render(
         </FiltersProvider>
       </UserProvider>
     </SettingsProvider>
-  </StrictMode>,
-  document.querySelector('#root')
+  </StrictMode>
 );
 
 initPlausible();

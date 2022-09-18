@@ -5,7 +5,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "leaflet": "^1.7.1",
-    "mongodb": "^4.2.2"
+    "leaflet": "1.8.0",
+    "mongodb": "4.9.1"
   }
 }
