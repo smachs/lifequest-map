@@ -3,14 +3,16 @@
  * StudioLoot approved the usage, if we credit them.
  */
 
-import markers from './markers.json' assert { type: 'json' };
 import loreTitles from './lore_titles.json' assert { type: 'json' };
-import regions from '../app/components/WorldMap/regions.json' assert { type: 'json' };
+import regions from '../../packages/static/src/regions.json' assert { type: 'json' };
 import { Double, MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
+const markers = await fetch('https://www.newworld-map.com/markers.json').then(
+  (resolve) => resolve.json()
+);
 const brimstoneSandsRegion = regions.find(
   (region) => region.name === 'Brimstone Sands'
 );
