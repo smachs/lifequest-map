@@ -86,7 +86,6 @@ authRouter.get(
       typeof req.session?.sessionId === 'string' &&
       validateUUID(req.session.sessionId)
     ) {
-      console.log('1');
       next();
     } else {
       res.sendStatus(403);
