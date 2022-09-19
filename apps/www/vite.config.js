@@ -23,7 +23,7 @@ export default defineConfig({
   publicDir: resolve(__dirname, 'src/public'),
   build: {
     target: 'esnext',
-    outDir: resolve(__dirname, '../../dist/server'),
+    outDir: resolve(__dirname, 'dist'),
     rollupOptions: {
       input: {
         minimap: resolve(__dirname, 'src/minimap.html'),

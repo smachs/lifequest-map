@@ -10,8 +10,8 @@ import { SCREENSHOTS_PATH } from '../env.js';
 import { getScreenshotsCollection } from '../screenshots/collection.js';
 import { ensureAuthenticated } from '../auth/middlewares.js';
 import etag from 'etag';
-import type { MarkerDTO } from 'lib';
-import { DEFAULT_MAP_NAME, findMapDetails, mapFilters } from 'lib';
+import type { MarkerDTO } from 'static';
+import { DEFAULT_MAP_NAME, findMapDetails, mapFilters } from 'static';
 
 const markersRouter = Router();
 

@@ -1,0 +1,19 @@
+{
+  "name": "static",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsc --noEmit false"
+  },
+  "dependencies": {
+    "leaflet": "1.8.0",
+    "mongodb": "4.9.1"
+  }
+}

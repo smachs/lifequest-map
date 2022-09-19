@@ -1,6 +1,6 @@
 import leaflet from 'leaflet';
 import { useEffect } from 'react';
-import regions from 'lib/regions.json';
+import { regions } from 'static';
 
 const COLOR = 'rgb(200 200 200)';
 

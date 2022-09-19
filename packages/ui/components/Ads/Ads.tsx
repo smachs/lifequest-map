@@ -3,6 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 import classes from './Ads.module.css';
 import useWindowIsVisible from '../../utils/useWindowIsVisible';
 
+declare global {
+  interface Window {
+    OwAd?: typeof OwAd;
+  }
+}
+
 type AdsProps = {
   active: boolean;
 };

@@ -3,8 +3,12 @@ import { useState } from 'react';
 import { useMemo } from 'react';
 import { useEffect } from 'react';
 import { createContext, useContext } from 'react';
-import { findRegion, findLocation } from 'lib/areas';
-import { DEFAULT_MAP_NAME, findMapDetails } from 'lib/maps';
+import {
+  findRegion,
+  findLocation,
+  DEFAULT_MAP_NAME,
+  findMapDetails,
+} from 'static';
 import { getGameInfo, useIsNewWorldRunning } from '../utils/games';
 import { writeError } from '../utils/logs';
 
