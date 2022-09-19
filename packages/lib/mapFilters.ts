@@ -898,6 +898,12 @@ export const mapFilters: FilterItem[] = [
     iconUrl: '/pois/showOfStrength.webp',
     hasName: true,
   },
+  {
+    category: 'events',
+    type: 'baalphazu',
+    title: 'Baalphazu',
+    iconUrl: '/pois/baalphazu.webp',
+  },
 ];
 
 export type MapFiltersCategory = {
