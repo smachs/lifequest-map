@@ -70,7 +70,10 @@ authRouter.get(
       res.sendStatus(403);
     }
   },
-  passport.authenticate('steam', { failureRedirect: '/' }),
+  passport.authenticate('steam', {
+    failureRedirect: '/',
+    keepSessionInfo: true,
+  }),
   function (_req, res) {
     res.redirect('/');
   }
@@ -83,12 +86,16 @@ authRouter.get(
       typeof req.session?.sessionId === 'string' &&
       validateUUID(req.session.sessionId)
     ) {
+      console.log('1');
       next();
     } else {
       res.sendStatus(403);
     }
   },
-  passport.authenticate('steam', { failureRedirect: '/' }),
+  passport.authenticate('steam', {
+    failureRedirect: '/',
+    keepSessionInfo: true,
+  }),
   async (req, res) => {
     if (!req.isAuthenticated()) {
       res.sendStatus(403);
@@ -123,7 +130,8 @@ authRouter.get(
       postToDiscord(`🤘 ${req.user.displayName} is using Aeternum Map`, false);
     } catch (error) {
       console.error(
-        `Login failed for ${req.user.displayName} (${req.user.steamId}) with ${req.session.sessionId}`
+        `Login failed for ${req.user.displayName} (${req.user.steamId}) with ${req.session.sessionId}`,
+        error
       );
       res
         .status(500)
