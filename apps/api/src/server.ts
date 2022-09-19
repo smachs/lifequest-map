@@ -123,12 +123,12 @@ async function runServer() {
     });
 
     // Serve webversion (only on production)
-    app.use(express.static(path.join(__dirname, 'app')));
+    app.use(express.static(path.join(__dirname, '../../www/dist')));
 
     // Static assets folder
     app.use(
       '/assets',
-      express.static(path.join(__dirname, 'assets'), {
+      express.static(path.join(__dirname, '../public'), {
         immutable: true,
         maxAge: '1d',
         fallthrough: true,
