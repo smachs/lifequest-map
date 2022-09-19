@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import leaflet from 'leaflet';
-import { mapFilters, mapFiltersCategories } from 'static/mapFilters';
+import { mapFilters, mapFiltersCategories, DEFAULT_MAP_NAME } from 'static';
 import type { MarkerBasic } from '../../contexts/MarkersContext';
 import { getTooltipContent } from './tooltips';
 import { useMarkers } from '../../contexts/MarkersContext';
@@ -8,7 +8,6 @@ import CanvasMarker from './CanvasMarker';
 import { useSettings } from '../../contexts/SettingsContext';
 import { writeError } from '../../utils/logs';
 import { useFilters } from '../../contexts/FiltersContext';
-import { DEFAULT_MAP_NAME } from 'static/maps';
 import useEventListener from '../../utils/useEventListener';
 import { calcDistance } from '../../utils/positions';
 import { usePlayer } from '../../contexts/PlayerContext';

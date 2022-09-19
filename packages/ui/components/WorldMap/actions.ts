@@ -6,7 +6,7 @@ import styles from './WorldMap.module.css';
 import { toast } from 'react-toastify';
 import leaflet from 'leaflet';
 import { latestLeafletMap } from './useWorldMap';
-import type { MarkerSize } from 'static/types';
+import type { MarkerSize } from 'static';
 
 const formatTimer = (seconds: number) => {
   const format = (value: number) => `0${Math.floor(value)}`.slice(-2);

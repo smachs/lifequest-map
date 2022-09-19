@@ -7,7 +7,7 @@ import { coordinates as playerCoordinates } from './usePlayerPosition';
 import { getJSONItem, setJSONItem } from '../../utils/storage';
 import { useSettings } from '../../contexts/SettingsContext';
 import useRegionBorders from './useRegionBorders';
-import { DEFAULT_MAP_NAME, findMapDetails } from 'static/maps';
+import { DEFAULT_MAP_NAME, findMapDetails } from 'static';
 import { useFilters } from '../../contexts/FiltersContext';
 
 const { VITE_API_ENDPOINT = '' } = import.meta.env;

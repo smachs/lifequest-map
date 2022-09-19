@@ -1,6 +1,6 @@
 import styles from './MarkerTypes.module.css';
-import type { FilterItem } from 'static/mapFilters';
-import { mapFilters } from 'static/mapFilters';
+import type { FilterItem } from 'static';
+import { mapFilters } from 'static';
 import { useFilters } from '../../contexts/FiltersContext';
 import { classNames } from '../../utils/styles';
 import { useMemo } from 'react';

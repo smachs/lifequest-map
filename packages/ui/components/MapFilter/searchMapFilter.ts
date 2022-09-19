@@ -1,5 +1,5 @@
 import { escapeRegExp } from '../../utils/regExp';
-import type { FilterItem } from 'static/mapFilters';
+import type { FilterItem } from 'static';
 
 export function searchMapFilter(
   search: string

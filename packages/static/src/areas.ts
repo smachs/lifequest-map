@@ -2,6 +2,7 @@ import locations from './locations.json' assert { type: 'json' };
 import regions from './regions.json' assert { type: 'json' };
 import { DEFAULT_MAP_NAME, findMapDetails } from './maps.js';
 
+export { regions, locations };
 export type Area = {
   name: string;
   coordinates: number[][];

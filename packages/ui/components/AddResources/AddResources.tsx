@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMarkers } from '../../contexts/MarkersContext';
-import type { FilterItem } from 'static/mapFilters';
-import { mapFilters } from 'static/mapFilters';
+import type { FilterItem, MarkerSize } from 'static';
+import { mapFilters, DEFAULT_MAP_NAME } from 'static';
 import styles from './AddResources.module.css';
 import SelectType from './SelectType';
 import SelectPosition from './SelectPosition';
@@ -15,8 +15,6 @@ import Button from '../Button/Button';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import { usePlayer } from '../../contexts/PlayerContext';
 import { useFilters } from '../../contexts/FiltersContext';
-import { DEFAULT_MAP_NAME } from 'static/maps';
-import type { MarkerSize } from 'static/types';
 
 export type Details = {
   description?: string;

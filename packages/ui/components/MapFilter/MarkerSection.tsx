@@ -1,6 +1,6 @@
 import Checkbox from './Checkbox';
 import FilterSelection from './FilterSelection';
-import type { MapFiltersCategory } from 'static/mapFilters';
+import type { MapFiltersCategory } from 'static';
 import styles from './MarkerSection.module.css';
 import { searchMapFilter } from './searchMapFilter';
 

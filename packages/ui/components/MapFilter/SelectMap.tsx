@@ -1,5 +1,5 @@
 import { useFilters } from '../../contexts/FiltersContext';
-import { mapDetails } from 'static/maps';
+import { mapDetails } from 'static';
 import styles from './MarkersView.module.css';
 
 const SelectMap = () => {

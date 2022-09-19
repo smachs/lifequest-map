@@ -5,8 +5,7 @@ import { Double, ObjectId } from 'mongodb';
 import { getMarkerRoutesCollection } from './collection.js';
 import { postToDiscord } from '../discord.js';
 import { ensureAuthenticated } from '../auth/middlewares.js';
-import { findRegions } from 'static/areas.js';
-import { DEFAULT_MAP_NAME, findMapDetails } from 'static/maps.js';
+import { findRegions, DEFAULT_MAP_NAME, findMapDetails } from 'static';
 
 const markerRoutesRouter = Router();
 

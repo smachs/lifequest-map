@@ -1,5 +1,5 @@
 import Checkbox from './Checkbox';
-import type { FilterItem } from 'static/mapFilters';
+import type { FilterItem } from 'static';
 import FilterWithOptions from './FilterWithOptions';
 
 type FilterSectionProps = {

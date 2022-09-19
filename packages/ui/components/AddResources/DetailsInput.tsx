@@ -1,4 +1,4 @@
-import type { FilterItem } from 'static/mapFilters';
+import type { FilterItem } from 'static';
 import type { Details } from './AddResources';
 import styles from './DetailsInput.module.css';
 import generalStyles from './AddResources.module.css';
