@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { createContext, useContext } from 'react';
-import { mapFilters } from 'lib/mapFilters';
-import { DEFAULT_MAP_NAME } from 'lib/maps';
+import { mapFilters } from 'static/mapFilters';
+import { DEFAULT_MAP_NAME } from 'static/maps';
 import { usePersistentState } from '../utils/storage';
 
 type FiltersContextValue = {

@@ -1,7 +1,7 @@
 import useGeoman from './useGeoman';
 import styles from './SelectPosition.module.css';
 import generalStyles from './AddResources.module.css';
-import type { FilterItem } from 'lib/mapFilters';
+import type { FilterItem } from 'static/mapFilters';
 import type { Details } from './AddResources';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
 

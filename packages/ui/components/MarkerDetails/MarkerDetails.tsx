@@ -6,7 +6,7 @@ import AddComment from '../AddComment/AddComment';
 import Comment from '../Comment/Comment';
 import useMarker from './useMarker';
 import Loading from '../Loading/Loading';
-import { mapFilters } from 'lib/mapFilters';
+import { mapFilters } from 'static/mapFilters';
 import styles from './MarkerDetails.module.css';
 import Markdown from 'markdown-to-jsx';
 import HideMarkerInput from './HideMarkerInput';

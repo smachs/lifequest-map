@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import type { FilterItem } from 'lib/mapFilters';
-import { mapFilters } from 'lib/mapFilters';
+import type { FilterItem } from 'static/mapFilters';
+import { mapFilters } from 'static/mapFilters';
 import styles from './SelectType.module.css';
 import generalStyles from './AddResources.module.css';
 import CloseIcon from '../icons/CloseIcon';

@@ -11,7 +11,7 @@ import { useMarkers } from '../../contexts/MarkersContext';
 import type { MarkerRouteItem } from './MarkerRoutes';
 import Button from '../Button/Button';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
-import { findRegions } from 'lib/areas';
+import { findRegions } from 'static/areas';
 import { useFilters } from '../../contexts/FiltersContext';
 import { writeError } from '../../utils/logs';
 import DeleteButton from '../DeleteButton/DeleteButton';

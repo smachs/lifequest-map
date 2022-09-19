@@ -1,5 +1,5 @@
 import styles from './MarkersView.module.css';
-import { mapFiltersCategories } from 'lib/mapFilters';
+import { mapFiltersCategories } from 'static/mapFilters';
 import MarkerSection from './MarkerSection';
 import { useFilters } from '../../contexts/FiltersContext';
 import ActionButton from '../ActionControl/ActionButton';

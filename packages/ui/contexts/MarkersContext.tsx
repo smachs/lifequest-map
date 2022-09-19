@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect } from 'react';
 import { getMarkerRoutes } from '../components/MarkerRoutes/api';
 import type { MarkerRouteItem } from '../components/MarkerRoutes/MarkerRoutes';
 import { latestLeafletMap } from '../components/WorldMap/useWorldMap';
-import { DEFAULT_MAP_NAME } from 'lib/maps';
+import { DEFAULT_MAP_NAME } from 'static/maps';
 import { fetchJSON } from '../utils/api';
 import { writeError } from '../utils/logs';
 import { notify } from '../utils/notifications';
@@ -13,8 +13,8 @@ import { isOverwolfApp } from '../utils/overwolf';
 import { usePersistentState } from '../utils/storage';
 import { useFilters } from './FiltersContext';
 import { useUser } from './UserContext';
-import type { MarkerSize } from 'lib/types';
-import { mapFilters } from 'lib/mapFilters';
+import type { MarkerSize } from 'static/types';
+import { mapFilters } from 'static/mapFilters';
 
 export type MarkerBasic = {
   type: string;
