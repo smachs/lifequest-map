@@ -1,6 +1,7 @@
 {
   "name": "aeternum-map",
   "private": true,
+  "type": "module",
   "workspaces": [
     "apps/*",
     "packages/*"
