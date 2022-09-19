@@ -31,6 +31,13 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'locations',
+    type: 'glyph',
+    title: 'Ancient Glyph',
+    iconUrl: '/pois/glyph.webp',
+    hasName: true,
+  },
+  {
+    category: 'locations',
     type: 'outpost',
     title: 'Outpost',
     iconUrl: '/pois/outpost.webp',
