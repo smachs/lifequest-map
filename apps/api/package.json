@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "nodemon src/server.ts",
     "build": "tsc --noEmit false && cp -R src/assets ../../dist/server/assets",
-    "start": "node dist/server/server.js",
     "lint": "tsc"
   },
   "dependencies": {
