@@ -159,6 +159,13 @@ async function runServer() {
     console.log('Socket listening');
   }
 
+  // Error handling middleware: https://expressjs.com/en/guide/error-handling.html#writing-error-handlers
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  app.use((err, _req, res, _next) => {
+    res.status(500).send(err.message);
+  });
+
   // All other requests are answered with a 404
   app.all('*', (_req, res) => {
     res.status(404).send('🙈 Not found');
