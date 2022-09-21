@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAccount } from '../../contexts/UserContext';
-import { writeError } from '../../utils/logs';
-import { takeScreenshot } from '../../utils/media';
 import { notify } from '../../utils/notifications';
 import { classNames } from '../../utils/styles';
 import { uploadScreenshot } from './api';
@@ -14,7 +12,6 @@ function UploadScreenshot({ onUpload }: UploadScreenshotProps): JSX.Element {
   const { account } = useAccount();
   const [screenshot, setScreenshot] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [timer, setTimer] = useState<number | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
@@ -38,7 +35,6 @@ function UploadScreenshot({ onUpload }: UploadScreenshotProps): JSX.Element {
   }, [canvasRef.current, screenshot]);
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setTimer(null);
     const file = event.target.files![0];
     setScreenshot(URL.createObjectURL(file));
   }
@@ -63,56 +59,10 @@ function UploadScreenshot({ onUpload }: UploadScreenshotProps): JSX.Element {
     }
   }
 
-  async function handleTakeScreenshot() {
-    setTimer(3);
-    try {
-      const screenshotUrl = await takeScreenshot();
-      setScreenshot(screenshotUrl);
-    } catch (error) {
-      writeError(error);
-    }
-  }
-
-  useEffect(() => {
-    if (timer === null) {
-      return;
-    }
-    let timeout: NodeJS.Timeout | null = null;
-    if (timer > 0) {
-      timeout = setTimeout(() => {
-        setTimer(timer - 1);
-      }, 1000);
-    } else {
-      (async () => {
-        try {
-          const screenshotUrl = await takeScreenshot();
-          setScreenshot(screenshotUrl);
-          setTimer(null);
-        } catch (error) {
-          writeError(error);
-          setTimer(3);
-        }
-      })();
-    }
-    return () => {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-    };
-  }, [timer]);
-
   return (
     <div className={styles.container}>
       <div className={styles.preview}>
         <div className={styles.actions}>
-          <button
-            className={styles.action}
-            onClick={handleTakeScreenshot}
-            disabled={!account}
-          >
-            Take screenshot
-          </button>
-          <span>or</span>
           <label
             className={classNames(styles.action, !account && styles.disabled)}
           >
@@ -128,13 +78,9 @@ function UploadScreenshot({ onUpload }: UploadScreenshotProps): JSX.Element {
           </label>
         </div>
         <div>
-          {timer !== null ? (
-            <>Please focus New World. Screenshot in {timer}s</>
-          ) : account ? (
-            'A screenshot helps other players to find this resource.'
-          ) : (
-            'Please login to upload a screenshot.'
-          )}
+          {account
+            ? 'A screenshot helps other players to find this resource.'
+            : 'Please login to upload a screenshot.'}
         </div>
         <canvas ref={canvasRef} className={styles.screenshot} />
       </div>
