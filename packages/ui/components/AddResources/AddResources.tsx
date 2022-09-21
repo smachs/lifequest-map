@@ -76,7 +76,7 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
       details.tier = marker?.tier || 1;
     }
     if (filter.sizes) {
-      details.size = marker?.size || 'S';
+      details.size = marker?.size || '?';
     }
     if (filter.hasLevel) {
       details.level = marker?.level || 1;
