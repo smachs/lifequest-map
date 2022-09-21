@@ -1,7 +1,7 @@
 import type { MarkerSize } from './types.js';
 
-export const defaultSizes: MarkerSize[] = ['S', 'M', 'L', '?'];
-export const treeSizes: MarkerSize[] = ['XS', 'S', 'M', 'L', 'XL', '?'];
+export const defaultSizes: MarkerSize[] = ['?', 'S', 'M', 'L'];
+export const treeSizes: MarkerSize[] = ['?', 'XS', 'S', 'M', 'L', 'XL'];
 
 export type FilterItem = {
   type: string;
