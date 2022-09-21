@@ -2,7 +2,7 @@
   "manifest_version": 1,
   "type": "WebApp",
   "meta": {
-    "name": "Aeternum Map",
+    "name": "Aeternum Map-DEV",
     "author": "Leon Machens",
     "version": "2.12.1",
     "minimum-overwolf-version": "0.169.0",
@@ -13,7 +13,14 @@
     "launcher_icon": "icons/desktopIcon.ico",
     "window_icon": "icons/taskbarIcon.png"
   },
-  "permissions": ["Hotkeys", "GameInfo", "Media", "FileSystem", "DesktopStreaming", "Clipboard"],
+  "permissions": [
+    "Hotkeys",
+    "GameInfo",
+    "Media",
+    "FileSystem",
+    "DesktopStreaming",
+    "Clipboard"
+  ],
   "data": {
     "start_window": "background",
     "windows": {
@@ -78,13 +85,15 @@
       "game_ids": [21816]
     },
     "game_events": [21816],
-    "launch_events": [{
-      "event": "GameLaunch",
-      "event_data": {
-        "game_ids": [21816]
-      },
-      "start_minimized": false
-    }],
+    "launch_events": [
+      {
+        "event": "GameLaunch",
+        "event_data": {
+          "game_ids": [21816]
+        },
+        "start_minimized": false
+      }
+    ],
     "hotkeys": {
       "show_hide_app": {
         "title": "Show/Hide App",
@@ -136,7 +145,11 @@
       "googlesyndication": "http"
     },
     "externally_connectable": {
-      "matches": ["http://localhost:6006", "http://localhost:5173", "https://aeternum-map.gg"]
+      "matches": [
+        "http://localhost:6006",
+        "http://localhost:5173",
+        "https://aeternum-map.gg"
+      ]
     },
     "force_browser": "user",
     "developer": {

@@ -1,13 +1,6 @@
 node_modules
 .DS_Store
 dist
-/dist/lib
-/dist/overwolf
-!/dist/overwolf/manifest.json
-!/dist/overwolf/icons
-!/dist/overwolf/simple-io-plugin.dll
-/dist/server
-dist-ssr
 *.local
 .eslintcache
 .env
