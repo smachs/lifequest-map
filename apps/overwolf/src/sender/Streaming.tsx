@@ -114,6 +114,10 @@ function Streaming(): JSX.Element {
           <a href="https://aeternum-map.gg" target="_blank">
             aeternum-map.gg
           </a>{' '}
+          or{' '}
+          <a href="https://newworld-map.com" target="_blank">
+            newworld&#8209;map.com
+          </a>{' '}
           to see your live location on the map. You can use any device that has
           a browser. Share this token and server with your friends to see each
           others' location 🤗.

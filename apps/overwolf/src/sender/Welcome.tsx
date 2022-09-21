@@ -59,10 +59,14 @@ function Welcome(): JSX.Element {
       <p>
         Sign in and connect to{' '}
         <a href="https://aeternum-map.gg" target="_blank">
-          https://aeternum-map.gg
+          aeternum-map.gg
         </a>
         , an interactive New World map with routes and community managed
-        markers.
+        markers. As alternative, you can use{' '}
+        <a href="https://newworld-map.com" target="_blank">
+          newworld&#8209;map.com
+        </a>{' '}
+        with limited functionality.
       </p>
       <ul>
         <li>🚀 Live Tracking of your In-Game position</li>
