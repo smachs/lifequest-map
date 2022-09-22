@@ -2,6 +2,12 @@
 
 Client library for Aeternum Map's live location sharing
 
+## Install
+
+```shell
+npm install aeternum-map-realtime
+```
+
 ## Usage
 
 See [StackBlitz](https://stackblitz.com/edit/aeternum-map-realtime?file=src%2Fmain.ts) for an example.
