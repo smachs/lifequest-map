@@ -4,6 +4,7 @@ import generalStyles from './AddResources.module.css';
 import type { FilterItem } from 'static';
 import type { Details } from './AddResources';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
+import PlayerPositionButton from './PlayerPositionButton';
 
 type SelectPositionType = {
   details: Details | null;
@@ -30,45 +31,56 @@ function SelectPosition({
   });
 
   return (
-    <label>
-      <span className={generalStyles.key}>Position</span> [
-      <input
-        className={styles.input}
-        type="number"
-        placeholder="e.g. 9015.32"
-        min={0}
-        max={14336}
-        step={0.01}
-        value={location[0]}
-        onChange={(event) =>
+    <div>
+      <label>
+        <span className={generalStyles.key}>Position</span>[
+        <input
+          className={styles.input}
+          type="number"
+          placeholder="e.g. 9015.32"
+          min={0}
+          max={14336}
+          step={0.01}
+          value={location[0]}
+          onChange={(event) =>
+            onSelectLocation([
+              +(+event.target.value).toFixed(2),
+              location[1],
+              location[2],
+            ])
+          }
+          required
+        />
+        ,{' '}
+        <input
+          className={styles.input}
+          type="number"
+          placeholder="e.g. 5015.12"
+          min={0}
+          max={14336}
+          step={0.01}
+          value={location[1]}
+          onChange={(event) =>
+            onSelectLocation([
+              location[0],
+              +(+event.target.value).toFixed(2),
+              location[2],
+            ])
+          }
+          required
+        />
+        ]
+      </label>
+      <PlayerPositionButton
+        onClick={(position) =>
           onSelectLocation([
-            +(+event.target.value).toFixed(2),
-            location[1],
+            position.location[1],
+            position.location[0],
             location[2],
           ])
         }
-        required
       />
-      ,{' '}
-      <input
-        className={styles.input}
-        type="number"
-        placeholder="e.g. 5015.12"
-        min={0}
-        max={14336}
-        step={0.01}
-        value={location[1]}
-        onChange={(event) =>
-          onSelectLocation([
-            location[0],
-            +(+event.target.value).toFixed(2),
-            location[2],
-          ])
-        }
-        required
-      />
-      ]
-    </label>
+    </div>
   );
 }
 
