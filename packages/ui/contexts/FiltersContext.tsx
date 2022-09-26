@@ -45,7 +45,14 @@ export function FiltersProvider({
   const [map, setMap] = useState(DEFAULT_MAP_NAME);
 
   return (
-    <FiltersContext.Provider value={{ filters, setFilters, map, setMap }}>
+    <FiltersContext.Provider
+      value={{
+        filters,
+        setFilters,
+        map,
+        setMap,
+      }}
+    >
       {children}
     </FiltersContext.Provider>
   );

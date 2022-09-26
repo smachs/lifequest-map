@@ -3,7 +3,6 @@ import { mapFiltersCategories } from 'static';
 import MarkerSection from './MarkerSection';
 import { useFilters } from '../../contexts/FiltersContext';
 import ActionButton from '../ActionControl/ActionButton';
-import ActionCheckbox from '../ActionControl/ActionCheckbox';
 import { usePersistentState } from '../../utils/storage';
 import { useAccount } from '../../contexts/UserContext';
 import SearchInput from '../SearchInput/SearchInput';
@@ -11,6 +10,7 @@ import PresetSelect from '../PresetSelect/PresetSelect';
 import { useState } from 'react';
 import type { Preset } from '../PresetSelect/presets';
 import SelectMap from './SelectMap';
+import MarkerSearch from '../MarkerSearch/MarkerSearch';
 
 type MarkersViewProps = {
   onAdd: () => void;
@@ -44,27 +44,11 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
         <ActionButton disabled={!account} onClick={onAdd}>
           {account ? 'Add resource' : 'Login to add resource'}
         </ActionButton>
-        <ActionCheckbox
-          onChange={(checked) => handleToggle(['hidden'], checked)}
-          checked={filters.includes('hidden')}
-          title="Show Hidden"
-        />
-        <ActionCheckbox
-          onChange={(checked) =>
-            handleToggle(['hide-without-comment'], checked)
-          }
-          checked={filters.includes('hide-without-comment')}
-          title="Hide without comment"
-        />
-        <ActionCheckbox
-          onChange={(checked) => handleToggle(['hide-without-issue'], checked)}
-          checked={filters.includes('hide-without-issue')}
-          title="Hide without issue"
-        />
       </div>
+      <MarkerSearch />
       <div className={styles.actions}>
         <SearchInput
-          placeholder="Search marker types..."
+          placeholder="Filter marker types..."
           value={search}
           onChange={setSearch}
         />

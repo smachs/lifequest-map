@@ -22,6 +22,7 @@ import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
 import { initPlausible } from 'ui/utils/stats';
 import { PlayerProvider } from 'ui/contexts/PlayerContext';
 import { createRoot } from 'react-dom/client';
+import { MantineProvider } from '@mantine/core';
 
 const root = createRoot(document.querySelector('#root')!);
 
@@ -193,23 +194,29 @@ function Minimap(): JSX.Element {
 waitForOverwolf().then(() => {
   root.render(
     <StrictMode>
-      <SettingsProvider>
-        <UserProvider>
-          <FiltersProvider>
-            <MarkersProvider readonly>
-              {isOverwolfApp ? (
-                <PositionProvider>
-                  <Minimap />
-                </PositionProvider>
-              ) : (
-                <PlayerProvider>
-                  <Minimap />
-                </PlayerProvider>
-              )}
-            </MarkersProvider>
-          </FiltersProvider>
-        </UserProvider>
-      </SettingsProvider>
+      <MantineProvider
+        theme={{
+          colorScheme: 'dark',
+        }}
+      >
+        <SettingsProvider>
+          <UserProvider>
+            <FiltersProvider>
+              <MarkersProvider readonly>
+                {isOverwolfApp ? (
+                  <PositionProvider>
+                    <Minimap />
+                  </PositionProvider>
+                ) : (
+                  <PlayerProvider>
+                    <Minimap />
+                  </PlayerProvider>
+                )}
+              </MarkersProvider>
+            </FiltersProvider>
+          </UserProvider>
+        </SettingsProvider>
+      </MantineProvider>
     </StrictMode>
   );
 });

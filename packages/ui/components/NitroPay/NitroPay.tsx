@@ -4,7 +4,10 @@ import { useAccount } from '../../contexts/UserContext';
 const NitroPay = () => {
   const { account } = useAccount();
   useEffect(() => {
-    if (account?.hideAds) {
+    if (
+      account?.hideAds ||
+      window.location.href.startsWith('http://localhost')
+    ) {
       return;
     }
     // @ts-ignore
