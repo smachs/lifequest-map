@@ -6,8 +6,8 @@ const searchRouter = Router();
 searchRouter.get('/', async (_req, res, next) => {
   try {
     const [from, name] = await Promise.all([
-      getMarkersCollection().distinct('username'),
-      getMarkersCollection().distinct('name'),
+      getMarkersCollection().distinct('username', { isPrivate: { $ne: true } }),
+      getMarkersCollection().distinct('name', { isPrivate: { $ne: true } }),
     ]);
 
     res.status(200).json({
