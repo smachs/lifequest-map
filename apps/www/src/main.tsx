@@ -9,23 +9,30 @@ import { FiltersProvider } from 'ui/contexts/FiltersContext';
 import { SettingsProvider } from 'ui/contexts/SettingsContext';
 import { initPlausible } from 'ui/utils/stats';
 import { createRoot } from 'react-dom/client';
+import { MantineProvider } from '@mantine/core';
 
 const root = createRoot(document.querySelector('#root')!);
 root.render(
   <StrictMode>
-    <SettingsProvider>
-      <UserProvider>
-        <FiltersProvider>
-          <MarkersProvider>
-            <PlayerProvider>
-              <ModalProvider>
-                <App />
-              </ModalProvider>
-            </PlayerProvider>
-          </MarkersProvider>
-        </FiltersProvider>
-      </UserProvider>
-    </SettingsProvider>
+    <MantineProvider
+      theme={{
+        colorScheme: 'dark',
+      }}
+    >
+      <SettingsProvider>
+        <UserProvider>
+          <FiltersProvider>
+            <MarkersProvider>
+              <PlayerProvider>
+                <ModalProvider>
+                  <App />
+                </ModalProvider>
+              </PlayerProvider>
+            </MarkersProvider>
+          </FiltersProvider>
+        </UserProvider>
+      </SettingsProvider>
+    </MantineProvider>
   </StrictMode>
 );
 

@@ -20,3 +20,15 @@ export type MarkerDTO = {
   updatedAt?: Date;
   createdAt: Date;
 };
+
+export type ItemDTO = {
+  id: string;
+  name: string;
+  rarity: string;
+  iconSrc: string;
+  minGearScore: number;
+  maxGearScore: number;
+  markerIds: string[];
+  updatedAt?: Date;
+  createdAt: Date;
+};

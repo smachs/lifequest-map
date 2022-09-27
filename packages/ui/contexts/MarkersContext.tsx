@@ -14,6 +14,7 @@ import { usePersistentState } from '../utils/storage';
 import { useFilters } from './FiltersContext';
 import { useUser } from './UserContext';
 import type { MarkerSize } from 'static';
+import { useMarkerSearchStore } from '../components/MarkerSearch/markerSearchStore';
 
 export type MarkerBasic = {
   type: string;
@@ -93,6 +94,8 @@ export function MarkersProvider({
 
   const { filters, setFilters, map } = useFilters();
   const user = useUser();
+  const searchValues = useMarkerSearchStore((state) => state.searchValues);
+  const markerFilters = useMarkerSearchStore((state) => state.markerFilters);
 
   const refresh = () => {
     if (!readonly) {
@@ -146,6 +149,10 @@ export function MarkersProvider({
 
   const hiddenMarkerIds = user?.hiddenMarkerIds || [];
   const visibleMarkers = useMemo(() => {
+    const nameSearchValues = searchValues.filter((value) =>
+      value.startsWith('name: ')
+    );
+
     return markers.filter((marker) => {
       if (map !== DEFAULT_MAP_NAME && marker.map !== map) {
         return false;
@@ -153,6 +160,12 @@ export function MarkersProvider({
         return false;
       }
 
+      if (
+        markerFilters.length > 0 &&
+        !markerFilters.some((limit) => limit.markerIds.includes(marker._id))
+      ) {
+        return false;
+      }
       if (marker.tier) {
         if (
           !filters.some((filter) => filter === `${marker.type}-${marker.tier}`)
@@ -171,13 +184,22 @@ export function MarkersProvider({
       if (temporaryHiddenMarkerIDs.includes(marker._id)) {
         return false;
       }
-      if (filters.includes('hide-without-comment') && !marker.comments) {
+      if (searchValues.includes('has: comment') && !marker.comments) {
         return false;
       }
-      if (filters.includes('hide-without-issue') && !marker.issues) {
+      if (searchValues.includes('has: issue') && !marker.issues) {
         return false;
       }
-      if (!filters.includes('hidden') && hiddenMarkerIds.includes(marker._id)) {
+      if (
+        searchValues.includes('is: hidden') &&
+        !hiddenMarkerIds.includes(marker._id)
+      ) {
+        return false;
+      }
+      if (
+        nameSearchValues.length > 0 &&
+        !nameSearchValues.some((value) => value.slice(6) === marker.name)
+      ) {
         return false;
       }
       return true;
