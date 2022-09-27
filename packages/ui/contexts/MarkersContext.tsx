@@ -204,7 +204,14 @@ export function MarkersProvider({
       }
       return true;
     });
-  }, [filters, markers, hiddenMarkerIds, temporaryHiddenMarkerIDs, map]);
+  }, [
+    filters,
+    markers,
+    hiddenMarkerIds,
+    temporaryHiddenMarkerIDs,
+    map,
+    searchValues,
+  ]);
 
   const toggleMarkerRoute = (markerRoute: MarkerRouteItem, force?: boolean) => {
     const markerRoutesClone = [...markerRoutes];
