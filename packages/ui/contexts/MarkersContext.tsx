@@ -210,6 +210,7 @@ export function MarkersProvider({
     hiddenMarkerIds,
     temporaryHiddenMarkerIDs,
     map,
+    markerFilters,
     searchValues,
   ]);
 
