@@ -35,6 +35,8 @@ import { initSocket } from './lib/live/socket.js';
 import { initAccountsCollection } from './lib/auth/collection.js';
 import liveRouter from './lib/live/router.js';
 import searchRouter from './lib/search/router.js';
+import { initItemsCollection } from './lib/items/collection.js';
+import itemsRouter from './lib/items/router.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -116,6 +118,7 @@ async function runServer() {
     app.use('/api/users', usersRouter);
     app.use('/api/screenshots', screenshotsRouter);
     app.use('/api/search', searchRouter);
+    app.use('/api/items', itemsRouter);
 
     // Static screenshots folder
     app.use('/screenshots', express.static(SCREENSHOTS_PATH!));
@@ -150,9 +153,12 @@ async function runServer() {
       initMarkerRoutesCollection(),
       initUsersCollection(),
       initScreenshotsCollection(),
+      initItemsCollection(),
     ]);
+    console.log('Collection initialized');
 
     await refreshMarkers();
+    console.log('Markers refreshed');
   }
 
   if (NO_SOCKET !== 'true') {

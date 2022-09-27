@@ -15,7 +15,9 @@ export const useMarkerSearchStore = create<Store>((set, get) => ({
   refreshMarkerIds: async () => {
     const { searchValues, markerFilters } = get();
 
-    const froms = searchValues.filter((value) => value.startsWith('from: '));
+    const froms = searchValues.filter(
+      (value) => value.startsWith('from: ') || value.startsWith('loot: ')
+    );
     const newMarkerFilters = [...markerFilters].filter((markerFilter) =>
       froms.includes(markerFilter.context)
     );
@@ -24,8 +26,9 @@ export const useMarkerSearchStore = create<Store>((set, get) => ({
         ({ context }) => context === from
       );
       if (!markerFilter) {
+        const [, option, name] = from.match(/(\w+): (.*)/)!;
         const markerIds = await fetchJSON<string[]>(
-          `/api/search/from/${from.slice(6)}`
+          `/api/search/${option}/${name}`
         );
         newMarkerFilters.push({ context: from, markerIds });
       }

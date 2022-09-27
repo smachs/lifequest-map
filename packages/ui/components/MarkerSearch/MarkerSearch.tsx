@@ -11,17 +11,19 @@ const groups: {
   'Marker name': 'name:',
   'Marker has': 'has:',
   'Marker is': 'is:',
+  'Loot contains': 'loot:',
 };
 const options = Object.values(groups);
 
 const defaultData: SelectItem[] = [
   { value: 'name:', label: 'name: marker', group: 'Search Options' },
-  { value: 'from:', label: 'from: user', group: 'Search Options' },
+  { value: 'loot:', label: 'loot: item', group: 'Search Options' },
+  { value: 'is:', label: 'is: hidden', group: 'Search Options' },
   { value: 'has:', label: 'has: comment or issue', group: 'Search Options' },
   { value: 'has: comment', label: 'has: comment', group: 'Marker has' },
   { value: 'has: issue', label: 'has: issue', group: 'Marker has' },
-  { value: 'is:', label: 'is: hidden', group: 'Search Options' },
   { value: 'is: hidden', label: 'is: hidden', group: 'Marker is' },
+  { value: 'from:', label: 'from: user', group: 'Search Options' },
 ];
 
 function MarkerSearch() {
@@ -38,6 +40,7 @@ function MarkerSearch() {
     fetchJSON<{
       from: string[];
       name: string[];
+      loot: string[];
     }>('/api/search').then((result) => {
       setData((current) => [
         ...current,
@@ -50,6 +53,11 @@ function MarkerSearch() {
           value: `name: ${item}`,
           label: `name: ${item}`,
           group: 'Marker name',
+        })),
+        ...result.loot.map((item) => ({
+          value: `loot: ${item}`,
+          label: `loot: ${item}`,
+          group: 'Loot contains',
         })),
       ]);
     });

@@ -97,7 +97,7 @@ function MarkerDetails({ marker, onEdit }: MarkerDetailsProps): JSX.Element {
       </header>
       <main className={styles.main}>
         {['boss', 'bossElite'].includes(marker.type) && (
-          <Loot name={marker.name!} className={styles.loot} />
+          <Loot markerId={marker._id} className={styles.loot} />
         )}
         <div className={styles.grow}>
           <div className={styles.comments}>

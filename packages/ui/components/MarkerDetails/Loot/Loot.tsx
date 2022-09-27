@@ -1,14 +1,14 @@
 import Loading from '../../Loading/Loading';
-import useNewWorldFansLoot from './useNewWorldFansLoot';
+import useLoot from './useLoot';
 import styles from './Loot.module.css';
 import { classNames } from '../../../utils/styles';
 
 type LootProps = {
-  name: string;
+  markerId: string;
   className: string;
 };
-function Loot({ name, className }: LootProps) {
-  const { isLoading, items } = useNewWorldFansLoot(name);
+function Loot({ markerId, className }: LootProps) {
+  const { isLoading, items } = useLoot(markerId);
 
   return (
     <div className={className}>
@@ -19,26 +19,19 @@ function Loot({ name, className }: LootProps) {
         <ul className={styles.list}>
           {items.map((item) => (
             <li
-              key={item.item_id}
+              key={item.id}
               className={classNames(styles.item, styles[item.rarity])}
             >
-              <img
-                className={styles.icon}
-                src={item.asset_path.replace(
-                  'items_hires',
-                  item.item_type.toLowerCase()
-                )}
-                alt=""
-              />
+              <img className={styles.icon} src={item.iconSrc} alt="" />
               <span className={styles.name}>{item.name}</span>
-              {item.max_gear_score > 0 && (
+              {item.maxGearScore > 0 && (
                 <>
-                  {item.min_gear_score !== item.max_gear_score ? (
+                  {item.minGearScore !== item.maxGearScore ? (
                     <span>
-                      {item.min_gear_score}-{item.max_gear_score} GS
+                      {item.minGearScore}-{item.maxGearScore} GS
                     </span>
                   ) : (
-                    <span>{item.max_gear_score} GS</span>
+                    <span>{item.maxGearScore} GS</span>
                   )}
                 </>
               )}
