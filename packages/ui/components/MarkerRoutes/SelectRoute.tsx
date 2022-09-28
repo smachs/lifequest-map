@@ -28,6 +28,9 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
     [type: string]: number;
   }>({});
   const [name, setName] = useState(markerRoute?.name || '');
+  const [description, setDescription] = useState(
+    markerRoute?.description || ''
+  );
   const [regions, setRegions] = useState<string[]>([]);
   const [isPublic, setIsPublic] = useState(markerRoute?.isPublic || false);
   const { markers, toggleMarkerRoute, refreshMarkerRoutes } = useMarkers();
@@ -176,6 +179,7 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
     try {
       const partialMarkerRoute = {
         name,
+        description,
         isPublic,
         positions,
         map,
@@ -224,6 +228,16 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
           value={name || ''}
           placeholder="Give this route an explanatory name"
           required
+        />
+      </label>
+      <label className={styles.label}>
+        Description
+        <textarea
+          className={styles.textarea}
+          onChange={(event) => setDescription(event.target.value)}
+          value={description || ''}
+          placeholder="Add some information like 'how long does the route take', 'how often it is contested' or 'which level is required'"
+          rows={4}
         />
       </label>
       <label className={styles.label}>

@@ -2,6 +2,7 @@ import type { Double, ObjectId } from 'mongodb';
 
 export type MarkerRouteDTO = {
   name: string;
+  description?: string;
   map?: string;
   userId: string;
   username: string;

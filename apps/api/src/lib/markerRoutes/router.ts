@@ -12,7 +12,15 @@ const markerRoutesRouter = Router();
 const MAX_MARKER_ROUTE_LENGTH = 100;
 markerRoutesRouter.post('/', ensureAuthenticated, async (req, res, next) => {
   try {
-    const { name, isPublic, positions, markersByType, map, origin } = req.body;
+    const {
+      name,
+      description,
+      isPublic,
+      positions,
+      markersByType,
+      map,
+      origin,
+    } = req.body;
     const account = req.account!;
 
     if (
@@ -43,6 +51,10 @@ markerRoutesRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       createdAt: now,
       updatedAt: now,
     };
+
+    if (typeof description === 'string') {
+      markerRoute.description = description;
+    }
 
     if (ObjectId.isValid(origin)) {
       markerRoute.origin = new ObjectId(origin);
@@ -185,7 +197,8 @@ markerRoutesRouter.patch(
       const account = req.account!;
 
       const { markerRouteId } = req.params;
-      const { name, isPublic, positions, markersByType, map } = req.body;
+      const { name, description, isPublic, positions, markersByType, map } =
+        req.body;
 
       if (!ObjectId.isValid(markerRouteId)) {
         res.status(400).send('Invalid payload');
@@ -218,6 +231,9 @@ markerRoutesRouter.patch(
       };
       if (typeof name === 'string' && name.length <= MAX_MARKER_ROUTE_LENGTH) {
         markerRoute.name = name;
+      }
+      if (typeof description === 'string') {
+        markerRoute.description = description;
       }
       if (typeof isPublic === 'boolean') {
         markerRoute.isPublic = isPublic;
