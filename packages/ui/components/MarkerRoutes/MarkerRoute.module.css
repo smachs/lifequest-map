@@ -60,3 +60,15 @@
 .owner {
   color: rgb(184 255 255);
 }
+
+.description {
+  font-style: italic;
+  font-size: 0.8em;
+  white-space: pre-line;
+}
+
+.description.collapsed {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

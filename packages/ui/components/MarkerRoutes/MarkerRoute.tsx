@@ -6,11 +6,11 @@ import { toTimeAgo } from '../../utils/dates';
 import EditButton from '../EditButton/EditButton';
 import FavoriteButton from '../FavoriteButton/FavoriteButton';
 import ForkButton from '../ForkButton/ForkButton';
+import { useState } from 'react';
 
 type MarkerRouteProps = {
   markerRoute: MarkerRouteItem;
   selected: boolean;
-  isPublic: boolean;
   editable: boolean;
   onClick: () => void;
   isFavorite: boolean;
@@ -22,7 +22,6 @@ type MarkerRouteProps = {
 function MarkerRoute({
   markerRoute,
   selected,
-  isPublic,
   editable,
   onClick,
   onFavorite,
@@ -31,6 +30,8 @@ function MarkerRoute({
   onEdit,
   isOwner,
 }: MarkerRouteProps): JSX.Element {
+  const [isDescriptionCollapsed, setIsDescriptionCollapsed] = useState(true);
+
   return (
     <article
       className={classNames(styles.container, selected && styles.selected)}
@@ -39,6 +40,7 @@ function MarkerRoute({
       <h4 className={styles.title} title={markerRoute.name}>
         {markerRoute.name}
       </h4>
+
       <div className={styles.regions}>{markerRoute.regions?.join(', ')}</div>
       <small className={styles.info}>
         {toTimeAgo(new Date(markerRoute.createdAt))} by{' '}
@@ -46,13 +48,33 @@ function MarkerRoute({
           {markerRoute.username}
         </span>
         <span
-          className={classNames(isPublic ? styles.public : styles.private)}
-          title={isPublic ? 'Visible for everyone' : 'Only visible for you'}
+          className={classNames(
+            markerRoute.isPublic ? styles.public : styles.private
+          )}
+          title={
+            markerRoute.isPublic
+              ? 'Visible for everyone'
+              : 'Only visible for you'
+          }
         >
-          {isPublic ? ' (Public)' : ' (Private)'}
+          {markerRoute.isPublic ? ' (Public)' : ' (Private)'}
         </span>
       </small>
       <MarkerTypes markersByType={markerRoute.markersByType} />
+      <p
+        className={classNames(
+          styles.description,
+          isDescriptionCollapsed && styles.collapsed
+        )}
+        onClick={(event) => {
+          event.stopPropagation();
+          setIsDescriptionCollapsed(!isDescriptionCollapsed);
+        }}
+        title={markerRoute.description}
+      >
+        {markerRoute.description || 'No description'}
+      </p>
+
       <div className={styles.actions}>
         <FavoriteButton
           onClick={onFavorite}

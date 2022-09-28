@@ -19,6 +19,7 @@ import styles from './MarkerRoutes.module.css';
 export type MarkerRouteItem = {
   _id: string;
   name: string;
+  description?: string;
   userId: string;
   username: string;
   isPublic: boolean;
@@ -250,7 +251,6 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
             key={markerRoute._id}
             isOwner={markerRoute.userId === account?.steamId}
             markerRoute={markerRoute}
-            isPublic={markerRoute.isPublic}
             selected={markerRoutes.some(
               (selectedMarkerRoute) =>
                 selectedMarkerRoute._id == markerRoute._id
