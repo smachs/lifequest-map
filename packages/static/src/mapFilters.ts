@@ -171,10 +171,15 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'enemies',
-    type: 'rafflebones',
-    title: 'Rafflebones',
+    type: 'rafflebones_25',
+    title: 'Rafflebones (LvL 25)',
     iconUrl: '/pois/rafflebones.webp',
-    hasLevel: true,
+  },
+  {
+    category: 'enemies',
+    type: 'rafflebones_66',
+    title: 'Rafflebones (LvL 66)',
+    iconUrl: '/pois/rafflebones.webp',
   },
   {
     category: 'skinning',
