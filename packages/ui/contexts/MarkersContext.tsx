@@ -191,8 +191,10 @@ export function MarkersProvider({
         return false;
       }
       if (
-        searchValues.includes('is: hidden') &&
-        !hiddenMarkerIds.includes(marker._id)
+        (!searchValues.includes('is: hidden') &&
+          hiddenMarkerIds.includes(marker._id)) ||
+        (searchValues.includes('is: hidden') &&
+          !hiddenMarkerIds.includes(marker._id))
       ) {
         return false;
       }
