@@ -53,7 +53,9 @@ export type AccountDTO = {
 
 export function UserProvider({ children }: UserProviderProps): JSX.Element {
   const [user, setUser] = usePersistentState<User | null>('user', null);
-  const [username, setUsername] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(
+    user?.username || null
+  );
   const [account, setAccount] = usePersistentState<AccountDTO | null>(
     'account',
     null
