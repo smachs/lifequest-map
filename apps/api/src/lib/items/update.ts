@@ -45,7 +45,11 @@ export const updateItems = async () => {
 
   const creatures = await getMarkersCollection()
     .find(
-      { type: { $in: ['boss', 'bossElite'] } },
+      {
+        type: {
+          $in: ['boss', 'bossElite', 'rafflebones_25', 'rafflebones_66'],
+        },
+      },
       {
         projection: {
           _id: 1,
@@ -59,11 +63,24 @@ export const updateItems = async () => {
     [itemId: string]: string[];
   } = {};
   for (const creature of creatures) {
-    const response = await fetch(
-      `https://newworldfans.com/api/v2/db/creature/name/${encodeURIComponent(
-        creature.name!
-      )}/loot`
-    );
+    let url = '';
+    switch (creature.type) {
+      case 'rafflebones_25':
+        url =
+          'https://newworldfans.com/api/v2/db/creature/vitals_id/Loot_Goblin/loot';
+        break;
+      case 'rafflebones_66':
+        url =
+          'https://newworldfans.com/api/v2/db/creature/vitals_id/Loot_Goblin_60/loot';
+        break;
+      default:
+        `https://newworldfans.com/api/v2/db/creature/name/${encodeURIComponent(
+          creature.name!
+        )}/loot`;
+        break;
+    }
+    const response = await fetch(url);
+
     if (!response.ok) {
       console.log(`Skip ${creature.name}`);
       continue;
