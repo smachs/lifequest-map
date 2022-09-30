@@ -54,6 +54,7 @@ export const updateItems = async () => {
         projection: {
           _id: 1,
           name: 1,
+          type: 1,
         },
       }
     )
@@ -62,30 +63,40 @@ export const updateItems = async () => {
   const markerIds: {
     [itemId: string]: string[];
   } = {};
+
+  const rafflebones25 = await fetch(
+    'https://newworldfans.com/api/v2/db/creature/vitals_id/Loot_Goblin/loot'
+  ).then((response) => response.json());
+  const rafflebones66 = await fetch(
+    'https://newworldfans.com/api/v2/db/creature/vitals_id/Loot_Goblin_60/loot'
+  ).then((response) => response.json());
   for (const creature of creatures) {
-    let url = '';
+    let result: CreatureLootResult | null = null;
     switch (creature.type) {
       case 'rafflebones_25':
-        url =
-          'https://newworldfans.com/api/v2/db/creature/vitals_id/Loot_Goblin/loot';
+        result = rafflebones25;
         break;
       case 'rafflebones_66':
-        url =
-          'https://newworldfans.com/api/v2/db/creature/vitals_id/Loot_Goblin_60/loot';
+        result = rafflebones66;
         break;
       default:
-        `https://newworldfans.com/api/v2/db/creature/name/${encodeURIComponent(
-          creature.name!
-        )}/loot`;
+        {
+          const response = await fetch(
+            `https://newworldfans.com/api/v2/db/creature/name/${encodeURIComponent(
+              creature.name!
+            )}/loot`
+          );
+          if (response.ok) {
+            result = (await response.json()) as CreatureLootResult;
+          }
+        }
         break;
     }
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      console.log(`Skip ${creature.name}`);
+    if (!result) {
+      console.log(`Skip ${creature.name} (${creature.type})`);
       continue;
     }
-    const result = (await response.json()) as CreatureLootResult;
+
     for (const item of result.items) {
       if (!items.some((i) => i.item_id === item.item_id)) {
         items.push(item);
