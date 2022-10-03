@@ -1,10 +1,10 @@
 import { StrictMode, useEffect, useState } from 'react';
 import './globals.css';
-import { isOverwolfApp, waitForOverwolf } from 'ui/utils/overwolf';
+import { waitForOverwolf } from 'ui/utils/overwolf';
 import { UserProvider } from 'ui/contexts/UserContext';
 import { MarkersProvider } from 'ui/contexts/MarkersContext';
 import { PositionProvider } from 'ui/contexts/PositionContext';
-import WorldMap from 'ui/components/WorldMap/WorldMap';
+import WorldMapBlank from './WorldMapBlank';
 import styles from './Minimap.module.css';
 import { dragMoveWindow, WINDOWS } from 'ui/utils/windows';
 import {
@@ -20,7 +20,6 @@ import ResizeBorder from 'ui/components/ResizeBorder/ResizeBorder';
 import useEventListener from 'ui/utils/useEventListener';
 import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
 import { initPlausible } from 'ui/utils/stats';
-import { PlayerProvider } from 'ui/contexts/PlayerContext';
 import { createRoot } from 'react-dom/client';
 
 const root = createRoot(document.querySelector('#root')!);
@@ -126,7 +125,7 @@ function Minimap(): JSX.Element {
           borderRadius: `${minimapBorderRadius}%`,
         }}
       >
-        <WorldMap
+        <WorldMapBlank
           isMinimap
           hideControls
           initialZoom={minimapZoom}
@@ -197,15 +196,9 @@ waitForOverwolf().then(() => {
         <UserProvider>
           <FiltersProvider>
             <MarkersProvider readonly>
-              {isOverwolfApp ? (
-                <PositionProvider>
-                  <Minimap />
-                </PositionProvider>
-              ) : (
-                <PlayerProvider>
-                  <Minimap />
-                </PlayerProvider>
-              )}
+              <PositionProvider>
+                <Minimap />
+              </PositionProvider>
             </MarkersProvider>
           </FiltersProvider>
         </UserProvider>
