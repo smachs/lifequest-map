@@ -10,6 +10,25 @@ import { SettingsProvider } from 'ui/contexts/SettingsContext';
 import { initPlausible } from 'ui/utils/stats';
 import { createRoot } from 'react-dom/client';
 import { MantineProvider } from '@mantine/core';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App />,
+    children: [
+      {
+        path: ':map',
+      },
+      {
+        path: ':map/nodes/:nodeId',
+      },
+      {
+        path: ':map/routes/:routeId',
+      },
+    ],
+  },
+]);
 
 const root = createRoot(document.querySelector('#root')!);
 root.render(
@@ -25,7 +44,7 @@ root.render(
             <MarkersProvider>
               <PlayerProvider>
                 <ModalProvider>
-                  <App />
+                  <RouterProvider router={router} />
                 </ModalProvider>
               </PlayerProvider>
             </MarkersProvider>

@@ -8,7 +8,7 @@ import { getJSONItem, setJSONItem } from '../../utils/storage';
 import { useSettings } from '../../contexts/SettingsContext';
 import useRegionBorders from './useRegionBorders';
 import { DEFAULT_MAP_NAME, findMapDetails } from 'static';
-import { useFilters } from '../../contexts/FiltersContext';
+import { useMap } from 'ui/utils/routes';
 
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
@@ -61,7 +61,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const [leafletMap, setLeafletMap] = useState<leaflet.Map | null>(null);
   const { showRegionBorders } = useSettings();
-  const { map } = useFilters();
+  const map = useMap();
 
   useEffect(() => {
     if (leafletMap && initialZoom) {

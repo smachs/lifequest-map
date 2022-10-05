@@ -104,6 +104,6 @@ export const mapDetails: Map[] = [
 
 export const findMapDetails = (map: string) => {
   return mapDetails.find(
-    (mapDetail) => mapDetail.name.toLowerCase() === map.toLowerCase()
+    (mapDetail) => mapDetail.title.toLowerCase() === map.toLowerCase()
   );
 };

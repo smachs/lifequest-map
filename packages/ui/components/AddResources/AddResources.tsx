@@ -14,7 +14,7 @@ import { notify } from '../../utils/notifications';
 import Button from '../Button/Button';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import { usePlayer } from '../../contexts/PlayerContext';
-import { useFilters } from '../../contexts/FiltersContext';
+import { useMap } from 'ui/utils/routes';
 
 export type Details = {
   description?: string;
@@ -31,7 +31,8 @@ type AddResourcesProps = {
 };
 function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
   const { setMarkers, setTemporaryHiddenMarkerIDs } = useMarkers();
-  const { map } = useFilters();
+  const map = useMap();
+
   const [filter, setFilter] = useState<FilterItem | null>(
     () =>
       (marker && mapFilters.find((filter) => filter.type === marker.type)) ||

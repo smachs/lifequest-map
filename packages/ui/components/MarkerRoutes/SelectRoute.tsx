@@ -12,9 +12,9 @@ import type { MarkerRouteItem } from './MarkerRoutes';
 import Button from '../Button/Button';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import { findRegions } from 'static';
-import { useFilters } from '../../contexts/FiltersContext';
 import { writeError } from '../../utils/logs';
 import DeleteButton from '../DeleteButton/DeleteButton';
+import { useMap } from 'ui/utils/routes';
 
 type SelectRouteProps = {
   markerRoute?: MarkerRouteItem;
@@ -34,7 +34,7 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
   const [regions, setRegions] = useState<string[]>([]);
   const [isPublic, setIsPublic] = useState(markerRoute?.isPublic || false);
   const { markers, toggleMarkerRoute, refreshMarkerRoutes } = useMarkers();
-  const { map } = useFilters();
+  const map = useMap();
 
   const refreshMarkers = useCallback(
     (workingLayer: leaflet.Polyline | leaflet.Layer) => {

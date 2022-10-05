@@ -1,15 +1,23 @@
-import { useFilters } from '../../contexts/FiltersContext';
 import { mapDetails } from 'static';
 import styles from './MarkersView.module.css';
+import { useNavigate } from 'react-router-dom';
+import { useMap } from 'ui/utils/routes';
 
 const SelectMap = () => {
-  const { map, setMap } = useFilters();
+  const map = useMap();
+  const navigate = useNavigate();
 
   return (
     <div className={styles.actions}>
-      <select value={map} onChange={(event) => setMap(event.target.value)}>
+      <select
+        onChange={(event) => navigate(`/${event.target.value}`)}
+        id="map"
+        aria-label="Select map"
+        name="map"
+        defaultValue={map}
+      >
         {mapDetails.map((mapDetail) => (
-          <option key={mapDetail.name} value={mapDetail.name}>
+          <option key={mapDetail.name} value={mapDetail.title}>
             {mapDetail.title}
           </option>
         ))}

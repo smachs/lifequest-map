@@ -10,8 +10,8 @@ import UpsertArea from 'ui/components/UpsertArea/UpsertArea';
 import type { MarkerRouteItem } from 'ui/components/MarkerRoutes/MarkerRoutes';
 import useEventListener from 'ui/utils/useEventListener';
 import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
-import { useFilters } from 'ui/contexts/FiltersContext';
 import NitroPay from 'ui/components/NitroPay/NitroPay';
+import { useMap } from 'ui/utils/routes';
 
 function App(): JSX.Element {
   const [targetMarker, setTargetMarker] = useState<
@@ -20,7 +20,7 @@ function App(): JSX.Element {
   const [targetMarkerRoute, setTargetMarkerRoute] = useState<
     MarkerRouteItem | true | undefined
   >(undefined);
-  const { map } = useFilters();
+  const map = useMap();
 
   useEffect(() => {
     setTargetMarker(undefined);

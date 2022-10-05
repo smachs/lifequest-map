@@ -7,7 +7,7 @@ import { useMarkers } from '../../contexts/MarkersContext';
 import CanvasMarker from './CanvasMarker';
 import { useSettings } from '../../contexts/SettingsContext';
 import { writeError } from '../../utils/logs';
-import { useFilters } from '../../contexts/FiltersContext';
+import { useMap } from 'ui/utils/routes';
 import useEventListener from '../../utils/useEventListener';
 import { calcDistance } from '../../utils/positions';
 import { usePlayer } from '../../contexts/PlayerContext';
@@ -43,7 +43,7 @@ function useLayerGroups({
       hasIssues: boolean;
     };
   }>({});
-  const { map } = useFilters();
+  const map = useMap();
   const { player } = usePlayer();
   const user = useUser();
   const refreshUser = useRefreshUser();
