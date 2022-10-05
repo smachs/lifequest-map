@@ -10,7 +10,11 @@ const SelectMap = () => {
   return (
     <div className={styles.actions}>
       <select
-        onChange={(event) => navigate(`/${event.target.value}`)}
+        onChange={(event) =>
+          navigate(
+            event.target.value === 'Aeternum' ? '/' : `/${event.target.value}`
+          )
+        }
         id="map"
         aria-label="Select map"
         name="map"

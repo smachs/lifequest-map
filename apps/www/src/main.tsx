@@ -18,13 +18,24 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
+        path: 'nodes/:nodeId',
+        element: null,
+      },
+      {
+        path: 'routes/:routeId',
+        element: null,
+      },
+      {
         path: ':map',
+        element: null,
       },
       {
         path: ':map/nodes/:nodeId',
+        element: null,
       },
       {
         path: ':map/routes/:routeId',
+        element: null,
       },
     ],
   },

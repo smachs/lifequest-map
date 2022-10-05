@@ -20,6 +20,31 @@ export function setJSONItem<T>(key: string, item: T): void {
   }
 }
 
+export function serializeMapView(
+  map: string,
+  view: {
+    y: number;
+    x: number;
+    zoom: number;
+  }
+) {
+  setJSONItem(`mapView-${map}`, view);
+}
+
+export function deserializeMapView(map: string) {
+  return (
+    getJSONItem<{
+      y: number;
+      x: number;
+      zoom: number;
+    } | null>(`mapView-${map}`, null) ?? {
+      x: null,
+      y: null,
+      zoom: null,
+    }
+  );
+}
+
 export function usePersistentState<T>(
   key: string,
   initialValue: T | (() => T),

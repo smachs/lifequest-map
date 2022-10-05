@@ -81,7 +81,7 @@ function usePlayerPosition({
 
   useEffect(() => {
     if (playerMap) {
-      navigate(`/${playerMap}`);
+      navigate(playerMap === 'Aeternum' ? '/' : `/${playerMap}`);
     }
   }, [playerMap]);
 
