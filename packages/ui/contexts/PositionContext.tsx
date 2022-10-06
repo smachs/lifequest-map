@@ -6,7 +6,7 @@ import { createContext, useContext } from 'react';
 import {
   findRegion,
   findLocation,
-  DEFAULT_MAP_NAME,
+  mapIsAeternumMap,
   findMapDetails,
 } from 'static';
 import { getGameInfo, useIsNewWorldRunning } from '../utils/games';
@@ -46,14 +46,15 @@ export function PositionProvider({
 
   const location = useMemo(
     () =>
-      (map === DEFAULT_MAP_NAME &&
+      (map &&
+        mapIsAeternumMap(map) &&
         position &&
         findLocation(position.location)) ||
       null,
     [position, map]
   );
   const region = useMemo(() => {
-    if (map && map !== DEFAULT_MAP_NAME) {
+    if (map && !mapIsAeternumMap(map)) {
       const world = findMapDetails(map);
       return world?.title || 'Unknown';
     }

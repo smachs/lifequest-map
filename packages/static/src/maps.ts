@@ -9,12 +9,10 @@ export type Map = {
   maxBounds: LatLngExpression[];
 };
 
-export const DEFAULT_MAP_NAME = 'NewWorld_VitaeEterna';
-
 export const mapDetails: Map[] = [
   {
     name: 'NewWorld_VitaeEterna',
-    title: 'Aeternum',
+    title: 'Aeternum Map',
     folder: 'newworld_vitaeeterna',
     maxZoom: 6,
     minZoom: 0,
@@ -102,8 +100,18 @@ export const mapDetails: Map[] = [
   },
 ];
 
+export const AETERNUM_MAP = mapDetails[0];
+
 export const findMapDetails = (map: string) => {
+  const lowerCasedMap = map.toLowerCase();
   return mapDetails.find(
-    (mapDetail) => mapDetail.name.toLowerCase() === map.toLowerCase()
+    (mapDetail) =>
+      mapDetail.name.toLowerCase() === lowerCasedMap ||
+      mapDetail.title.toLowerCase() === lowerCasedMap
   );
+};
+
+export const mapIsAeternumMap = (map: string) => {
+  const mapDetails = findMapDetails(map);
+  return mapDetails ? mapDetails.name === AETERNUM_MAP.name : false;
 };

@@ -1,6 +1,5 @@
 import leaflet from 'leaflet';
 import { useEffect, useMemo, useState } from 'react';
-import { useFilters } from '../../contexts/FiltersContext';
 import { usePlayer } from '../../contexts/PlayerContext';
 import { usePosition } from '../../contexts/PositionContext';
 import { useSettings } from '../../contexts/SettingsContext';
@@ -12,6 +11,9 @@ import PositionMarker from './PositionMarker';
 import { updateRotation } from './rotation';
 import useAdaptiveZoom from './useAdaptiveZoom';
 import useDirectionLine from './useDirectionLine';
+import { useMap } from 'ui/utils/routes';
+import { useNavigate } from 'react-router-dom';
+import { findMapDetails, mapIsAeternumMap } from 'static';
 
 const divElement = leaflet.DomUtil.create('div', 'leaflet-player-position');
 const CoordinatesControl = leaflet.Control.extend({
@@ -47,7 +49,8 @@ function usePlayerPosition({
   const traceDots = useMemo<leaflet.Circle[]>(() => [], []);
 
   const { showTraceLines, maxTraceLines, traceLineColor } = useSettings();
-  const { map, setMap } = useFilters();
+  const map = useMap();
+  const navigate = useNavigate();
 
   let isFollowing: boolean | null = null;
   let playerPosition: Position | null = null;
@@ -75,11 +78,14 @@ function usePlayerPosition({
     isFollowing = false;
   }
 
-  const isOnSameWorld = playerMap === map;
+  const isOnSameWorld = useMemo(
+    () => !!playerMap && findMapDetails(playerMap) === findMapDetails(map),
+    [playerMap, map]
+  );
 
   useEffect(() => {
     if (playerMap) {
-      setMap(playerMap);
+      navigate(mapIsAeternumMap(playerMap) ? '/' : `/${playerMap}`);
     }
   }, [playerMap]);
 

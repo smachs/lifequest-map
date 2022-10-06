@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect } from 'react';
 import { getMarkerRoutes } from '../components/MarkerRoutes/api';
 import type { MarkerRouteItem } from '../components/MarkerRoutes/MarkerRoutes';
 import { latestLeafletMap } from '../components/WorldMap/useWorldMap';
-import { DEFAULT_MAP_NAME, mapFilters } from 'static';
+import { findMapDetails, mapFilters, mapIsAeternumMap } from 'static';
 import { fetchJSON } from '../utils/api';
 import { writeError } from '../utils/logs';
 import { notify } from '../utils/notifications';
@@ -15,6 +15,7 @@ import { useFilters } from './FiltersContext';
 import { useUser } from './UserContext';
 import type { MarkerSize } from 'static';
 import { useMarkerSearchStore } from '../components/MarkerSearch/markerSearchStore';
+import { useMap } from '../utils/routes';
 
 export type MarkerBasic = {
   type: string;
@@ -92,7 +93,9 @@ export function MarkersProvider({
     string[]
   >([]);
 
-  const { filters, setFilters, map } = useFilters();
+  const { filters, setFilters } = useFilters();
+  const map = useMap();
+
   const user = useUser();
   const searchValues = useMarkerSearchStore((state) => state.searchValues);
   const markerFilters = useMarkerSearchStore((state) => state.markerFilters);
@@ -153,10 +156,14 @@ export function MarkersProvider({
       value.startsWith('name: ')
     );
 
+    const isAeternumMap = mapIsAeternumMap(map);
+    const mapDetails = findMapDetails(map);
     return markers.filter((marker) => {
-      if (map !== DEFAULT_MAP_NAME && marker.map !== map) {
-        return false;
-      } else if (map === DEFAULT_MAP_NAME && marker.map) {
+      if (marker.map) {
+        if (mapDetails !== findMapDetails(marker.map)) {
+          return false;
+        }
+      } else if (!isAeternumMap) {
         return false;
       }
 
@@ -259,9 +266,14 @@ export function MarkersProvider({
   const visibleMarkerRoutes = useMemo(
     () =>
       allMarkerRoutes.filter((markerRoute) => {
-        if (map !== DEFAULT_MAP_NAME && markerRoute.map !== map) {
-          return false;
-        } else if (map === DEFAULT_MAP_NAME && markerRoute.map) {
+        if (markerRoute.map) {
+          if (mapIsAeternumMap(map)) {
+            return false;
+          }
+          if (findMapDetails(map) !== findMapDetails(markerRoute.map)) {
+            return false;
+          }
+        } else if (!mapIsAeternumMap(map)) {
           return false;
         }
         return true;

@@ -5,7 +5,7 @@ import { Double, ObjectId } from 'mongodb';
 import { getMarkerRoutesCollection } from './collection.js';
 import { postToDiscord } from '../discord.js';
 import { ensureAuthenticated } from '../auth/middlewares.js';
-import { findRegions, DEFAULT_MAP_NAME, findMapDetails } from 'static';
+import { findRegions, mapIsAeternumMap, findMapDetails } from 'static';
 
 const markerRoutesRouter = Router();
 
@@ -62,7 +62,7 @@ markerRoutesRouter.post('/', ensureAuthenticated, async (req, res, next) => {
 
     if (
       typeof map === 'string' &&
-      map !== DEFAULT_MAP_NAME &&
+      !mapIsAeternumMap(map) &&
       findMapDetails(map)
     ) {
       markerRoute.map = map;
@@ -240,7 +240,7 @@ markerRoutesRouter.patch(
       }
       if (
         typeof map === 'string' &&
-        map !== DEFAULT_MAP_NAME &&
+        !mapIsAeternumMap(map) &&
         findMapDetails(map)
       ) {
         markerRoute.map = map;

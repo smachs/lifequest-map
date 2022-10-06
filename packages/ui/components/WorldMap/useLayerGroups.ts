@@ -1,13 +1,18 @@
 import { useCallback, useEffect, useRef } from 'react';
 import leaflet from 'leaflet';
-import { mapFilters, mapFiltersCategories, DEFAULT_MAP_NAME } from 'static';
+import {
+  findMapDetails,
+  mapFilters,
+  mapFiltersCategories,
+  mapIsAeternumMap,
+} from 'static';
 import type { MarkerBasic } from '../../contexts/MarkersContext';
 import { getTooltipContent } from './tooltips';
 import { useMarkers } from '../../contexts/MarkersContext';
 import CanvasMarker from './CanvasMarker';
 import { useSettings } from '../../contexts/SettingsContext';
 import { writeError } from '../../utils/logs';
-import { useFilters } from '../../contexts/FiltersContext';
+import { useMap } from 'ui/utils/routes';
 import useEventListener from '../../utils/useEventListener';
 import { calcDistance } from '../../utils/positions';
 import { usePlayer } from '../../contexts/PlayerContext';
@@ -43,7 +48,7 @@ function useLayerGroups({
       hasIssues: boolean;
     };
   }>({});
-  const { map } = useFilters();
+  const map = useMap();
   const { player } = usePlayer();
   const user = useUser();
   const refreshUser = useRefreshUser();
@@ -282,10 +287,15 @@ function useLayerGroups({
     }
 
     const layerGroup = new leaflet.LayerGroup();
+    const mapDetails = findMapDetails(map);
 
     for (let i = 0; i < markerRoutes.length; i++) {
       const markerRoute = markerRoutes[i];
-      if (map !== (markerRoute.map || DEFAULT_MAP_NAME)) {
+      if (
+        markerRoute.map
+          ? mapDetails !== findMapDetails(markerRoute.map)
+          : !mapIsAeternumMap(map)
+      ) {
         continue;
       }
       const startHereCircle = leaflet.circle(markerRoute.positions[0], {

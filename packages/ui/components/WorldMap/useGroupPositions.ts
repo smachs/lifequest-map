@@ -3,9 +3,9 @@ import type { Group } from '../../utils/useReadLivePosition';
 import { latestLeafletMap } from './useWorldMap';
 import { useSettings } from '../../contexts/SettingsContext';
 import PositionMarker from './PositionMarker';
-import { useFilters } from '../../contexts/FiltersContext';
 import { createPlayerIcon } from './playerIcon';
 import ColorHash from 'color-hash';
+import { useMap } from 'ui/utils/routes';
 
 const colorHash = new ColorHash();
 
@@ -15,7 +15,7 @@ function useGroupPositions(group: Group): void {
   }>({});
 
   const { showPlayerNames } = useSettings();
-  const { map } = useFilters();
+  const map = useMap();
 
   useEffect(() => {
     const groupValues = Object.values(group);

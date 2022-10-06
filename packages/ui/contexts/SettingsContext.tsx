@@ -54,10 +54,10 @@ type SettingsProviderProps = {
 export function SettingsProvider({
   children,
 }: SettingsProviderProps): JSX.Element {
-  const [markerSize, setMarkerSize] = usePersistentState('markerSize', 30);
+  const [markerSize, setMarkerSize] = usePersistentState('markerSize', 27);
   const [markerShowBackground, setMarkerShowBackground] = usePersistentState(
     'markerShowBackground',
-    true
+    false
   );
   const [showRegionBorders, setShowRegionBorders] = usePersistentState(
     'showRegionBorders',
