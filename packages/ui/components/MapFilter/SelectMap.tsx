@@ -12,7 +12,9 @@ const SelectMap = () => {
       <select
         onChange={(event) =>
           navigate(
-            event.target.value === 'Aeternum' ? '/' : `/${event.target.value}`
+            event.target.value.toLowerCase() === 'aeternum map'
+              ? '/'
+              : `/${event.target.value}`
           )
         }
         id="map"

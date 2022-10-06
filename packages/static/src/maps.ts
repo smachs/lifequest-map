@@ -14,7 +14,7 @@ export const DEFAULT_MAP_NAME = 'NewWorld_VitaeEterna';
 export const mapDetails: Map[] = [
   {
     name: 'NewWorld_VitaeEterna',
-    title: 'Aeternum',
+    title: 'Aeternum Map',
     folder: 'newworld_vitaeeterna',
     maxZoom: 6,
     minZoom: 0,

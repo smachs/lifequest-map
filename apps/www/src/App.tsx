@@ -12,6 +12,7 @@ import useEventListener from 'ui/utils/useEventListener';
 import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
 import NitroPay from 'ui/components/NitroPay/NitroPay';
 import { useMap } from 'ui/utils/routes';
+import Head from './Head';
 
 function App(): JSX.Element {
   const [targetMarker, setTargetMarker] = useState<
@@ -51,6 +52,7 @@ function App(): JSX.Element {
 
   return (
     <div className={styles.container}>
+      <Head map={map} />
       <AppHeader />
       <MapFilter
         onMarkerCreate={() => setTargetMarker(true)}

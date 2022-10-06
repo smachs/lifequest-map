@@ -4,7 +4,7 @@ import { mapDetails } from 'static';
 import { deserializeMapView, serializeMapView } from './storage';
 
 export const useRouteParams = () => {
-  const { map = mapDetails[0].name, nodeId, routeId } = useParams();
+  const { map = mapDetails[0].title, nodeId, routeId } = useParams();
   return { map, nodeId, routeId };
 };
 

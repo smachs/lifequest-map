@@ -81,7 +81,9 @@ function usePlayerPosition({
 
   useEffect(() => {
     if (playerMap) {
-      navigate(playerMap === 'Aeternum' ? '/' : `/${playerMap}`);
+      navigate(
+        playerMap.toLowerCase() === 'aeternum map' ? '/' : `/${playerMap}`
+      );
     }
   }, [playerMap]);
 

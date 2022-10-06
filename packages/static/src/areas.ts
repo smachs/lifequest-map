@@ -61,7 +61,7 @@ export const findRegions = (
     return [mapDetail?.title || 'Unknown'];
   }
   const regions = positions.map(
-    (position) => findRegion(position) || 'Aeternum'
+    (position) => findRegion(position) || 'Aeternum Map'
   );
   const uniqueRegions = regions.filter(
     (region, index) => regions.indexOf(region) === index
