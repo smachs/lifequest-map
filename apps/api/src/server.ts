@@ -130,6 +130,11 @@ async function runServer() {
     // Serve webversion (only on production)
     app.use(express.static(path.join(__dirname, '../../www/dist')));
 
+    // All other requests are answered with a 404
+    app.all('*', (_req, res) => {
+      res.sendFile(path.join(__dirname, '../../www/dist/index.html'));
+    });
+
     // Static assets folder
     app.use(
       '/assets',
