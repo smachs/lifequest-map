@@ -6,7 +6,7 @@ import 'tilelayer-canvas';
 import { coordinates as playerCoordinates } from './usePlayerPosition';
 import { useSettings } from '../../contexts/SettingsContext';
 import useRegionBorders from './useRegionBorders';
-import { DEFAULT_MAP_NAME, findMapDetails } from 'static';
+import { mapIsAeternumMap, findMapDetails } from 'static';
 import { useView } from 'ui/utils/routes';
 
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
@@ -68,11 +68,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
     }
   }, [leafletMap, initialZoom]);
 
-  useRegionBorders(
-    showRegionBorders,
-    leafletMap,
-    view.map === DEFAULT_MAP_NAME
-  );
+  useRegionBorders(showRegionBorders, leafletMap, mapIsAeternumMap(view.map));
 
   useEffect(() => {
     const mapElement = elementRef.current;

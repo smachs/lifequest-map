@@ -1,10 +1,15 @@
 import App from './App';
 import { createBrowserRouter } from 'react-router-dom';
+import ProviderHell from './ProviderHell';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: (
+      <ProviderHell>
+        <App />
+      </ProviderHell>
+    ),
     children: [
       {
         path: 'nodes/:nodeId',

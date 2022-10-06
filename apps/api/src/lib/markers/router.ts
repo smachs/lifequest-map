@@ -11,7 +11,7 @@ import { getScreenshotsCollection } from '../screenshots/collection.js';
 import { ensureAuthenticated } from '../auth/middlewares.js';
 import etag from 'etag';
 import type { MarkerDTO } from 'static';
-import { DEFAULT_MAP_NAME, findMapDetails, mapFilters } from 'static';
+import { mapIsAeternumMap, findMapDetails, mapFilters } from 'static';
 
 const markersRouter = Router();
 
@@ -396,7 +396,7 @@ async function bodyToMarker(
 
   if (
     typeof map === 'string' &&
-    map !== DEFAULT_MAP_NAME &&
+    !mapIsAeternumMap(map) &&
     findMapDetails(map)
   ) {
     marker.map = map;

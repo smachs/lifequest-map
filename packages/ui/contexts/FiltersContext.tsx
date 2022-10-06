@@ -1,20 +1,15 @@
 import type { ReactNode } from 'react';
-import { useState } from 'react';
 import { createContext, useContext } from 'react';
-import { mapFilters, DEFAULT_MAP_NAME } from 'static';
+import { mapFilters } from 'static';
 import { usePersistentState } from '../utils/storage';
 
 type FiltersContextValue = {
   filters: string[];
   setFilters: (value: string[] | ((value: string[]) => string[])) => void;
-  map: string;
-  setMap: (map: string) => void;
 };
 const FiltersContext = createContext<FiltersContextValue>({
   filters: [],
   setFilters: () => undefined,
-  map: DEFAULT_MAP_NAME,
-  setMap: () => undefined,
 });
 
 type FiltersProviderProps = {
@@ -42,15 +37,12 @@ export function FiltersProvider({
     'selected-filters',
     allFilters
   );
-  const [map, setMap] = useState(DEFAULT_MAP_NAME);
 
   return (
     <FiltersContext.Provider
       value={{
         filters,
         setFilters,
-        map,
-        setMap,
       }}
     >
       {children}

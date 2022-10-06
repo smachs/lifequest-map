@@ -13,6 +13,7 @@ import useAdaptiveZoom from './useAdaptiveZoom';
 import useDirectionLine from './useDirectionLine';
 import { useMap } from 'ui/utils/routes';
 import { useNavigate } from 'react-router-dom';
+import { findMapDetails, mapIsAeternumMap } from 'static';
 
 const divElement = leaflet.DomUtil.create('div', 'leaflet-player-position');
 const CoordinatesControl = leaflet.Control.extend({
@@ -77,13 +78,14 @@ function usePlayerPosition({
     isFollowing = false;
   }
 
-  const isOnSameWorld = playerMap === map;
+  const isOnSameWorld = useMemo(
+    () => !!playerMap && findMapDetails(playerMap) === findMapDetails(map),
+    [playerMap, map]
+  );
 
   useEffect(() => {
     if (playerMap) {
-      navigate(
-        playerMap.toLowerCase() === 'aeternum map' ? '/' : `/${playerMap}`
-      );
+      navigate(mapIsAeternumMap(playerMap) ? '/' : `/${playerMap}`);
     }
   }, [playerMap]);
 

@@ -1,6 +1,6 @@
 import locations from './locations.json' assert { type: 'json' };
 import regions from './regions.json' assert { type: 'json' };
-import { DEFAULT_MAP_NAME, findMapDetails } from './maps.js';
+import { mapIsAeternumMap, findMapDetails, AETERNUM_MAP } from './maps.js';
 
 export { regions, locations };
 export type Area = {
@@ -56,12 +56,12 @@ export const findRegions = (
   positions: [number, number][],
   map: string
 ): string[] => {
-  if (map && map !== DEFAULT_MAP_NAME) {
+  if (!mapIsAeternumMap(map)) {
     const mapDetail = findMapDetails(map);
     return [mapDetail?.title || 'Unknown'];
   }
   const regions = positions.map(
-    (position) => findRegion(position) || 'Aeternum Map'
+    (position) => findRegion(position) || AETERNUM_MAP.title
   );
   const uniqueRegions = regions.filter(
     (region, index) => regions.indexOf(region) === index

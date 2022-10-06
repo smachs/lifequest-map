@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMarkers } from '../../contexts/MarkersContext';
 import type { FilterItem, MarkerSize } from 'static';
-import { mapFilters, DEFAULT_MAP_NAME } from 'static';
+import { mapFilters, mapIsAeternumMap } from 'static';
 import styles from './AddResources.module.css';
 import SelectType from './SelectType';
 import SelectPosition from './SelectPosition';
@@ -105,7 +105,7 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
         position: location || undefined,
         ...details,
       };
-      if (map !== DEFAULT_MAP_NAME) {
+      if (!mapIsAeternumMap(map)) {
         newMarker.map = map;
       }
 

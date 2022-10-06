@@ -2,6 +2,7 @@ import { mapDetails } from 'static';
 import styles from './MarkersView.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useMap } from 'ui/utils/routes';
+import { mapIsAeternumMap } from 'static';
 
 const SelectMap = () => {
   const map = useMap();
@@ -12,7 +13,7 @@ const SelectMap = () => {
       <select
         onChange={(event) =>
           navigate(
-            event.target.value.toLowerCase() === 'aeternum map'
+            mapIsAeternumMap(event.target.value)
               ? '/'
               : `/${event.target.value}`
           )
@@ -20,7 +21,7 @@ const SelectMap = () => {
         id="map"
         aria-label="Select map"
         name="map"
-        defaultValue={map}
+        value={map}
       >
         {mapDetails.map((mapDetail) => (
           <option key={mapDetail.name} value={mapDetail.title}>
