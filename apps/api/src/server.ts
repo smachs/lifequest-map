@@ -127,6 +127,9 @@ async function runServer() {
       response.redirect(301, 'https://api.nitropay.com/v1/ads-1042.txt');
     });
 
+    // Serve webversion (only on production)
+    app.use(express.static(path.join(__dirname, '../../www/dist')));
+
     // Static assets folder
     app.use(
       '/assets',
@@ -139,9 +142,6 @@ async function runServer() {
     app.use('/assets', (_req, res) => {
       res.redirect('/assets/map/empty.webp');
     });
-
-    // Serve webversion (only on production)
-    app.use(express.static(path.join(__dirname, '../../www/dist')));
 
     // All other requests are answered with a 404
     app.all('*', (_req, res) => {
