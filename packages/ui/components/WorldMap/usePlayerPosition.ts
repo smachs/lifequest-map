@@ -85,7 +85,11 @@ function usePlayerPosition({
 
   useEffect(() => {
     if (playerMap) {
-      navigate(mapIsAeternumMap(playerMap) ? '/' : `/${playerMap}`);
+      navigate(
+        mapIsAeternumMap(playerMap)
+          ? '/'
+          : `/${findMapDetails(playerMap)?.title ?? playerMap}`
+      );
     }
   }, [playerMap]);
 
