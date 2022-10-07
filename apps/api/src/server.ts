@@ -176,6 +176,7 @@ async function runServer() {
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   app.use((err, _req, res, _next) => {
+    console.error(err);
     res.status(500).send(err.message);
   });
 

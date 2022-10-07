@@ -54,9 +54,9 @@ export const findRegion = (position: [number, number]): string | null => {
 
 export const findRegions = (
   positions: [number, number][],
-  map: string
+  map?: string
 ): string[] => {
-  if (!mapIsAeternumMap(map)) {
+  if (map && !mapIsAeternumMap(map)) {
     const mapDetail = findMapDetails(map);
     return [mapDetail?.title || 'Unknown'];
   }
