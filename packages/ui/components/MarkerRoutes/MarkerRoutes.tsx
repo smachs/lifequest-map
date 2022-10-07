@@ -32,6 +32,7 @@ export type MarkerRouteItem = {
   favorites?: number;
   forks?: number;
   createdAt: string;
+  updatedAt: string;
 };
 
 type SortBy = 'match' | 'favorites' | 'date' | 'name' | 'username';
@@ -78,7 +79,7 @@ function handleSort(sortBy: SortBy, filters: string[]) {
   }
   if (sortBy === 'date') {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
-      b.createdAt.localeCompare(a.createdAt);
+      b.updatedAt.localeCompare(a.updatedAt);
   }
   if (sortBy === 'name') {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>

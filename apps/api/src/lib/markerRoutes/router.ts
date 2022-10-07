@@ -123,6 +123,7 @@ markerRoutesRouter.get('/', async (req, res, next) => {
     }
     const markerRoutes = await getMarkerRoutesCollection()
       .find(query)
+      .sort({ updatedAt: -1 })
       .toArray();
     res.status(200).json(markerRoutes);
   } catch (error) {
