@@ -98,6 +98,17 @@ export const mapDetails: Map[] = [
       [1970, 2150],
     ],
   },
+  {
+    name: 'NW_Arena01',
+    title: '3v3 PvP Arena',
+    folder: 'nw_arena01',
+    maxZoom: 6,
+    minZoom: 3,
+    maxBounds: [
+      [800, 800],
+      [1000, 1000],
+    ],
+  },
 ];
 
 export const AETERNUM_MAP = mapDetails[0];
