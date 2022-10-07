@@ -79,7 +79,7 @@ function handleSort(sortBy: SortBy, filters: string[]) {
   }
   if (sortBy === 'date') {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
-      b.updatedAt.localeCompare(a.updatedAt);
+      b.updatedAt?.localeCompare(a.updatedAt);
   }
   if (sortBy === 'name') {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
