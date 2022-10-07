@@ -87,6 +87,7 @@ function ensureMarkerRoutesSchema(): Promise<Document> {
           'isPublic',
           'markersByType',
           'createdAt',
+          'updatedAt',
         ],
       },
     },

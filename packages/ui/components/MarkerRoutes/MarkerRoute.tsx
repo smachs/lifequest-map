@@ -43,7 +43,7 @@ function MarkerRoute({
 
       <div className={styles.regions}>{markerRoute.regions?.join(', ')}</div>
       <small className={styles.info}>
-        {toTimeAgo(new Date(markerRoute.createdAt))} by{' '}
+        {toTimeAgo(new Date(markerRoute.updatedAt))} by{' '}
         <span className={classNames(isOwner ? styles.owner : styles.notOwner)}>
           {markerRoute.username}
         </span>
