@@ -10,7 +10,6 @@ import { usePersistentState } from '../../utils/storage';
 import ActionButton from '../ActionControl/ActionButton';
 import Button from '../Button/Button';
 import { mapFilters, regionNames } from 'static';
-import SelectMap from '../MapFilter/SelectMap';
 import SearchInput from '../SearchInput/SearchInput';
 import { patchFavoriteMarkerRoute, postMarkerRoute } from './api';
 import MarkerRoute from './MarkerRoute';
@@ -202,7 +201,6 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
 
   return (
     <section className={styles.container}>
-      <SelectMap />
       <div className={styles.actions}>
         <ActionButton
           disabled={!account}

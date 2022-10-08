@@ -1,3 +1,5 @@
+import { Text } from '@mantine/core';
+
 type CreditProps = {
   username: string;
 };
@@ -19,7 +21,7 @@ function Credit({ username }: CreditProps): JSX.Element {
   } else {
     content = <b>{username}</b>;
   }
-  return <small>Credits to {content} ❤️</small>;
+  return <Text size="xs">Credits to {content} ❤️</Text>;
 }
 
 export default Credit;

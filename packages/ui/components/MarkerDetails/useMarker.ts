@@ -16,6 +16,7 @@ export type MarkerFull = {
   type: string;
   position: [number, number, number];
   name?: string;
+  map?: string;
   level?: number;
   description?: string;
   screenshotFilename?: string;
@@ -23,18 +24,16 @@ export type MarkerFull = {
   userId?: string;
   username?: string;
   comments?: number;
+  chestType?: string;
+  tier?: number;
   _id: string;
 };
 
-function useMarker(markerId: string): {
-  marker?: MarkerFull;
-  comments?: Comment[];
-  loading: boolean;
-  refresh: () => Promise<void>;
-} {
-  const [result, setResult] = useState<
-    { marker: MarkerFull; comments: Comment[] } | Record<string, never>
-  >({});
+function useMarker(markerId: string) {
+  const [result, setResult] = useState<{
+    marker: MarkerFull;
+    comments: Comment[];
+  } | null>(null);
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(() => {
@@ -59,7 +58,11 @@ function useMarker(markerId: string): {
     refresh();
   }, [refresh, markerId]);
 
-  return { ...result, loading, refresh };
+  return {
+    ...result,
+    loading,
+    refresh,
+  };
 }
 
 export default useMarker;

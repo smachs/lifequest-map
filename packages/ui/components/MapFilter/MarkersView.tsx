@@ -9,7 +9,6 @@ import SearchInput from '../SearchInput/SearchInput';
 import PresetSelect from '../PresetSelect/PresetSelect';
 import { useState } from 'react';
 import type { Preset } from '../PresetSelect/presets';
-import SelectMap from './SelectMap';
 import MarkerSearch from '../MarkerSearch/MarkerSearch';
 
 type MarkersViewProps = {
@@ -39,7 +38,6 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
   }
   return (
     <section className={styles.container}>
-      <SelectMap />
       <div className={styles.actions}>
         <ActionButton disabled={!account} onClick={onAdd}>
           {account ? 'Add resource' : 'Login to add resource'}
