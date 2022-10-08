@@ -6,6 +6,7 @@ import PositionMarker from './PositionMarker';
 import { createPlayerIcon } from './playerIcon';
 import ColorHash from 'color-hash';
 import { useMap } from 'ui/utils/routes';
+import { findMapDetails } from 'static';
 
 const colorHash = new ColorHash();
 
@@ -34,10 +35,16 @@ function useGroupPositions(group: Group): void {
     }
     const removeablePlayerMarkers = { ...playerMarkers };
 
+    const mapDetails = findMapDetails(map);
     const newPlayerMarkers = Object.values(group)
-      .filter(
-        (player) => player.position && player.username && player.map === map
-      )
+      .filter((player) => {
+        const playerMapDetails = player.map
+          ? findMapDetails(player.map)
+          : undefined;
+        return (
+          player.position && player.username && mapDetails === playerMapDetails
+        );
+      })
       .reduce(
         (acc, player) => {
           const username = player.username!;
