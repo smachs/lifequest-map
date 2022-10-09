@@ -65,10 +65,10 @@ export const updateItems = async () => {
   } = {};
 
   const rafflebones25 = await fetch(
-    'https://newworldfans.com/api/v2/db/creature/vitals_id/Loot_Goblin/loot'
+    'https://api.newworldfans.com/api/v2/db/creature/vitals_id/Loot_Goblin/loot'
   ).then((response) => response.json());
   const rafflebones66 = await fetch(
-    'https://newworldfans.com/api/v2/db/creature/vitals_id/Loot_Goblin_60/loot'
+    'https://api.newworldfans.com/api/v2/db/creature/vitals_id/Loot_Goblin_60/loot'
   ).then((response) => response.json());
   for (const creature of creatures) {
     let result: CreatureLootResult | null = null;
@@ -82,7 +82,7 @@ export const updateItems = async () => {
       default:
         {
           const response = await fetch(
-            `https://newworldfans.com/api/v2/db/creature/name/${encodeURIComponent(
+            `https://api.newworldfans.com/api/v2/db/creature/name/${encodeURIComponent(
               creature.name!
             )}/loot`
           );
