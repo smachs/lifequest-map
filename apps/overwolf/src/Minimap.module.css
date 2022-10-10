@@ -6,7 +6,6 @@
   transition: 0.2s opacity ease-in;
   display: grid;
   place-items: center;
-  -webkit-app-region: drag;
 }
 
 .hideOnHover:hover {
