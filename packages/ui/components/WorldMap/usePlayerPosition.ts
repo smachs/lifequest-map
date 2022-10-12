@@ -162,13 +162,13 @@ function usePlayerPosition({
       marker.rotation = newRotation;
       marker.setLatLng(playerPosition.location);
 
-      // @ts-ignore
-      if (rotate && leafletMap.markersLayerGroup) {
+      if (rotate) {
         leaftletMapContainer.style.transform = `rotate(${newRotation * -1}deg)`;
         const start = Date.now();
-        const visibleMarkers = Object.values(
-          // @ts-ignore
-          leafletMap.markersLayerGroup._layers
+        // @ts-ignore
+        const markersLayerGroup = leafletMap.markersLayerGroup;
+        const visibleMarkers = (
+          markersLayerGroup ? Object.values(markersLayerGroup._layers) : []
         ) as CanvasMarker[];
         const oldMarkerRotation = visibleMarkers[0]?.options.image.rotate || 0;
 
