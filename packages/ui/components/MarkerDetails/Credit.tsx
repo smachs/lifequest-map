@@ -1,4 +1,4 @@
-import { Text } from '@mantine/core';
+import { Anchor, Text } from '@mantine/core';
 
 type CreditProps = {
   username: string;
@@ -8,20 +8,31 @@ function Credit({ username }: CreditProps): JSX.Element {
   let content: JSX.Element;
   if (username === 'mapgenie') {
     content = (
-      <a href="https://mapgenie.io/new-world/maps/aeternum" target="_blank">
+      <Anchor
+        href="https://mapgenie.io/new-world/maps/aeternum"
+        target="_blank"
+      >
         Map Genie
-      </a>
+      </Anchor>
     );
   } else if (username === 'newworld-map') {
     content = (
-      <a href="https://www.newworld-map.com" target="_blank">
+      <Anchor href="https://www.newworld-map.com" target="_blank">
         New World Map
-      </a>
+      </Anchor>
     );
   } else {
-    content = <b>{username}</b>;
+    content = (
+      <Text component="span" weight="bold">
+        {username}
+      </Text>
+    );
   }
-  return <Text size="xs">Credits to {content} ❤️</Text>;
+  return (
+    <Text component="span" size="xs">
+      by {content} ❤️
+    </Text>
+  );
 }
 
 export default Credit;

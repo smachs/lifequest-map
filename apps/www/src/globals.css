@@ -119,10 +119,6 @@ input:disabled {
   color: var(--color-trivial);
 }
 
-svg {
-  fill: currentColor;
-}
-
 @keyframes show {
   0%,
   99% {

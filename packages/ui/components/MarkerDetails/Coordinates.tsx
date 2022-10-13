@@ -1,4 +1,4 @@
-import { Group, Text } from '@mantine/core';
+import { ActionIcon, Group, Text } from '@mantine/core';
 import { copyTextToClipboard } from '../../utils/clipboard';
 import CopyIcon from '../icons/CopyIcon';
 
@@ -8,16 +8,16 @@ type CoordinatesProps = {
 function Coordinates({ position }: CoordinatesProps) {
   const coordinates = `[${position.join(', ')}]`;
   return (
-    <Text size="xs">
-      <Group spacing={0}>
+    <Text size="sm">
+      <Group spacing={2}>
         {coordinates}
-        <button
+        <ActionIcon
           onClick={() => {
             copyTextToClipboard(coordinates);
           }}
         >
           <CopyIcon />
-        </button>
+        </ActionIcon>
       </Group>
     </Text>
   );

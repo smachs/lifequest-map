@@ -1,8 +1,9 @@
-import { Button, Group } from '@mantine/core';
+import { Button } from '@mantine/core';
 import { useRefreshUser, useUser } from '../../contexts/UserContext';
 import { notify } from '../../utils/notifications';
 import { patchUser } from './api';
 import { IconEyeOff, IconEye } from '@tabler/icons';
+import { useState } from 'react';
 
 type HideMarkerInputProps = {
   markerId: string;
@@ -10,6 +11,7 @@ type HideMarkerInputProps = {
 function HideMarkerInput({ markerId }: HideMarkerInputProps): JSX.Element {
   const user = useUser();
   const refreshUser = useRefreshUser();
+  const [isLoading, setIsLoading] = useState(false);
 
   const discovered = user?.hiddenMarkerIds.includes(markerId);
 
@@ -17,6 +19,7 @@ function HideMarkerInput({ markerId }: HideMarkerInputProps): JSX.Element {
     if (!user) {
       return;
     }
+    setIsLoading(true);
     const hiddenMarkerIds = [...user.hiddenMarkerIds];
     if (!discovered && hiddenMarkerIds.indexOf(markerId) === -1) {
       hiddenMarkerIds.push(markerId);
@@ -26,39 +29,27 @@ function HideMarkerInput({ markerId }: HideMarkerInputProps): JSX.Element {
       return;
     }
     await notify(patchUser(user.username, hiddenMarkerIds));
-    refreshUser();
+    await refreshUser();
+    setIsLoading(false);
   }
 
+  const isHidden = user?.hiddenMarkerIds.includes(markerId);
   return (
     <Button
       onClick={handleClick}
-      color="gray"
-      variant="light"
-      size="xs"
-      compact
-      mb="xs"
-      sx={{
-        '> *': {
-          justifyContent: 'left',
-        },
-      }}
+      color="cyan"
       disabled={!user}
-      title={
-        user ? "Marker won't be shown on the map" : 'Character not detected'
-      }
-    >
-      <Group>
-        {user?.hiddenMarkerIds.includes(markerId) ? (
-          <>
-            <IconEyeOff size={20} stroke={1.5} /> Marker is hidden
-          </>
+      loading={isLoading}
+      leftIcon={
+        isHidden ? (
+          <IconEyeOff size={20} stroke={1.5} />
         ) : (
-          <>
-            <IconEye size={20} stroke={1.5} />
-            Marker is visible
-          </>
-        )}
-      </Group>
+          <IconEye size={20} stroke={1.5} />
+        )
+      }
+      title={user ? "Node won't be shown on the map" : 'Character not detected'}
+    >
+      {isHidden ? 'Node is hidden on map' : 'Node is visible on map'}
     </Button>
   );
 }

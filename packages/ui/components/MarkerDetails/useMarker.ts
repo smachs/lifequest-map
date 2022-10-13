@@ -29,15 +29,21 @@ export type MarkerFull = {
   _id: string;
 };
 
-function useMarker(markerId: string) {
+function useMarker(markerId?: string) {
   const [result, setResult] = useState<{
     marker: MarkerFull;
     comments: Comment[];
   } | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(() => {
-    return notify(
+  const refresh = useCallback(async () => {
+    if (!markerId) {
+      setResult(null);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    return await notify(
       fetchJSON<{ marker: MarkerFull; comments: Comment[] }>(
         `/api/markers/${markerId}`
       )
@@ -56,7 +62,7 @@ function useMarker(markerId: string) {
 
   useEffect(() => {
     refresh();
-  }, [refresh, markerId]);
+  }, [refresh]);
 
   return {
     ...result,

@@ -62,7 +62,7 @@ function MapFilter({
       <div className={styles.content}>
         <User />
         <SelectMap />
-        {nodeId && <MarkerDetails nodeId={nodeId} onEdit={onMarkerEdit} />}
+        <MarkerDetails nodeId={nodeId} onEdit={onMarkerEdit} />
         {view === 'markers' && <MarkersView onAdd={() => onMarkerCreate()} />}
         {view === 'settings' && <Settings />}
         {view === 'markerRoutes' && (

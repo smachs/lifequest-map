@@ -14,6 +14,12 @@ export type FilterItem = {
   sizes?: MarkerSize[];
 };
 
+export const lootableMapFilters = [
+  'boss',
+  'bossElite',
+  'rafflebones_25',
+  'rafflebones_66',
+];
 export const mapFilters: FilterItem[] = [
   {
     category: 'locations',
