@@ -29,9 +29,9 @@ const worldCRS = leaflet.extend({}, leaflet.CRS.Simple, {
 const WorldTiles = (map: string): new () => TileLayer =>
   // @ts-ignore
   leaflet.TileLayer.Canvas.extend({
-    options: {
-      errorTileUrl: `${VITE_API_ENDPOINT}/assets/map/empty.webp`,
-    },
+    // options: {
+    //   errorTileUrl: `${VITE_API_ENDPOINT}/assets/map/empty.webp`,
+    // },
     getTileUrl(coords: { x: number; y: number; z: number }) {
       const zoom = 8 - coords.z - 1;
       const multiplicators = [1, 2, 4, 8, 16, 32, 64];

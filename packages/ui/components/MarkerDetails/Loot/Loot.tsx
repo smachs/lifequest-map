@@ -1,5 +1,5 @@
 import useLoot from './useLoot';
-import { Anchor, Group, Image, List, Skeleton, Text } from '@mantine/core';
+import { Anchor, Image, List, Skeleton, Text } from '@mantine/core';
 import { useEffect } from 'react';
 
 const rarityColors: {
@@ -45,28 +45,27 @@ function Loot({ markerId }: LootProps) {
           <List.Item
             key={item.id}
             icon={<Image src={item.iconSrc} width={24} height={24} />}
-            style={{
-              color: rarityColors[item.rarity],
-            }}
           >
             <Anchor
               href={`https://newworldfans.com/db/item/${item.slug}`}
               target="_blank"
+              style={{
+                color: rarityColors[item.rarity],
+              }}
             >
-              <Group>
-                {item.name}
-                {item.maxGearScore > 0 && (
-                  <>
-                    {item.minGearScore !== item.maxGearScore ? (
-                      <Text component="span">
-                        {item.minGearScore}-{item.maxGearScore} GS
-                      </Text>
-                    ) : (
-                      <Text component="span">{item.maxGearScore} GS</Text>
-                    )}
-                  </>
-                )}
-              </Group>
+              {item.name}
+              {item.maxGearScore > 0 && (
+                <>
+                  {' '}
+                  {item.minGearScore !== item.maxGearScore ? (
+                    <Text component="span">
+                      {item.minGearScore}-{item.maxGearScore} GS
+                    </Text>
+                  ) : (
+                    <Text component="span">{item.maxGearScore} GS</Text>
+                  )}
+                </>
+              )}
             </Anchor>
           </List.Item>
         ))}
