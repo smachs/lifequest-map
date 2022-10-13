@@ -34,7 +34,7 @@ type MarkerDetailsProps = {
 };
 
 function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
-  const { marker, comments, refresh } = useMarker(nodeId);
+  const { marker, comments, refresh, loading } = useMarker(nodeId);
   const { setMarkers } = useMarkers();
   const { account } = useAccount();
   const navigate = useNavigate();
@@ -104,8 +104,8 @@ function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
       }
       onClose={handleClose}
     >
-      {!filterItem && <Skeleton height={50} />}
-      {filterItem && (
+      {(!filterItem || loading) && <Skeleton height={50} />}
+      {filterItem && !loading && (
         <Stack style={{ height: 'calc(100% - 50px)' }} spacing="xs">
           <Group>
             {marker.name && (

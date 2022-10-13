@@ -119,6 +119,8 @@ export const updateItems = async () => {
         $set: {
           updatedAt: now,
           name: item.name,
+          slug: item.slug,
+          type: item.item_type,
           rarity: item.rarity,
           iconSrc: item.asset_path.replace(
             'items_hires',

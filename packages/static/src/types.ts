@@ -24,6 +24,7 @@ export type MarkerDTO = {
 export type ItemDTO = {
   id: string;
   name: string;
+  slug: string;
   rarity: string;
   iconSrc: string;
   minGearScore: number;

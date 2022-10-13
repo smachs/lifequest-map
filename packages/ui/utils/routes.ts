@@ -104,6 +104,5 @@ export const useView = (): [
     },
     [map, nodeId]
   );
-  console.log(nodeId, internalView.nodeId);
   return [internalView, setView];
 };
