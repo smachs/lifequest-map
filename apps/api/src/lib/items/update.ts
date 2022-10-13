@@ -120,7 +120,6 @@ export const updateItems = async () => {
           updatedAt: now,
           name: item.name,
           slug: item.slug,
-          type: item.item_type,
           rarity: item.rarity,
           iconSrc: item.asset_path.replace(
             'items_hires',

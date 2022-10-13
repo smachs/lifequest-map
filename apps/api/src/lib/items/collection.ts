@@ -30,9 +30,6 @@ function ensureItemsSchema(): Promise<Document> {
           slug: {
             bsonType: 'string',
           },
-          type: {
-            bsonType: 'string',
-          },
           name: {
             bsonType: 'string',
           },
