@@ -6,8 +6,9 @@ import 'tilelayer-canvas';
 import { coordinates as playerCoordinates } from './usePlayerPosition';
 import { useSettings } from '../../contexts/SettingsContext';
 import useRegionBorders from './useRegionBorders';
-import { mapIsAeternumMap, findMapDetails } from 'static';
+import { mapIsAeternumMap, findMapDetails, AETERNUM_MAP } from 'static';
 import { useView } from 'ui/utils/routes';
+import { useNavigate } from 'react-router-dom';
 
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
@@ -28,9 +29,9 @@ const worldCRS = leaflet.extend({}, leaflet.CRS.Simple, {
 const WorldTiles = (map: string): new () => TileLayer =>
   // @ts-ignore
   leaflet.TileLayer.Canvas.extend({
-    options: {
-      errorTileUrl: `${VITE_API_ENDPOINT}/assets/map/empty.webp`,
-    },
+    // options: {
+    //   errorTileUrl: `${VITE_API_ENDPOINT}/assets/map/empty.webp`,
+    // },
     getTileUrl(coords: { x: number; y: number; z: number }) {
       const zoom = 8 - coords.z - 1;
       const multiplicators = [1, 2, 4, 8, 16, 32, 64];
@@ -61,6 +62,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
   const [leafletMap, setLeafletMap] = useState<leaflet.Map | null>(null);
   const { showRegionBorders } = useSettings();
   const [view, setView] = useView();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (leafletMap && initialZoom) {
@@ -69,6 +71,23 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
   }, [leafletMap, initialZoom]);
 
   useRegionBorders(showRegionBorders, leafletMap, mapIsAeternumMap(view.map));
+
+  useEffect(() => {
+    if (leafletMap) {
+      leafletMap.off('click');
+      leafletMap.on('click', (event) => {
+        // @ts-ignore
+        if (!event.originalEvent.propagatedFromMarker && view.nodeId) {
+          const mapDetail = findMapDetails(view.map);
+          if (mapDetail === AETERNUM_MAP || !mapDetail) {
+            navigate(`/${location.search}`);
+          } else {
+            navigate(`/${view.map}${location.search}`);
+          }
+        }
+      });
+    }
+  }, [leafletMap, view.map, view.nodeId]);
 
   useEffect(() => {
     const mapElement = elementRef.current;
@@ -183,7 +202,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
       clearTimeout(timeoutId);
       leafletMap.off('moveend', handleMoveEnd);
     };
-  }, [leafletMap, view.map]);
+  }, [leafletMap, setView]);
 
   return { elementRef, leafletMap };
 }

@@ -18,7 +18,7 @@ export type User = {
 type UserContextValue = {
   user: User | null;
   setUsername: (name: string) => void;
-  refresh: () => void;
+  refresh: () => Promise<void>;
   account: AccountDTO | null;
   logoutAccount: () => void;
   setAccount: (account: AccountDTO) => void;
@@ -27,7 +27,7 @@ type UserContextValue = {
 const UserContext = createContext<UserContextValue>({
   user: null,
   setUsername: () => undefined,
-  refresh: () => undefined,
+  refresh: async () => undefined,
   account: null,
   logoutAccount: () => undefined,
   setAccount: () => undefined,
@@ -154,6 +154,6 @@ export function useSetUser(): (name: string) => void {
   return useContext(UserContext).setUsername;
 }
 
-export function useRefreshUser(): () => void {
+export function useRefreshUser() {
   return useContext(UserContext).refresh;
 }

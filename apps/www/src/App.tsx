@@ -5,7 +5,6 @@ import MapFilter from 'ui/components/MapFilter/MapFilter';
 import WorldMap from 'ui/components/WorldMap/WorldMap';
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, useState } from 'react';
-import type { MarkerBasic } from 'ui/contexts/MarkersContext';
 import UpsertArea from 'ui/components/UpsertArea/UpsertArea';
 import type { MarkerRouteItem } from 'ui/components/MarkerRoutes/MarkerRoutes';
 import useEventListener from 'ui/utils/useEventListener';
@@ -13,10 +12,11 @@ import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
 import NitroPay from 'ui/components/NitroPay/NitroPay';
 import { useMap } from 'ui/utils/routes';
 import Head from './Head';
+import type { MarkerFull } from 'ui/components/MarkerDetails/useMarker';
 
 function App(): JSX.Element {
   const [targetMarker, setTargetMarker] = useState<
-    MarkerBasic | true | undefined
+    MarkerFull | true | undefined
   >(undefined);
   const [targetMarkerRoute, setTargetMarkerRoute] = useState<
     MarkerRouteItem | true | undefined
@@ -55,13 +55,11 @@ function App(): JSX.Element {
       <Head map={map} />
       <AppHeader />
       <MapFilter
+        onMarkerEdit={setTargetMarker}
         onMarkerCreate={() => setTargetMarker(true)}
         onMarkerRouteUpsert={setTargetMarkerRoute}
       />
-      <WorldMap
-        onMarkerEdit={setTargetMarker}
-        isEditing={Boolean(targetMarker || targetMarkerRoute)}
-      />
+      <WorldMap isEditing={Boolean(targetMarker || targetMarkerRoute)} />
       <ToastContainer theme="dark" pauseOnFocusLoss={false} />
       <UpsertArea
         marker={targetMarker}

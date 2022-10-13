@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import leaflet from 'leaflet';
 import {
   findMapDetails,
@@ -6,19 +6,19 @@ import {
   mapFiltersCategories,
   mapIsAeternumMap,
 } from 'static';
-import type { MarkerBasic } from '../../contexts/MarkersContext';
 import { getTooltipContent } from './tooltips';
 import { useMarkers } from '../../contexts/MarkersContext';
 import CanvasMarker from './CanvasMarker';
 import { useSettings } from '../../contexts/SettingsContext';
 import { writeError } from '../../utils/logs';
-import { useMap } from 'ui/utils/routes';
+import { useRouteParams } from 'ui/utils/routes';
 import useEventListener from '../../utils/useEventListener';
 import { calcDistance } from '../../utils/positions';
 import { usePlayer } from '../../contexts/PlayerContext';
 import { useRefreshUser, useUser } from '../../contexts/UserContext';
 import { toast } from 'react-toastify';
 import { getAction } from './actions';
+import { useNavigate } from 'react-router-dom';
 
 export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
   leaflet.Icon.extend({
@@ -33,10 +33,8 @@ const markersLayerGroup = leaflet.layerGroup();
 
 function useLayerGroups({
   leafletMap,
-  onMarkerClick,
 }: {
   leafletMap: leaflet.Map | null;
-  onMarkerClick: (marker: MarkerBasic) => void;
 }): void {
   const { visibleMarkers, markerRoutes } = useMarkers();
   const { markerSize, markerShowBackground } = useSettings();
@@ -48,10 +46,14 @@ function useLayerGroups({
       hasIssues: boolean;
     };
   }>({});
-  const map = useMap();
+  const { map, nodeId } = useRouteParams();
   const { player } = usePlayer();
   const user = useUser();
   const refreshUser = useRefreshUser();
+  const navigate = useNavigate();
+
+  const [highlightedMapMarker, setHighlightedMapMarker] =
+    useState<CanvasMarker | null>(null);
 
   const onMarkerAction = useCallback(async () => {
     const playerLocation = player?.position?.location;
@@ -99,22 +101,18 @@ function useLayerGroups({
       if (allMarkers.length === 0 || !leafletMap) {
         return;
       }
+      const radius = markerSize / 2;
       allMarkers.forEach(({ layer }) => {
         if (
-          layer.options.image.size[0] === markerSize &&
-          layer.options.image.size[1] === markerSize &&
+          layer.options.radius === radius &&
           layer.options.image.showBackground === markerShowBackground
         ) {
           return;
         }
 
-        layer.options.image.size = [markerSize, markerSize];
+        layer.setRadius(radius);
         layer.options.image.showBackground = markerShowBackground;
-        const isVisible = markersLayerGroup.hasLayer(layer);
-        markersLayerGroup.removeLayer(layer);
-        if (isVisible) {
-          markersLayerGroup.addLayer(layer);
-        }
+        layer.redraw();
       });
     }, 200);
 
@@ -122,6 +120,23 @@ function useLayerGroups({
       clearTimeout(handle);
     };
   }, [markerSize, markerShowBackground]);
+
+  useEffect(() => {
+    if (!highlightedMapMarker || !nodeId) {
+      return;
+    }
+    const size = markerSize * 1.5;
+    highlightedMapMarker.setRadius(size / 2);
+    highlightedMapMarker.options.image.highlight = true;
+    highlightedMapMarker.redraw();
+    highlightedMapMarker.bringToFront();
+
+    return () => {
+      highlightedMapMarker.setRadius(markerSize / 2);
+      highlightedMapMarker.options.image.highlight = false;
+      highlightedMapMarker.redraw();
+    };
+  }, [highlightedMapMarker, nodeId]);
 
   useEffect(() => {
     if (!leafletMap) {
@@ -175,9 +190,11 @@ function useLayerGroups({
         if (!filterCategory) {
           continue;
         }
+        const isHighlighted = marker._id === nodeId;
+        const radius = markerSize / 2;
         const mapMarker = new CanvasMarker(latLng, {
           renderer: canvasRenderer,
-          radius: 16,
+          radius: isHighlighted ? radius * 1.5 : radius,
           image: {
             markerId: marker._id,
             type: marker.type,
@@ -185,7 +202,7 @@ function useLayerGroups({
             src: mapFilter.iconUrl,
             showBackground: markerShowBackground,
             borderColor: filterCategory.borderColor,
-            size: [markerSize, markerSize],
+            highlight: isHighlighted,
             comments: marker.comments,
             issues: marker.issues,
           },
@@ -193,13 +210,28 @@ function useLayerGroups({
         }).bindTooltip(getTooltipContent(marker, mapFilter), {
           direction: 'top',
         });
-        mapMarker.on('click', () => {
+        if (isHighlighted) {
+          setHighlightedMapMarker(mapMarker);
+        }
+        mapMarker.on('click', (event) => {
+          // @ts-ignore
+          event.originalEvent.propagatedFromMarker = true;
+
           if (
             !leafletMap.pm ||
             (!leafletMap.pm.globalEditModeEnabled() &&
               !leafletMap.pm.globalDrawModeEnabled())
           ) {
-            onMarkerClick(marker);
+            let url = '/';
+            if (marker.map) {
+              const mapDetails = findMapDetails(marker.map);
+              if (mapDetails) {
+                url += `${mapDetails.title}/`;
+              }
+            }
+            url += `nodes/${marker._id}${location.search}`;
+            navigate(url);
+            setHighlightedMapMarker(mapMarker);
           }
         });
         mapMarker.on('contextmenu', () => {

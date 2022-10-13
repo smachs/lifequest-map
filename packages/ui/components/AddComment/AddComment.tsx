@@ -1,10 +1,10 @@
+import { Anchor, Textarea } from '@mantine/core';
 import type { FormEvent, KeyboardEvent } from 'react';
 import { useState } from 'react';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { useAccount } from '../../contexts/UserContext';
 import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
-import styles from './AddComment.module.css';
 import { postComment } from './api';
 
 type AddCommentProps = {
@@ -50,32 +50,32 @@ function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
   }
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
-      <textarea
+    <form onSubmit={handleSubmit}>
+      <Textarea
+        style={{ flex: 1 }}
         value={message}
         onChange={(event) => setMessage(event.target.value)}
         onKeyPress={handleKeyPress}
+        label="Your comment"
         placeholder={
-          !account ? 'You need to login to add a comment' : 'Add a comment'
+          !account ? 'You need to login to add a comment' : 'Your comment'
         }
-        rows={1}
-        disabled={!account}
+        minRows={1}
+        maxRows={1}
+        disabled={!account || loading}
+        description={
+          <>
+            <Anchor
+              href="https://www.markdownguide.org/cheat-sheet/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Markdown
+            </Anchor>{' '}
+            is supported
+          </>
+        }
       />
-      <input
-        type="submit"
-        value="Send"
-        disabled={message.trim().length === 0 || !account || loading}
-      />
-      <small className={styles.hint}>
-        <a
-          href="https://www.markdownguide.org/cheat-sheet/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Markdown
-        </a>{' '}
-        is supported
-      </small>
     </form>
   );
 }

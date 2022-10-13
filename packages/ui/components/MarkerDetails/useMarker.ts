@@ -16,6 +16,7 @@ export type MarkerFull = {
   type: string;
   position: [number, number, number];
   name?: string;
+  map?: string;
   level?: number;
   description?: string;
   screenshotFilename?: string;
@@ -23,22 +24,26 @@ export type MarkerFull = {
   userId?: string;
   username?: string;
   comments?: number;
+  chestType?: string;
+  tier?: number;
   _id: string;
 };
 
-function useMarker(markerId: string): {
-  marker?: MarkerFull;
-  comments?: Comment[];
-  loading: boolean;
-  refresh: () => Promise<void>;
-} {
-  const [result, setResult] = useState<
-    { marker: MarkerFull; comments: Comment[] } | Record<string, never>
-  >({});
-  const [loading, setLoading] = useState(true);
+function useMarker(markerId?: string) {
+  const [result, setResult] = useState<{
+    marker: MarkerFull;
+    comments: Comment[];
+  } | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(() => {
-    return notify(
+  const refresh = useCallback(async () => {
+    if (!markerId) {
+      setResult(null);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    return await notify(
       fetchJSON<{ marker: MarkerFull; comments: Comment[] }>(
         `/api/markers/${markerId}`
       )
@@ -57,9 +62,13 @@ function useMarker(markerId: string): {
 
   useEffect(() => {
     refresh();
-  }, [refresh, markerId]);
+  }, [refresh]);
 
-  return { ...result, loading, refresh };
+  return {
+    ...result,
+    loading,
+    refresh,
+  };
 }
 
 export default useMarker;

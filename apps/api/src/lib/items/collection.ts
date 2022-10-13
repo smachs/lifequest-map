@@ -27,6 +27,12 @@ function ensureItemsSchema(): Promise<Document> {
           id: {
             bsonType: 'string',
           },
+          slug: {
+            bsonType: 'string',
+          },
+          type: {
+            bsonType: 'string',
+          },
           name: {
             bsonType: 'string',
           },
@@ -58,6 +64,7 @@ function ensureItemsSchema(): Promise<Document> {
         additionalProperties: false,
         required: [
           'id',
+          'slug',
           'name',
           'rarity',
           'iconSrc',

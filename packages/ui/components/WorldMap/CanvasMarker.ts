@@ -2,8 +2,8 @@ import leaflet from 'leaflet';
 import type { MarkerSize } from 'static';
 
 type CanvasMarkerOptions = {
+  radius: number;
   image: {
-    size: [number, number];
     markerSize?: MarkerSize;
     showBackground: boolean;
     markerId: string;
@@ -14,6 +14,7 @@ type CanvasMarkerOptions = {
     comments?: number;
     issues?: number;
     rotate?: number;
+    highlight?: boolean;
   };
 };
 
@@ -74,15 +75,15 @@ leaflet.Canvas.include({
     if (!ctx) {
       return;
     }
-    const { image } = layer.options;
+    const { image, radius } = layer.options;
     const p = layer._point.round();
-    const halfWidth = image.size[0] / 2;
-    const halfHeight = halfWidth;
-    const dx = p.x - halfWidth;
-    const dy = p.y - halfHeight;
+    const imageSize = radius * 2;
+    const dx = p.x - radius;
+    const dy = p.y - radius;
+
     if (image.showBackground) {
       ctx.beginPath();
-      ctx.arc(dx + halfWidth, dy + halfHeight, halfWidth, 0, Math.PI * 2, true); // Outer circle
+      ctx.arc(dx + radius, dy + radius, radius, 0, Math.PI * 2, true);
       ctx.fillStyle = 'rgba(30, 30, 30, 0.7)';
       ctx.fill();
       if (image.borderColor) {
@@ -91,34 +92,32 @@ leaflet.Canvas.include({
         ctx.stroke();
       }
     }
+
+    if (image.highlight) {
+      ctx.beginPath();
+      ctx.arc(dx + radius, dy + radius, radius, 0, Math.PI * 2, true);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
     if (image.rotate) {
       ctx.save();
 
       ctx.translate(p.x, p.y);
       ctx.rotate((image.rotate * Math.PI) / 180);
-      ctx.drawImage(
-        layer.imageElement,
-        -halfWidth,
-        -halfHeight,
-        image.size[0],
-        image.size[1]
-      );
+      ctx.drawImage(layer.imageElement, -radius, -radius, imageSize, imageSize);
       ctx.translate(-p.x, -p.y);
       ctx.restore();
     } else {
-      ctx.drawImage(layer.imageElement, dx, dy, image.size[0], image.size[1]);
+      ctx.drawImage(layer.imageElement, dx, dy, imageSize, imageSize);
     }
 
     if (image.comments) {
       ctx.beginPath();
-      ctx.arc(
-        dx + image.size[0] - 8,
-        dy + halfHeight - 8,
-        3,
-        0,
-        Math.PI * 2,
-        true
-      ); // Outer circle
+      ctx.arc(dx + imageSize - 8, dy + radius - 8, 3, 0, Math.PI * 2, true);
       ctx.fillStyle = '#3791F9';
       ctx.fill();
       ctx.strokeStyle = '#333';
@@ -128,13 +127,13 @@ leaflet.Canvas.include({
       ctx.beginPath();
       const offsetY = image.comments ? 4 : 0;
       ctx.arc(
-        dx + image.size[0] - 8,
-        dy + halfHeight - 8 + offsetY,
+        dx + imageSize - 8,
+        dy + radius - 8 + offsetY,
         3,
         0,
         Math.PI * 2,
         true
-      ); // Outer circle
+      );
       ctx.fillStyle = '#ff5722';
       ctx.fill();
       ctx.strokeStyle = '#333';

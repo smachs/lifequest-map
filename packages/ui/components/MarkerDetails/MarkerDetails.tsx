@@ -1,235 +1,220 @@
-import type { MarkerBasic } from '../../contexts/MarkersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { getScreenshotUrl } from '../../utils/api';
 import { toTimeAgo } from '../../utils/dates';
 import AddComment from '../AddComment/AddComment';
 import Comment from '../Comment/Comment';
+import type { MarkerFull } from './useMarker';
 import useMarker from './useMarker';
-import Loading from '../Loading/Loading';
-import { mapFilters } from 'static';
-import styles from './MarkerDetails.module.css';
+import { findMapDetails, mapFilters } from 'static';
 import Markdown from 'markdown-to-jsx';
 import HideMarkerInput from './HideMarkerInput';
-import { useModal } from '../../contexts/ModalContext';
-import UploadScreenshot from '../AddResources/UploadScreenshot';
 import { useAccount } from '../../contexts/UserContext';
 import Credit from './Credit';
-import { writeError } from '../../utils/logs';
-import { deleteMarker } from './api';
-import { notify } from '../../utils/notifications';
-import Confirm from '../Confirm/Confirm';
-import { patchMarker } from '../AddResources/api';
 import Coordinates from './Coordinates';
-import ReportIssue from '../AddComment/ReportIssue';
 import Loot from './Loot/Loot';
+import {
+  Button,
+  Drawer,
+  Group,
+  Image,
+  ScrollArea,
+  Skeleton,
+  Stack,
+  Text,
+} from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
+import ImagePreview from './ImagePreview';
+import { lootableMapFilters } from 'static';
+import ReportIssueButton from './ReportIssueButton';
+import DeleteNode from './DeleteNode';
 
 type MarkerDetailsProps = {
-  marker: MarkerBasic;
-  onEdit: () => void;
+  nodeId?: string;
+  onEdit: (marker: MarkerFull) => void;
 };
 
-function MarkerDetails({ marker, onEdit }: MarkerDetailsProps): JSX.Element {
-  const {
-    marker: fullMarker,
-    comments,
-    loading,
-    refresh,
-  } = useMarker(marker._id);
-  const filterItem = mapFilters.find(
-    (mapFilter) => mapFilter.type === marker.type
-  );
-  const { addModal, closeLatestModal } = useModal();
+function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
+  const { marker, comments, refresh, loading } = useMarker(nodeId);
   const { setMarkers } = useMarkers();
   const { account } = useAccount();
+  const navigate = useNavigate();
 
-  async function handleUploadScreenshot(screenshotId?: string) {
-    try {
-      closeLatestModal();
-      if (!screenshotId || !fullMarker) {
-        return;
+  // async function handleUploadScreenshot(screenshotId?: string) {
+  //   try {
+  //     closeLatestModal();
+  //     if (!screenshotId || !marker) {
+  //       return;
+  //     }
+  //     const patchedMarker = await notify(
+  //       patchMarker(marker._id, { ...marker, screenshotId })
+  //     );
+  //     marker.screenshotFilename = patchedMarker.screenshotFilename;
+  //     setMarkers((markers) => {
+  //       const markersClone = [...markers];
+  //       const index = markersClone.findIndex(
+  //         (marker) => marker._id === patchedMarker._id
+  //       );
+  //       if (index === -1) {
+  //         return markers;
+  //       }
+  //       markersClone[index] = patchedMarker;
+  //       return markersClone;
+  //     });
+  //   } catch (error) {
+  //     writeError(error);
+  //   }
+  // }
+
+  const handleClose = () => {
+    if (!marker || !marker.map) {
+      navigate(`/${location.search}`);
+    } else {
+      const mapDetail = findMapDetails(marker.map);
+      if (mapDetail) {
+        navigate(`/${mapDetail.title}${location.search}`);
       }
-      const patchedMarker = await notify(
-        patchMarker(marker._id, { ...fullMarker, screenshotId })
-      );
-      fullMarker.screenshotFilename = patchedMarker.screenshotFilename;
-      setMarkers((markers) => {
-        const markersClone = [...markers];
-        const index = markersClone.findIndex(
-          (marker) => marker._id === patchedMarker._id
-        );
-        if (index === -1) {
-          return markers;
-        }
-        markersClone[index] = patchedMarker;
-        return markersClone;
-      });
-    } catch (error) {
-      writeError(error);
     }
-  }
+  };
 
-  async function handleDelete() {
-    try {
-      await notify(deleteMarker(marker._id), {
-        success: 'Marker deleted 👌',
-      });
-      setMarkers((markers) =>
-        markers.filter((existingMarker) => existingMarker._id !== marker._id)
-      );
-      refresh();
-      closeLatestModal();
-    } catch (error) {
-      writeError(error);
-    }
-  }
-
-  const title = marker.chestType
-    ? `${marker.chestType} Chest T${marker.tier}`
-    : marker.name
-    ? `${marker.name} (${filterItem?.title})`
-    : filterItem?.title;
-
+  const filterItem =
+    marker && mapFilters.find((mapFilter) => mapFilter.type === marker.type);
   return (
-    <section className={styles.container}>
-      <header className={styles.header}>
-        <img className={styles.icon} src={filterItem?.iconUrl} alt="" />
-        <h2>{title}</h2>
-      </header>
-      <main className={styles.main}>
-        {['boss', 'bossElite', 'rafflebones_25', 'rafflebones_66'].includes(
-          marker.type
-        ) && <Loot markerId={marker._id} className={styles.loot} />}
-        <div className={styles.grow}>
-          <div className={styles.comments}>
-            {comments?.map((comment) => (
-              <Comment
-                key={comment._id}
-                id={comment._id}
-                username={comment.username}
-                message={comment.message}
-                createdAt={comment.createdAt}
-                isIssue={comment.isIssue}
-                removable={Boolean(
-                  account &&
-                    (account.isModerator || account.steamId === comment.userId)
-                )}
-                onRemove={() => {
-                  refresh();
-                  setMarkers((markers) => {
-                    const markersClone = [...markers];
-                    const index = markersClone.findIndex(
-                      (marker) => marker._id === comment.markerId
-                    );
-                    if (index === -1) {
-                      return markers;
-                    }
-                    markersClone[index].comments =
-                      markersClone[index].comments! - 1;
-                    return markersClone;
-                  });
-                }}
-              />
-            ))}
-            {!loading && comments?.length === 0 && (
-              <div className={styles.empty}>
-                Be the first to write a comment
-              </div>
-            )}
-          </div>
-          {loading && <Loading />}
-          <AddComment markerId={marker._id} onAdd={refresh} />
-        </div>
-      </main>
-      <aside className={styles.more}>
-        <h3>Actions</h3>
-        <HideMarkerInput markerId={marker._id} onHide={closeLatestModal} />
-        <button
-          className={styles.button}
-          onClick={() =>
-            addModal({
-              title: 'Report an issue',
-              children: (
-                <ReportIssue
-                  markerId={marker._id}
-                  onAdd={() => {
-                    refresh();
-                    closeLatestModal();
-                  }}
-                />
-              ),
-              fitContent: true,
-            })
-          }
-          disabled={!account}
-        >
-          ⚠️ {account ? 'Report an issue' : 'Login to report an issue'}
-        </button>
-        {account &&
-          (account.isModerator || account.steamId === fullMarker?.userId) && (
-            <>
-              <button className={styles.button} onClick={onEdit}>
-                ✍ Edit marker
-              </button>
-              <button
-                className={styles.button}
-                onClick={() => {
-                  addModal({
-                    title: 'Do you really want to delete this marker?',
-                    children: <Confirm onConfirm={handleDelete} />,
-                    fitContent: true,
-                  });
-                }}
-              >
-                💀 Remove invalid marker 💀
-              </button>
-            </>
-          )}
-        <h3>Screenshot</h3>
-        {fullMarker?.screenshotFilename ? (
-          <a
-            href={getScreenshotUrl(fullMarker.screenshotFilename)}
-            target="_blank"
-          >
-            <img
-              className={styles.preview}
-              src={
-                fullMarker.screenshotFilename
-                  ? getScreenshotUrl(fullMarker.screenshotFilename)
-                  : '/icon.png'
-              }
-              alt=""
-            />
-          </a>
+    <Drawer
+      opened={!!nodeId}
+      withOverlay={false}
+      zIndex={99999}
+      padding="sm"
+      size="xl"
+      styles={(theme) => ({
+        header: {
+          marginBottom: theme.spacing.xs,
+        },
+      })}
+      title={
+        filterItem ? (
+          <Group>
+            <Image width={32} height={32} src={filterItem.iconUrl} alt="" />{' '}
+            {marker.chestType
+              ? `${marker.chestType} Chest T${marker.tier}`
+              : marker.name || filterItem.title}
+          </Group>
         ) : (
-          <button
-            onClick={() =>
-              addModal({
-                title: 'Add screenshot',
-                children: (
-                  <UploadScreenshot onUpload={handleUploadScreenshot} />
-                ),
-              })
+          <Skeleton height={20} width={120} />
+        )
+      }
+      onClose={handleClose}
+    >
+      {(!filterItem || loading) && <Skeleton height={50} />}
+      {filterItem && !loading && (
+        <Stack style={{ height: 'calc(100% - 50px)' }} spacing="xs">
+          <Group>
+            {marker.name && (
+              <Text size="sm" color="cyan" weight="bold">
+                {filterItem.title}
+              </Text>
+            )}
+            {marker.level && <Text size="sm">Level {marker.level}</Text>}
+            <Coordinates position={marker.position} />
+          </Group>
+          <Text size="xs">
+            Added {marker && toTimeAgo(new Date(marker.createdAt))}{' '}
+            {marker.username && <Credit username={marker.username} />}
+          </Text>
+          {marker.description && (
+            <Text italic size="sm">
+              <Markdown>{marker.description}</Markdown>
+            </Text>
+          )}
+          {marker.screenshotFilename && (
+            <ImagePreview src={getScreenshotUrl(marker.screenshotFilename)} />
+          )}
+          {lootableMapFilters.includes(marker.type) && (
+            <ScrollArea style={{ flex: 1, minHeight: 100 }}>
+              <Loot markerId={marker._id} />
+            </ScrollArea>
+          )}
+          <ScrollArea
+            style={
+              lootableMapFilters.includes(marker.type) ? {} : { flexGrow: 1 }
             }
           >
-            <img className={styles.preview} src={'/icon.png'} alt="" />
-            Take a screenshot
-          </button>
-        )}
-        <h3>Details</h3>
-        {account?.isModerator && (
-          <small className={styles.userSelect}>{marker._id}</small>
-        )}
-        {marker.level && <p>Level {marker.level}</p>}
-        {fullMarker?.description && (
-          <Markdown>{fullMarker.description}</Markdown>
-        )}
-        {marker.position && <Coordinates position={marker.position} />}
-        <small>
-          Added {fullMarker && toTimeAgo(new Date(fullMarker.createdAt))}
-        </small>
-        {fullMarker?.username && <Credit username={fullMarker.username} />}
-      </aside>
-    </section>
+            <Stack spacing="xs">
+              {comments?.map((comment) => (
+                <Comment
+                  key={comment._id}
+                  id={comment._id}
+                  username={comment.username}
+                  message={comment.message}
+                  createdAt={comment.createdAt}
+                  isIssue={comment.isIssue}
+                  removable={Boolean(
+                    account &&
+                      (account.isModerator ||
+                        account.steamId === comment.userId)
+                  )}
+                  onRemove={() => {
+                    refresh();
+                    setMarkers((markers) => {
+                      const markersClone = [...markers];
+                      const index = markersClone.findIndex(
+                        (marker) => marker._id === comment.markerId
+                      );
+                      if (index === -1) {
+                        return markers;
+                      }
+                      markersClone[index].comments =
+                        markersClone[index].comments! - 1;
+                      return markersClone;
+                    });
+                  }}
+                />
+              ))}
+            </Stack>
+          </ScrollArea>
+          <AddComment markerId={marker._id} onAdd={refresh} />
+          <HideMarkerInput markerId={marker._id} />
+          <ReportIssueButton markerId={marker._id} onReport={refresh} />
+          {account &&
+            (account.isModerator || account.steamId === marker.userId) && (
+              <>
+                <Button
+                  color="teal"
+                  leftIcon="✍"
+                  onClick={() => {
+                    onEdit(marker);
+                    handleClose();
+                  }}
+                >
+                  Edit node
+                </Button>
+                <DeleteNode
+                  markerId={marker._id}
+                  onDelete={() => {
+                    setMarkers((markers) =>
+                      markers.filter(
+                        (existingMarker) => existingMarker._id !== marker._id
+                      )
+                    );
+                    refresh();
+                    handleClose();
+                  }}
+                />
+              </>
+            )}
+          {/* <button
+          onClick={() =>
+            addModal({
+              title: 'Add screenshot',
+              children: <UploadScreenshot onUpload={handleUploadScreenshot} />,
+            })
+          }
+        >
+          <img className={styles.preview} src={'/icon.png'} alt="" />
+          Take a screenshot
+        </button> */}
+        </Stack>
+      )}
+    </Drawer>
   );
 }
 

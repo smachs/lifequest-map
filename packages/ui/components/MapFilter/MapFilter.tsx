@@ -21,16 +21,22 @@ import BroadcastIcon from '../icons/BroadcastIcon';
 import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
 import Footer from '../Footer/Footer';
 import { usePlayer } from '../../contexts/PlayerContext';
+import SelectMap from './SelectMap';
+import { useNodeId } from '../../utils/routes';
+import MarkerDetails from '../MarkerDetails/MarkerDetails';
+import type { MarkerFull } from '../MarkerDetails/useMarker';
 
 type View = 'markers' | 'settings' | 'markerRoutes';
 
 type MarkerFilterProps = {
   onMarkerCreate: () => void;
   onMarkerRouteUpsert: (target: MarkerRouteItem | true) => void;
+  onMarkerEdit: (marker: MarkerFull) => void;
 };
 function MapFilter({
   onMarkerCreate,
   onMarkerRouteUpsert,
+  onMarkerEdit,
 }: MarkerFilterProps): JSX.Element {
   const { addModal, closeLatestModal } = useModal();
   const [isOpen, setIsOpen] = usePersistentState(
@@ -39,6 +45,7 @@ function MapFilter({
   );
   const [view, setView] = usePersistentState<View>('sidebar-view', 'markers');
   const { following, toggleFollowing, isSyncing, setIsSyncing } = usePlayer();
+  const nodeId = useNodeId();
 
   useDebounce(
     isOpen,
@@ -54,6 +61,8 @@ function MapFilter({
     <aside className={classNames(styles.container, isOpen && styles.open)}>
       <div className={styles.content}>
         <User />
+        <SelectMap />
+        <MarkerDetails nodeId={nodeId} onEdit={onMarkerEdit} />
         {view === 'markers' && <MarkersView onAdd={() => onMarkerCreate()} />}
         {view === 'settings' && <Settings />}
         {view === 'markerRoutes' && (

@@ -1,45 +1,75 @@
-import Loading from '../../Loading/Loading';
 import useLoot from './useLoot';
-import styles from './Loot.module.css';
-import { classNames } from '../../../utils/styles';
+import { Anchor, Image, List, Skeleton, Text } from '@mantine/core';
+import { useEffect } from 'react';
 
+const rarityColors: {
+  [rarity: string]: string;
+} = {
+  common: '#c3c3c3',
+  uncommon: '#34bf48',
+  rare: '#28bfd0',
+  epic: '#e72fe5',
+  legendary: '#c76b2a',
+};
 type LootProps = {
   markerId: string;
-  className: string;
 };
-function Loot({ markerId, className }: LootProps) {
+function Loot({ markerId }: LootProps) {
   const { isLoading, items } = useLoot(markerId);
 
+  useEffect(() => {
+    if (document.querySelector('#newworldfans-tooltips')) {
+      return;
+    }
+    const script = document.createElement('script');
+    script.id = 'newworldfans-tooltips';
+    script.src = 'http://localhost:8126/src/main.js';
+    script.async = true;
+    script.onload = () => {
+      window.document.dispatchEvent(
+        new Event('DOMContentLoaded', {
+          bubbles: true,
+          cancelable: true,
+        })
+      );
+    };
+    document.body.appendChild(script);
+  }, []);
+
   return (
-    <div className={className}>
-      <h3>Loot</h3>
-      {isLoading && <Loading />}
-      {!isLoading && !items && <p className={styles.notFound}>No loot found</p>}
-      {!isLoading && items && (
-        <ul className={styles.list}>
-          {items.map((item) => (
-            <li
-              key={item.id}
-              className={classNames(styles.item, styles[item.rarity])}
+    <List spacing="xs">
+      {isLoading && <Skeleton height={40} />}
+      {!isLoading && !items && <Text color="dimmed">No loot found</Text>}
+      {!isLoading &&
+        items?.map((item) => (
+          <List.Item
+            key={item.id}
+            icon={<Image src={item.iconSrc} width={24} height={24} />}
+          >
+            <Anchor
+              href={`https://newworldfans.com/db/item/${item.slug}`}
+              target="_blank"
+              style={{
+                color: rarityColors[item.rarity],
+              }}
             >
-              <img className={styles.icon} src={item.iconSrc} alt="" />
-              <span className={styles.name}>{item.name}</span>
+              {item.name}
               {item.maxGearScore > 0 && (
                 <>
+                  {' '}
                   {item.minGearScore !== item.maxGearScore ? (
-                    <span>
+                    <Text component="span">
                       {item.minGearScore}-{item.maxGearScore} GS
-                    </span>
+                    </Text>
                   ) : (
-                    <span>{item.maxGearScore} GS</span>
+                    <Text component="span">{item.maxGearScore} GS</Text>
                   )}
                 </>
               )}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+            </Anchor>
+          </List.Item>
+        ))}
+    </List>
   );
 }
 
