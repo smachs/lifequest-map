@@ -23,7 +23,7 @@ function Loot({ markerId }: LootProps) {
     }
     const script = document.createElement('script');
     script.id = 'newworldfans-tooltips';
-    script.src = 'http://localhost:8126/src/main.js';
+    script.src = 'https://cdn.newworldfans.com/tooltips/nw-tooltips.min.js';
     script.async = true;
     script.onload = () => {
       window.document.dispatchEvent(
