@@ -12,23 +12,50 @@ const router = createBrowserRouter([
     ),
     children: [
       {
+        id: 'map',
+        path: ':map',
+        element: null,
+        children: [
+          {
+            id: 'nodeDetails-2',
+            path: 'nodes/:nodeId',
+            element: null,
+          },
+          {
+            id: 'routes-2',
+            path: 'routes',
+            element: null,
+          },
+          {
+            id: 'settings-2',
+            path: 'settings',
+            element: null,
+          },
+          {
+            id: 'nodes-2',
+            path: '',
+            element: null,
+          },
+        ],
+      },
+      {
+        id: 'nodeDetails-1',
         path: 'nodes/:nodeId',
         element: null,
       },
       {
-        path: 'routes/:routeId',
+        id: 'routes-1',
+        path: 'routes',
         element: null,
       },
       {
-        path: ':map',
+        id: 'settings-1',
+        path: 'settings',
         element: null,
       },
       {
-        path: ':map/nodes/:nodeId',
-        element: null,
-      },
-      {
-        path: ':map/routes/:routeId',
+        id: 'nodes-1',
+        path: '',
         element: null,
       },
     ],

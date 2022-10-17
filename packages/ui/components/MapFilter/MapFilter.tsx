@@ -22,11 +22,12 @@ import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
 import Footer from '../Footer/Footer';
 import { usePlayer } from '../../contexts/PlayerContext';
 import SelectMap from './SelectMap';
-import { useNodeId } from '../../utils/routes';
+import { useMap, useNodeId } from '../../utils/routes';
 import MarkerDetails from '../MarkerDetails/MarkerDetails';
 import type { MarkerFull } from '../MarkerDetails/useMarker';
-
-type View = 'markers' | 'settings' | 'markerRoutes';
+import { NavLink, useLocation, useMatches } from 'react-router-dom';
+import { findMapDetails, mapIsAeternumMap } from 'static';
+import { useEffect } from 'react';
 
 type MarkerFilterProps = {
   onMarkerCreate: () => void;
@@ -43,9 +44,15 @@ function MapFilter({
     'aeternum-map-client.sidebar-state',
     true
   );
-  const [view, setView] = usePersistentState<View>('sidebar-view', 'markers');
   const { following, toggleFollowing, isSyncing, setIsSyncing } = usePlayer();
   const nodeId = useNodeId();
+
+  const matches = useMatches();
+  const location = useLocation();
+  const map = useMap();
+  const mapDetail = findMapDetails(map);
+  const basePath =
+    mapDetail && !mapIsAeternumMap(map) ? `/${mapDetail.title}/` : '/';
 
   useDebounce(
     isOpen,
@@ -53,59 +60,59 @@ function MapFilter({
     400
   );
 
-  function handleViewClick(view: View) {
+  const isNodes = matches.some((match) => match.id.startsWith('nodes'));
+  const isRoutes = matches.some((match) => match.id.startsWith('routes'));
+  const isSettings = matches.some((match) => match.id.startsWith('settings'));
+
+  useEffect(() => {
     setIsOpen(true);
-    setView(view);
-  }
+  }, [isNodes, isRoutes, isSettings]);
+
   return (
     <aside className={classNames(styles.container, isOpen && styles.open)}>
       <div className={styles.content}>
         <User />
         <SelectMap />
         <MarkerDetails nodeId={nodeId} onEdit={onMarkerEdit} />
-        {view === 'markers' && <MarkersView onAdd={() => onMarkerCreate()} />}
-        {view === 'settings' && <Settings />}
-        {view === 'markerRoutes' && (
-          <MarkerRoutes onEdit={onMarkerRouteUpsert} />
-        )}
+        {isNodes && <MarkersView onAdd={() => onMarkerCreate()} />}
+        {isRoutes && <Settings />}
+        {isSettings && <MarkerRoutes onEdit={onMarkerRouteUpsert} />}
         <Footer />
       </div>
       <nav className={styles.nav}>
         <MapSearch className={styles.nav__button} />
-        <button
-          data-tooltip="Markers"
-          data-tooltip-position="right"
-          className={classNames(
-            styles.nav__button,
-            styles.nav__border,
-            view === 'markers' && styles.nav__active
-          )}
-          onClick={() => handleViewClick('markers')}
+        <NavLink
+          to={`${basePath}${location.search}`}
+          end
+          className={({ isActive }) =>
+            classNames(
+              styles.nav__button,
+              styles.nav__border,
+              isActive && styles.nav__active
+            )
+          }
         >
           <MarkerIcon />
-        </button>
-        <button
-          data-tooltip="Routes"
-          data-tooltip-position="right"
-          className={classNames(
-            styles.nav__button,
-            view === 'markerRoutes' && styles.nav__active
-          )}
-          onClick={() => handleViewClick('markerRoutes')}
+        </NavLink>
+        <NavLink
+          to={`${basePath}routes${location.search}`}
+          end
+          className={({ isActive }) =>
+            classNames(styles.nav__button, isActive && styles.nav__active)
+          }
         >
           <RoutesIcon />
-        </button>
-        <button
-          data-tooltip="Settings"
-          data-tooltip-position="right"
-          className={classNames(
-            styles.nav__button,
-            view === 'settings' && styles.nav__active
-          )}
-          onClick={() => handleViewClick('settings')}
+        </NavLink>
+        <NavLink
+          to={`${basePath}settings${location.search}`}
+          end
+          className={({ isActive }) =>
+            classNames(styles.nav__button, isActive && styles.nav__active)
+          }
         >
           <SettingsIcon />
-        </button>
+        </NavLink>
+
         <button
           data-tooltip="Share live status"
           data-tooltip-position="right"
