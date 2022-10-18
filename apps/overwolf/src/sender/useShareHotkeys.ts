@@ -12,6 +12,7 @@ function useShareHotkeys(
     async function handleHotkeyPressed(
       event: overwolf.settings.hotkeys.OnPressedEvent
     ) {
+      overwolf.utils.sendKeyStroke(event.binding);
       socket!.emit('hotkey', event.name);
     }
     overwolf.settings.hotkeys.onPressed.addListener(handleHotkeyPressed);
