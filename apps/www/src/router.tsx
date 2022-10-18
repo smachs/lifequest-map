@@ -12,23 +12,20 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: 'nodes/:nodeId',
-        element: null,
-      },
-      {
-        path: 'routes/:routeId',
-        element: null,
-      },
-      {
+        id: 'map',
         path: ':map',
         element: null,
+        children: [
+          {
+            id: 'nodeDetails-2',
+            path: 'nodes/:nodeId',
+            element: null,
+          },
+        ],
       },
       {
-        path: ':map/nodes/:nodeId',
-        element: null,
-      },
-      {
-        path: ':map/routes/:routeId',
+        id: 'nodeDetails-1',
+        path: 'nodes/:nodeId',
         element: null,
       },
     ],

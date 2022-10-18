@@ -22,11 +22,11 @@ import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
 import Footer from '../Footer/Footer';
 import { usePlayer } from '../../contexts/PlayerContext';
 import SelectMap from './SelectMap';
-import { useNodeId } from '../../utils/routes';
+import { useNodeId, useView } from '../../utils/routes';
 import MarkerDetails from '../MarkerDetails/MarkerDetails';
 import type { MarkerFull } from '../MarkerDetails/useMarker';
-
-type View = 'markers' | 'settings' | 'markerRoutes';
+import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
 type MarkerFilterProps = {
   onMarkerCreate: () => void;
@@ -43,9 +43,9 @@ function MapFilter({
     'aeternum-map-client.sidebar-state',
     true
   );
-  const [view, setView] = usePersistentState<View>('sidebar-view', 'markers');
   const { following, toggleFollowing, isSyncing, setIsSyncing } = usePlayer();
   const nodeId = useNodeId();
+  const { view, toView } = useView();
 
   useDebounce(
     isOpen,
@@ -53,59 +53,56 @@ function MapFilter({
     400
   );
 
-  function handleViewClick(view: View) {
+  useEffect(() => {
     setIsOpen(true);
-    setView(view);
-  }
+  }, [view.section]);
+
   return (
     <aside className={classNames(styles.container, isOpen && styles.open)}>
       <div className={styles.content}>
         <User />
         <SelectMap />
         <MarkerDetails nodeId={nodeId} onEdit={onMarkerEdit} />
-        {view === 'markers' && <MarkersView onAdd={() => onMarkerCreate()} />}
-        {view === 'settings' && <Settings />}
-        {view === 'markerRoutes' && (
+        {view.section === 'nodes' && (
+          <MarkersView onAdd={() => onMarkerCreate()} />
+        )}
+        {view.section === 'routes' && (
           <MarkerRoutes onEdit={onMarkerRouteUpsert} />
         )}
+        {view.section === 'settings' && <Settings />}
         <Footer />
       </div>
       <nav className={styles.nav}>
         <MapSearch className={styles.nav__button} />
-        <button
-          data-tooltip="Markers"
-          data-tooltip-position="right"
+        <Link
+          to={toView({ section: 'nodes' })}
           className={classNames(
             styles.nav__button,
             styles.nav__border,
-            view === 'markers' && styles.nav__active
+            view.section === 'nodes' && styles.nav__active
           )}
-          onClick={() => handleViewClick('markers')}
         >
           <MarkerIcon />
-        </button>
-        <button
-          data-tooltip="Routes"
-          data-tooltip-position="right"
+        </Link>
+        <Link
+          to={toView({ section: 'routes' })}
           className={classNames(
             styles.nav__button,
-            view === 'markerRoutes' && styles.nav__active
+            view.section === 'routes' && styles.nav__active
           )}
-          onClick={() => handleViewClick('markerRoutes')}
         >
           <RoutesIcon />
-        </button>
-        <button
-          data-tooltip="Settings"
-          data-tooltip-position="right"
+        </Link>
+        <Link
+          to={toView({ section: 'settings' })}
           className={classNames(
             styles.nav__button,
-            view === 'settings' && styles.nav__active
+            view.section === 'settings' && styles.nav__active
           )}
-          onClick={() => handleViewClick('settings')}
         >
           <SettingsIcon />
-        </button>
+        </Link>
+
         <button
           data-tooltip="Share live status"
           data-tooltip-position="right"
