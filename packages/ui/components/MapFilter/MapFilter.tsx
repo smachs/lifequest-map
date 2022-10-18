@@ -22,11 +22,10 @@ import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
 import Footer from '../Footer/Footer';
 import { usePlayer } from '../../contexts/PlayerContext';
 import SelectMap from './SelectMap';
-import { useMap, useNodeId } from '../../utils/routes';
+import { useNodeId, useView } from '../../utils/routes';
 import MarkerDetails from '../MarkerDetails/MarkerDetails';
 import type { MarkerFull } from '../MarkerDetails/useMarker';
-import { NavLink, useLocation, useMatches } from 'react-router-dom';
-import { findMapDetails, mapIsAeternumMap } from 'static';
+import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 
 type MarkerFilterProps = {
@@ -46,13 +45,7 @@ function MapFilter({
   );
   const { following, toggleFollowing, isSyncing, setIsSyncing } = usePlayer();
   const nodeId = useNodeId();
-
-  const matches = useMatches();
-  const location = useLocation();
-  const map = useMap();
-  const mapDetail = findMapDetails(map);
-  const basePath =
-    mapDetail && !mapIsAeternumMap(map) ? `/${mapDetail.title}/` : '/';
+  const { view, toView } = useView();
 
   useDebounce(
     isOpen,
@@ -60,13 +53,9 @@ function MapFilter({
     400
   );
 
-  const isNodes = matches.some((match) => match.id.startsWith('nodes'));
-  const isRoutes = matches.some((match) => match.id.startsWith('routes'));
-  const isSettings = matches.some((match) => match.id.startsWith('settings'));
-
   useEffect(() => {
     setIsOpen(true);
-  }, [isNodes, isRoutes, isSettings]);
+  }, [view.section]);
 
   return (
     <aside className={classNames(styles.container, isOpen && styles.open)}>
@@ -74,44 +63,45 @@ function MapFilter({
         <User />
         <SelectMap />
         <MarkerDetails nodeId={nodeId} onEdit={onMarkerEdit} />
-        {isNodes && <MarkersView onAdd={() => onMarkerCreate()} />}
-        {isRoutes && <Settings />}
-        {isSettings && <MarkerRoutes onEdit={onMarkerRouteUpsert} />}
+        {view.section === 'nodes' && (
+          <MarkersView onAdd={() => onMarkerCreate()} />
+        )}
+        {view.section === 'routes' && (
+          <MarkerRoutes onEdit={onMarkerRouteUpsert} />
+        )}
+        {view.section === 'settings' && <Settings />}
         <Footer />
       </div>
       <nav className={styles.nav}>
         <MapSearch className={styles.nav__button} />
-        <NavLink
-          to={`${basePath}${location.search}`}
-          end
-          className={({ isActive }) =>
-            classNames(
-              styles.nav__button,
-              styles.nav__border,
-              isActive && styles.nav__active
-            )
-          }
+        <Link
+          to={toView({ section: 'nodes' })}
+          className={classNames(
+            styles.nav__button,
+            styles.nav__border,
+            view.section === 'nodes' && styles.nav__active
+          )}
         >
           <MarkerIcon />
-        </NavLink>
-        <NavLink
-          to={`${basePath}routes${location.search}`}
-          end
-          className={({ isActive }) =>
-            classNames(styles.nav__button, isActive && styles.nav__active)
-          }
+        </Link>
+        <Link
+          to={toView({ section: 'routes' })}
+          className={classNames(
+            styles.nav__button,
+            view.section === 'routes' && styles.nav__active
+          )}
         >
           <RoutesIcon />
-        </NavLink>
-        <NavLink
-          to={`${basePath}settings${location.search}`}
-          end
-          className={({ isActive }) =>
-            classNames(styles.nav__button, isActive && styles.nav__active)
-          }
+        </Link>
+        <Link
+          to={toView({ section: 'settings' })}
+          className={classNames(
+            styles.nav__button,
+            view.section === 'settings' && styles.nav__active
+          )}
         >
           <SettingsIcon />
-        </NavLink>
+        </Link>
 
         <button
           data-tooltip="Share live status"

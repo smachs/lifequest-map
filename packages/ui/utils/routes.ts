@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { mapDetails } from 'static';
 import { deserializeMapView, serializeMapView } from './storage';
+
+export type Section = 'nodes' | 'routes' | 'settings';
+export const SECTIONS: Section[] = ['nodes', 'routes', 'settings'];
 
 export const useRouteParams = () => {
   const { map = mapDetails[0].title, nodeId, routeId } = useParams();
@@ -16,10 +19,11 @@ export const useNodeId = () => {
   return useRouteParams().nodeId;
 };
 
-const getSearchParamsView = (searchParams: URLSearchParams) => {
+const getMapView = (searchParams: URLSearchParams) => {
   const x = searchParams.get('x');
   const y = searchParams.get('y');
   const zoom = searchParams.get('zoom');
+
   if (!x || !y || !zoom) {
     return null;
   }
@@ -35,26 +39,52 @@ const getView = (
   searchParams: URLSearchParams,
   nodeId?: string
 ) => {
-  const searchParamsView =
-    getSearchParamsView(searchParams) ?? deserializeMapView(map);
-  return { ...searchParamsView, map, nodeId };
+  const searchParamsView = getMapView(searchParams) ?? deserializeMapView(map);
+  const sectionParam = searchParams.get('section');
+  const section: Section =
+    !sectionParam || !SECTIONS.includes(sectionParam as Section)
+      ? 'nodes'
+      : (sectionParam as Section);
+
+  return { ...searchParamsView, map, nodeId, section };
 };
 
-export const useView = (): [
-  (
+export const useView = (): {
+  view:
     | {
         map: string;
         nodeId?: string;
         y: number;
         x: number;
         zoom: number;
+        section: Section;
       }
-    | { map: string; nodeId?: string; x: null; y: null; zoom: null }
-  ),
-  (x: number, y: number, zoom: number) => void
-] => {
+    | {
+        map: string;
+        nodeId?: string;
+        x: null;
+        y: null;
+        zoom: null;
+        section: Section;
+      };
+  setView: (
+    props: { x: number; y: number; zoom: number } | { section: Section }
+  ) => void;
+  toView: (
+    props:
+      | {
+          x: number;
+          y: number;
+          zoom: number;
+        }
+      | {
+          section: Section;
+        }
+  ) => string;
+} => {
   const { map, nodeId } = useRouteParams();
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
 
   const [internalView, setInternalView] = useState(() =>
     getView(map, searchParams, nodeId)
@@ -63,25 +93,30 @@ export const useView = (): [
   useEffect(() => {
     const view = getView(map, searchParams, nodeId);
     setInternalView(view);
-  }, [map, nodeId]);
+  }, [map, nodeId, searchParams]);
 
   useEffect(() => {
     if (!internalView.x) {
-      return;
-    }
-    setSearchParams(
-      {
+      setSearchParams((searchParams) => ({
         ...searchParams,
-        x: internalView.x.toString(),
-        y: internalView.y.toString(),
-        zoom: internalView.zoom.toString(),
-      },
-      { replace: true }
-    );
+        section: internalView.section,
+      }));
+    } else {
+      setSearchParams(
+        (searchParams) => ({
+          ...searchParams,
+          x: internalView.x.toString(),
+          y: internalView.y.toString(),
+          zoom: internalView.zoom.toString(),
+          section: internalView.section,
+        }),
+        { replace: true }
+      );
+    }
   }, [internalView]);
 
   useEffect(() => {
-    const searchParamsView = getSearchParamsView(searchParams);
+    const searchParamsView = getMapView(searchParams);
     if (!searchParamsView) {
       return;
     }
@@ -90,19 +125,26 @@ export const useView = (): [
   }, [searchParams]);
 
   const setView = useCallback(
-    (x: number, y: number, zoom: number) => {
-      setInternalView({ map, nodeId, x, y, zoom });
-      setSearchParams(
-        {
-          ...searchParams,
-          x: x.toString(),
-          y: y.toString(),
-          zoom: zoom.toString(),
-        },
-        { replace: true }
-      );
+    (props: { x: number; y: number; zoom: number } | { section: Section }) => {
+      setInternalView((internalView) => ({ ...internalView, ...props }));
     },
-    [map, nodeId]
+    []
   );
-  return [internalView, setView];
+
+  const toView = useCallback(
+    (props: { x: number; y: number; zoom: number } | { section: Section }) => {
+      const newSearchParams = new URLSearchParams(searchParams);
+      if ('section' in props) {
+        newSearchParams.set('section', props.section);
+      } else {
+        newSearchParams.set('x', props.x.toString());
+        newSearchParams.set('y', props.y.toString());
+        newSearchParams.set('zoom', props.zoom.toString());
+      }
+      return `${location.pathname}?${newSearchParams.toString()}`;
+    },
+    [location.pathname, searchParams]
+  );
+
+  return { view: internalView, setView, toView };
 };

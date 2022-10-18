@@ -8,7 +8,7 @@ import { useSettings } from '../../contexts/SettingsContext';
 import useRegionBorders from './useRegionBorders';
 import { mapIsAeternumMap, findMapDetails, AETERNUM_MAP } from 'static';
 import { useView } from 'ui/utils/routes';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
@@ -61,8 +61,9 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const [leafletMap, setLeafletMap] = useState<leaflet.Map | null>(null);
   const { showRegionBorders } = useSettings();
-  const [view, setView] = useView();
+  const { view, setView } = useView();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     if (leafletMap && initialZoom) {
@@ -193,7 +194,11 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
         const center = leafletMap.getCenter();
-        setView(center.lng, center.lat, leafletMap.getZoom());
+        setView({
+          x: center.lng,
+          y: center.lat,
+          zoom: leafletMap.getZoom(),
+        });
       }, 1000);
     };
     leafletMap.on('moveend', handleMoveEnd);
@@ -202,7 +207,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
       clearTimeout(timeoutId);
       leafletMap.off('moveend', handleMoveEnd);
     };
-  }, [leafletMap, setView]);
+  }, [leafletMap]);
 
   return { elementRef, leafletMap };
 }

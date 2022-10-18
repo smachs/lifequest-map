@@ -1,34 +1,33 @@
 import { mapDetails } from 'static';
 import styles from './MarkersView.module.css';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useMap } from 'ui/utils/routes';
-import { mapIsAeternumMap } from 'static';
+import { Button, Menu } from '@mantine/core';
+import useToMap from './useToMap';
 
 const SelectMap = () => {
   const map = useMap();
-  const navigate = useNavigate();
+  const toMap = useToMap();
 
   return (
     <div className={styles.actions}>
-      <select
-        onChange={(event) =>
-          navigate(
-            mapIsAeternumMap(event.target.value)
-              ? '/'
-              : `/${event.target.value}`
-          )
-        }
-        id="map"
-        aria-label="Select map"
-        name="map"
-        value={map}
-      >
-        {mapDetails.map((mapDetail) => (
-          <option key={mapDetail.name} value={mapDetail.title}>
-            {mapDetail.title}
-          </option>
-        ))}
-      </select>
+      <Menu>
+        <Menu.Target>
+          <Button variant="outline">{map}</Button>
+        </Menu.Target>
+
+        <Menu.Dropdown>
+          {mapDetails.map((mapDetail) => (
+            <Menu.Item
+              key={mapDetail.name}
+              component={Link}
+              to={toMap(mapDetail.title)}
+            >
+              {mapDetail.title}
+            </Menu.Item>
+          ))}
+        </Menu.Dropdown>
+      </Menu>
     </div>
   );
 };
