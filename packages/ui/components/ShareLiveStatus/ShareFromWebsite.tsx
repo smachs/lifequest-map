@@ -5,7 +5,6 @@ function ShareFromWebsite(): JSX.Element {
         You can read the live status of New World including position and
         character name 🤘.
       </p>
-      <h4>Instructions</h4>
       <p>
         Install{' '}
         <a

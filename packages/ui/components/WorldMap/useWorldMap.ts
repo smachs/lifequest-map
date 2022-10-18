@@ -8,7 +8,7 @@ import { useSettings } from '../../contexts/SettingsContext';
 import useRegionBorders from './useRegionBorders';
 import { mapIsAeternumMap, findMapDetails, AETERNUM_MAP } from 'static';
 import { useView } from 'ui/utils/routes';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
@@ -63,7 +63,6 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
   const { showRegionBorders } = useSettings();
   const { view, setView } = useView();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     if (leafletMap && initialZoom) {
