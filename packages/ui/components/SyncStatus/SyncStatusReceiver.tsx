@@ -35,14 +35,15 @@ function SyncStatusReceiver() {
   }
   return (
     <>
-      {player?.position && player.username && (
+      {player?.position && (
         <small>
-          <span className={styles.success}>Playing</span> as {player.username}{' '}
-          at [{player.position.location[1]}, {player.position.location[0]}]{' '}
+          <span className={styles.success}>Playing</span>
+          {player.username && ` as ${player.username}`} at [
+          {player.position.location[1]}, {player.position.location[0]}]{' '}
           <div>{player.region && `${player.location || player.region}`}</div>
         </small>
       )}
-      {player && (!player.position || !player.username) && (
+      {player && !player.position && (
         <small>
           <span className={styles.waiting}>Connected</span> to Overwolf app.
           Waiting for player position.

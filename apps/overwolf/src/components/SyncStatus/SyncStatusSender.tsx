@@ -1,18 +1,15 @@
 import useOverlayActivated from './useOverlayActivated';
-import type { Position } from '../../utils/useReadLivePosition';
 import styles from './SyncStatus.module.css';
+import { usePosition } from '../../contexts/PositionContext';
+import { IconAlertCircle } from '@tabler/icons';
+import { Group, Tooltip, ActionIcon } from '@mantine/core';
 
 type SyncStatusProps = {
   newWorldIsRunning: boolean;
-  player: {
-    username: string | null;
-    position: Position | null;
-    region: string | null;
-    location: string | null;
-  } | null;
 };
-function SyncStatusSender({ newWorldIsRunning, player }: SyncStatusProps) {
+function SyncStatusSender({ newWorldIsRunning }: SyncStatusProps) {
   const activated = useOverlayActivated();
+  const { position, location, region, username } = usePosition();
 
   if (!activated) {
     return (
@@ -32,17 +29,28 @@ function SyncStatusSender({ newWorldIsRunning, player }: SyncStatusProps) {
     );
   }
   return (
-    <>
-      {newWorldIsRunning && player?.username && player?.position && (
+    <Group spacing="xs">
+      <Tooltip
+        multiline
+        label={
+          "Make sure to run Overwolf before New World. If this doesn't help, please activate 'Show FPS' in-game to display coordinates. This app is using screen capture as fallback with limited functionalty."
+        }
+      >
+        <ActionIcon>
+          <IconAlertCircle size={18} />
+        </ActionIcon>
+      </Tooltip>
+      {newWorldIsRunning && position && (
         <small>
-          <span className={styles.success}>Playing</span> as {player.username}{' '}
-          at [{player.position.location[1]}, {player.position.location[0]}]{' '}
+          <span className={styles.success}>Playing</span>
+          {username && ` as ${username}`} at [{position.location[1]},{' '}
+          {position.location[0]}]{' '}
           <span className={styles.region}>
-            {player.region && `${player.location || player.region}`}
+            {region && `${location || region}`}
           </span>
         </small>
       )}
-      {newWorldIsRunning && (!player?.position || !player?.username) && (
+      {newWorldIsRunning && !position && (
         <small>
           <span className={styles.waiting}>Connected</span> to New World.
           Waiting for position.
@@ -58,7 +66,7 @@ function SyncStatusSender({ newWorldIsRunning, player }: SyncStatusProps) {
           Please run the game first.
         </small>
       )}
-    </>
+    </Group>
   );
 }
 

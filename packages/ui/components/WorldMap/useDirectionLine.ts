@@ -1,11 +1,11 @@
 import leaflet from 'leaflet';
 import { useEffect, useMemo, useState } from 'react';
-import type { Position } from '../../contexts/PositionContext';
+import type { Player } from 'realtime/types';
 import { useSettings } from '../../contexts/SettingsContext';
 import useEventListener from '../../utils/useEventListener';
 import { latestLeafletMap } from './useWorldMap';
 
-function useDirectionLine(position?: Position | null) {
+function useDirectionLine(position?: Player['position'] | null) {
   const { alwaysShowDirection } = useSettings();
   const [showDirection, setShowDirection] = useState(false);
 

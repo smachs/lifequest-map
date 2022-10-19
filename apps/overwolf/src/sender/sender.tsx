@@ -1,9 +1,10 @@
+import { MantineProvider } from '@mantine/core';
 import '../globals.css';
 import { StrictMode } from 'react';
 import AppHeader from './AppHeader';
 import { SettingsProvider } from 'ui/contexts/SettingsContext';
 import { useAccount, UserProvider } from 'ui/contexts/UserContext';
-import { PositionProvider } from 'ui/contexts/PositionContext';
+import { PositionProvider } from '../contexts/PositionContext';
 import { waitForOverwolf } from 'ui/utils/overwolf';
 import styles from './Sender.module.css';
 import Ads from 'ui/components/Ads/Ads';
@@ -44,13 +45,19 @@ function Sender(): JSX.Element {
 waitForOverwolf().then(() => {
   root.render(
     <StrictMode>
-      <SettingsProvider>
-        <UserProvider>
-          <PositionProvider>
-            <Sender />
-          </PositionProvider>
-        </UserProvider>
-      </SettingsProvider>
+      <MantineProvider
+        theme={{
+          colorScheme: 'dark',
+        }}
+      >
+        <SettingsProvider>
+          <UserProvider>
+            <PositionProvider>
+              <Sender />
+            </PositionProvider>
+          </UserProvider>
+        </SettingsProvider>
+      </MantineProvider>
     </StrictMode>
   );
 });
