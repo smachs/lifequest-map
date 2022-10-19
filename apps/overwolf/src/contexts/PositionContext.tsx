@@ -22,7 +22,6 @@ type PositionContextProps = {
   worldName: string | null;
   map: string | null;
   username: string | null;
-  fallbackToOCR: boolean;
 };
 
 const PositionContext = createContext<PositionContextProps>({
@@ -32,7 +31,6 @@ const PositionContext = createContext<PositionContextProps>({
   worldName: null,
   map: null,
   username: null,
-  fallbackToOCR: false,
 });
 
 type PositionProviderProps = {
@@ -47,7 +45,6 @@ export function PositionProvider({
   const [map, setMap] = useState<string>(AETERNUM_MAP.name);
   const [username, setUsername] = useState<string | null>(null);
   const newWorldIsRunning = useIsNewWorldRunning();
-  const [fallbackToOCR, setFallbackToOCR] = useState(false);
 
   const location = useMemo(
     () =>
@@ -82,6 +79,7 @@ export function PositionProvider({
     let lastPlayerName = '';
     let lastWorldName = '';
     let lastMap = '';
+    let falsePositive = 0;
     async function updatePosition() {
       try {
         const gameInfo = await getGameInfo();
@@ -110,32 +108,38 @@ export function PositionProvider({
             });
             hasError = false;
           }
-          if (fallbackToOCR) {
-            setFallbackToOCR(false);
-          }
         } else {
           const location = await getLocation();
-          const rotation = 90; // Need to find out the correct calculation
-          // const rotation =
-          //   (Math.atan2(
-          //     location[1] - (lastLocation?.[1] || location[1]),
-          //     location[0] - (lastLocation?.[0] || location[0])
-          //   ) *
-          //     180) /
-          //   -Math.PI;
+          const rotation =
+            (Math.atan2(
+              location[0] - (lastLocation?.[0] || location[0]),
+              location[1] - (lastLocation?.[1] || location[1])
+            ) *
+              180) /
+            Math.PI;
 
           if (
             lastLocation?.[0] !== location[0] ||
             lastLocation?.[1] !== location[1] ||
             lastRotation !== rotation
           ) {
-            lastLocation = location;
-            setPosition({
-              location,
-              rotation,
-            });
-            if (!fallbackToOCR) {
-              setFallbackToOCR(true);
+            const distance = lastLocation
+              ? Math.sqrt(
+                  Math.pow(location[0] - lastLocation[0], 2) +
+                    Math.pow(location[1] - lastLocation[1], 2)
+                )
+              : 0;
+            if (distance > 50 && falsePositive < 5) {
+              // Might be false positive
+              falsePositive++;
+            } else {
+              falsePositive = 0;
+              lastLocation = location;
+
+              setPosition({
+                location,
+                rotation,
+              });
             }
           }
         }
@@ -167,7 +171,7 @@ export function PositionProvider({
       active = false;
       clearTimeout(handler);
     };
-  }, [newWorldIsRunning, fallbackToOCR]);
+  }, [newWorldIsRunning]);
 
   return (
     <PositionContext.Provider
@@ -178,7 +182,6 @@ export function PositionProvider({
         map,
         worldName,
         username,
-        fallbackToOCR,
       }}
     >
       {children}
