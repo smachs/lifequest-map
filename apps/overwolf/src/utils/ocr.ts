@@ -276,10 +276,9 @@ export async function getLocation(): Promise<[number, number]> {
   if (!gameInfo || gameInfo.classId !== 21816) {
     throw new Error('Game is not running');
   }
-  const highResOffsetX = gameInfo.width > 3800 ? 245 : 0;
   const url = await takeScreenshot({
     crop: {
-      x: gameInfo.width - 280 - highResOffsetX,
+      x: gameInfo.width - 280,
       y: 19,
       width: 275,
       height: 15,
