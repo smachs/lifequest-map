@@ -89,6 +89,7 @@ const actions: {
 } = {
   lore_note: async (marker, user, refreshUser) => {
     if (!user) {
+      toast.warn('User not detected');
       return;
     }
     const markerId = marker.options.image.markerId;
@@ -192,10 +193,6 @@ const actions: {
   fish_hotspot3: respawnAction(5400),
 };
 
-const notFoundAction = () => {
-  toast.warning(`No action for marker found`);
-};
-
 export const getAction = (type: string) => {
-  return actions[type] || notFoundAction;
+  return actions[type];
 };

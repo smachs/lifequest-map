@@ -16,7 +16,6 @@ import useEventListener from '../../utils/useEventListener';
 import { calcDistance } from '../../utils/positions';
 import { usePlayer } from '../../contexts/PlayerContext';
 import { useRefreshUser, useUser } from '../../contexts/UserContext';
-import { toast } from 'react-toastify';
 import { getAction } from './actions';
 import { useNavigate } from 'react-router-dom';
 
@@ -57,7 +56,7 @@ function useLayerGroups({
 
   const onMarkerAction = useCallback(async () => {
     const playerLocation = player?.position?.location;
-    if (!playerLocation || !user) {
+    if (!playerLocation) {
       return;
     }
     const markers = markersLayerGroup.getLayers() as CanvasMarker[];
@@ -73,8 +72,6 @@ function useLayerGroups({
     if (marker) {
       const action = getAction(marker.options.image.type);
       action(marker, user, refreshUser);
-    } else {
-      toast.warn('Can not find near interactable marker');
     }
   }, [player?.position, user]);
 
