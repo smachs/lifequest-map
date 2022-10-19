@@ -190,7 +190,7 @@ function Minimap(): JSX.Element {
 
 const router = createBrowserRouter([
   {
-    path: '*',
+    path: '/',
     element: (
       <SettingsProvider>
         <UserProvider>
@@ -204,6 +204,13 @@ const router = createBrowserRouter([
         </UserProvider>
       </SettingsProvider>
     ),
+    children: [
+      {
+        id: 'map',
+        path: ':map',
+        element: null,
+      },
+    ],
   },
 ]);
 

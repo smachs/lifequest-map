@@ -68,7 +68,7 @@ function Minimap(): JSX.Element {
 
 const router = createBrowserRouter([
   {
-    path: '*',
+    path: '/',
     element: (
       <MantineProvider
         theme={{
@@ -88,6 +88,13 @@ const router = createBrowserRouter([
         </SettingsProvider>
       </MantineProvider>
     ),
+    children: [
+      {
+        id: 'map',
+        path: ':map',
+        element: null,
+      },
+    ],
   },
 ]);
 
