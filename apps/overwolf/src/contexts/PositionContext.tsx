@@ -8,9 +8,11 @@ import {
   findLocation,
   mapIsAeternumMap,
   findMapDetails,
+  AETERNUM_MAP,
 } from 'static';
-import { getGameInfo, useIsNewWorldRunning } from '../utils/games';
-import { writeError } from '../utils/logs';
+import { writeError } from 'ui/utils/logs';
+import { getGameInfo, useIsNewWorldRunning } from 'ui/utils/games';
+import { getLocation } from '../utils/ocr';
 
 export type Position = { location: [number, number]; rotation: number };
 type PositionContextProps = {
@@ -20,6 +22,7 @@ type PositionContextProps = {
   worldName: string | null;
   map: string | null;
   username: string | null;
+  fallbackToOCR: boolean;
 };
 
 const PositionContext = createContext<PositionContextProps>({
@@ -29,6 +32,7 @@ const PositionContext = createContext<PositionContextProps>({
   worldName: null,
   map: null,
   username: null,
+  fallbackToOCR: false,
 });
 
 type PositionProviderProps = {
@@ -39,10 +43,11 @@ export function PositionProvider({
   children,
 }: PositionProviderProps): JSX.Element {
   const [position, setPosition] = useState<Position | null>(null);
-  const [worldName, setWorldName] = useState<string | null>(null);
-  const [map, setMap] = useState<string | null>(null);
+  const [worldName, setWorldName] = useState<string>('Unknown');
+  const [map, setMap] = useState<string>(AETERNUM_MAP.name);
   const [username, setUsername] = useState<string | null>(null);
   const newWorldIsRunning = useIsNewWorldRunning();
+  const [fallbackToOCR, setFallbackToOCR] = useState(false);
 
   const location = useMemo(
     () =>
@@ -105,6 +110,34 @@ export function PositionProvider({
             });
             hasError = false;
           }
+          if (fallbackToOCR) {
+            setFallbackToOCR(false);
+          }
+        } else {
+          const location = await getLocation();
+          const rotation = 90; // Need to find out the correct calculation
+          // const rotation =
+          //   (Math.atan2(
+          //     location[1] - (lastLocation?.[1] || location[1]),
+          //     location[0] - (lastLocation?.[0] || location[0])
+          //   ) *
+          //     180) /
+          //   -Math.PI;
+
+          if (
+            lastLocation?.[0] !== location[0] ||
+            lastLocation?.[1] !== location[1] ||
+            lastRotation !== rotation
+          ) {
+            lastLocation = location;
+            setPosition({
+              location,
+              rotation,
+            });
+            if (!fallbackToOCR) {
+              setFallbackToOCR(true);
+            }
+          }
         }
         if (playerName && playerName !== lastPlayerName) {
           lastPlayerName = playerName;
@@ -134,7 +167,7 @@ export function PositionProvider({
       active = false;
       clearTimeout(handler);
     };
-  }, [newWorldIsRunning]);
+  }, [newWorldIsRunning, fallbackToOCR]);
 
   return (
     <PositionContext.Provider
@@ -145,6 +178,7 @@ export function PositionProvider({
         map,
         worldName,
         username,
+        fallbackToOCR,
       }}
     >
       {children}

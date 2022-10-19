@@ -1,7 +1,6 @@
 import leaflet from 'leaflet';
 import { useEffect, useMemo, useState } from 'react';
 import { usePlayer } from '../../contexts/PlayerContext';
-import { usePosition } from '../../contexts/PositionContext';
 import { useSettings } from '../../contexts/SettingsContext';
 import { isOverwolfApp } from '../../utils/overwolf';
 import type { Position } from '../../utils/useReadLivePosition';
@@ -55,25 +54,17 @@ function usePlayerPosition({
   let isFollowing: boolean | null = null;
   let playerPosition: Position | null = null;
   let playerMap: string | null = null;
-  if (!isOverwolfApp) {
-    const { player, following } = usePlayer();
-    useDirectionLine(player?.username ? player.position : null);
-    if (!isMinimap) {
-      useAdaptiveZoom(player?.username ? player : null);
-    }
-    if (player?.username) {
-      playerPosition = player.position;
-      playerMap = player.map;
-    }
-    isFollowing = following;
-  } else {
-    const { position, map: positionMap, username } = usePosition();
-    if (username) {
-      playerPosition = position;
-      playerMap = positionMap;
-    }
-    isFollowing = true;
+  const { player, following } = usePlayer();
+  useDirectionLine(player?.username ? player.position : null);
+  if (!isMinimap) {
+    useAdaptiveZoom(player?.username ? player : null);
   }
+  if (player?.position) {
+    playerPosition = player.position;
+    playerMap = player.map;
+  }
+  isFollowing = following;
+
   if (isEditing) {
     isFollowing = false;
   }
@@ -192,7 +183,6 @@ function usePlayerPosition({
 
       divElement.innerHTML = `<span>[${playerPosition.location[1]}, ${playerPosition.location[0]}]</span>`;
     }
-
     if (isFollowing) {
       leafletMap.panTo(
         [playerPosition.location[0], playerPosition.location[1]],

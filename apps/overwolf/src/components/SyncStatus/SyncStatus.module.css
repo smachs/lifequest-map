@@ -1,0 +1,15 @@
+.success {
+  color: #07bc0c;
+}
+
+.waiting {
+  color: var(--color-secondary);
+}
+
+.warning {
+  color: lightcoral;
+}
+
+.region {
+  display: block;
+}
