@@ -26,11 +26,9 @@ function usePlayerPosition({
   let playerPosition: Position | null = null;
   let playerMap: string | null = null;
 
-  const { position, map: positionMap, username } = usePosition();
-  if (username) {
-    playerPosition = position;
-    playerMap = positionMap;
-  }
+  const { position, map: positionMap } = usePosition();
+  playerPosition = position;
+  playerMap = positionMap;
 
   const isOnSameWorld = useMemo(
     () => !!playerMap && findMapDetails(playerMap) === findMapDetails(map),
