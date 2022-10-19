@@ -133,7 +133,8 @@
       "marker_action": {
         "title": "Interact with near marker (Website)",
         "action-type": "custom",
-        "default": "F10"
+        "default": "E",
+        "passthrough": true
       },
       "show_hide_direction": {
         "title": "Show/Hide Direction (Website)",
