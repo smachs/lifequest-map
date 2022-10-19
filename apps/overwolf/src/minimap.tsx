@@ -3,8 +3,8 @@ import './globals.css';
 import { waitForOverwolf } from 'ui/utils/overwolf';
 import { UserProvider } from 'ui/contexts/UserContext';
 import { MarkersProvider } from 'ui/contexts/MarkersContext';
-import { PositionProvider } from 'ui/contexts/PositionContext';
-import WorldMapBlank from './WorldMapBlank';
+import { PositionProvider } from './contexts/PositionContext';
+import WorldMapBlank from './components/WorldMapBlank';
 import styles from './Minimap.module.css';
 import { dragMoveWindow, WINDOWS } from 'ui/utils/windows';
 import {
@@ -127,8 +127,6 @@ function Minimap(): JSX.Element {
         }}
       >
         <WorldMapBlank
-          isMinimap
-          hideControls
           initialZoom={minimapZoom}
           className={styles.minimap}
           rotate={rotateMinimap}

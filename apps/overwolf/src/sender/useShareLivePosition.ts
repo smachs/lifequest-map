@@ -3,7 +3,7 @@ import type { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import type { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
 import { useAccount } from 'ui/contexts/UserContext';
-import { usePosition } from 'ui/contexts/PositionContext';
+import { usePosition } from '../contexts/PositionContext';
 import { usePersistentState } from 'ui/utils/storage';
 import { toast } from 'react-toastify';
 import type { Group } from 'ui/utils/useReadLivePosition';
