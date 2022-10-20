@@ -37,13 +37,6 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'locations',
-    type: 'glyph',
-    title: 'Ancient Glyph',
-    iconUrl: '/pois/glyph.webp',
-    hasName: true,
-  },
-  {
-    category: 'locations',
     type: 'outpost',
     title: 'Outpost',
     iconUrl: '/pois/outpost.webp',
@@ -576,6 +569,13 @@ export const mapFilters: FilterItem[] = [
     hasName: true,
   },
   {
+    category: 'lore',
+    type: 'glyph',
+    title: 'Ancient Glyph',
+    iconUrl: '/pois/glyph.webp',
+    hasName: true,
+  },
+  {
     category: 'essences',
     type: 'essences_shockbulb',
     title: 'Shockbulb',
@@ -992,7 +992,7 @@ export const mapFiltersCategories: MapFiltersCategory[] = [
   },
   {
     value: 'lore',
-    title: 'Lore',
+    title: 'Documents',
     filters: mapFilters.filter((mapFilter) => mapFilter.category === 'lore'),
     borderColor: 'rgba(65, 105, 225, 0.7)',
   },
