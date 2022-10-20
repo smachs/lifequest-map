@@ -21,7 +21,7 @@ import useEventListener from 'ui/utils/useEventListener';
 import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
 import { initPlausible } from 'ui/utils/stats';
 import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 const root = createRoot(document.querySelector('#root')!);
 
@@ -188,7 +188,7 @@ function Minimap(): JSX.Element {
   );
 }
 
-const router = createBrowserRouter([
+const router = createMemoryRouter([
   {
     path: '/',
     element: (

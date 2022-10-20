@@ -67,24 +67,23 @@ export function PositionProvider({
     if (!newWorldIsRunning) {
       return;
     }
-
     overwolf.games.events.setRequiredFeatures(['game_info'], () => undefined);
 
     let handler = setTimeout(updatePosition, 50);
     let active = true;
 
-    let lastLocation: [number, number] | null = null;
-    let lastRotation: number | null = null;
+    let lastLocation: [number, number] | null = position?.location || null;
+    let lastRotation: number | null = position?.rotation || null;
     let hasError = false;
-    let lastPlayerName = '';
-    let lastWorldName = '';
-    let lastMap = '';
-    let falsePositive = 0;
+    let lastUsername = username;
+    let lastWorldName = worldName;
+    let lastMap = map;
+    let falsePositiveCount = 0;
     async function updatePosition() {
       try {
         const gameInfo = await getGameInfo();
         const {
-          player_name: playerName,
+          player_name: username,
           location: locationList,
           world_name: worldName,
           map,
@@ -109,6 +108,7 @@ export function PositionProvider({
             hasError = false;
           }
         } else {
+          // OCR fallback
           const location = await getLocation();
           const rotation =
             (Math.atan2(
@@ -129,11 +129,11 @@ export function PositionProvider({
                     Math.pow(location[1] - lastLocation[1], 2)
                 )
               : 0;
-            if (distance > 50 && falsePositive < 5) {
+            if (distance > 50 && falsePositiveCount < 5) {
               // Might be false positive
-              falsePositive++;
+              falsePositiveCount++;
             } else {
-              falsePositive = 0;
+              falsePositiveCount = 0;
               lastLocation = location;
 
               setPosition({
@@ -143,9 +143,9 @@ export function PositionProvider({
             }
           }
         }
-        if (playerName && playerName !== lastPlayerName) {
-          lastPlayerName = playerName;
-          setUsername(playerName);
+        if (username && username !== lastUsername) {
+          lastUsername = username;
+          setUsername(username);
         }
         if (worldName && worldName !== lastWorldName) {
           lastWorldName = worldName;
