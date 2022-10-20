@@ -80,6 +80,31 @@ const respawnSizeAction =
     return respawnAction(timer)(marker);
   };
 
+const hideMarker = async (
+  marker: CanvasMarker,
+  user: User | null,
+  refreshUser: () => void
+) => {
+  if (!user) {
+    toast.warn('User not detected');
+    return;
+  }
+  const markerId = marker.options.image.markerId;
+  const hiddenMarkerIds = [...user.hiddenMarkerIds];
+  let message: string;
+  if (hiddenMarkerIds.indexOf(markerId) === -1) {
+    hiddenMarkerIds.push(markerId);
+    message = 'Lore note is hidden';
+  } else {
+    hiddenMarkerIds.splice(hiddenMarkerIds.indexOf(markerId), 1);
+    message = 'Lore note is not hidden anymore';
+  }
+  await notify(patchUser(user.username, hiddenMarkerIds), {
+    success: message,
+  });
+  refreshUser();
+};
+
 const actions: {
   [type: string]: (
     marker: CanvasMarker,
@@ -87,26 +112,8 @@ const actions: {
     refreshUser: () => void
   ) => void;
 } = {
-  lore_note: async (marker, user, refreshUser) => {
-    if (!user) {
-      toast.warn('User not detected');
-      return;
-    }
-    const markerId = marker.options.image.markerId;
-    const hiddenMarkerIds = [...user.hiddenMarkerIds];
-    let message: string;
-    if (hiddenMarkerIds.indexOf(markerId) === -1) {
-      hiddenMarkerIds.push(markerId);
-      message = 'Lore note is hidden';
-    } else {
-      hiddenMarkerIds.splice(hiddenMarkerIds.indexOf(markerId), 1);
-      message = 'Lore note is not hidden anymore';
-    }
-    await notify(patchUser(user.username, hiddenMarkerIds), {
-      success: message,
-    });
-    refreshUser();
-  },
+  lore_note: hideMarker,
+  glyph: hideMarker,
   lostPresent: respawnAction(600),
   floatingPresent: respawnAction(600),
   chestsEliteAncient: respawnAction(82800),
