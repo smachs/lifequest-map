@@ -71,6 +71,12 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'chests',
+    type: 'glyphChest',
+    title: 'Glyph Chest',
+    iconUrl: '/pois/chest_glyph.webp',
+  },
+  {
+    category: 'chests',
     type: 'chestsEliteAncient',
     title: 'Elite Ancient Chest',
     iconUrl: '/pois/chest_elite2.webp',

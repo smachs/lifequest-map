@@ -290,6 +290,9 @@ const allNodes = [
       ...toNode({ type: 'lore_note' })(document),
       name: loreTitles[document.title],
     })),
+  ...Object.values(markers.chests.glyphelite).map(
+    toNode({ type: 'glyphChest', tier: 1 })
+  ),
 ];
 const filteredNodes = allNodes.filter(inBrimstoneSands);
 
