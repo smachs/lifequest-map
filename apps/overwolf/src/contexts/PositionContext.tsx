@@ -110,6 +110,7 @@ export function PositionProvider({
         } else {
           // OCR fallback
           const location = await getLocation();
+
           const rotation =
             (Math.atan2(
               location[0] - (lastLocation?.[0] || location[0]),

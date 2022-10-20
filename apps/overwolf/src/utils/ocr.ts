@@ -83,7 +83,7 @@ async function preprocessorImage(
   width: number,
   height: number
 ): Promise<string> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const image = new Image(width, height);
     image.src = url;
     image.onload = async () => {
@@ -99,6 +99,9 @@ async function preprocessorImage(
       context.putImageData(imageData, 0, 0);
       const dataURI = canvas.toDataURL('image/jpeg');
       resolve(dataURI);
+    };
+    image.onerror = async (error) => {
+      reject(error);
     };
   });
 }
