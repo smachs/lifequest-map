@@ -14,7 +14,7 @@ import { initPlausible } from 'ui/utils/stats';
 import { PlayerProvider } from 'ui/contexts/PlayerContext';
 import { createRoot } from 'react-dom/client';
 import { MantineProvider } from '@mantine/core';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 const root = createRoot(document.querySelector('#root')!);
 
@@ -66,7 +66,7 @@ function Minimap(): JSX.Element {
   );
 }
 
-const router = createBrowserRouter([
+const router = createMemoryRouter([
   {
     path: '/',
     element: (
