@@ -16,6 +16,7 @@ type CanvasMarkerOptions = {
     rotate?: number;
     highlight?: boolean;
   };
+  customRespawnTimer?: number;
 };
 
 const imageElements: {
@@ -31,6 +32,7 @@ class CanvasMarker extends leaflet.CircleMarker {
   declare _point: any;
   public actionHandle?: NodeJS.Timeout;
   public popup?: leaflet.Popup;
+  public customRespawnTimer?: number;
 
   constructor(
     latLng: leaflet.LatLngExpression,
@@ -43,6 +45,7 @@ class CanvasMarker extends leaflet.CircleMarker {
       imageElements[options.image.src].src = options.image.src;
     }
     this.imageElement = imageElements[options.image.src];
+    this.customRespawnTimer = options.customRespawnTimer;
   }
 
   _redraw(): void {

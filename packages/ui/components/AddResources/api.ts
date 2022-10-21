@@ -12,6 +12,7 @@ export type MarkerDTO = {
   chestType?: string;
   tier?: number;
   size?: MarkerSize;
+  customRespawnTimer?: number;
   description?: string;
   screenshotId?: string;
 };

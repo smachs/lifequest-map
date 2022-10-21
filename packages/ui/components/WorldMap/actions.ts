@@ -18,7 +18,11 @@ const formatTimer = (seconds: number) => {
   return [minutes, seconds % 60].map(format).join(':');
 };
 const respawnAction =
-  (respawnTimer: number) => async (marker: CanvasMarker) => {
+  (typeRespawnTimer?: number) => async (marker: CanvasMarker) => {
+    const respawnTimer = marker.customRespawnTimer ?? typeRespawnTimer;
+    if (!respawnTimer) {
+      return;
+    }
     if (marker.actionHandle) {
       clearTimeout(marker.actionHandle);
       delete marker.actionHandle;
@@ -198,6 +202,8 @@ const actions: {
   fish_hotspot1: respawnAction(1800),
   fish_hotspot2: respawnAction(2700),
   fish_hotspot3: respawnAction(5400),
+  boss: respawnAction(90),
+  bossElite: respawnAction(360),
 };
 
 export const getAction = (type: string) => {

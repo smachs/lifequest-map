@@ -80,6 +80,9 @@ function ensureMarkersSchema(): Promise<Document> {
           issues: {
             bsonType: 'int',
           },
+          customRespawnTimer: {
+            bsonType: 'int',
+          },
           isPrivate: {
             bsonType: 'bool',
           },

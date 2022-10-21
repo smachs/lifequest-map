@@ -10,6 +10,7 @@ export type FilterItem = {
   iconUrl: string;
   hasName?: boolean;
   hasLevel?: boolean;
+  hasCustomRespawnTimer?: boolean;
   maxTier?: number;
   sizes?: MarkerSize[];
 };
@@ -177,6 +178,7 @@ export const mapFilters: FilterItem[] = [
     iconUrl: '/pois/boss.webp',
     hasName: true,
     hasLevel: true,
+    hasCustomRespawnTimer: true,
   },
   {
     category: 'enemies',
@@ -185,6 +187,7 @@ export const mapFilters: FilterItem[] = [
     iconUrl: '/pois/boss.webp',
     hasName: true,
     hasLevel: true,
+    hasCustomRespawnTimer: true,
   },
   {
     category: 'enemies',

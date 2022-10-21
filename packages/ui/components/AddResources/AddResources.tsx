@@ -23,6 +23,7 @@ export type Details = {
   chestType?: string;
   tier?: number;
   size?: MarkerSize;
+  customRespawnTimer?: number;
 };
 
 type AddResourcesProps = {
@@ -84,6 +85,9 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
     }
     if (filter.hasName) {
       details.name = marker?.name || '';
+    }
+    if (filter.hasCustomRespawnTimer) {
+      details.customRespawnTimer = marker?.customRespawnTimer || 0;
     }
     setDetails(details);
   }, [filter]);
