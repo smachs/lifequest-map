@@ -281,7 +281,7 @@ export async function getScreenshotFromNewWorld() {
   }
   const url = await takeScreenshot({
     crop: {
-      x: gameInfo.width - 293,
+      x: gameInfo.logicalWidth - 293,
       y: 20,
       width: 288,
       height: 14,
