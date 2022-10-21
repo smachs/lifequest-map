@@ -12,7 +12,7 @@ import {
 } from 'static';
 import { writeError } from 'ui/utils/logs';
 import { getGameInfo, useIsNewWorldRunning } from 'ui/utils/games';
-import { getLocation } from '../utils/ocr';
+import { getLocation, getScreenshotFromNewWorld } from '../utils/ocr';
 
 export type Position = { location: [number, number]; rotation: number };
 type PositionContextProps = {
@@ -22,6 +22,7 @@ type PositionContextProps = {
   worldName: string | null;
   map: string | null;
   username: string | null;
+  isOCR: boolean;
 };
 
 const PositionContext = createContext<PositionContextProps>({
@@ -31,6 +32,7 @@ const PositionContext = createContext<PositionContextProps>({
   worldName: null,
   map: null,
   username: null,
+  isOCR: false,
 });
 
 type PositionProviderProps = {
@@ -45,6 +47,7 @@ export function PositionProvider({
   const [map, setMap] = useState<string>(AETERNUM_MAP.name);
   const [username, setUsername] = useState<string | null>(null);
   const newWorldIsRunning = useIsNewWorldRunning();
+  const [isOCR, setIsOCR] = useState(false);
 
   const location = useMemo(
     () =>
@@ -79,6 +82,8 @@ export function PositionProvider({
     let lastWorldName = worldName;
     let lastMap = map;
     let falsePositiveCount = 0;
+    let lastIsOCR = isOCR;
+
     async function updatePosition() {
       try {
         const gameInfo = await getGameInfo();
@@ -107,9 +112,14 @@ export function PositionProvider({
             });
             hasError = false;
           }
+          if (lastIsOCR) {
+            lastIsOCR = false;
+            setIsOCR(false);
+          }
         } else {
           // OCR fallback
-          const location = await getLocation();
+          const url = await getScreenshotFromNewWorld();
+          const location = await getLocation(url);
 
           const rotation =
             (Math.atan2(
@@ -142,6 +152,10 @@ export function PositionProvider({
                 rotation,
               });
             }
+          }
+          if (!lastIsOCR) {
+            lastIsOCR = true;
+            setIsOCR(true);
           }
         }
         if (username && username !== lastUsername) {
@@ -183,6 +197,7 @@ export function PositionProvider({
         map,
         worldName,
         username,
+        isOCR,
       }}
     >
       {children}

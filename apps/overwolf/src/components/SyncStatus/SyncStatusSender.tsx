@@ -1,7 +1,7 @@
 import useOverlayActivated from './useOverlayActivated';
 import styles from './SyncStatus.module.css';
 import { usePosition } from '../../contexts/PositionContext';
-import { IconAlertCircle } from '@tabler/icons';
+import { IconAlertCircle, IconCircleCheck, IconEyeCheck } from '@tabler/icons';
 import { Group, Tooltip, ActionIcon } from '@mantine/core';
 
 type SyncStatusProps = {
@@ -9,7 +9,7 @@ type SyncStatusProps = {
 };
 function SyncStatusSender({ newWorldIsRunning }: SyncStatusProps) {
   const activated = useOverlayActivated();
-  const { position, location, region, username } = usePosition();
+  const { position, location, region, username, isOCR } = usePosition();
 
   if (!activated) {
     return (
@@ -30,16 +30,37 @@ function SyncStatusSender({ newWorldIsRunning }: SyncStatusProps) {
   }
   return (
     <Group spacing="xs">
-      <Tooltip
-        multiline
-        label={
-          "Make sure to run Overwolf before New World. If this doesn't help, please activate 'Show FPS' in-game to display coordinates. This app is using screen capture as fallback with limited functionalty."
-        }
-      >
-        <ActionIcon>
-          <IconAlertCircle size={18} />
-        </ActionIcon>
-      </Tooltip>
+      {location && isOCR && (
+        <Tooltip
+          multiline
+          label={
+            'Could not detect position from Overwolf API, but fallback to OCR works 🤘.'
+          }
+        >
+          <ActionIcon>
+            <IconEyeCheck size={18} />
+          </ActionIcon>
+        </Tooltip>
+      )}
+      {location && !isOCR && (
+        <Tooltip multiline label={'Everything works fine 🤘.'}>
+          <ActionIcon>
+            <IconCircleCheck size={18} />
+          </ActionIcon>
+        </Tooltip>
+      )}
+      {!location && (
+        <Tooltip
+          multiline
+          label={
+            "Make sure to run Overwolf before New World. If this doesn't help, please activate 'Show FPS' in-game to display coordinates. This app is using screen capture as fallback with limited functionalty."
+          }
+        >
+          <ActionIcon>
+            <IconAlertCircle size={18} />
+          </ActionIcon>
+        </Tooltip>
+      )}
       {newWorldIsRunning && position && (
         <small>
           <span className={styles.success}>Playing</span>

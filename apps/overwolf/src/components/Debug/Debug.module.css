@@ -1,0 +1,9 @@
+.dump {
+  background: var(--color-shade-two);
+  color: white;
+  padding: 0.5em;
+}
+
+.ocr {
+  max-width: 100%;
+}
