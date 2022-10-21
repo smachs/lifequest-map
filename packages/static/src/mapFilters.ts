@@ -89,6 +89,12 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'chests',
+    type: 'chestsEliteOffering',
+    title: 'Elite Grave Offering',
+    iconUrl: '/pois/chest_elite_offering.webp',
+  },
+  {
+    category: 'chests',
     type: 'chestsLargeAlchemy',
     title: 'Alchemy Stockpile',
     iconUrl: '/pois/chest_large1.webp',
@@ -112,6 +118,12 @@ export const mapFilters: FilterItem[] = [
     type: 'chestsLargeSupplies',
     title: 'Supply Stockpile',
     iconUrl: '/pois/chest_large4.webp',
+  },
+  {
+    category: 'chests',
+    type: 'chestsOffering',
+    title: 'Grave Offering',
+    iconUrl: '/pois/chest_offering.webp',
   },
   {
     category: 'chests',
@@ -356,6 +368,13 @@ export const mapFilters: FilterItem[] = [
     type: 'starmetal',
     title: 'Starmetal',
     iconUrl: '/pois/starmetal.webp',
+    sizes: defaultSizes,
+  },
+  {
+    category: 'mining',
+    type: 'brimstone',
+    title: 'Sulfur',
+    iconUrl: '/pois/brimstone.webp',
     sizes: defaultSizes,
   },
   {

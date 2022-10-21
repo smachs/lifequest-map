@@ -167,6 +167,9 @@ const allNodes = [
   ...Object.values(markers.plants.PricklyPearCactus).map(
     toNode({ type: 'pricklyPearCactus' })
   ),
+  ...Object.values(markers.ores.brimstone).map(
+    toNode({ type: 'brimstone', size: '?' })
+  ),
   ...Object.values(markers.chests.al1).map(
     toNode({ type: 'chestsLargeAlchemy', tier: 1 })
   ),
@@ -283,6 +286,12 @@ const allNodes = [
   ),
   ...Object.values(markers.chests.ss3).map(
     toNode({ type: 'chestsCommonSupplies', tier: 3 })
+  ),
+  ...Object.values(markers.chests.legionelite).map(
+    toNode({ type: 'chestsEliteOffering', tier: 1 })
+  ),
+  ...Object.values(markers.chests.ancientoffering).map(
+    toNode({ type: 'chestsOffering', tier: 1 })
   ),
   ...Object.values(markers.documents)
     .flatMap(Object.values)
