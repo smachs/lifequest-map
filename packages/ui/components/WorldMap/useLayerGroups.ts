@@ -203,6 +203,7 @@ function useLayerGroups({
             comments: marker.comments,
             issues: marker.issues,
           },
+          customRespawnTimer: marker.customRespawnTimer,
           pmIgnore: false,
         }).bindTooltip(getTooltipContent(marker, mapFilter), {
           direction: 'top',

@@ -28,6 +28,7 @@ export type MarkerBasic = {
   comments?: number;
   size?: MarkerSize;
   issues?: number;
+  customRespawnTimer?: number;
   _id: string;
   screenshotFilename?: string;
 };

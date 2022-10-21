@@ -114,6 +114,11 @@ function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
               </Text>
             )}
             {marker.level && <Text size="sm">Level {marker.level}</Text>}
+            {marker.customRespawnTimer && (
+              <Text size="sm" color="lime">
+                Respawns {marker.customRespawnTimer}s
+              </Text>
+            )}
             <Coordinates position={marker.position} />
           </Group>
           <Text size="xs">

@@ -89,6 +89,26 @@ function DetailsInput({
             />
           </label>
         )}
+        {filter?.hasCustomRespawnTimer && (
+          <label className={styles.label}>
+            <span className={generalStyles.key}>Respawn (optional)</span>
+            <div>
+              <input
+                type="number"
+                name="size"
+                value={details.customRespawnTimer}
+                style={{ width: 130 }}
+                onChange={(event) =>
+                  onChange({
+                    ...details,
+                    customRespawnTimer: +event.target.value,
+                  })
+                }
+              />
+              <span>seconds</span>
+            </div>
+          </label>
+        )}
         <label className={styles.label}>
           <span className={generalStyles.key}>Description (optional)</span>
           <textarea
