@@ -1,8 +1,6 @@
 import CloseIcon from 'ui/components/icons/CloseIcon';
 import { useSettings } from 'ui/contexts/SettingsContext';
 import { useAccount } from 'ui/contexts/UserContext';
-import { copyTextToClipboard } from 'ui/utils/clipboard';
-import { getGameInfo } from 'ui/utils/games';
 import {
   SETUP_MINIMAP,
   SHOW_HIDE_DIRECTION,
@@ -15,6 +13,7 @@ import {
   ZOOM_OUT_MAP,
   MARKER_ACTION,
 } from 'ui/utils/hotkeys';
+import Debug from '../components/Debug/Debug';
 import styles from './Settings.module.css';
 
 type SettingsProps = {
@@ -134,17 +133,7 @@ function Settings({
         <button onClick={logoutAccount} className={styles.logout}>
           Sign out
         </button>
-        <h4>Debug</h4>
-        <button
-          onClick={() => {
-            getGameInfo().then((result) =>
-              copyTextToClipboard(JSON.stringify(result, null, 2))
-            );
-          }}
-          className={styles.dump}
-        >
-          Copy game info
-        </button>
+        <Debug />
       </div>
     </div>
   );

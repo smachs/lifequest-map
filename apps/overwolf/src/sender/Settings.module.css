@@ -32,9 +32,3 @@
   color: lightcoral;
   padding: 0.5em;
 }
-
-.dump {
-  background: var(--color-shade-two);
-  color: white;
-  padding: 0.5em;
-}

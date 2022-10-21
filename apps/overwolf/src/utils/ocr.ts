@@ -272,7 +272,7 @@ function invertColors(pixels: Uint8ClampedArray) {
   }
 }
 
-export async function getLocation(): Promise<[number, number]> {
+export async function getScreenshotFromNewWorld() {
   const gameInfo = await new Promise<overwolf.games.GetRunningGameInfoResult>(
     (resolve) => overwolf.games.getRunningGameInfo((result) => resolve(result))
   );
@@ -281,17 +281,20 @@ export async function getLocation(): Promise<[number, number]> {
   }
   const url = await takeScreenshot({
     crop: {
-      x: gameInfo.width - 280,
-      y: 19,
-      width: 275,
-      height: 15,
+      x: gameInfo.width - 293,
+      y: 20,
+      width: 288,
+      height: 14,
     },
     rescale: {
-      width: 550,
-      height: 30,
+      width: 288 * 2,
+      height: 14 * 2,
     },
   });
+  return url;
+}
 
+export async function getLocation(url: string): Promise<[number, number]> {
   const dataURL = await preprocessorImage(url, 550, 30);
   await initializedWorker;
 
