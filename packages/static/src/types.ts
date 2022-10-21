@@ -31,6 +31,7 @@ export type ItemDTO = {
   minGearScore: number;
   maxGearScore: number;
   markerIds: string[];
+  unique: boolean;
   updatedAt?: Date;
   createdAt: Date;
 };

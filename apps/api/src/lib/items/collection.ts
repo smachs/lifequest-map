@@ -51,6 +51,9 @@ function ensureItemsSchema(): Promise<Document> {
               bsonType: 'string',
             },
           },
+          unique: {
+            bsonType: 'bool',
+          },
           updatedAt: {
             bsonType: 'date',
           },
@@ -68,6 +71,7 @@ function ensureItemsSchema(): Promise<Document> {
           'minGearScore',
           'maxGearScore',
           'markerIds',
+          'unique',
           'createdAt',
         ],
       },
