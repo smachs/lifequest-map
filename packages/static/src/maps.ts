@@ -33,6 +33,17 @@ export const mapDetails: Map[] = [
     ],
   },
   {
+    name: 'NW_Dungeon_BrimstoneSands_00',
+    title: 'The Ennead',
+    folder: 'nw_dungeon_brimstonesands_00',
+    maxZoom: 6,
+    minZoom: 3,
+    maxBounds: [
+      [740, 550],
+      [1450, 1500],
+    ],
+  },
+  {
     name: 'NW_Dungeon_CutlassKeys_00',
     title: 'Barnacles & Black Powder',
     folder: 'nw_dungeon_cutlasskeys_00',
