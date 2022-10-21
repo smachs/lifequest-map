@@ -128,6 +128,7 @@ export const updateItems = async () => {
           minGearScore: item.min_gear_score,
           maxGearScore: item.max_gear_score,
           markerIds: markerIds[item.item_id],
+          unique: Boolean(item.unique),
         },
       },
       { upsert: true }

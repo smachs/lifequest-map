@@ -1,5 +1,13 @@
 import useLoot from './useLoot';
-import { Anchor, Image, List, Skeleton, Text } from '@mantine/core';
+import {
+  Anchor,
+  Badge,
+  Group,
+  Image,
+  List,
+  Skeleton,
+  Text,
+} from '@mantine/core';
 import { useEffect } from 'react';
 
 const rarityColors: {
@@ -37,7 +45,14 @@ function Loot({ markerId }: LootProps) {
   }, []);
 
   return (
-    <List spacing="xs">
+    <List
+      spacing="xs"
+      styles={{
+        itemWrapper: {
+          width: '100%',
+        },
+      }}
+    >
       {isLoading && <Skeleton height={40} />}
       {!isLoading && !items && <Text color="dimmed">No loot found</Text>}
       {!isLoading &&
@@ -45,27 +60,47 @@ function Loot({ markerId }: LootProps) {
           <List.Item
             key={item.id}
             icon={<Image src={item.iconSrc} width={24} height={24} />}
+            sx={{
+              width: '100%',
+            }}
           >
             <Anchor
               href={`https://newworldfans.com/db/item/${item.slug}`}
               target="_blank"
-              style={{
+              sx={{
                 color: rarityColors[item.rarity],
+                width: '100%',
+                ':hover': {
+                  textDecoration: 'none',
+                },
               }}
             >
-              {item.name}
-              {item.maxGearScore > 0 && (
-                <>
-                  {' '}
-                  {item.minGearScore !== item.maxGearScore ? (
-                    <Text component="span">
-                      {item.minGearScore}-{item.maxGearScore} GS
-                    </Text>
-                  ) : (
-                    <Text component="span">{item.maxGearScore} GS</Text>
-                  )}
-                </>
-              )}
+              <Group>
+                <Text>{item.name}</Text>
+                {item.maxGearScore > 0 && (
+                  <Badge
+                    color="lime"
+                    sx={{
+                      cursor: 'inherit',
+                    }}
+                  >
+                    {item.minGearScore !== item.maxGearScore
+                      ? `${item.minGearScore}-${item.maxGearScore}`
+                      : item.maxGearScore}{' '}
+                    GS
+                  </Badge>
+                )}
+
+                {item.unique && (
+                  <Badge
+                    sx={{
+                      cursor: 'inherit',
+                    }}
+                  >
+                    Unique
+                  </Badge>
+                )}
+              </Group>
             </Anchor>
           </List.Item>
         ))}
