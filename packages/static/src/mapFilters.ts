@@ -359,6 +359,13 @@ export const mapFilters: FilterItem[] = [
     sizes: defaultSizes,
   },
   {
+    category: 'mining',
+    type: 'brimstone',
+    title: 'Sulfur',
+    iconUrl: '/pois/brimstone.webp',
+    sizes: defaultSizes,
+  },
+  {
     category: 'fishing',
     type: 'fish_hotspot1',
     title: 'Fish Broad',

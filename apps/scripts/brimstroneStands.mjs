@@ -296,11 +296,18 @@ const allNodes = [
 ];
 const filteredNodes = allNodes.filter(inBrimstoneSands);
 
+const specificNodes = [
+  ...Object.values(markers.ores.brimstone).map(
+    toNode({ type: 'brimstone', size: '?' })
+  ),
+];
+
 const client = new MongoClient(process.env.MONGODB_URI);
 await client.connect();
 const markersCollection = client.db().collection('markers');
 
-for (const node of filteredNodes) {
+for (const node of specificNodes) {
+  // for (const node of filteredNodes) {
   const normalizedNode = {
     ...node,
     position: node.position.map(Double),
