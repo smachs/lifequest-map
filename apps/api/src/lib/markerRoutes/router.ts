@@ -131,22 +131,43 @@ markerRoutesRouter.get('/', async (req, res, next) => {
   }
 });
 
+markerRoutesRouter.get('/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    if (!ObjectId.isValid(id)) {
+      res.status(400).send('Invalid payload');
+      return;
+    }
+
+    const markerRoute = await getMarkerRoutesCollection().findOne({
+      _id: new ObjectId(id),
+    });
+    if (!markerRoute) {
+      res.status(404).json({ message: 'No route found' });
+      return;
+    }
+    res.status(200).json(markerRoute);
+  } catch (error) {
+    next(error);
+  }
+});
+
 markerRoutesRouter.delete(
-  '/:markerRouteId',
+  '/:id',
   ensureAuthenticated,
   async (req, res, next) => {
     try {
       const account = req.account!;
 
-      const { markerRouteId } = req.params;
+      const { id } = req.params;
 
-      if (!ObjectId.isValid(markerRouteId)) {
+      if (!ObjectId.isValid(id)) {
         res.status(400).send('Invalid payload');
         return;
       }
 
       const query: Filter<MarkerRouteDTO> = {
-        _id: new ObjectId(markerRouteId),
+        _id: new ObjectId(id),
       };
       if (!account.isModerator) {
         query.userId = account.steamId;
@@ -155,7 +176,7 @@ markerRoutesRouter.delete(
       const markerRoutesCollection = getMarkerRoutesCollection();
       const markerRoute = await markerRoutesCollection.findOne(query);
       if (!markerRoute) {
-        res.status(404).end(`No marker route found for id ${markerRouteId}`);
+        res.status(404).end(`No marker route found for id ${id}`);
         return;
       }
       if (
@@ -169,7 +190,7 @@ markerRoutesRouter.delete(
 
       const result = await getMarkerRoutesCollection().deleteOne(query);
       if (!result.deletedCount) {
-        res.status(404).end(`No marker route found for id ${markerRouteId}`);
+        res.status(404).end(`No marker route found for id ${id}`);
         return;
       }
       if (markerRoute.origin) {
@@ -191,23 +212,23 @@ markerRoutesRouter.delete(
 );
 
 markerRoutesRouter.patch(
-  '/:markerRouteId',
+  '/:id',
   ensureAuthenticated,
   async (req, res, next) => {
     try {
       const account = req.account!;
 
-      const { markerRouteId } = req.params;
+      const { id } = req.params;
       const { name, description, isPublic, positions, markersByType, map } =
         req.body;
 
-      if (!ObjectId.isValid(markerRouteId)) {
+      if (!ObjectId.isValid(id)) {
         res.status(400).send('Invalid payload');
         return;
       }
 
       const query: Filter<MarkerRouteDTO> = {
-        _id: new ObjectId(markerRouteId),
+        _id: new ObjectId(id),
       };
       if (!account.isModerator) {
         query.userId = account.steamId;
@@ -215,7 +236,7 @@ markerRoutesRouter.patch(
       const markerRoutesCollection = getMarkerRoutesCollection();
       const existingMarkerRoute = await markerRoutesCollection.findOne(query);
       if (!existingMarkerRoute) {
-        res.status(404).end(`No marker route found for id ${markerRouteId}`);
+        res.status(404).end(`No marker route found for id ${id}`);
         return;
       }
       if (
@@ -266,7 +287,7 @@ markerRoutesRouter.patch(
       });
 
       if (!result.ok || !result.value) {
-        res.status(404).end(`No marker route found for id ${markerRouteId}`);
+        res.status(404).end(`No marker route found for id ${id}`);
         return;
       }
       res.status(200).json(result.value);
