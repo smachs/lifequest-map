@@ -74,7 +74,9 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
     }
     const details: Details = {};
     if (filter.category === 'chests') {
-      details.chestType = marker?.chestType || 'Supply';
+      if (filter.type.includes('Supplies')) {
+        details.chestType = marker?.chestType || 'Supply';
+      }
       details.tier = marker?.tier || 1;
     }
     if (filter.sizes) {
@@ -96,7 +98,9 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
     filter &&
     (filter.hasName ? details.name && details.name.length > 0 : true) &&
     (filter.hasLevel ? details.level && details.level > 0 : true) &&
-    (filter.category === 'chests' ? details.tier && details.chestType : true) &&
+    (filter.category === 'chests'
+      ? details.tier && (details.chestType || !filter.type.includes('Supplies'))
+      : true) &&
     (filter.sizes ? Boolean(details.size) : true);
 
   async function handleSave() {

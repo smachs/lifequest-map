@@ -185,7 +185,7 @@ markersRouter.patch(
       const unset: {
         [K in keyof MarkerDTO]?: 1;
       } = {};
-      if (mapFilter.category !== 'chests') {
+      if (!mapFilter.type.includes('Supplies')) {
         unset.chestType = 1;
       }
       if (!mapFilter.hasLevel) {
