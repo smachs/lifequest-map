@@ -28,6 +28,7 @@ export type ItemDTO = {
   slug: string;
   rarity: string;
   iconSrc: string;
+  gearScore: number;
   minGearScore: number;
   maxGearScore: number;
   markerIds: string[];

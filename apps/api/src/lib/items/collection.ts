@@ -39,6 +39,9 @@ function ensureItemsSchema(): Promise<Document> {
           iconSrc: {
             bsonType: 'string',
           },
+          gearScore: {
+            bsonType: 'int',
+          },
           minGearScore: {
             bsonType: 'int',
           },
@@ -68,6 +71,7 @@ function ensureItemsSchema(): Promise<Document> {
           'name',
           'rarity',
           'iconSrc',
+          'gearScore',
           'minGearScore',
           'maxGearScore',
           'markerIds',

@@ -77,14 +77,16 @@ function Loot({ markerId }: LootProps) {
             >
               <Group>
                 <Text>{item.name}</Text>
-                {item.maxGearScore > 0 && (
+                {(item.gearScore > 0 || item.maxGearScore > 0) && (
                   <Badge
                     color="lime"
                     sx={{
                       cursor: 'inherit',
                     }}
                   >
-                    {item.minGearScore !== item.maxGearScore
+                    {item.gearScore > 0
+                      ? item.gearScore
+                      : item.minGearScore !== item.maxGearScore
                       ? `${item.minGearScore}-${item.maxGearScore}`
                       : item.maxGearScore}{' '}
                     GS

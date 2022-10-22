@@ -21,8 +21,8 @@ itemsRouter.get('/update', async (req, res, next) => {
       res.status(401).send('Not allowed');
       return;
     }
-    await updateItems();
-    res.status(200).send('Done');
+    const result = await updateItems();
+    res.status(200).json(result);
   } catch (error) {
     next(error);
   }
