@@ -40,8 +40,12 @@ type CreatureLootResult = {
   }[];
 };
 
+let busy = false;
 export const updateItems = async () => {
-  await getItemsCollection().deleteMany({});
+  if (busy) {
+    throw new Error('Update is in progress');
+  }
+  busy = true;
 
   const creatures = await getMarkersCollection()
     .find(
@@ -70,6 +74,8 @@ export const updateItems = async () => {
   const rafflebones66 = await fetch(
     'https://api.newworldfans.com/api/v2/db/creature/vitals_id/Loot_Goblin_60/loot'
   ).then((response) => response.json());
+
+  const invalidNames: string[] = [];
   for (const creature of creatures) {
     let result: CreatureLootResult | null = null;
     switch (creature.type) {
@@ -93,7 +99,7 @@ export const updateItems = async () => {
         break;
     }
     if (!result) {
-      console.log(`Skip ${creature.name} (${creature.type})`);
+      invalidNames.push(creature.name!);
       continue;
     }
 
@@ -108,9 +114,11 @@ export const updateItems = async () => {
     }
   }
 
+  let insertedItems = 0;
+  let updatedItems = 0;
   const now = new Date();
   for (const item of items) {
-    await getItemsCollection().updateOne(
+    const result = await getItemsCollection().updateOne(
       { id: item.item_id },
       {
         $setOnInsert: {
@@ -125,6 +133,7 @@ export const updateItems = async () => {
             'items_hires',
             item.item_type.toLowerCase()
           ),
+          gearScore: item.gear_score_override,
           minGearScore: item.min_gear_score,
           maxGearScore: item.max_gear_score,
           markerIds: markerIds[item.item_id],
@@ -133,5 +142,17 @@ export const updateItems = async () => {
       },
       { upsert: true }
     );
+    if (result.upsertedCount > 0) {
+      insertedItems++;
+    } else if (result.modifiedCount > 0) {
+      updatedItems++;
+    }
   }
+  busy = false;
+
+  return {
+    invalidNames,
+    insertedItems,
+    updatedItems,
+  };
 };
