@@ -59,18 +59,16 @@ function Streaming(): JSX.Element {
     }
   }, [account!.liveShareToken, account!.liveShareServerUrl]);
 
+  const accountNeedsUpdate =
+    account &&
+    (account.liveShareToken !== token ||
+      account.liveShareServerUrl !== serverUrl);
+
   useEffect(() => {
-    if (isSharing) {
-      if (
-        account!.liveShareToken !== token ||
-        account!.liveShareServerUrl !== serverUrl
-      ) {
-        patchLiveShareToken(token, serverUrl).catch((error) =>
-          writeError(error)
-        );
-      }
+    if (isSharing && accountNeedsUpdate) {
+      patchLiveShareToken(token, serverUrl).catch((error) => writeError(error));
     }
-  }, [isSharing, token, serverUrl, account]);
+  }, [isSharing, accountNeedsUpdate]);
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();

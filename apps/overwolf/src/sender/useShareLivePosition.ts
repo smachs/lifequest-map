@@ -154,6 +154,7 @@ function useShareLivePosition(token: string, serverUrl: string) {
       newSocket.removeAllListeners();
       newSocket.io.removeAllListeners();
       newSocket.close();
+      setIsConnected(false);
 
       Object.entries(peerConnections).forEach(([clientId, peerConnection]) => {
         peerConnection.close();
@@ -166,7 +167,7 @@ function useShareLivePosition(token: string, serverUrl: string) {
       setStatus(null);
       toast.info('Stop sharing live status 🛑');
     };
-  }, [isSharing, account?.steamId, peerToPeer]);
+  }, [isSharing, account?.steamId, peerToPeer, token, serverUrl]);
 
   useEffect(() => {
     if (socket && isConnected) {
