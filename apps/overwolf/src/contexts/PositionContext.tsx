@@ -48,7 +48,7 @@ export function PositionProvider({
   const [username, setUsername] = useState<string | null>(null);
   const newWorldIsRunning = useIsNewWorldRunning();
   const [isOCR, setIsOCR] = useState(false);
-
+  console.log({ newWorldIsRunning });
   const location = useMemo(
     () =>
       (map &&
