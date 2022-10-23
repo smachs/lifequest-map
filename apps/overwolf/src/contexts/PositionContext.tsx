@@ -131,8 +131,7 @@ export function PositionProvider({
 
           if (
             lastLocation?.[0] !== location[0] ||
-            lastLocation?.[1] !== location[1] ||
-            lastRotation !== rotation
+            lastLocation?.[1] !== location[1]
           ) {
             const distance = lastLocation
               ? Math.sqrt(
@@ -146,7 +145,7 @@ export function PositionProvider({
             } else {
               falsePositiveCount = 0;
               lastLocation = location;
-
+              lastRotation = rotation;
               setPosition({
                 location,
                 rotation,
