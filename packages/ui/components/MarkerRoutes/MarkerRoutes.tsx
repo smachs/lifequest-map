@@ -255,7 +255,7 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
                 selectedMarkerRoute._id == markerRoute._id
             )}
             editable={isEditable(markerRoute)}
-            onClick={() => toggleMarkerRoute(markerRoute)}
+            onSelect={(checked) => toggleMarkerRoute(markerRoute, checked)}
             isFavorite={Boolean(
               account?.favoriteRouteIds?.some(
                 (routeId) => markerRoute._id === routeId

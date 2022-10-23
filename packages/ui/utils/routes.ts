@@ -19,6 +19,10 @@ export const useNodeId = () => {
   return useRouteParams().nodeId;
 };
 
+export const useRouteId = () => {
+  return useRouteParams().routeId;
+};
+
 const getMapView = (searchParams: URLSearchParams) => {
   const x = searchParams.get('x');
   const y = searchParams.get('y');

@@ -14,8 +14,7 @@ function FavoriteButton({
   return (
     <button
       className={classNames(styles.button, isFavorite && styles.favorite)}
-      onClick={(event) => {
-        event.stopPropagation();
+      onClick={() => {
         onClick();
       }}
       title={`${favorites} times favored`}

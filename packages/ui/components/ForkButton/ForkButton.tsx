@@ -18,8 +18,7 @@ function ForkButton({
   return (
     <button
       className={classNames(styles.button)}
-      onClick={(event) => {
-        event.stopPropagation();
+      onClick={() => {
         addModal({
           title: 'Please select a name',
           children: (

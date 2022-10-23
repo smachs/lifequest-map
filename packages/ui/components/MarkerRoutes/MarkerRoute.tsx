@@ -7,12 +7,15 @@ import EditButton from '../EditButton/EditButton';
 import FavoriteButton from '../FavoriteButton/FavoriteButton';
 import ForkButton from '../ForkButton/ForkButton';
 import { useState } from 'react';
+import { Switch } from '@mantine/core';
+import { Link } from 'react-router-dom';
+import { findMapDetails } from 'static';
 
 type MarkerRouteProps = {
   markerRoute: MarkerRouteItem;
   selected: boolean;
   editable: boolean;
-  onClick: () => void;
+  onSelect: (checked: boolean) => void;
   isFavorite: boolean;
   onFavorite: () => void;
   onFork: (name: string) => void;
@@ -23,7 +26,7 @@ function MarkerRoute({
   markerRoute,
   selected,
   editable,
-  onClick,
+  onSelect,
   onFavorite,
   isFavorite,
   onFork,
@@ -31,17 +34,25 @@ function MarkerRoute({
   isOwner,
 }: MarkerRouteProps): JSX.Element {
   const [isDescriptionCollapsed, setIsDescriptionCollapsed] = useState(true);
+  let url = '/';
+  if (markerRoute.map) {
+    const mapDetails = findMapDetails(markerRoute.map);
+    if (mapDetails) {
+      url += `${mapDetails.title}/`;
+    }
+  }
+  url += `routes/${markerRoute._id}${location.search}`;
 
   return (
     <article
       className={classNames(styles.container, selected && styles.selected)}
-      onClick={onClick}
     >
-      <h4 className={styles.title} title={markerRoute.name}>
-        {markerRoute.name}
-      </h4>
-
-      <div className={styles.regions}>{markerRoute.regions?.join(', ')}</div>
+      <Link to={url} style={{ textDecoration: 'none' }}>
+        <h4 className={styles.title} title={markerRoute.name}>
+          {markerRoute.name}
+        </h4>
+      </Link>
+      <div className={styles.regions}>{markerRoute.regions.join(', ')}</div>
       <small className={styles.info}>
         {toTimeAgo(new Date(markerRoute.updatedAt))} by{' '}
         <span className={classNames(isOwner ? styles.owner : styles.notOwner)}>
@@ -76,6 +87,14 @@ function MarkerRoute({
       </p>
 
       <div className={styles.actions}>
+        <Switch
+          title="Toggle route"
+          color="green"
+          checked={selected}
+          onChange={(event) => {
+            onSelect(event.target.checked);
+          }}
+        />
         <FavoriteButton
           onClick={onFavorite}
           isFavorite={isFavorite}

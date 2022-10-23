@@ -46,7 +46,6 @@ export const updateItems = async () => {
     throw new Error('Update is in progress');
   }
   busy = true;
-
   const creatures = await getMarkersCollection()
     .find(
       {
@@ -142,6 +141,7 @@ export const updateItems = async () => {
       },
       { upsert: true }
     );
+
     if (result.upsertedCount > 0) {
       insertedItems++;
     } else if (result.modifiedCount > 0) {

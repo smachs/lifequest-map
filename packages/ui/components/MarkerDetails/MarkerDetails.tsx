@@ -75,7 +75,7 @@ function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
       }
     }
   };
-
+  console.log(marker);
   const filterItem =
     marker && mapFilters.find((mapFilter) => mapFilter.type === marker.type);
   return (
@@ -91,7 +91,7 @@ function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
         },
       })}
       title={
-        filterItem ? (
+        filterItem && !loading ? (
           <Group>
             <Image width={32} height={32} src={filterItem.iconUrl} alt="" />{' '}
             {marker.chestType
