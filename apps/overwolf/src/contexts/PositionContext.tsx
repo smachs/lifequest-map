@@ -110,7 +110,6 @@ export function PositionProvider({
               location,
               rotation,
             });
-            hasError = false;
           }
           if (lastIsOCR) {
             lastIsOCR = false;
@@ -120,41 +119,44 @@ export function PositionProvider({
           // OCR fallback
           const url = await getScreenshotFromNewWorld();
           const location = await getLocation(url);
+          // OCR is too fast, delay it
+          await new Promise((resolve) => setTimeout(resolve, 100));
+          if (location) {
+            const rotation =
+              (Math.atan2(
+                location[0] - (lastLocation?.[0] || location[0]),
+                location[1] - (lastLocation?.[1] || location[1])
+              ) *
+                180) /
+              Math.PI;
 
-          const rotation =
-            (Math.atan2(
-              location[0] - (lastLocation?.[0] || location[0]),
-              location[1] - (lastLocation?.[1] || location[1])
-            ) *
-              180) /
-            Math.PI;
-
-          if (
-            lastLocation?.[0] !== location[0] ||
-            lastLocation?.[1] !== location[1]
-          ) {
-            const distance = lastLocation
-              ? Math.sqrt(
-                  Math.pow(location[0] - lastLocation[0], 2) +
-                    Math.pow(location[1] - lastLocation[1], 2)
-                )
-              : 0;
-            if (distance > 50 && falsePositiveCount < 5) {
-              // Might be false positive
-              falsePositiveCount++;
-            } else {
-              falsePositiveCount = 0;
-              lastLocation = location;
-              lastRotation = rotation;
-              setPosition({
-                location,
-                rotation,
-              });
+            if (
+              lastLocation?.[0] !== location[0] ||
+              lastLocation?.[1] !== location[1]
+            ) {
+              const distance = lastLocation
+                ? Math.sqrt(
+                    Math.pow(location[0] - lastLocation[0], 2) +
+                      Math.pow(location[1] - lastLocation[1], 2)
+                  )
+                : 0;
+              if (distance > 50 && falsePositiveCount < 5) {
+                // Might be false positive
+                falsePositiveCount++;
+              } else {
+                falsePositiveCount = 0;
+                lastLocation = location;
+                lastRotation = rotation;
+                setPosition({
+                  location,
+                  rotation,
+                });
+              }
             }
-          }
-          if (!lastIsOCR) {
-            lastIsOCR = true;
-            setIsOCR(true);
+            if (!lastIsOCR) {
+              lastIsOCR = true;
+              setIsOCR(true);
+            }
           }
         }
         if (username && username !== lastUsername) {
@@ -169,6 +171,7 @@ export function PositionProvider({
           lastMap = map;
           setMap(lastMap);
         }
+        hasError = false;
       } catch (error) {
         if (!hasError) {
           writeError(error);
