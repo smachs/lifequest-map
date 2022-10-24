@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import { copyTextToClipboard } from 'ui/utils/clipboard';
 import { getGameInfo } from 'ui/utils/games';
-import { getLocation, getScreenshotFromNewWorld } from '../../utils/ocr';
+import {
+  getLocation,
+  getScreenshotFromNewWorld,
+  toLocation,
+} from '../../utils/ocr';
 import styles from './Debug.module.css';
 
 const Debug = () => {
@@ -31,8 +35,8 @@ const Debug = () => {
   useEffect(() => {
     if (ocrUrl) {
       getLocation(ocrUrl)
+        .then(toLocation)
         .then(setLocation)
-        .then(() => setErrorMessage(''))
         .catch((error) => setErrorMessage(error.message));
     }
   }, [ocrUrl]);
@@ -54,7 +58,7 @@ const Debug = () => {
           [{location[1]}, {location[0]}]
         </div>
       )}
-      {errorMessage && <div>{errorMessage}</div>}
+      {errorMessage && <div>Last error: {errorMessage}</div>}
       <h4>Debug</h4>
       <button
         onClick={() => {

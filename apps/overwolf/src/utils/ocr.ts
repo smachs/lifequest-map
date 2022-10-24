@@ -113,9 +113,7 @@ function characterScoreMatched(
 //   console.log('\n');
 // }
 
-export async function getLocation(
-  url: string
-): Promise<[number, number] | null> {
+export async function getLocation(url: string): Promise<string> {
   const screenGrayArray = await preprocessorImage(url);
 
   let resultString = '';
@@ -136,9 +134,13 @@ export async function getLocation(
       resultString += result.type;
     }
   }
+  return resultString;
+}
 
+export function toLocation(locationString: string): [number, number] | null {
   try {
-    const result = JSON.parse(resultString) as [number, number, number];
+    const interestingPart = `[${locationString.split('[')[1].split(']')[0]}]`;
+    const result = JSON.parse(interestingPart) as [number, number, number];
     return [result[1], result[0]];
   } catch (error) {
     return null;
