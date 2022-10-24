@@ -406,9 +406,9 @@ async function bodyToMarker(
     marker.map = map;
   }
 
-  if (Array.isArray(position)) {
+  if (Array.isArray(position) && position.length >= 2) {
     marker.position = position.map(
-      (part: number) => new Double(+part.toFixed(2))
+      (part: number) => new Double(part ? +part.toFixed(2) : 0)
     ) as [Double, Double, Double];
   }
 
