@@ -132,7 +132,6 @@ function useShareLivePosition(token: string, serverUrl: string) {
       updateStatus();
       peerConnections[clientId]?.close();
       delete peerConnections[clientId];
-      setIsConnected(false);
     });
 
     newSocket.io.on('reconnect_attempt', () => {
