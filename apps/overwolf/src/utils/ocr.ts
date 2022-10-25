@@ -86,7 +86,7 @@ function characterScoreMatched(
   let scoreSum = 0;
   for (const stat of characterPixelStats) {
     const pixel = block[stat.y][stat.x];
-    if (pixel >= stat.min - 2 && pixel <= stat.max + 2) {
+    if (pixel >= stat.min - 7 && pixel <= stat.max + 7) {
       scoreSum++;
     }
   }
@@ -128,7 +128,7 @@ export async function getLocation(url: string): Promise<string> {
 
     const result = sortedResults[0];
 
-    if (result.finalScore <= 40) {
+    if (result.finalScore <= 50) {
       resultString += ' ';
     } else {
       resultString += result.type;
@@ -137,10 +137,15 @@ export async function getLocation(url: string): Promise<string> {
   return resultString;
 }
 
+const regExp = new RegExp(/\[\d{3,}\.\d{3}, \d{3,}\.\d{3}, \d{3,}\.\d{3}\]/);
+
 export function toLocation(locationString: string): [number, number] | null {
   try {
-    const interestingPart = `[${locationString.split('[')[1].split(']')[0]}]`;
-    const result = JSON.parse(interestingPart) as [number, number, number];
+    const match = locationString.match(regExp);
+    if (!match) {
+      return null;
+    }
+    const result = JSON.parse(match[0]) as [number, number, number];
     if (
       !result ||
       typeof result[1] !== 'number' ||
