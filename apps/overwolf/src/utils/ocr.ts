@@ -115,7 +115,6 @@ function characterScoreMatched(
 
 export async function getLocation(url: string): Promise<string> {
   const screenGrayArray = await preprocessorImage(url);
-
   let resultString = '';
   for (let index = 0; index < 32; index++) {
     const x = index * 9;
@@ -127,8 +126,7 @@ export async function getLocation(url: string): Promise<string> {
     const sortedResults = results.sort((a, b) => b.finalScore - a.finalScore);
 
     const result = sortedResults[0];
-
-    if (result.finalScore <= 50) {
+    if (result.finalScore <= 75) {
       resultString += ' ';
     } else {
       resultString += result.type;
