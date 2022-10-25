@@ -42,7 +42,7 @@ function SyncStatusSender({ newWorldIsRunning }: SyncStatusProps) {
         <Text component="span" color="dimmed">
           Position:{' '}
         </Text>
-        [{position?.location[1] || '?'}, {position?.location[0] || '?'}]
+        [{position?.location?.[1] || '?'}, {position?.location?.[0] || '?'}]
       </Text>
       <Text size="xs">
         <Text component="span" color="dimmed">
@@ -116,8 +116,8 @@ function SyncStatusSender({ newWorldIsRunning }: SyncStatusProps) {
       {newWorldIsRunning && position && (
         <small>
           <span className={styles.success}>Playing</span>
-          {username && ` as ${username}`} at [{position.location[1]},{' '}
-          {position.location[0]}]{' '}
+          {username && ` as ${username}`} at [{position.location?.[1]},{' '}
+          {position.location?.[0]}]{' '}
           <span className={styles.region}>
             {region && `${location || region}`}
           </span>

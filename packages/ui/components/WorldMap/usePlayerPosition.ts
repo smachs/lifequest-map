@@ -124,7 +124,13 @@ function usePlayerPosition({
   }, [leafletMap, rotate]);
 
   useEffect(() => {
-    if (!marker || !leafletMap || !playerPosition || !isOnSameWorld) {
+    if (
+      !marker ||
+      !leafletMap ||
+      !playerPosition ||
+      !playerPosition.location ||
+      !isOnSameWorld
+    ) {
       return;
     }
     const playerImage = marker.getElement();
@@ -203,7 +209,12 @@ function usePlayerPosition({
   }, [marker, leafletMap, playerPosition, isFollowing, rotate, isOnSameWorld]);
 
   useEffect(() => {
-    if (!leafletMap || isOverwolfApp || !playerPosition) {
+    if (
+      !leafletMap ||
+      isOverwolfApp ||
+      !playerPosition ||
+      !playerPosition.location
+    ) {
       return;
     }
     const traceDot = createTraceDot(playerPosition.location, traceLineColor);

@@ -50,13 +50,25 @@ export function PlayerProvider({ children }: PlayerProviderProps): JSX.Element {
     setFollowing(!following);
   }
 
+  const updatePlayer = (player: Player | null) => {
+    if (
+      player?.position &&
+      (typeof player.position.location[0] !== 'number' ||
+        typeof player.position.location[1] !== 'number')
+    ) {
+      return;
+    }
+
+    setPlayer(player);
+  };
+
   return (
     <PlayerContext.Provider
       value={{
         following,
         toggleFollowing,
         player,
-        setPlayer,
+        setPlayer: updatePlayer,
         isSyncing,
         setIsSyncing,
       }}

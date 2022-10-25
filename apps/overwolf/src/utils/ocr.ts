@@ -141,6 +141,13 @@ export function toLocation(locationString: string): [number, number] | null {
   try {
     const interestingPart = `[${locationString.split('[')[1].split(']')[0]}]`;
     const result = JSON.parse(interestingPart) as [number, number, number];
+    if (
+      !result ||
+      typeof result[1] !== 'number' ||
+      typeof result[0] !== 'number'
+    ) {
+      return null;
+    }
     return [result[1], result[0]];
   } catch (error) {
     return null;

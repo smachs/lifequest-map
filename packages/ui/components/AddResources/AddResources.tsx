@@ -47,7 +47,7 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
     if (marker) {
       return marker.position;
     }
-    if (following && player?.position) {
+    if (following && player?.position?.location) {
       const location = player.position.location;
       return [location[1], location[0], 0];
     }
