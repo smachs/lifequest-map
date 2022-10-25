@@ -135,7 +135,7 @@ export async function getLocation(url: string): Promise<string> {
   return resultString;
 }
 
-const regExp = new RegExp(/\[\d{3,}\.\d{3}, \d{3,}\.\d{3}, \d{3,}\.\d{3}\]/);
+const regExp = new RegExp(/\[\d{2,}\.\d{3}, \d{2,}\.\d{3}, \d{1,}\.\d{3}\]/);
 
 export function toLocation(locationString: string): [number, number] | null {
   try {

@@ -11,6 +11,7 @@ import styles from './Debug.module.css';
 const Debug = () => {
   const [ocrUrl, setOcrUrl] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [locationString, setLocationString] = useState<null | string>(null);
   const [location, setLocation] = useState<null | [number, number]>(null);
 
   useEffect(() => {
@@ -18,7 +19,13 @@ const Debug = () => {
     const startTimeout = () => {
       timeoutId = setTimeout(() => {
         getScreenshotFromNewWorld()
-          .then(setOcrUrl)
+          .then((ocrUrl) => {
+            setOcrUrl(ocrUrl);
+            getLocation(ocrUrl).then((locationString) => {
+              setLocationString(locationString);
+              setLocation(toLocation(locationString));
+            });
+          })
           .catch((error) => setErrorMessage(error.message))
           .finally(startTimeout);
       }, 1000);
@@ -32,32 +39,21 @@ const Debug = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (ocrUrl) {
-      getLocation(ocrUrl)
-        .then(toLocation)
-        .then(setLocation)
-        .catch((error) => setErrorMessage(error.message));
-    }
-  }, [ocrUrl]);
-
   return (
     <>
-      <h4>OCR preview</h4>
-      {!ocrUrl && !errorMessage && <div>Please focus New World</div>}
-      {ocrUrl && (
+      <h4>OCR preview (Please focus New World)</h4>
+      {ocrUrl ? (
         <img
           src={ocrUrl}
           alt="OCR"
           onError={() => setErrorMessage('Can not load image')}
           className={styles.ocr}
         />
+      ) : (
+        'Waiting for image'
       )}
-      {location && (
-        <div>
-          [{location[1]}, {location[0]}]
-        </div>
-      )}
+      <div>{locationString || 'No location string'}</div>
+      <div>{location ? `[${location[1]}, ${location[0]}]` : 'No location'}</div>
       {errorMessage && <div>Last error: {errorMessage}</div>}
       <h4>Debug</h4>
       <button
