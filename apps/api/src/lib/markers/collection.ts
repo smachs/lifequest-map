@@ -83,6 +83,9 @@ function ensureMarkersSchema(): Promise<Document> {
           customRespawnTimer: {
             bsonType: 'int',
           },
+          hp: {
+            bsonType: 'int',
+          },
           isPrivate: {
             bsonType: 'bool',
           },

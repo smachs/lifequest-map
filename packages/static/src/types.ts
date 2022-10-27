@@ -18,6 +18,7 @@ export type MarkerDTO = {
   issues?: number;
   isPrivate?: boolean;
   customRespawnTimer?: number;
+  hp?: number;
   updatedAt?: Date;
   createdAt: Date;
 };

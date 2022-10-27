@@ -114,6 +114,11 @@ function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
               </Text>
             )}
             {marker.level && <Text size="sm">Level {marker.level}</Text>}
+            {marker.hp && (
+              <Text size="sm" color="orange">
+                {marker.hp} HP
+              </Text>
+            )}
             {marker.customRespawnTimer && (
               <Text size="sm" color="lime">
                 Respawns {marker.customRespawnTimer}s

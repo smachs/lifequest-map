@@ -10,6 +10,7 @@ export type FilterItem = {
   iconUrl: string;
   hasName?: boolean;
   hasLevel?: boolean;
+  hasHP?: boolean;
   hasCustomRespawnTimer?: boolean;
   maxTier?: number;
   sizes?: MarkerSize[];
@@ -179,6 +180,7 @@ export const mapFilters: FilterItem[] = [
     hasName: true,
     hasLevel: true,
     hasCustomRespawnTimer: true,
+    hasHP: true,
   },
   {
     category: 'enemies',
@@ -188,6 +190,7 @@ export const mapFilters: FilterItem[] = [
     hasName: true,
     hasLevel: true,
     hasCustomRespawnTimer: true,
+    hasHP: true,
   },
   {
     category: 'enemies',

@@ -24,6 +24,7 @@ export type Details = {
   tier?: number;
   size?: MarkerSize;
   customRespawnTimer?: number;
+  hp?: number;
 };
 
 type AddResourcesProps = {
@@ -90,6 +91,9 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
     }
     if (filter.hasCustomRespawnTimer) {
       details.customRespawnTimer = marker?.customRespawnTimer || 0;
+    }
+    if (filter.hasHP) {
+      details.hp = marker?.hp || 0;
     }
     setDetails(details);
   }, [filter]);
