@@ -13,6 +13,7 @@ export type MarkerDTO = {
   tier?: number;
   size?: MarkerSize;
   customRespawnTimer?: number;
+  hp?: number;
   description?: string;
   screenshotId?: string;
 };

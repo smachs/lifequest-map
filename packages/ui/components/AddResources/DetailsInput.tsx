@@ -96,6 +96,7 @@ function DetailsInput({
               <input
                 type="number"
                 name="size"
+                min={0}
                 value={details.customRespawnTimer}
                 style={{ width: 130 }}
                 onChange={(event) =>
@@ -107,6 +108,23 @@ function DetailsInput({
               />
               <span>seconds</span>
             </div>
+          </label>
+        )}
+        {filter?.hasHP && (
+          <label className={styles.label}>
+            <span className={generalStyles.key}>HP (optional)</span>
+            <input
+              type="number"
+              name="size"
+              value={details.hp}
+              min={0}
+              onChange={(event) =>
+                onChange({
+                  ...details,
+                  hp: +event.target.value,
+                })
+              }
+            />
           </label>
         )}
         <label className={styles.label}>

@@ -197,6 +197,9 @@ markersRouter.patch(
       if (!mapFilter.hasCustomRespawnTimer) {
         unset.customRespawnTimer = 1;
       }
+      if (!mapFilter.hasHP) {
+        unset.hp = 1;
+      }
 
       marker.isPrivate = mapFilter.category === 'private';
       marker.updatedAt = new Date();
@@ -388,6 +391,7 @@ async function bodyToMarker(
     description,
     screenshotId,
     customRespawnTimer,
+    hp,
   } = body;
 
   const marker: Partial<MarkerDTO> = {};
@@ -429,6 +433,9 @@ async function bodyToMarker(
   }
   if (typeof customRespawnTimer === 'number') {
     marker.customRespawnTimer = customRespawnTimer;
+  }
+  if (typeof hp === 'number') {
+    marker.hp = hp;
   }
   if (description) {
     marker.description = description.substring(0, MAX_DESCRIPTION_LENGTH);

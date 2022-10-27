@@ -18,6 +18,7 @@ export type MarkerFull = {
   name?: string;
   map?: string;
   level?: number;
+  hp?: number;
   description?: string;
   screenshotFilename?: string;
   createdAt: string;
