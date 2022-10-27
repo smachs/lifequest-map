@@ -29,7 +29,6 @@ const respawnAction =
       if (marker.popup) {
         marker.popup.remove();
       }
-      return;
     }
     const respawnAt = Date.now() + 1000 * respawnTimer;
 
