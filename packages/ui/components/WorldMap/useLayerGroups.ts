@@ -239,7 +239,9 @@ function useLayerGroups({
               !leafletMap.pm.globalDrawModeEnabled())
           ) {
             const action = getAction(mapMarker.options.image.type);
-            action(mapMarker, user, refreshUser);
+            if (action) {
+              action(mapMarker, user, refreshUser);
+            }
           }
         });
         allLayers[marker._id] = {
