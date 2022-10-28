@@ -3,15 +3,12 @@ import { useFilters } from '../../contexts/FiltersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
 import type { AccountDTO } from '../../contexts/UserContext';
 import { useAccount } from '../../contexts/UserContext';
-import { writeError } from '../../utils/logs';
-import { notify } from '../../utils/notifications';
 import { escapeRegExp } from '../../utils/regExp';
 import { usePersistentState } from '../../utils/storage';
 import ActionButton from '../ActionControl/ActionButton';
 import Button from '../Button/Button';
 import { mapFilters, regionNames } from 'static';
 import SearchInput from '../SearchInput/SearchInput';
-import { patchFavoriteMarkerRoute, postMarkerRoute } from './api';
 import MarkerRoute from './MarkerRoute';
 import styles from './MarkerRoutes.module.css';
 
@@ -114,7 +111,7 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
     refreshMarkerRoutes,
     visibleMarkerRoutes,
   } = useMarkers();
-  const { account, refreshAccount } = useAccount();
+  const { account } = useAccount();
   const [sortBy, setSortBy] = usePersistentState<SortBy>(
     'markerRoutesSort',
     'match'
@@ -124,7 +121,7 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
     'all'
   );
   const [search, setSearch] = usePersistentState('searchRoutes', '');
-  const { filters, setFilters } = useFilters();
+  const { filters } = useFilters();
   const [limit, setLimit] = useState(10);
 
   useEffect(() => {
@@ -199,11 +196,6 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
                 selectedMarkerRoute._id == markerRoute._id
             )}
             onSelect={(checked) => toggleMarkerRoute(markerRoute, checked)}
-            isFavorite={Boolean(
-              account?.favoriteRouteIds?.some(
-                (routeId) => markerRoute._id === routeId
-              )
-            )}
           />
         ))}
         {sortedMarkerRoutes.length > limit && (

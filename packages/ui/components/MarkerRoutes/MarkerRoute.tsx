@@ -3,10 +3,7 @@ import MarkerTypes from './MarkerTypes';
 import styles from './MarkerRoute.module.css';
 import { classNames } from '../../utils/styles';
 import { toTimeAgo } from '../../utils/dates';
-import FavoriteButton from '../FavoriteButton/FavoriteButton';
-import ForkButton from '../ForkButton/ForkButton';
-import { useState } from 'react';
-import { Badge, Group, Stack, Switch, Text } from '@mantine/core';
+import { Badge, Group, Stack, Switch, Text, Title } from '@mantine/core';
 import { Link } from 'react-router-dom';
 import { findMapDetails } from 'static';
 import { IconArrowFork } from '@tabler/icons';
@@ -15,17 +12,14 @@ type MarkerRouteProps = {
   markerRoute: MarkerRouteItem;
   selected: boolean;
   onSelect: (checked: boolean) => void;
-  isFavorite: boolean;
   isOwner: boolean;
 };
 function MarkerRoute({
   markerRoute,
   selected,
   onSelect,
-  isFavorite,
   isOwner,
 }: MarkerRouteProps): JSX.Element {
-  const [isDescriptionCollapsed, setIsDescriptionCollapsed] = useState(true);
   let url = '/';
   if (markerRoute.map) {
     const mapDetails = findMapDetails(markerRoute.map);
@@ -66,9 +60,9 @@ function MarkerRoute({
       </Group>
       <Link to={url} style={{ textDecoration: 'none' }}>
         <Stack spacing={2}>
-          <h4 className={styles.title} title={markerRoute.name}>
+          <Title order={4} color="yellow" size="md">
             {markerRoute.name}
-          </h4>
+          </Title>
 
           <div className={styles.regions}>{markerRoute.regions.join(', ')}</div>
           <Text size="xs" className={styles.info}>
@@ -80,17 +74,7 @@ function MarkerRoute({
             </span>
           </Text>
           <MarkerTypes markersByType={markerRoute.markersByType} />
-          <p
-            className={classNames(
-              styles.description,
-              isDescriptionCollapsed && styles.collapsed
-            )}
-            onClick={(event) => {
-              event.stopPropagation();
-              setIsDescriptionCollapsed(!isDescriptionCollapsed);
-            }}
-            title={markerRoute.description}
-          >
+          <p className={styles.description} title={markerRoute.description}>
             {markerRoute.description || 'No description'}
           </p>
         </Stack>
