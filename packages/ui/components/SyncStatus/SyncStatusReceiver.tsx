@@ -35,7 +35,7 @@ function SyncStatusReceiver() {
   }
   return (
     <>
-      {player?.position && (
+      {player?.position?.location && (
         <small>
           <span className={styles.success}>Playing</span>
           {player.username && ` as ${player.username}`} at [

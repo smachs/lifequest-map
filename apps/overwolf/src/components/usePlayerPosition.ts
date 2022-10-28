@@ -64,7 +64,14 @@ function usePlayerPosition({
   }, [leafletMap, Boolean(playerPosition), isOnSameWorld]);
 
   useEffect(() => {
-    if (!marker || !leafletMap || !playerPosition || !isOnSameWorld) {
+    if (
+      !marker ||
+      !leafletMap ||
+      !playerPosition ||
+      typeof playerPosition.location?.[0] !== 'number' ||
+      typeof playerPosition.location?.[1] !== 'number' ||
+      !isOnSameWorld
+    ) {
       return;
     }
     const playerImage = marker.getElement();

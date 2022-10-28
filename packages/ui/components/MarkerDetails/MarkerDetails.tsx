@@ -6,7 +6,6 @@ import Comment from '../Comment/Comment';
 import type { MarkerFull } from './useMarker';
 import useMarker from './useMarker';
 import { findMapDetails, mapFilters } from 'static';
-import Markdown from 'markdown-to-jsx';
 import HideMarkerInput from './HideMarkerInput';
 import { useAccount } from '../../contexts/UserContext';
 import Credit from './Credit';
@@ -27,6 +26,7 @@ import ImagePreview from './ImagePreview';
 import { lootableMapFilters } from 'static';
 import ReportIssueButton from './ReportIssueButton';
 import DeleteNode from './DeleteNode';
+import Markdown from '../Markdown/Markdown';
 
 type MarkerDetailsProps = {
   nodeId?: string;
@@ -114,6 +114,11 @@ function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
               </Text>
             )}
             {marker.level && <Text size="sm">Level {marker.level}</Text>}
+            {marker.hp && (
+              <Text size="sm" color="orange">
+                {marker.hp} HP
+              </Text>
+            )}
             {marker.customRespawnTimer && (
               <Text size="sm" color="lime">
                 Respawns {marker.customRespawnTimer}s

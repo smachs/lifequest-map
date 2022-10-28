@@ -37,7 +37,7 @@ function useDirectionLine(position?: Player['position'] | null) {
   }, [showDirection, alwaysShowDirection]);
 
   useEffect(() => {
-    if (!position) {
+    if (!position?.location) {
       return;
     }
 

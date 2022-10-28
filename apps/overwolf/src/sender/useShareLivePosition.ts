@@ -110,6 +110,7 @@ function useShareLivePosition(token: string, serverUrl: string) {
     newSocket.on('connect', () => {
       setIsConnected(true);
       toast.success('Sharing live status 👌');
+      console.log('Sharing live status 👌');
       updateStatus();
     });
 
@@ -118,6 +119,7 @@ function useShareLivePosition(token: string, serverUrl: string) {
         ? `${steamName} connected 🎮`
         : 'Website connected 👽';
       toast.info(message);
+      console.info(message);
       updateStatus();
     });
 
@@ -126,13 +128,32 @@ function useShareLivePosition(token: string, serverUrl: string) {
         ? `${steamName} disconnected 👋`
         : 'Website disconnected 👋';
       toast.info(message);
+      console.info(message);
       updateStatus();
       peerConnections[clientId]?.close();
       delete peerConnections[clientId];
     });
 
+    newSocket.io.on('reconnect_attempt', () => {
+      setIsConnected(false);
+    });
+
+    newSocket.io.on('reconnect_failed', () => {
+      toast.error('Reconnection failed');
+      console.error('Reconnection failed');
+      newSocket.io.connect();
+    });
+
+    newSocket.io.on('reconnect', () => {
+      console.info('Reconnected');
+      setIsConnected(true);
+    });
+
     return () => {
+      newSocket.removeAllListeners();
+      newSocket.io.removeAllListeners();
       newSocket.close();
+      setIsConnected(false);
 
       Object.entries(peerConnections).forEach(([clientId, peerConnection]) => {
         peerConnection.close();
@@ -145,49 +166,49 @@ function useShareLivePosition(token: string, serverUrl: string) {
       setStatus(null);
       toast.info('Stop sharing live status 🛑');
     };
-  }, [isSharing, account?.steamId, peerToPeer]);
+  }, [isSharing, account?.steamId, peerToPeer, token, serverUrl]);
 
   useEffect(() => {
-    if (socket) {
+    if (socket && isConnected) {
       sendToPeers({ steamId, position });
       socket.emit('position', position);
     }
-  }, [socket, position]);
+  }, [socket, isConnected, position]);
 
   useEffect(() => {
-    if (socket) {
+    if (socket && isConnected) {
       sendToPeers({ steamId, location });
       socket.emit('location', location);
     }
-  }, [socket, location]);
+  }, [socket, isConnected, location]);
 
   useEffect(() => {
-    if (socket) {
+    if (socket && isConnected) {
       sendToPeers({ steamId, worldName });
       socket.emit('worldName', worldName);
     }
-  }, [socket, worldName]);
+  }, [socket, isConnected, worldName]);
 
   useEffect(() => {
-    if (socket) {
+    if (socket && isConnected) {
       sendToPeers({ steamId, map });
       socket.emit('map', map);
     }
-  }, [socket, map]);
+  }, [socket, isConnected, map]);
 
   useEffect(() => {
-    if (socket) {
+    if (socket && isConnected) {
       sendToPeers({ steamId, region });
       socket.emit('region', region);
     }
-  }, [socket, region]);
+  }, [socket, isConnected, region]);
 
   useEffect(() => {
-    if (socket) {
+    if (socket && isConnected) {
       sendToPeers({ steamId, username });
       socket.emit('username', username);
     }
-  }, [socket, username]);
+  }, [socket, isConnected, username]);
 
   return { status, isConnected, isSharing, setIsSharing, peerConnections };
 }

@@ -61,6 +61,12 @@ app.use(compression());
 app.use(express.json());
 
 async function runServer() {
+  if (NO_SOCKET !== 'true') {
+    initSocket(server);
+    app.use('/api/live', liveRouter);
+    console.log('Socket listening');
+  }
+
   if (NO_API !== 'true') {
     app.use(
       session({
@@ -164,12 +170,6 @@ async function runServer() {
 
     await refreshMarkers();
     console.log('Markers refreshed');
-  }
-
-  if (NO_SOCKET !== 'true') {
-    initSocket(server);
-    app.use('/api/live', liveRouter);
-    console.log('Socket listening');
   }
 
   // Error handling middleware: https://expressjs.com/en/guide/error-handling.html#writing-error-handlers

@@ -59,30 +59,30 @@ function Streaming(): JSX.Element {
     }
   }, [account!.liveShareToken, account!.liveShareServerUrl]);
 
+  const accountNeedsUpdate =
+    account &&
+    (account.liveShareToken !== token ||
+      account.liveShareServerUrl !== serverUrl);
+
+  useEffect(() => {
+    if (isSharing && accountNeedsUpdate) {
+      patchLiveShareToken(token, serverUrl).catch((error) => writeError(error));
+    }
+  }, [isSharing, accountNeedsUpdate]);
+
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
-
-    try {
-      if (isSharing) {
-        setIsSharing(false);
-        return;
-      }
-
-      if (!token || !serverUrl) {
-        toast.error('Token and server are required 🙄');
-        return;
-      }
-
-      if (
-        account!.liveShareToken !== token ||
-        account!.liveShareServerUrl !== serverUrl
-      ) {
-        patchLiveShareToken(token, serverUrl);
-      }
-      setIsSharing(true);
-    } catch (error) {
-      writeError(error);
+    if (isSharing) {
+      setIsSharing(false);
+      return;
     }
+
+    if (!token || !serverUrl) {
+      toast.error('Token and server are required 🙄');
+      return;
+    }
+
+    setIsSharing(true);
   }
 
   const players = status ? Object.values(status.group) : [];
