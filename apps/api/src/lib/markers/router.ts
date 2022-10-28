@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { getMarkersCollection } from './collection.js';
 import { Double, ObjectId } from 'mongodb';
 import fs from 'fs/promises';
-import { postToDiscord } from '../discord.js';
+import { getMarkerURL, postToDiscord } from '../discord.js';
 import { getCommentsCollection } from '../comments/collection.js';
 import type { CommentDTO } from '../comments/types.js';
 import { SCREENSHOTS_PATH } from '../env.js';
@@ -211,7 +211,7 @@ markersRouter.patch(
         },
         { returnDocument: 'after' }
       );
-      if (!result.ok) {
+      if (!result.ok || !result.value) {
         res.status(404).end(`No marker updated for id ${markerId}`);
         return;
       }
@@ -223,7 +223,9 @@ markersRouter.patch(
         nameType += ` (${marker.size})`;
       }
       await postToDiscord(
-        `📌 ${nameType} was updated by ${account.name} at [${marker.position}]`,
+        `📌 ${nameType} was updated by ${account.name} at [${
+          marker.position
+        }]\n${getMarkerURL(result.value._id.toString(), result.value.map)}`,
         !marker.isPrivate
       );
 
@@ -292,7 +294,9 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       nameType += ` (${marker.size})`;
     }
     await postToDiscord(
-      `📌 ${nameType} was added by ${account.name} at [${marker.position}]`,
+      `📌 ${nameType} was added by ${account.name} at [${
+        marker.position
+      }]\n${getMarkerURL(inserted.insertedId.toString(), marker.map)}`,
       !marker.isPrivate
     );
 
@@ -360,12 +364,22 @@ markersRouter.post(
       const position = marker.position ? marker.position.join(', ') : 'unknown';
       if (comment.isIssue) {
         await postToDiscord(
-          `⚠️ ${account.name} added an issue for ${marker.type} at [${position}]:\n${comment.message}`,
+          `⚠️ ${account.name} added an issue for ${
+            marker.type
+          } at [${position}]:\n${comment.message}\n${getMarkerURL(
+            markerId,
+            marker.map
+          )}`,
           !marker.isPrivate
         );
       } else {
         await postToDiscord(
-          `✍ ${account.name} added a comment for ${marker.type} at [${position}]:\n${comment.message}`,
+          `✍ ${account.name} added a comment for ${
+            marker.type
+          } at [${position}]:\n${comment.message}\n${getMarkerURL(
+            markerId,
+            marker.map
+          )}`,
           !marker.isPrivate
         );
       }
