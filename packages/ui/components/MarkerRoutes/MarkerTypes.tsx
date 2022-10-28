@@ -4,6 +4,7 @@ import { mapFilters } from 'static';
 import { useFilters } from '../../contexts/FiltersContext';
 import { classNames } from '../../utils/styles';
 import { useMemo } from 'react';
+import { Avatar, Badge, Text, Tooltip } from '@mantine/core';
 
 type MarkerTypesProps = {
   markersByType: {
@@ -28,23 +29,32 @@ function MarkerTypes({ markersByType }: MarkerTypesProps): JSX.Element {
   }, [markersByType]);
 
   return (
-    <section className={styles.container}>
-      {markerMapFilters.length === 0 && 'No markers'}
+    <section>
+      {markerMapFilters.length === 0 && (
+        <Text size="xs" color="dimmed">
+          No markers
+        </Text>
+      )}
       {markerMapFilters.map((markerMapFilter) => {
         return (
-          <div
-            key={markerMapFilter.type}
-            className={classNames(
-              styles.marker,
-              !filters.some((filter) =>
-                filter.startsWith(markerMapFilter.type)
-              ) && styles.unchecked
-            )}
-            title={markerMapFilter.title}
-          >
-            <img src={markerMapFilter.iconUrl} alt={markerMapFilter.type} />
-            <span>{markersByType[markerMapFilter.type]}x</span>
-          </div>
+          <Tooltip key={markerMapFilter.type} label={markerMapFilter.title}>
+            <Badge
+              leftSection={
+                <Avatar
+                  size={24}
+                  src={markerMapFilter.iconUrl}
+                  alt={markerMapFilter.type}
+                />
+              }
+              className={classNames(
+                !filters.some((filter) =>
+                  filter.startsWith(markerMapFilter.type)
+                ) && styles.unchecked
+              )}
+            >
+              {markersByType[markerMapFilter.type]}
+            </Badge>
+          </Tooltip>
         );
       })}
     </section>

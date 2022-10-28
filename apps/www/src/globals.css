@@ -115,6 +115,11 @@ a {
   font-family: var(--font-family-secondary);
 }
 
+input,
+input[type='checkbox'] {
+  margin: 0;
+}
+
 input:disabled {
   color: var(--color-trivial);
 }

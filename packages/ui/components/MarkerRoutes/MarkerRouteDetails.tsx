@@ -1,16 +1,17 @@
+import leaflet from 'leaflet';
 import {
+  Badge,
   Button,
   Drawer,
+  Group,
   Image,
   List,
   ScrollArea,
   Skeleton,
   Stack,
-  Switch,
   Text,
 } from '@mantine/core';
-import { IconArrowFork } from '@tabler/icons';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FilterItem } from 'static';
 import { findMapDetails, mapFilters } from 'static';
@@ -20,8 +21,14 @@ import { useAccount } from '../../contexts/UserContext';
 import { toTimeAgo } from '../../utils/dates';
 import Markdown from '../Markdown/Markdown';
 import Credit from '../MarkerDetails/Credit';
+import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import type { MarkerRouteItem } from './MarkerRoutes';
 import useMarkerRoute from './useMarkerRoute';
+import DeleteRoute from './DeleteRoute';
+import { notify } from '../../utils/notifications';
+import { patchFavoriteMarkerRoute } from './api';
+import { writeError } from '../../utils/logs';
+import ForkRoute from './ForkRoute';
 
 type MarkerRouteDetailsProps = {
   markerRouteId?: string;
@@ -34,14 +41,51 @@ const MarkerRouteDetails = ({
   const { markerRoute, refresh, loading } = useMarkerRoute(markerRouteId);
   const navigate = useNavigate();
   const { account, refreshAccount } = useAccount();
-  const {
-    markerRoutes,
-    clearMarkerRoutes,
-    toggleMarkerRoute,
-    refreshMarkerRoutes,
-    visibleMarkerRoutes,
-  } = useMarkers();
-  const { filters, setFilters } = useFilters();
+  const { markerRoutes, toggleMarkerRoute, refreshMarkerRoutes } = useMarkers();
+  const { setFilters } = useFilters();
+
+  const editable =
+    account &&
+    markerRoute &&
+    (account.isModerator || account.steamId === markerRoute.userId);
+  const selected = Boolean(
+    markerRoute &&
+      markerRoutes.some(
+        (selectedMarkerRoute) => selectedMarkerRoute._id == markerRoute._id
+      )
+  );
+
+  useEffect(() => {
+    if (!markerRoute || !latestLeafletMap) {
+      return;
+    }
+    latestLeafletMap.fitBounds(markerRoute.positions);
+  }, [markerRoute?._id]);
+
+  useEffect(() => {
+    if (!markerRoute || !latestLeafletMap || selected) {
+      return;
+    }
+
+    const layerGroup = new leaflet.LayerGroup();
+
+    const startHereCircle = leaflet.circle(markerRoute.positions[0], {
+      pmIgnore: true,
+      color: 'rgba(51, 136, 255, 0.6)',
+    });
+    const line = leaflet.polyline(markerRoute.positions, {
+      pmIgnore: true,
+      color: 'rgba(51, 136, 255, 0.6)',
+    });
+    startHereCircle.addTo(layerGroup);
+    line.addTo(layerGroup);
+    layerGroup.addTo(latestLeafletMap);
+
+    return () => {
+      layerGroup.off();
+      layerGroup.remove();
+    };
+  }, [markerRoute?._id, selected]);
 
   const handleClose = () => {
     if (!markerRoute || !markerRoute.map) {
@@ -80,16 +124,27 @@ const MarkerRouteDetails = ({
     onEdit(markerRoute);
   }
 
-  const editable =
-    account &&
+  const isFavorite = Boolean(
     markerRoute &&
-    (account.isModerator || account.steamId === markerRoute.userId);
-  const selected = Boolean(
-    markerRoute &&
-      markerRoutes.some(
-        (selectedMarkerRoute) => selectedMarkerRoute._id == markerRoute._id
-      )
+      account?.favoriteRouteIds?.some((routeId) => markerRoute._id === routeId)
   );
+
+  async function handleFavorite(): Promise<void> {
+    if (!account || !markerRouteId) {
+      return;
+    }
+
+    try {
+      await notify(patchFavoriteMarkerRoute(markerRouteId, !isFavorite), {
+        success: 'Favored route changed 👌',
+      });
+      refreshAccount();
+      refresh();
+    } catch (error) {
+      writeError(error);
+    }
+  }
+
   return (
     <Drawer
       opened={!!markerRouteId}
@@ -103,7 +158,7 @@ const MarkerRouteDetails = ({
         },
       })}
       title={
-        markerRoute && !loading ? (
+        markerRoute ? (
           <Text>{markerRoute.name}</Text>
         ) : (
           <Skeleton height={20} width={120} />
@@ -111,19 +166,20 @@ const MarkerRouteDetails = ({
       }
       onClose={handleClose}
     >
-      {(!markerRoute || loading) && <Skeleton height={50} />}
-      {markerRoute && !loading && (
+      {!markerRoute && <Skeleton height={50} />}
+      {markerRoute && (
         <Stack style={{ height: 'calc(100% - 50px)' }} spacing="xs">
-          <Text
-            size="sm"
-            color={markerRoute.isPublic ? 'lime' : 'teal'}
-            weight="bold"
-          >
-            {markerRoute.isPublic ? 'Public' : 'Private'}
-          </Text>
-          <Text size="sm" color="cyan" weight="bold">
-            {markerRoute.regions.join(', ')}
-          </Text>
+          <Group>
+            <Badge size="sm" color="cyan">
+              {markerRoute.regions.join(', ')}
+            </Badge>
+            <Badge size="sm" color={markerRoute.isPublic ? 'lime' : 'teal'}>
+              {markerRoute.isPublic ? 'Public' : 'Private'}
+            </Badge>
+            <Badge leftSection="🤘" size="sm" color="orange">
+              {markerRoute.favorites || 0} favored
+            </Badge>
+          </Group>
           <Text size="xs">
             Added {markerRoute && toTimeAgo(new Date(markerRoute.createdAt))}{' '}
             {markerRoute.username && <Credit username={markerRoute.username} />}
@@ -142,52 +198,68 @@ const MarkerRouteDetails = ({
                 },
               }}
             >
-              {loading && <Skeleton height={40} />}
-              {!loading && markerMapFilters.length === 0 && 'No markers'}
-              {!loading &&
-                markerMapFilters.map((markerMapFilter) => (
-                  <List.Item
-                    key={markerMapFilter.type}
-                    icon={
-                      <Image
-                        src={markerMapFilter.iconUrl}
-                        alt={markerMapFilter.type}
-                        width={24}
-                        height={24}
-                      />
-                    }
-                    sx={{
-                      width: '100%',
-                    }}
-                  >
-                    {markerMapFilter.title}:{' '}
-                    {markerRoute.markersByType[markerMapFilter.type]}x
-                  </List.Item>
-                ))}
+              {markerMapFilters.length === 0 && loading && (
+                <Skeleton height={40} />
+              )}
+              {markerMapFilters.length === 0 && !loading && 'No markers'}
+              {markerMapFilters.map((markerMapFilter) => (
+                <List.Item
+                  key={markerMapFilter.type}
+                  icon={
+                    <Image
+                      src={markerMapFilter.iconUrl}
+                      alt={markerMapFilter.type}
+                      width={24}
+                      height={24}
+                    />
+                  }
+                  sx={{
+                    width: '100%',
+                  }}
+                >
+                  {markerMapFilter.title}:{' '}
+                  {markerRoute.markersByType[markerMapFilter.type]}x
+                </List.Item>
+              ))}
             </List>
           </ScrollArea>
 
           <Button
             title="Toggle route"
             variant={selected ? 'filled' : 'outline'}
-            color="green"
+            color="blue"
             onClick={() => {
               toggleMarkerRoute(markerRoute, !selected);
             }}
           >
-            {selected ? 'Visible' : 'Not visible'}
+            {selected ? 'Deselect route' : 'Select route'}
           </Button>
           <Button
-            color="teal"
-            leftIcon={<IconArrowFork />}
-            onClick={() => {
-              handleEdit(markerRoute);
-              handleClose();
-            }}
+            title="Toggle favorite"
+            variant={isFavorite ? 'filled' : 'outline'}
+            color="orange"
+            disabled={!account}
+            onClick={handleFavorite}
           >
-            Fork this route ({markerRoute.forks || 0} times)
+            {isFavorite ? 'Remove from favorites' : 'Add to favorites'}
           </Button>
-          <Button color="orange"></Button>
+          <ForkRoute
+            markerRoute={markerRoute}
+            onFork={async (markerRoute) => {
+              toggleMarkerRoute(markerRoute, false);
+              await refreshMarkerRoutes();
+              if (!markerRoute || !markerRoute.map) {
+                navigate(`/routes/${markerRoute._id}/${location.search}`);
+              } else {
+                const mapDetail = findMapDetails(markerRoute.map);
+                if (mapDetail) {
+                  navigate(
+                    `/${mapDetail.title}/routes/${markerRoute._id}${location.search}`
+                  );
+                }
+              }
+            }}
+          />
           {editable && (
             <Button
               color="teal"
@@ -200,6 +272,14 @@ const MarkerRouteDetails = ({
               Edit route
             </Button>
           )}
+          <DeleteRoute
+            routeId={markerRoute._id}
+            onDelete={async () => {
+              toggleMarkerRoute(markerRoute, true);
+              await refreshMarkerRoutes();
+              handleClose();
+            }}
+          />
         </Stack>
       )}
     </Drawer>

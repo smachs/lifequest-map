@@ -135,30 +135,6 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
     setLimit(10);
   }, [sortBy, filter, search]);
 
-  async function handleFavorite(markerRouteId: string): Promise<void> {
-    if (!account) {
-      return;
-    }
-    const isFavorite = account.favoriteRouteIds?.some(
-      (routeId) => markerRouteId === routeId
-    );
-    try {
-      await notify(patchFavoriteMarkerRoute(markerRouteId, !isFavorite), {
-        success: 'Favored route changed 👌',
-      });
-      refreshAccount();
-      refreshMarkerRoutes();
-    } catch (error) {
-      writeError(error);
-    }
-  }
-
-  function isEditable(markerRoute: MarkerRouteItem): boolean {
-    return Boolean(
-      account && (account.isModerator || account.steamId === markerRoute.userId)
-    );
-  }
-
   const sortedMarkerRoutes = useMemo(
     () =>
       visibleMarkerRoutes
@@ -166,38 +142,6 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
         .sort(handleSort(sortBy, filters)),
     [sortBy, visibleMarkerRoutes, filters, filter, search]
   );
-  function handleEdit(markerRoute: MarkerRouteItem) {
-    toggleMarkerRoute(markerRoute, false);
-    const types = Object.keys(markerRoute.markersByType);
-    setFilters((filters) => [
-      ...filters,
-      ...types.filter((type) => !filters.includes(type)),
-    ]);
-    onEdit(markerRoute);
-  }
-
-  async function handleFork(markerRoute: MarkerRouteItem, name: string) {
-    try {
-      const newMarkerRoute = {
-        name: name,
-        isPublic: false,
-        positions: markerRoute.positions,
-        markersByType: markerRoute.markersByType,
-        map: markerRoute.map,
-        origin: markerRoute._id,
-      };
-
-      toggleMarkerRoute(markerRoute, false);
-      const forkedMarkerRoute = await notify(postMarkerRoute(newMarkerRoute), {
-        success: 'Fork added 👌',
-      });
-
-      await refreshMarkerRoutes();
-      onEdit(forkedMarkerRoute);
-    } catch (error) {
-      writeError(error);
-    }
-  }
 
   return (
     <section className={styles.container}>
@@ -254,16 +198,12 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
               (selectedMarkerRoute) =>
                 selectedMarkerRoute._id == markerRoute._id
             )}
-            editable={isEditable(markerRoute)}
             onSelect={(checked) => toggleMarkerRoute(markerRoute, checked)}
             isFavorite={Boolean(
               account?.favoriteRouteIds?.some(
                 (routeId) => markerRoute._id === routeId
               )
             )}
-            onFavorite={() => handleFavorite(markerRoute._id)}
-            onEdit={() => handleEdit(markerRoute)}
-            onFork={(name) => handleFork(markerRoute, name)}
           />
         ))}
         {sortedMarkerRoutes.length > limit && (

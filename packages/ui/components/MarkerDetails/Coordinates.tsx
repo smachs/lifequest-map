@@ -8,7 +8,7 @@ type CoordinatesProps = {
 function Coordinates({ position }: CoordinatesProps) {
   const coordinates = `[${position.join(', ')}]`;
   return (
-    <Text size="sm">
+    <Text size="xs">
       <Group spacing={2}>
         {coordinates}
         <ActionIcon
