@@ -2,7 +2,7 @@ import { Router } from 'express';
 import type { Filter } from 'mongodb';
 import { ObjectId } from 'mongodb';
 import { ensureAuthenticated } from '../auth/middlewares.js';
-import { postToDiscord } from '../discord.js';
+import { getMarkerURL, postToDiscord } from '../discord.js';
 import { getMarkersCollection } from '../markers/collection.js';
 import { refreshMarkers } from '../markers/router.js';
 import { getCommentsCollection } from './collection.js';
@@ -65,13 +65,24 @@ commentsRouter.delete('/:commentId', ensureAuthenticated, async (req, res) => {
   await refreshMarkers();
   res.status(200).json({});
   const position = marker.position.join(', ');
+
   if (comment.isIssue) {
     postToDiscord(
-      `⚠️💀 ${account.name} deleted an issue for ${marker.type} at [${position}]:\n${comment.message}`
+      `⚠️💀 ${account.name} deleted an issue for ${
+        marker.type
+      } at [${position}]:\n${comment.message}\n${getMarkerURL(
+        marker._id.toString(),
+        marker.map
+      )}`
     );
   } else {
     postToDiscord(
-      `✍💀 ${account.name} deleted a comment for ${marker.type} at [${position}]:\n${comment.message}`
+      `✍💀 ${account.name} deleted a comment for ${
+        marker.type
+      } at [${position}]:\n${comment.message}\n${getMarkerURL(
+        marker._id.toString(),
+        marker.map
+      )}`
     );
   }
 });

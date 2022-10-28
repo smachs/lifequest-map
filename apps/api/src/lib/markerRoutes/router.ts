@@ -3,7 +3,7 @@ import { Router } from 'express';
 import type { MarkerRouteDTO } from './types.js';
 import { Double, ObjectId } from 'mongodb';
 import { getMarkerRoutesCollection } from './collection.js';
-import { postToDiscord } from '../discord.js';
+import { getMarkerRoutesURL, postToDiscord } from '../discord.js';
 import { ensureAuthenticated } from '../auth/middlewares.js';
 import { findRegions, mapIsAeternumMap, findMapDetails } from 'static';
 
@@ -94,7 +94,7 @@ markerRoutesRouter.post('/', ensureAuthenticated, async (req, res, next) => {
     postToDiscord(
       `🗺️ ${markerRoute.origin ? 'Forked' : 'New'} route ${name} added by ${
         account.name
-      }`,
+      }\n${getMarkerRoutesURL(inserted.insertedId.toString(), map)}`,
       markerRoute.isPublic
     );
   } catch (error) {
@@ -292,7 +292,9 @@ markerRoutesRouter.patch(
       }
       res.status(200).json(result.value);
       postToDiscord(
-        `🗺️ Route ${result.value.name} updated by ${account.name}`,
+        `🗺️ Route ${result.value.name} updated by ${
+          account.name
+        }\n${getMarkerRoutesURL(result.value._id.toString(), markerRoute.map)}`,
         markerRoute.isPublic
       );
     } catch (error) {
