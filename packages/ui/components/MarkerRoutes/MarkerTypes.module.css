@@ -1,20 +1,4 @@
-.container {
-  display: flex;
-  column-gap: 1rem;
-  width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  height: 1.7rem;
-}
-
-.marker {
-  display: inline-flex;
-  column-gap: 0.2em;
-  align-items: center;
-  color: var(--color-text);
-}
-
-.marker img {
+.img {
   height: 1.5rem;
 }
 

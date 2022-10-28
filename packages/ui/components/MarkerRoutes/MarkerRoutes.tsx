@@ -3,15 +3,12 @@ import { useFilters } from '../../contexts/FiltersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
 import type { AccountDTO } from '../../contexts/UserContext';
 import { useAccount } from '../../contexts/UserContext';
-import { writeError } from '../../utils/logs';
-import { notify } from '../../utils/notifications';
 import { escapeRegExp } from '../../utils/regExp';
 import { usePersistentState } from '../../utils/storage';
 import ActionButton from '../ActionControl/ActionButton';
 import Button from '../Button/Button';
 import { mapFilters, regionNames } from 'static';
 import SearchInput from '../SearchInput/SearchInput';
-import { patchFavoriteMarkerRoute, postMarkerRoute } from './api';
 import MarkerRoute from './MarkerRoute';
 import styles from './MarkerRoutes.module.css';
 
@@ -114,7 +111,7 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
     refreshMarkerRoutes,
     visibleMarkerRoutes,
   } = useMarkers();
-  const { account, refreshAccount } = useAccount();
+  const { account } = useAccount();
   const [sortBy, setSortBy] = usePersistentState<SortBy>(
     'markerRoutesSort',
     'match'
@@ -124,7 +121,7 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
     'all'
   );
   const [search, setSearch] = usePersistentState('searchRoutes', '');
-  const { filters, setFilters } = useFilters();
+  const { filters } = useFilters();
   const [limit, setLimit] = useState(10);
 
   useEffect(() => {
@@ -135,30 +132,6 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
     setLimit(10);
   }, [sortBy, filter, search]);
 
-  async function handleFavorite(markerRouteId: string): Promise<void> {
-    if (!account) {
-      return;
-    }
-    const isFavorite = account.favoriteRouteIds?.some(
-      (routeId) => markerRouteId === routeId
-    );
-    try {
-      await notify(patchFavoriteMarkerRoute(markerRouteId, !isFavorite), {
-        success: 'Favored route changed 👌',
-      });
-      refreshAccount();
-      refreshMarkerRoutes();
-    } catch (error) {
-      writeError(error);
-    }
-  }
-
-  function isEditable(markerRoute: MarkerRouteItem): boolean {
-    return Boolean(
-      account && (account.isModerator || account.steamId === markerRoute.userId)
-    );
-  }
-
   const sortedMarkerRoutes = useMemo(
     () =>
       visibleMarkerRoutes
@@ -166,38 +139,6 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
         .sort(handleSort(sortBy, filters)),
     [sortBy, visibleMarkerRoutes, filters, filter, search]
   );
-  function handleEdit(markerRoute: MarkerRouteItem) {
-    toggleMarkerRoute(markerRoute, false);
-    const types = Object.keys(markerRoute.markersByType);
-    setFilters((filters) => [
-      ...filters,
-      ...types.filter((type) => !filters.includes(type)),
-    ]);
-    onEdit(markerRoute);
-  }
-
-  async function handleFork(markerRoute: MarkerRouteItem, name: string) {
-    try {
-      const newMarkerRoute = {
-        name: name,
-        isPublic: false,
-        positions: markerRoute.positions,
-        markersByType: markerRoute.markersByType,
-        map: markerRoute.map,
-        origin: markerRoute._id,
-      };
-
-      toggleMarkerRoute(markerRoute, false);
-      const forkedMarkerRoute = await notify(postMarkerRoute(newMarkerRoute), {
-        success: 'Fork added 👌',
-      });
-
-      await refreshMarkerRoutes();
-      onEdit(forkedMarkerRoute);
-    } catch (error) {
-      writeError(error);
-    }
-  }
 
   return (
     <section className={styles.container}>
@@ -254,16 +195,7 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
               (selectedMarkerRoute) =>
                 selectedMarkerRoute._id == markerRoute._id
             )}
-            editable={isEditable(markerRoute)}
-            onClick={() => toggleMarkerRoute(markerRoute)}
-            isFavorite={Boolean(
-              account?.favoriteRouteIds?.some(
-                (routeId) => markerRoute._id === routeId
-              )
-            )}
-            onFavorite={() => handleFavorite(markerRoute._id)}
-            onEdit={() => handleEdit(markerRoute)}
-            onFork={(name) => handleFork(markerRoute, name)}
+            onSelect={(checked) => toggleMarkerRoute(markerRoute, checked)}
           />
         ))}
         {sortedMarkerRoutes.length > limit && (

@@ -76,8 +76,11 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
     if (leafletMap) {
       leafletMap.off('click');
       leafletMap.on('click', (event) => {
-        // @ts-ignore
-        if (!event.originalEvent.propagatedFromMarker && view.nodeId) {
+        if (
+          // @ts-ignore
+          !event.originalEvent.propagatedFromMarker &&
+          (view.nodeId || view.routeId)
+        ) {
           const mapDetail = findMapDetails(view.map);
           if (mapDetail === AETERNUM_MAP || !mapDetail) {
             navigate(`/${location.search}`);
@@ -87,7 +90,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
         }
       });
     }
-  }, [leafletMap, view.map, view.nodeId]);
+  }, [leafletMap, view.map, view.routeId, view.nodeId]);
 
   useEffect(() => {
     const mapElement = elementRef.current;

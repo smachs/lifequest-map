@@ -6,14 +6,13 @@ import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 import leaflet from 'leaflet';
 import MarkerTypes from './MarkerTypes';
 import { notify } from '../../utils/notifications';
-import { deleteMarkerRoute, patchMarkerRoute, postMarkerRoute } from './api';
+import { patchMarkerRoute, postMarkerRoute } from './api';
 import { useMarkers } from '../../contexts/MarkersContext';
 import type { MarkerRouteItem } from './MarkerRoutes';
 import Button from '../Button/Button';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import { findRegions } from 'static';
 import { writeError } from '../../utils/logs';
-import DeleteButton from '../DeleteButton/DeleteButton';
 import { useMap } from 'ui/utils/routes';
 
 type SelectRouteProps = {
@@ -201,24 +200,6 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
     }
   }
 
-  async function handleRemove(): Promise<void> {
-    try {
-      if (!markerRoute) {
-        return;
-      }
-      await notify(deleteMarkerRoute(markerRoute._id), {
-        success: 'Route deleted 👌',
-      });
-
-      toggleMarkerRoute(markerRoute, true);
-
-      await refreshMarkerRoutes();
-      onClose();
-    } catch (error) {
-      writeError(error);
-    }
-  }
-
   return (
     <div className={styles.container}>
       <label className={styles.label}>
@@ -254,13 +235,6 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
         Save Route {!name && '(Name missing)'}
       </Button>
       <Button onClick={onClose}>Cancel</Button>
-      {markerRoute && (
-        <DeleteButton
-          variant="text"
-          onClick={handleRemove}
-          title={`Do you really want to delete ${markerRoute.name}?`}
-        />
-      )}
       <small>Right click in edit mode to remove a vertex</small>
     </div>
   );

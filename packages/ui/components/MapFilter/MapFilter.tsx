@@ -22,11 +22,12 @@ import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
 import Footer from '../Footer/Footer';
 import { usePlayer } from '../../contexts/PlayerContext';
 import SelectMap from './SelectMap';
-import { useNodeId, useView } from '../../utils/routes';
+import { useRouteParams, useView } from '../../utils/routes';
 import MarkerDetails from '../MarkerDetails/MarkerDetails';
 import type { MarkerFull } from '../MarkerDetails/useMarker';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
+import MarkerRouteDetails from '../MarkerRoutes/MarkerRouteDetails';
 
 type MarkerFilterProps = {
   onMarkerCreate: () => void;
@@ -44,7 +45,7 @@ function MapFilter({
     true
   );
   const { following, toggleFollowing, isSyncing, setIsSyncing } = usePlayer();
-  const nodeId = useNodeId();
+  const { nodeId, routeId } = useRouteParams();
   const { view, toView } = useView();
 
   useDebounce(
@@ -63,6 +64,10 @@ function MapFilter({
         <User />
         <SelectMap />
         <MarkerDetails nodeId={nodeId} onEdit={onMarkerEdit} />
+        <MarkerRouteDetails
+          markerRouteId={routeId}
+          onEdit={onMarkerRouteUpsert}
+        />
         {view.section === 'nodes' && (
           <MarkersView onAdd={() => onMarkerCreate()} />
         )}

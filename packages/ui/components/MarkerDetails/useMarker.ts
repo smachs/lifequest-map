@@ -58,6 +58,7 @@ function useMarker(markerId?: string) {
             })),
           })
         )
+        .catch(() => setResult(null))
         .finally(() => setLoading(false))
     );
   }, [markerId]);

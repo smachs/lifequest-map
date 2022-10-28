@@ -19,6 +19,10 @@ export const useNodeId = () => {
   return useRouteParams().nodeId;
 };
 
+export const useRouteId = () => {
+  return useRouteParams().routeId;
+};
+
 const getMapView = (searchParams: URLSearchParams) => {
   const x = searchParams.get('x');
   const y = searchParams.get('y');
@@ -37,7 +41,8 @@ const getMapView = (searchParams: URLSearchParams) => {
 const getView = (
   map: string,
   searchParams: URLSearchParams,
-  nodeId?: string
+  nodeId?: string,
+  routeId?: string
 ) => {
   const searchParamsView = getMapView(searchParams) ?? deserializeMapView(map);
   const sectionParam = searchParams.get('section');
@@ -46,7 +51,7 @@ const getView = (
       ? 'nodes'
       : (sectionParam as Section);
 
-  return { ...searchParamsView, map, nodeId, section };
+  return { ...searchParamsView, map, nodeId, routeId, section };
 };
 
 export const useView = (): {
@@ -54,6 +59,7 @@ export const useView = (): {
     | {
         map: string;
         nodeId?: string;
+        routeId?: string;
         y: number;
         x: number;
         zoom: number;
@@ -62,6 +68,7 @@ export const useView = (): {
     | {
         map: string;
         nodeId?: string;
+        routeId?: string;
         x: null;
         y: null;
         zoom: null;
@@ -82,16 +89,16 @@ export const useView = (): {
         }
   ) => string;
 } => {
-  const { map, nodeId } = useRouteParams();
+  const { map, nodeId, routeId } = useRouteParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
 
   const [internalView, setInternalView] = useState(() =>
-    getView(map, searchParams, nodeId)
+    getView(map, searchParams, nodeId, routeId)
   );
 
   useEffect(() => {
-    const view = getView(map, searchParams, nodeId);
+    const view = getView(map, searchParams, nodeId, routeId);
     setInternalView(view);
   }, [map, nodeId, searchParams]);
 

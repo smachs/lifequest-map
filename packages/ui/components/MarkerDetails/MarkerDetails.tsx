@@ -12,6 +12,7 @@ import Credit from './Credit';
 import Coordinates from './Coordinates';
 import Loot from './Loot/Loot';
 import {
+  Badge,
   Button,
   Drawer,
   Group,
@@ -75,7 +76,6 @@ function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
       }
     }
   };
-
   const filterItem =
     marker && mapFilters.find((mapFilter) => mapFilter.type === marker.type);
   return (
@@ -91,7 +91,7 @@ function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
         },
       })}
       title={
-        filterItem ? (
+        filterItem && !loading ? (
           <Group>
             <Image width={32} height={32} src={filterItem.iconUrl} alt="" />{' '}
             {marker.chestType
@@ -109,20 +109,20 @@ function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
         <Stack style={{ height: 'calc(100% - 50px)' }} spacing="xs">
           <Group>
             {marker.name && (
-              <Text size="sm" color="cyan" weight="bold">
+              <Badge size="sm" color="cyan">
                 {filterItem.title}
-              </Text>
+              </Badge>
             )}
-            {marker.level && <Text size="sm">Level {marker.level}</Text>}
+            {marker.level && <Badge size="sm">Level {marker.level}</Badge>}
             {marker.hp && (
-              <Text size="sm" color="orange">
+              <Badge size="sm" color="orange">
                 {marker.hp} HP
-              </Text>
+              </Badge>
             )}
             {marker.customRespawnTimer && (
-              <Text size="sm" color="lime">
+              <Badge size="sm" color="lime">
                 Respawns {marker.customRespawnTimer}s
-              </Text>
+              </Badge>
             )}
             <Coordinates position={marker.position} />
           </Group>
