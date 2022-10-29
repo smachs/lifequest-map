@@ -87,6 +87,11 @@ export const init = ({
         onPlayer(data as Partial<Player>);
       });
     });
+
+    peer.on('disconnected', () => {
+      console.log('Peer disconnected -> reconnecting');
+      peer.reconnect();
+    });
   });
 
   return {
