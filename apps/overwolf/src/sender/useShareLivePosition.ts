@@ -76,7 +76,6 @@ function useShareLivePosition(token: string, serverUrl: string) {
 
     const updateStatus = () => {
       newSocket.emit('status', (group: Group, connections: string[]) => {
-        console.log('STATUS', group, connections);
         setStatus({ group, connections });
         sendToPeers({ group });
 
