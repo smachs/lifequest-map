@@ -1,7 +1,7 @@
 import type { OwAd } from '@overwolf/types/owads';
 import { useEffect, useRef, useState } from 'react';
+import useWindowIsVisible from '../useWindowIsVisible';
 import classes from './Ads.module.css';
-import useWindowIsVisible from '../../utils/useWindowIsVisible';
 
 declare global {
   interface Window {

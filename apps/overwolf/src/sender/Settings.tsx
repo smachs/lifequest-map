@@ -12,7 +12,7 @@ import {
   ZOOM_IN_MAP,
   ZOOM_OUT_MAP,
   MARKER_ACTION,
-} from 'ui/utils/hotkeys';
+} from '../utils/hotkeys';
 import Debug from '../components/Debug/Debug';
 import styles from './Settings.module.css';
 

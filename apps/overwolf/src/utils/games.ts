@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { isOverwolfApp } from './overwolf';
+import { isOverwolfApp } from 'ui/utils/overwolf';
 
 export const NEW_WORLD_CLASS_ID = 21816;
 

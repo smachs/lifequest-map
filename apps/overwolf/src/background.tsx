@@ -1,5 +1,3 @@
-import { isNewWorldRunning, NEW_WORLD_CLASS_ID } from 'ui/utils/games';
-import { SHOW_HIDE_APP } from 'ui/utils/hotkeys';
 import { writeLog } from 'ui/utils/logs';
 import { waitForOverwolf } from 'ui/utils/overwolf';
 import { initPlausible } from 'ui/utils/stats';
@@ -10,6 +8,8 @@ import {
   toggleWindow,
   WINDOWS,
 } from 'ui/utils/windows';
+import { isNewWorldRunning, NEW_WORLD_CLASS_ID } from './utils/games';
+import { SHOW_HIDE_APP } from './utils/hotkeys';
 
 writeLog('Starting background process');
 
