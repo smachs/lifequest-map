@@ -90,7 +90,7 @@ export const init = ({
 
     peer.on('disconnected', () => {
       console.log('Peer disconnected -> reconnecting');
-      peer.reconnect();
+      peer?.reconnect();
     });
   });
 
