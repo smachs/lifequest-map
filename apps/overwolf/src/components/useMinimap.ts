@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { usePersistentState } from 'ui/utils/storage';
 import { closeWindow, restoreWindow, WINDOWS } from 'ui/utils/windows';
-import { useIsNewWorldRunning } from '../utils/games';
 import { SHOW_HIDE_MINIMAP } from '../utils/hotkeys';
+import { useIsNewWorldRunning } from './store';
 
 function useMinimap(): [
   boolean,

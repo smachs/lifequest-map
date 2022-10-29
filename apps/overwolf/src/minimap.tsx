@@ -7,11 +7,7 @@ import { PositionProvider } from './contexts/PositionContext';
 import WorldMapBlank from './components/WorldMapBlank';
 import styles from './Minimap.module.css';
 import { dragMoveWindow, WINDOWS } from 'ui/utils/windows';
-import {
-  SETUP_MINIMAP,
-  ZOOM_IN_MINIMAP,
-  ZOOM_OUT_MINIMAP,
-} from 'ui/utils/hotkeys';
+
 import { usePersistentState } from 'ui/utils/storage';
 import { FiltersProvider } from 'ui/contexts/FiltersContext';
 import { SettingsProvider } from 'ui/contexts/SettingsContext';
@@ -22,6 +18,11 @@ import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
 import { initPlausible } from 'ui/utils/stats';
 import { createRoot } from 'react-dom/client';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import {
+  SETUP_MINIMAP,
+  ZOOM_IN_MINIMAP,
+  ZOOM_OUT_MINIMAP,
+} from './utils/hotkeys';
 
 const root = createRoot(document.querySelector('#root')!);
 

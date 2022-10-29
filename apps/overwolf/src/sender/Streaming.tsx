@@ -18,8 +18,8 @@ import Settings from './Settings';
 import ServerRadioButton from 'ui/components/LiveServer/ServerRadioButton';
 import useServers from 'ui/components/ShareLiveStatus/useServers';
 import SyncStatusSender from '../components/SyncStatus/SyncStatusSender';
-import { useIsNewWorldRunning } from '../utils/games';
 import useMinimap from '../components/useMinimap';
+import { useIsNewWorldRunning } from '../components/store';
 
 function Streaming(): JSX.Element {
   const { account } = useAccount();

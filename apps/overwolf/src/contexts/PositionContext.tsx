@@ -11,7 +11,8 @@ import {
   AETERNUM_MAP,
 } from 'static';
 import { writeError } from 'ui/utils/logs';
-import { getGameInfo, useIsNewWorldRunning } from '../utils/games';
+import { useIsNewWorldRunning } from '../components/store';
+import { getGameInfo } from '../utils/games';
 import {
   getLocation,
   getScreenshotFromNewWorld,
