@@ -8,10 +8,11 @@ import { usePersistentState } from 'ui/utils/storage';
 import { toast } from 'react-toastify';
 import type { Group } from 'ui/utils/useReadLivePosition';
 import useShareHotkeys from './useShareHotkeys';
+import type { DataConnection } from 'peerjs';
 import Peer from 'peerjs';
 import { useSettings } from 'ui/contexts/SettingsContext';
 
-const peerConnections: { [key: string]: any } = {};
+const peerConnections: { [key: string]: DataConnection } = {};
 
 const sendToPeers = (data: unknown) => {
   Object.values(peerConnections).forEach((peerConnection) => {
@@ -46,7 +47,7 @@ function useShareLivePosition(token: string, serverUrl: string) {
   useShareHotkeys(socket);
 
   useEffect(() => {
-    if (!isSharing) {
+    if (!isSharing || socket) {
       return;
     }
     if (!token || !serverUrl) {
@@ -55,7 +56,6 @@ function useShareLivePosition(token: string, serverUrl: string) {
     }
 
     const peer = peerToPeer ? new Peer({ debug: 2 }) : null;
-
     const openPromise = new Promise((resolve) => {
       peer?.on('open', (id) => {
         console.log('My peer ID is: ' + id);
@@ -70,7 +70,6 @@ function useShareLivePosition(token: string, serverUrl: string) {
         steamName: account!.name,
         isOverwolfApp: true,
       },
-      upgrade: false,
       transports: ['websocket'],
     });
     setSocket(newSocket);
@@ -85,20 +84,20 @@ function useShareLivePosition(token: string, serverUrl: string) {
             await openPromise;
             if (!peerConnections[connection]) {
               const peerId = connection.replace(/[^a-zA-Z ]/g, '');
-              console.log(`Connect to ${peerId}`);
+              console.log(`Connecting to peer ${peerId}`);
               peerConnections[connection] = peer.connect(peerId);
 
               peerConnections[connection].on('error', (error: Error) => {
-                console.error('Peer error', error);
+                console.error(`Peer ${peerId} error`, error);
               });
 
               peerConnections[connection].on('open', () => {
-                console.log('Peer opened');
+                console.log(`Peer ${peerId} opened`);
                 peerConnections[connection].send({ group });
               });
 
               peerConnections[connection].on('close', () => {
-                console.log('Peer closed');
+                console.log(`Peer ${peerId} closed`);
                 delete peerConnections[connection];
               });
             }
@@ -153,20 +152,26 @@ function useShareLivePosition(token: string, serverUrl: string) {
       newSocket.removeAllListeners();
       newSocket.io.removeAllListeners();
       newSocket.close();
+
       setIsConnected(false);
 
+      peer?.destroy();
       Object.entries(peerConnections).forEach(([clientId, peerConnection]) => {
         peerConnection.close();
         delete peerConnections[clientId];
       });
-
-      peer?.destroy();
-
       setSocket(null);
       setStatus(null);
       toast.info('Stop sharing live status 🛑');
     };
-  }, [isSharing, account?.steamId, peerToPeer, token, serverUrl]);
+  }, [
+    isSharing,
+    account?.steamId,
+    peerToPeer,
+    token,
+    serverUrl,
+    peerConnections,
+  ]);
 
   useEffect(() => {
     if (socket && isConnected) {

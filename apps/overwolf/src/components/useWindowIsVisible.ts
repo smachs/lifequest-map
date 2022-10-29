@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { NEW_WORLD_CLASS_ID } from './games';
-import { getCurrentWindow } from './windows';
+import { getCurrentWindow } from 'ui/utils/windows';
+import { NEW_WORLD_CLASS_ID } from '../utils/games';
 
 function useWindowIsVisible() {
   const [isVisible, setIsVisible] = useState(true);

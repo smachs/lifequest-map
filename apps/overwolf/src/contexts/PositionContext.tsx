@@ -10,8 +10,9 @@ import {
   findMapDetails,
   AETERNUM_MAP,
 } from 'static';
-import { writeError } from 'ui/utils/logs';
-import { getGameInfo, useIsNewWorldRunning } from 'ui/utils/games';
+import { writeError, writeLog } from 'ui/utils/logs';
+import { useIsNewWorldRunning } from '../components/store';
+import { getGameInfo } from '../utils/games';
 import {
   getLocation,
   getScreenshotFromNewWorld,
@@ -74,7 +75,9 @@ export function PositionProvider({
     if (!newWorldIsRunning) {
       return;
     }
-    overwolf.games.events.setRequiredFeatures(['game_info'], () => undefined);
+    overwolf.games.events.setRequiredFeatures(['game_info'], (event) =>
+      writeLog(event)
+    );
 
     let handler = setTimeout(updatePosition, 50);
     let active = true;

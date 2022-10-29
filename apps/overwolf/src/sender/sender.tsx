@@ -7,7 +7,6 @@ import { useAccount, UserProvider } from 'ui/contexts/UserContext';
 import { PositionProvider } from '../contexts/PositionContext';
 import { waitForOverwolf } from 'ui/utils/overwolf';
 import styles from './Sender.module.css';
-import Ads from 'ui/components/Ads/Ads';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -16,6 +15,7 @@ import Streaming from './Streaming';
 import ErrorBoundary from 'ui/components/ErrorBoundary/ErrorBoundary';
 import { initPlausible } from 'ui/utils/stats';
 import { createRoot } from 'react-dom/client';
+import Ads from '../components/Ads/Ads';
 
 const root = createRoot(document.querySelector('#root')!);
 

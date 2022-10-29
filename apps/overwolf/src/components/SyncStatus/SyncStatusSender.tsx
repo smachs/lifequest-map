@@ -101,9 +101,23 @@ function SyncStatusSender({ newWorldIsRunning }: SyncStatusProps) {
           multiline
           label={
             <>
-              Make sure to run Overwolf before New World. If this doesn't help,
-              please activate 'Show FPS' in-game to display coordinates. This
-              app is using screen capture as fallback with limited functionalty.
+              Did you run Overwolf before New World? If so, please activate{' '}
+              <Text component="span" weight="bold">
+                Show FPS
+              </Text>{' '}
+              in-game to display coordinates and set{' '}
+              <Text component="span" weight="bold">
+                brigthness
+              </Text>{' '}
+              and{' '}
+              <Text component="span" weight="bold">
+                contrast
+              </Text>{' '}
+              to{' '}
+              <Text component="span" weight="bold">
+                5
+              </Text>
+              . This app is using screen capture as fallback.
               {details}
             </>
           }

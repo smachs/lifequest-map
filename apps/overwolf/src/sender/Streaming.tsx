@@ -7,7 +7,6 @@ import CopyIcon from 'ui/components/icons/CopyIcon';
 import RefreshIcon from 'ui/components/icons/RefreshIcon';
 import BroadcastIcon from 'ui/components/icons/BroadcastIcon';
 import { classNames } from 'ui/utils/styles';
-import { useIsNewWorldRunning } from 'ui/utils/games';
 import { toast } from 'react-toastify';
 import { v4 as uuid } from 'uuid';
 import type { FormEvent } from 'react';
@@ -16,10 +15,11 @@ import { useAccount } from 'ui/contexts/UserContext';
 import styles from './Streaming.module.css';
 import MenuIcon from 'ui/components/icons/MenuIcon';
 import Settings from './Settings';
-import useMinimap from 'ui/components/Minimap/useMinimap';
 import ServerRadioButton from 'ui/components/LiveServer/ServerRadioButton';
 import useServers from 'ui/components/ShareLiveStatus/useServers';
 import SyncStatusSender from '../components/SyncStatus/SyncStatusSender';
+import useMinimap from '../components/useMinimap';
+import { useIsNewWorldRunning } from '../components/store';
 
 function Streaming(): JSX.Element {
   const { account } = useAccount();

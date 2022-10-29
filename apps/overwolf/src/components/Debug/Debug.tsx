@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { copyTextToClipboard } from 'ui/utils/clipboard';
-import { getGameInfo } from 'ui/utils/games';
+import { getGameInfo } from '../../utils/games';
 import {
   getLocation,
   getScreenshotFromNewWorld,
