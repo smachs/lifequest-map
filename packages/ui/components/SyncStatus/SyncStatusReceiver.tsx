@@ -1,7 +1,9 @@
+import { Group, Text } from '@mantine/core';
 import { useModal } from '../../contexts/ModalContext';
 import { usePlayer } from '../../contexts/PlayerContext';
 import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
 import styles from './SyncStatus.module.css';
+import WorldName from './WorldName';
 
 function SyncStatusReceiver() {
   const { player, isSyncing, setIsSyncing } = usePlayer();
@@ -40,7 +42,12 @@ function SyncStatusReceiver() {
           <span className={styles.success}>Playing</span>
           {player.username && ` as ${player.username}`} at [
           {player.position.location[1]}, {player.position.location[0]}]{' '}
-          <div>{player.region && `${player.location || player.region}`}</div>
+          <Group spacing="xs">
+            <Text size="xs">
+              {player.region && `${player.location || player.region}`}
+            </Text>
+            {player.worldName && <WorldName worldName={player.worldName} />}
+          </Group>
         </small>
       )}
       {player && !player.position && (

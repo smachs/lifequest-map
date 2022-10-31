@@ -3,6 +3,7 @@ import styles from './SyncStatus.module.css';
 import { usePosition } from '../../contexts/PositionContext';
 import { IconAlertCircle, IconCircleCheck, IconEyeCheck } from '@tabler/icons';
 import { Group, Tooltip, ActionIcon, Stack, Text } from '@mantine/core';
+import WorldName from 'ui/components/SyncStatus/WorldName';
 
 type SyncStatusProps = {
   newWorldIsRunning: boolean;
@@ -132,9 +133,10 @@ function SyncStatusSender({ newWorldIsRunning }: SyncStatusProps) {
           <span className={styles.success}>Playing</span>
           {username && ` as ${username}`} at [{position.location?.[1]},{' '}
           {position.location?.[0]}]{' '}
-          <span className={styles.region}>
-            {region && `${location || region}`}
-          </span>
+          <Group spacing="xs">
+            <Text size="xs">{region && `${location || region}`}</Text>
+            {worldName && <WorldName worldName={worldName} />}
+          </Group>
         </small>
       )}
       {newWorldIsRunning && !position && (
