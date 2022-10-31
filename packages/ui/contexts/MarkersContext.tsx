@@ -240,7 +240,12 @@ export function MarkersProvider({
           (mapFilter) => mapFilter.type === markerType
         );
         if (mapFilter) {
-          if (mapFilter.sizes) {
+          if (mapFilter.category === 'chests') {
+            const tierTypes = Array(mapFilter.maxTier || 5)
+              .fill(null)
+              .map((_, index) => `${mapFilter.type}-${index + 1}`);
+            requiredFilters.push(...tierTypes);
+          } else if (mapFilter.sizes) {
             requiredFilters.push(
               ...mapFilter.sizes.map((size) => `${mapFilter.type}-${size}`)
             );
