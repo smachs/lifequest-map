@@ -47,8 +47,9 @@ function MarkerSection({
           )
         }
         checked={filters.some((filter) =>
-          categories.some((categoryFilter) =>
-            filter.startsWith(categoryFilter.type)
+          categories.some(
+            (categoryFilter) =>
+              filter.replace(/-\d+/, '') === categoryFilter.type
           )
         )}
         title={mapFilterCategory.title}
