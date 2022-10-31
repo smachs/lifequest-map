@@ -86,13 +86,17 @@ export const updateItems = async () => {
         break;
       default:
         {
-          const response = await fetch(
-            `https://api.newworldfans.com/api/v2/db/creature/name/${encodeURIComponent(
-              creature.name!
-            )}/loot`
-          );
-          if (response.ok) {
-            result = (await response.json()) as CreatureLootResult;
+          try {
+            const response = await fetch(
+              `https://api.newworldfans.com/api/v2/db/creature/name/${encodeURIComponent(
+                creature.name!
+              )}/loot`
+            );
+            if (response.ok) {
+              result = (await response.json()) as CreatureLootResult;
+            }
+          } catch (error) {
+            console.error(error);
           }
         }
         break;
@@ -101,7 +105,6 @@ export const updateItems = async () => {
       invalidNames.push(creature.name!);
       continue;
     }
-
     for (const item of result.items) {
       if (!items.some((i) => i.item_id === item.item_id)) {
         items.push(item);
