@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { createContext, useContext } from 'react';
+import { patchUser } from '../components/MarkerDetails/api';
 import { usePersistentState } from '../utils/storage';
 import type { Player } from '../utils/useReadLivePosition';
 import { useSetUser } from './UserContext';
@@ -45,6 +46,12 @@ export function PlayerProvider({ children }: PlayerProviderProps): JSX.Element {
       setUsername(player.username);
     }
   }, [player?.username]);
+
+  useEffect(() => {
+    if (player?.worldName && player.username) {
+      patchUser(player.username, { worldName: player.worldName });
+    }
+  }, [player?.worldName]);
 
   function toggleFollowing() {
     setFollowing(!following);

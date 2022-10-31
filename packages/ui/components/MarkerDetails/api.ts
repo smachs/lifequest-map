@@ -1,14 +1,15 @@
 import { fetchJSON } from '../../utils/api';
 
-export function patchUser(username: string, hiddenMarkerIds: string[]) {
+export function patchUser(
+  username: string,
+  payload: { hiddenMarkerIds?: string[]; worldName?: string }
+) {
   return fetchJSON(`/api/users/${username}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      hiddenMarkerIds,
-    }),
+    body: JSON.stringify(payload),
   });
 }
 
