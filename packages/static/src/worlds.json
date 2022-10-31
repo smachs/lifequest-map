@@ -1,0 +1,417 @@
+[
+  {
+    "publicName": "Aaru",
+    "worldName": "live-1-10-1",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Abaton",
+    "worldName": "live-1-02-4",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Agartha",
+    "worldName": "live-5-02-1",
+    "zone": "syd"
+  },
+  {
+    "publicName": "Alastor",
+    "worldName": "live-1-02-3",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Albraca",
+    "worldName": "live-1-03-1",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Amarah",
+    "worldName": "live-2-fsw01-05",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Apophis",
+    "worldName": "live-1-fsw01-04",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Apsu",
+    "worldName": "live-4-09-1",
+    "zone": "gru"
+  },
+  {
+    "publicName": "Artemis",
+    "worldName": "live-1-fsw01-02",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Artorius",
+    "worldName": "live-4-fsw01-02",
+    "zone": "gru"
+  },
+  {
+    "publicName": "Asgard",
+    "worldName": "live-1-01-4",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Atlantis",
+    "worldName": "live-4-01-1",
+    "zone": "gru"
+  },
+  {
+    "publicName": "Atvatabar",
+    "worldName": "live-2-04-3",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Aukumea",
+    "worldName": "live-3-01-1",
+    "zone": "pdx"
+  },
+  {
+    "publicName": "Aztlan",
+    "worldName": "live-2-04-6",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Baltia",
+    "worldName": "live-1-12-3",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Barataria",
+    "worldName": "live-2-06-1",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Barri",
+    "worldName": "live-1-14-1",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Bengodi",
+    "worldName": "live-1-22-3",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Caer Sidi",
+    "worldName": "live-1-01-3",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Camelot",
+    "worldName": "live-3-04-1",
+    "zone": "pdx"
+  },
+  {
+    "publicName": "Castle of Steel",
+    "worldName": "live-2-06-7",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Cleopatra",
+    "worldName": "live-1-fsw01-05",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Crassus",
+    "worldName": "live-1-fsw01-06",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Delos",
+    "worldName": "live-5-05-1",
+    "zone": "syd"
+  },
+  {
+    "publicName": "Devaloka",
+    "worldName": "live-4-09-2",
+    "zone": "gru"
+  },
+  {
+    "publicName": "Devourer",
+    "worldName": "live-2-fsw01-04",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Dry Tree",
+    "worldName": "live-1-30-3",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Eden",
+    "worldName": "live-2-01-1",
+    "zone": "iad"
+  },
+  {
+    "publicName": "El Dorado",
+    "worldName": "live-3-03-1",
+    "zone": "pdx"
+  },
+  {
+    "publicName": "Ennead",
+    "worldName": "live-3-fsw01-03",
+    "zone": "pdx"
+  },
+  {
+    "publicName": "Eridu",
+    "worldName": "live-5-01-1",
+    "zone": "syd"
+  },
+  {
+    "publicName": "Eurytheia",
+    "worldName": "live-1-02-5",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Fae",
+    "worldName": "live-1-01-1",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Fate",
+    "worldName": "live-1-fsw01-08",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Frislandia",
+    "worldName": "live-2-02-2",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Gaea",
+    "worldName": "live-4-fsw01-03",
+    "zone": "gru"
+  },
+  {
+    "publicName": "Gawain",
+    "worldName": "live-1-fsw01-03",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Harmonia",
+    "worldName": "live-1-12-4",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Heliopolis",
+    "worldName": "live-2-04-1",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Imhotep",
+    "worldName": "live-1-fsw01-07",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Ishtakar",
+    "worldName": "live-1-02-1",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Jotunheim",
+    "worldName": "live-1-02-6",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Kay Pacha",
+    "worldName": "live-2-04-4",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Krocylea",
+    "worldName": "live-2-05-1",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Kronos",
+    "worldName": "live-1-fsw01-09",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Lanka",
+    "worldName": "live-4-01-2",
+    "zone": "gru"
+  },
+  {
+    "publicName": "live-1-fsw01-10",
+    "worldName": "live-1-fsw01-10",
+    "zone": "fra"
+  },
+  {
+    "publicName": "live-1-fsw01-11",
+    "worldName": "live-1-fsw01-11",
+    "zone": "fra"
+  },
+  {
+    "publicName": "live-1-fsw01-12",
+    "worldName": "live-1-fsw01-12",
+    "zone": "fra"
+  },
+  {
+    "publicName": "live-1-fsw01-13",
+    "worldName": "live-1-fsw01-13",
+    "zone": "fra"
+  },
+  {
+    "publicName": "live-1-fsw01-14",
+    "worldName": "live-1-fsw01-14",
+    "zone": "fra"
+  },
+  {
+    "publicName": "live-2-fsw01-08",
+    "worldName": "live-2-fsw01-08",
+    "zone": "iad"
+  },
+  {
+    "publicName": "live-2-fsw01-09",
+    "worldName": "live-2-fsw01-09",
+    "zone": "iad"
+  },
+  {
+    "publicName": "live-2-fsw01-10",
+    "worldName": "live-2-fsw01-10",
+    "zone": "iad"
+  },
+  {
+    "publicName": "live-5-fsw01-03",
+    "worldName": "live-5-fsw01-03",
+    "zone": "syd"
+  },
+  {
+    "publicName": "Maramma",
+    "worldName": "live-2-05-2",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Medea",
+    "worldName": "live-2-fsw01-02",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Medusa",
+    "worldName": "live-3-fsw01-05",
+    "zone": "pdx"
+  },
+  {
+    "publicName": "Midgard",
+    "worldName": "live-1-10-2",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Myrddin",
+    "worldName": "live-2-fsw01-03",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Naxos",
+    "worldName": "live-1-30-2",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Niflheim",
+    "worldName": "live-1-01-5",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Nomad",
+    "worldName": "live-3-fsw01-04",
+    "zone": "pdx"
+  },
+  {
+    "publicName": "Nysa",
+    "worldName": "live-1-12-2",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Olympus",
+    "worldName": "live-2-01-2",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Orion",
+    "worldName": "live-4-fsw01-04",
+    "zone": "gru"
+  },
+  {
+    "publicName": "Orofena",
+    "worldName": "live-2-15-1",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Primordial",
+    "worldName": "live-5-fsw01-02",
+    "zone": "syd"
+  },
+  {
+    "publicName": "Runeberg",
+    "worldName": "live-1-02-2",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Seer",
+    "worldName": "live-2-fsw01-07",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Sentinel",
+    "worldName": "live-2-fsw01-06",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Sutekh",
+    "worldName": "live-5-fsw01-01",
+    "zone": "syd"
+  },
+  {
+    "publicName": "Tartarus",
+    "worldName": "live-1-22-2",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Themiscyra",
+    "worldName": "live-2-01-3",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Thule",
+    "worldName": "live-1-12-1",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Tir Na Nog",
+    "worldName": "live-1-01-2",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Topan",
+    "worldName": "live-2-04-2",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Tritonis",
+    "worldName": "live-2-04-5",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Tupia",
+    "worldName": "live-1-22-1",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Valhalla",
+    "worldName": "live-2-02-1",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Yggdrasil",
+    "worldName": "live-3-06-5",
+    "zone": "pdx"
+  },
+  {
+    "publicName": "Yonas",
+    "worldName": "live-3-fsw01-02",
+    "zone": "pdx"
+  }
+]

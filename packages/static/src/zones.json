@@ -1,0 +1,22 @@
+[
+  {
+    "id": "syd",
+    "name": "AP Southeast"
+  },
+  {
+    "id": "fra",
+    "name": "EU Central"
+  },
+  {
+    "id": "gru",
+    "name": "SA East"
+  },
+  {
+    "id": "iad",
+    "name": "US East"
+  },
+  {
+    "id": "pdx",
+    "name": "US West"
+  }
+]
