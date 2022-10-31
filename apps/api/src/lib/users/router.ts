@@ -102,28 +102,34 @@ usersRouter.post('/', async (req, res, next) => {
 usersRouter.patch('/:username', async (req, res, next) => {
   try {
     const { username } = req.params;
-    const { hiddenMarkerIds } = req.body;
-    if (!Array.isArray(hiddenMarkerIds)) {
+    const { hiddenMarkerIds, worldName } = req.body;
+
+    const set: Partial<UserDTO> = {};
+    if (Array.isArray(hiddenMarkerIds)) {
+      set.hiddenMarkerIds = hiddenMarkerIds.map(
+        (markerId: string) => new ObjectId(markerId)
+      );
+    }
+    if (typeof worldName === 'string') {
+      set.worldName = worldName;
+    }
+
+    if (Object.keys(set).length === 0) {
       res.status(400).send('Invalid payload');
       return;
     }
-    const hiddenMarkerObjectIds = hiddenMarkerIds.map(
-      (markerId: string) => new ObjectId(markerId)
-    );
 
     const result = await getUsersCollection().updateOne(
       { username },
       {
-        $set: {
-          hiddenMarkerIds: hiddenMarkerObjectIds,
-        },
+        $set: set,
       }
     );
     if (!result.modifiedCount) {
       res.status(400).end(`No change`);
       return;
     }
-    res.status(200).json(hiddenMarkerIds);
+    res.status(200).json({ message: 'Success' });
   } catch (error) {
     next(error);
   }

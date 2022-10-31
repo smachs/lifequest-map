@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import leaflet from 'leaflet';
 import { latestLeafletMap } from './useWorldMap';
 import type { MarkerSize } from 'static';
+import { getWorld, getZone } from 'static';
 
 const formatTimer = (seconds: number) => {
   const format = (value: number) => `0${Math.floor(value)}`.slice(-2);
@@ -41,8 +42,68 @@ const respawnAction =
         keepInView: false,
         className: styles.respawn,
       })
-      .setLatLng(marker.getLatLng())
-      .setContent(`${formatTimer(respawnTimer)}`);
+      .setLatLng(marker.getLatLng());
+    latestLeafletMap!.addLayer(marker.popup);
+
+    const updateTimer = () => {
+      if (!marker || !marker.popup) {
+        return;
+      }
+      const timeLeft = Math.round((respawnAt - Date.now()) / 1000);
+      marker.popup.setContent(`${formatTimer(timeLeft)}`);
+      if (timeLeft > 0) {
+        marker.actionHandle = setTimeout(updateTimer, 1000);
+      } else {
+        marker.popup.remove();
+        delete marker.actionHandle;
+      }
+    };
+    updateTimer();
+  };
+
+const respawnWorldAction =
+  (respawnHour: number) => async (marker: CanvasMarker, user: User | null) => {
+    let timeDiff = 0;
+    if (user?.worldName) {
+      const world = getWorld(user.worldName);
+      const zone = world && getZone(world.zone);
+      if (zone) {
+        timeDiff = zone.timeDiffToUTC;
+      }
+    }
+    const timezoneRespawnHour = respawnHour + timeDiff;
+    const now = new Date();
+    const isNextDay = now.getHours() >= timezoneRespawnHour;
+    const respawnDate = new Date(
+      Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate() + (isNextDay ? 1 : 0),
+        timezoneRespawnHour,
+        0,
+        0
+      )
+    );
+
+    if (marker.actionHandle) {
+      clearTimeout(marker.actionHandle);
+      delete marker.actionHandle;
+      if (marker.popup) {
+        marker.popup.remove();
+      }
+    }
+    const respawnAt = respawnDate.getTime();
+
+    marker.popup = leaflet
+      .popup({
+        autoPan: false,
+        autoClose: false,
+        closeButton: false,
+        closeOnClick: false,
+        keepInView: false,
+        className: styles.respawn,
+      })
+      .setLatLng(marker.getLatLng());
     latestLeafletMap!.addLayer(marker.popup);
 
     const updateTimer = () => {
@@ -102,7 +163,7 @@ const hideMarker = async (
     hiddenMarkerIds.splice(hiddenMarkerIds.indexOf(markerId), 1);
     message = 'Lore note is not hidden anymore';
   }
-  await notify(patchUser(user.username, hiddenMarkerIds), {
+  await notify(patchUser(user.username, { hiddenMarkerIds }), {
     success: message,
   });
   refreshUser();
@@ -132,6 +193,9 @@ const actions: {
   chestsCommonAncient: respawnAction(600),
   chestsCommonProvisions: respawnAction(600),
   chestsCommonSupplies: respawnAction(600),
+  chestsOffering: respawnAction(3600),
+  chestsEliteOffering: respawnWorldAction(3),
+  glyphChest: respawnWorldAction(3),
   gold: respawnSizeAction([0, 720, 900, 1020, 0]),
   iron: respawnSizeAction([0, 720, 900, 1020, 0]),
   lodestone: respawnSizeAction([0, 1080, 1350, 1530, 0]),

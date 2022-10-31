@@ -13,6 +13,7 @@ export type User = {
   username: string;
   hiddenMarkerIds: string[];
   createdAt: Date;
+  worldName?: string;
   isModerator?: boolean;
 };
 type UserContextValue = {

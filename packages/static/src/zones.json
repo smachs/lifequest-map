@@ -1,22 +1,27 @@
 [
   {
     "id": "syd",
-    "name": "AP Southeast"
+    "name": "AP Southeast",
+    "timeDiffToUTC": 8
   },
   {
     "id": "fra",
-    "name": "EU Central"
+    "name": "EU Central",
+    "timeDiffToUTC": 1
   },
   {
     "id": "gru",
-    "name": "SA East"
+    "name": "SA East",
+    "timeDiffToUTC": 10
   },
   {
     "id": "iad",
-    "name": "US East"
+    "name": "US East",
+    "timeDiffToUTC": -5
   },
   {
     "id": "pdx",
-    "name": "US West"
+    "name": "US West",
+    "timeDiffToUTC": -7
   }
 ]

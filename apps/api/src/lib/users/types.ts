@@ -4,5 +4,6 @@ export type UserDTO = {
   username: string;
   accountId?: string;
   hiddenMarkerIds: ObjectId[];
+  worldName?: string;
   createdAt: Date;
 };

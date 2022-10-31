@@ -35,6 +35,9 @@ function ensureUsersSchema(): Promise<Document> {
               bsonType: 'objectId',
             },
           },
+          worldName: {
+            bsonType: 'string',
+          },
           createdAt: {
             bsonType: 'date',
           },

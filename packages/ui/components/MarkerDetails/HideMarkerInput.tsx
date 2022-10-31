@@ -28,7 +28,7 @@ function HideMarkerInput({ markerId }: HideMarkerInputProps): JSX.Element {
     } else {
       return;
     }
-    await notify(patchUser(user.username, hiddenMarkerIds));
+    await notify(patchUser(user.username, { hiddenMarkerIds }));
     await refreshUser();
     setIsLoading(false);
   }
