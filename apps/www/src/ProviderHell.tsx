@@ -5,18 +5,14 @@ import { MarkersProvider } from 'ui/contexts/MarkersContext';
 import { PlayerProvider } from 'ui/contexts/PlayerContext';
 import { FiltersProvider } from 'ui/contexts/FiltersContext';
 import { SettingsProvider } from 'ui/contexts/SettingsContext';
-import { MantineProvider } from '@mantine/core';
+import { ThemeProvider } from 'ui/contexts/ThemeProvider';
 
 type Props = {
   children: ReactNode;
 };
 const ProviderHell = ({ children }: Props) => {
   return (
-    <MantineProvider
-      theme={{
-        colorScheme: 'dark',
-      }}
-    >
+    <ThemeProvider>
       <SettingsProvider>
         <UserProvider>
           <FiltersProvider>
@@ -28,7 +24,7 @@ const ProviderHell = ({ children }: Props) => {
           </FiltersProvider>
         </UserProvider>
       </SettingsProvider>
-    </MantineProvider>
+    </ThemeProvider>
   );
 };
 
