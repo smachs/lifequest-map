@@ -181,8 +181,8 @@ const actions: {
 } = {
   lore_note: hideMarker,
   glyph: hideMarker,
-  chestsEliteAncient: respawnAction(82800),
-  chestsEliteSupplies: respawnAction(82800),
+  chestsEliteAncient: respawnWorldAction(4),
+  chestsEliteSupplies: respawnWorldAction(4),
   chestsLargeAlchemy: respawnAction(3600),
   chestsLargeAncient: respawnAction(3600),
   chestsLargeProvisions: respawnAction(3600),
