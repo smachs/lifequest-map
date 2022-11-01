@@ -1,9 +1,19 @@
 'use client';
-import type { TileLayer, Map as LeaftletMap } from 'leaflet';
+import type { TileLayer, Map as LeaftletMap, LatLngExpression } from 'leaflet';
 import { useEffect, useMemo, useRef } from 'react';
-import { AETERNUM_MAP } from 'static';
 import useSWR from 'swr';
 
+const AETERNUM_MAP = {
+  name: 'NewWorld_VitaeEterna',
+  title: 'Aeternum Map',
+  folder: 'newworld_vitaeeterna',
+  maxZoom: 6,
+  minZoom: 0,
+  maxBounds: [
+    [-10000, -7000],
+    [20000, 25000],
+  ],
+};
 function toThreeDigits(number: number): string {
   if (number < 10) {
     return `00${number}`;
@@ -80,7 +90,9 @@ export default function Map() {
         transformation: new leaflet.Transformation(1 / 16, 0, -1 / 16, 0),
       });
 
-      const latLngBounds = leaflet.latLngBounds(AETERNUM_MAP.maxBounds);
+      const latLngBounds = leaflet.latLngBounds(
+        AETERNUM_MAP.maxBounds as LatLngExpression[]
+      );
       leafletMap = leaflet.map(mapElement, {
         preferCanvas: true,
         crs: worldCRS,
@@ -98,13 +110,14 @@ export default function Map() {
 
       const worldTiles = new (WorldTiles(AETERNUM_MAP.folder))();
       worldTiles.addTo(leafletMap);
-      console.log(data);
       data.forEach(({ position }) => {
-        const circle = leaflet.circle(
-          [position.location[0], position.location[1]],
-          { color: 'white' }
-        );
-        circle.addTo(leafletMap!);
+        if (position.location[0] && position.location[1]) {
+          const circle = leaflet.circle(
+            [position.location[0], position.location[1]],
+            { color: 'white' }
+          );
+          circle.addTo(leafletMap!);
+        }
       });
     });
   }, [data]);
