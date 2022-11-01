@@ -119,16 +119,12 @@ usersRouter.patch('/:username', async (req, res, next) => {
       return;
     }
 
-    const result = await getUsersCollection().updateOne(
+    await getUsersCollection().updateOne(
       { username },
       {
         $set: set,
       }
     );
-    if (!result.modifiedCount) {
-      res.status(400).end(`No change`);
-      return;
-    }
     res.status(200).json({ message: 'Success' });
   } catch (error) {
     next(error);

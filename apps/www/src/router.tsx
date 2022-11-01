@@ -26,6 +26,10 @@ const router = createBrowserRouter([
             path: 'routes/:routeId',
             element: null,
           },
+          {
+            path: '*',
+            element: null,
+          },
         ],
       },
       {

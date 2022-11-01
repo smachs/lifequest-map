@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useParams, useSearchParams } from 'react-router-dom';
-import { mapDetails } from 'static';
+import { AETERNUM_MAP, findMapDetails, mapDetails } from 'static';
 import { deserializeMapView, serializeMapView } from './storage';
 
 export type Section = 'nodes' | 'routes' | 'settings';
@@ -8,7 +8,9 @@ export const SECTIONS: Section[] = ['nodes', 'routes', 'settings'];
 
 export const useRouteParams = () => {
   const { map = mapDetails[0].title, nodeId, routeId } = useParams();
-  return { map, nodeId, routeId };
+  const existingMap = findMapDetails(map) ? map : AETERNUM_MAP.title;
+
+  return { map: existingMap, nodeId, routeId };
 };
 
 export const useMap = () => {
@@ -51,7 +53,9 @@ const getView = (
       ? 'nodes'
       : (sectionParam as Section);
 
-  return { ...searchParamsView, map, nodeId, routeId, section };
+  const existingMap = findMapDetails(map) ? map : AETERNUM_MAP.title;
+
+  return { ...searchParamsView, map: existingMap, nodeId, routeId, section };
 };
 
 export const useView = (): {
