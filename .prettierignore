@@ -13,3 +13,4 @@ dist-ssr
 *.d.ts
 .next
 .vercel
+.vscode
