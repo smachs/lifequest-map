@@ -1,7 +1,9 @@
 import { Group, Text } from '@mantine/core';
+import { getWorld, getZone } from 'static';
 import { useModal } from '../../contexts/ModalContext';
 import { usePlayer } from '../../contexts/PlayerContext';
 import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
+import ServerTime from './ServerTime';
 import styles from './SyncStatus.module.css';
 import WorldName from './WorldName';
 
@@ -35,6 +37,10 @@ function SyncStatusReceiver() {
       </small>
     );
   }
+
+  const world = player?.worldName && getWorld(player.worldName);
+  const zone = world && getZone(world.zone);
+
   return (
     <>
       {player?.position?.location && (
@@ -46,7 +52,8 @@ function SyncStatusReceiver() {
             <Text size="xs">
               {player.region && `${player.location || player.region}`}
             </Text>
-            {player.worldName && <WorldName worldName={player.worldName} />}
+            {world && zone && <WorldName world={world} zone={zone} />}
+            {zone && <ServerTime zone={zone} />}
           </Group>
         </small>
       )}

@@ -4,6 +4,7 @@ import { usePosition } from '../../contexts/PositionContext';
 import { IconAlertCircle, IconCircleCheck, IconEyeCheck } from '@tabler/icons';
 import { Group, Tooltip, ActionIcon, Stack, Text } from '@mantine/core';
 import WorldName from 'ui/components/SyncStatus/WorldName';
+import { getWorld, getZone } from 'static';
 
 type SyncStatusProps = {
   newWorldIsRunning: boolean;
@@ -72,6 +73,9 @@ function SyncStatusSender({ newWorldIsRunning }: SyncStatusProps) {
     </Stack>
   );
 
+  const world = worldName && getWorld(worldName);
+  const zone = world && getZone(world.zone);
+
   return (
     <Group spacing="xs">
       {location && isOCR && (
@@ -135,7 +139,7 @@ function SyncStatusSender({ newWorldIsRunning }: SyncStatusProps) {
           {position.location?.[0]}]{' '}
           <Group spacing="xs">
             <Text size="xs">{region && `${location || region}`}</Text>
-            {worldName && <WorldName worldName={worldName} />}
+            {world && zone && <WorldName world={world} zone={zone} />}
           </Group>
         </small>
       )}
