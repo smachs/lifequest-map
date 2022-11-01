@@ -11,3 +11,5 @@ dist-ssr
 /data
 *.js
 *.d.ts
+.next
+.vercel
