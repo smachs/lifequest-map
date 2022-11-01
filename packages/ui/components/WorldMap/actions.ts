@@ -68,10 +68,13 @@ const respawnWorldAction =
       const world = getWorld(user.worldName);
       const zone = world && getZone(world.zone);
       if (zone) {
-        timeDiff = zone.timeDiffToUTC;
+        timeDiff = -zone.timeDiffToUTC;
       }
     }
-    const timezoneRespawnHour = respawnHour + timeDiff;
+    let timezoneRespawnHour = respawnHour + timeDiff;
+    if (timezoneRespawnHour < 0) {
+      timezoneRespawnHour += 24;
+    }
     const now = new Date();
     const isNextDay = now.getHours() >= timezoneRespawnHour;
     const respawnDate = new Date(
@@ -178,24 +181,22 @@ const actions: {
 } = {
   lore_note: hideMarker,
   glyph: hideMarker,
-  lostPresent: respawnAction(600),
-  floatingPresent: respawnAction(600),
   chestsEliteAncient: respawnAction(82800),
   chestsEliteSupplies: respawnAction(82800),
   chestsLargeAlchemy: respawnAction(3600),
   chestsLargeAncient: respawnAction(3600),
   chestsLargeProvisions: respawnAction(3600),
   chestsLargeSupplies: respawnAction(3600),
-  chestsMediumAlchemy: respawnAction(600),
-  chestsMediumAncient: respawnAction(600),
-  chestsMediumProvisions: respawnAction(600),
-  chestsMediumSupplies: respawnAction(600),
-  chestsCommonAncient: respawnAction(600),
-  chestsCommonProvisions: respawnAction(600),
-  chestsCommonSupplies: respawnAction(600),
+  chestsMediumAlchemy: respawnAction(3600),
+  chestsMediumAncient: respawnAction(3600),
+  chestsMediumProvisions: respawnAction(3600),
+  chestsMediumSupplies: respawnAction(3600),
+  chestsCommonAncient: respawnAction(3600),
+  chestsCommonProvisions: respawnAction(3600),
+  chestsCommonSupplies: respawnAction(3600),
   chestsOffering: respawnAction(3600),
-  chestsEliteOffering: respawnWorldAction(3),
-  glyphChest: respawnWorldAction(3),
+  chestsEliteOffering: respawnWorldAction(4),
+  glyphChest: respawnWorldAction(4),
   gold: respawnSizeAction([0, 720, 900, 1020, 0]),
   iron: respawnSizeAction([0, 720, 900, 1020, 0]),
   lodestone: respawnSizeAction([0, 1080, 1350, 1530, 0]),

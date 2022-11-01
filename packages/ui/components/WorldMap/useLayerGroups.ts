@@ -311,7 +311,7 @@ function useLayerGroups({
       leafletMap.off('moveend', placeMarkersInBounds);
       clearTimeout(trailingTimeoutId);
     };
-  }, [leafletMap, visibleMarkers]);
+  }, [leafletMap, visibleMarkers, user]);
 
   useEffect(() => {
     if (!leafletMap) {

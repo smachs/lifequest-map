@@ -11,7 +11,7 @@ function useAdaptiveZoom(player: Player | null) {
   const { adaptiveZoom } = useSettings();
 
   useEffect(() => {
-    if (!player) {
+    if (!player || !latestLeafletMap) {
       return;
     }
 

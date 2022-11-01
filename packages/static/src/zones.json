@@ -2,26 +2,36 @@
   {
     "id": "syd",
     "name": "AP Southeast",
-    "timeDiffToUTC": 8
+    "timeDiffToUTC": 11,
+    "timeZone": "Australia/Melbourne",
+    "timeZoneAbbreviation": "AEDT"
   },
   {
     "id": "fra",
     "name": "EU Central",
-    "timeDiffToUTC": 1
+    "timeDiffToUTC": 0,
+    "timeZone": "Europe/Paris",
+    "timeZoneAbbreviation": "CET"
   },
   {
     "id": "gru",
     "name": "SA East",
-    "timeDiffToUTC": 10
+    "timeDiffToUTC": -3,
+    "timeZone": "America/Sao_Paulo",
+    "timeZoneAbbreviation": "BRT"
   },
   {
     "id": "iad",
     "name": "US East",
-    "timeDiffToUTC": -5
+    "timeDiffToUTC": -5,
+    "timeZone": "America/New_York",
+    "timeZoneAbbreviation": "EDT"
   },
   {
     "id": "pdx",
     "name": "US West",
-    "timeDiffToUTC": -7
+    "timeDiffToUTC": -7,
+    "timeZone": "America/Los_Angeles",
+    "timeZoneAbbreviation": "PDT"
   }
 ]

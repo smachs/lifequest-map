@@ -1,15 +1,14 @@
 import { Text } from '@mantine/core';
-import { getWorld, getZone } from 'static';
-type WorldNameProps = {
-  worldName: string;
-};
-const WorldName = ({ worldName }: WorldNameProps) => {
-  const world = getWorld(worldName);
-  const zone = world && getZone(world.zone);
+import type { World, Zone } from 'static';
 
+type WorldNameProps = {
+  world: World;
+  zone: Zone;
+};
+const WorldName = ({ world, zone }: WorldNameProps) => {
   return (
     <Text size="xs">
-      {!world || !zone ? worldName : `${world.publicName} (${zone.name})`}
+      {world.publicName} ({zone.name})
     </Text>
   );
 };
