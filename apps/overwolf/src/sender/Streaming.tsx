@@ -53,6 +53,10 @@ function Streaming(): JSX.Element {
   }, [servers, serverUrl]);
 
   useEffect(() => {
+    refreshAccount();
+  }, []);
+
+  useEffect(() => {
     if (account.liveShareToken) {
       setToken(account.liveShareToken);
     }

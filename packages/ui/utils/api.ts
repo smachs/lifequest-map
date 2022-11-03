@@ -1,5 +1,4 @@
-import { getJSONItem } from './storage';
-import type { AccountDTO } from './userStore';
+import { useUserStore } from './userStore';
 
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
@@ -7,7 +6,7 @@ export async function fetchJSON<T>(
   url: RequestInfo,
   init: RequestInit | undefined = {}
 ): Promise<T> {
-  const account = getJSONItem<AccountDTO | null>('account', null);
+  const { account } = useUserStore.getState();
   if (account) {
     const sessionId = account?.sessionId || '';
     init.headers = {

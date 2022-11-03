@@ -117,13 +117,6 @@ export const useUserStore = create(
     },
     {
       name: 'user-store',
-      onRehydrateStorage: () => {
-        return (state) => {
-          if (state?.account) {
-            state.refreshAccount();
-          }
-        };
-      },
     }
   )
 );
