@@ -8,9 +8,10 @@ import leaflet from 'leaflet';
 import { latestLeafletMap } from './useWorldMap';
 import type { MarkerSize } from 'static';
 import { getWorld, getZone } from 'static';
+import { usePlayerStore } from '../../utils/playerStore';
 
+const format = (value: number) => `0${Math.floor(value)}`.slice(-2);
 const formatTimer = (seconds: number) => {
-  const format = (value: number) => `0${Math.floor(value)}`.slice(-2);
   const hours = seconds / 3600;
   const minutes = (seconds % 3600) / 60;
   if (hours >= 1) {
@@ -20,7 +21,7 @@ const formatTimer = (seconds: number) => {
 };
 const respawnAction =
   (typeRespawnTimer?: number) => async (marker: CanvasMarker) => {
-    const respawnTimer = marker.customRespawnTimer ?? typeRespawnTimer;
+    const respawnTimer = marker.customRespawnTimer || typeRespawnTimer;
     if (!respawnTimer) {
       return;
     }
@@ -62,31 +63,33 @@ const respawnAction =
   };
 
 const respawnWorldAction =
-  (respawnHour: number) => async (marker: CanvasMarker, user: User | null) => {
-    let timeDiff = 0;
-    if (user?.worldName) {
-      const world = getWorld(user.worldName);
+  (respawnHour: number) => async (marker: CanvasMarker) => {
+    let timeZone: string | undefined = undefined;
+    const worldName = usePlayerStore.getState().player?.worldName;
+    if (worldName) {
+      const world = getWorld(worldName);
       const zone = world && getZone(world.zone);
       if (zone) {
-        timeDiff = -zone.timeDiffToUTC;
+        timeZone = zone.timeZone;
       }
     }
-    let timezoneRespawnHour = respawnHour + timeDiff;
-    if (timezoneRespawnHour < 0) {
-      timezoneRespawnHour += 24;
-    }
-    const now = new Date();
-    const isNextDay = now.getHours() >= timezoneRespawnHour;
-    const respawnDate = new Date(
-      Date.UTC(
-        now.getUTCFullYear(),
-        now.getUTCMonth(),
-        now.getUTCDate() + (isNextDay ? 1 : 0),
-        timezoneRespawnHour,
-        0,
-        0
-      )
-    );
+    const timeString = new Date().toLocaleTimeString('en-US', {
+      timeZone: timeZone,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    });
+    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+    const hoursLeft = (respawnHour + 24 - 1 - hours) % 24;
+    const minutesLeft = 60 - minutes;
+    const secondsLeft = 60 - seconds;
+
+    const respawnAt =
+      Date.now() +
+      1000 * secondsLeft +
+      60000 * minutesLeft +
+      3600000 * hoursLeft;
 
     if (marker.actionHandle) {
       clearTimeout(marker.actionHandle);
@@ -95,7 +98,14 @@ const respawnWorldAction =
         marker.popup.remove();
       }
     }
-    const respawnAt = respawnDate.getTime();
+
+    if (marker.actionHandle) {
+      clearTimeout(marker.actionHandle);
+      delete marker.actionHandle;
+      if (marker.popup) {
+        marker.popup.remove();
+      }
+    }
 
     marker.popup = leaflet
       .popup({
@@ -181,8 +191,8 @@ const actions: {
 } = {
   lore_note: hideMarker,
   glyph: hideMarker,
-  chestsEliteAncient: respawnWorldAction(4),
-  chestsEliteSupplies: respawnWorldAction(4),
+  chestsEliteAncient: respawnWorldAction(5),
+  chestsEliteSupplies: respawnWorldAction(5),
   chestsLargeAlchemy: respawnAction(3600),
   chestsLargeAncient: respawnAction(3600),
   chestsLargeProvisions: respawnAction(3600),
@@ -195,7 +205,7 @@ const actions: {
   chestsCommonProvisions: respawnAction(3600),
   chestsCommonSupplies: respawnAction(3600),
   chestsOffering: respawnAction(3600),
-  chestsEliteOffering: respawnWorldAction(4),
+  chestsEliteOffering: respawnWorldAction(5),
   glyphChest: respawnWorldAction(4),
   gold: respawnSizeAction([0, 720, 900, 1020, 0]),
   iron: respawnSizeAction([0, 720, 900, 1020, 0]),
@@ -266,8 +276,8 @@ const actions: {
   fish_hotspot1: respawnAction(1800),
   fish_hotspot2: respawnAction(2700),
   fish_hotspot3: respawnAction(5400),
-  boss: respawnAction(90),
-  bossElite: respawnAction(360),
+  boss: respawnAction(5400),
+  bossElite: respawnAction(21600),
 };
 
 export const getAction = (type: string) => {
