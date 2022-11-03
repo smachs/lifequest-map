@@ -10,16 +10,22 @@ import { useUserStore } from '../../utils/userStore';
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 function User(): JSX.Element {
-  const { account, setAccount, logoutAccount } = useUserStore(
+  const { account, setAccount, logoutAccount, refreshAccount } = useUserStore(
     (state) => ({
       account: state.account,
       setAccount: state.setAccount,
       logoutAccount: state.logoutAccount,
+      refreshAccount: state.refreshAccount,
     }),
     shallow
   );
-
   const [verifyingSessionId, setVerifyingSessionId] = useState('');
+
+  useEffect(() => {
+    if (account) {
+      refreshAccount();
+    }
+  }, []);
 
   useEffect(() => {
     if (!verifyingSessionId) {
