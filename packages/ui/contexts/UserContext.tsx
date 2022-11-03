@@ -5,8 +5,11 @@ import type { Preset } from '../components/PresetSelect/presets';
 import { fetchJSON } from '../utils/api';
 import { writeError, writeWarn } from '../utils/logs';
 import { notify } from '../utils/notifications';
+import { usePlayerStore } from '../utils/playerStore';
 import { usePersistentState } from '../utils/storage';
 import useEventListener from '../utils/useEventListener';
+import shallow from 'zustand/shallow';
+import { patchUser } from '../components/MarkerDetails/api';
 
 export type User = {
   _id: string;
@@ -61,6 +64,27 @@ export function UserProvider({ children }: UserProviderProps): JSX.Element {
     'account',
     null
   );
+  const { playerUsername, playerWorldName } = usePlayerStore(
+    (state) => ({
+      playerUsername: state.player?.username,
+      playerWorldName: state.player?.worldName,
+    }),
+    shallow
+  );
+
+  useEffect(() => {
+    if (playerUsername) {
+      setUsername(playerUsername);
+    }
+  }, [playerUsername]);
+
+  useEffect(() => {
+    if (playerWorldName && user && user.worldName !== playerWorldName) {
+      patchUser(user.username, { worldName: playerWorldName }).then(() =>
+        refresh()
+      );
+    }
+  }, [playerWorldName, user]);
 
   const refresh = async (): Promise<void> => {
     try {

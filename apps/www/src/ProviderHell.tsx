@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 import { UserProvider } from 'ui/contexts/UserContext';
 import { ModalProvider } from 'ui/contexts/ModalContext';
 import { MarkersProvider } from 'ui/contexts/MarkersContext';
-import { PlayerProvider } from 'ui/contexts/PlayerContext';
 import { FiltersProvider } from 'ui/contexts/FiltersContext';
 import { SettingsProvider } from 'ui/contexts/SettingsContext';
 import { ThemeProvider } from 'ui/contexts/ThemeProvider';
@@ -17,9 +16,7 @@ const ProviderHell = ({ children }: Props) => {
         <UserProvider>
           <FiltersProvider>
             <MarkersProvider>
-              <PlayerProvider>
-                <ModalProvider>{children}</ModalProvider>
-              </PlayerProvider>
+              <ModalProvider>{children}</ModalProvider>
             </MarkersProvider>
           </FiltersProvider>
         </UserProvider>
