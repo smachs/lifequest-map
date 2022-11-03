@@ -14,10 +14,10 @@ type Store = {
 export const useSettingsStore = create(
   persist<Store>(
     (set) => ({
-      liveShareServerUrl: getJSONItem('live-share-server-url', ''),
+      liveShareServerUrl: getJSONItem('live-share-server-url', ''), // Deprecated
       setLiveShareServerUrl: (liveShareServerUrl) =>
         set({ liveShareServerUrl }),
-      liveShareToken: getJSONItem('live-share-token', ''),
+      liveShareToken: getJSONItem('live-share-token', ''), // Deprecated
       setLiveShareToken: (liveShareToken) => set({ liveShareToken }),
       following: true,
       toggleFollowing: () => set((state) => ({ following: !state.following })),

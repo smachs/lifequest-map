@@ -1,16 +1,16 @@
 import { deleteMarkerRoute } from './api';
 import { useState } from 'react';
 import { writeError } from '../../utils/logs';
-import { useAccount } from '../../contexts/UserContext';
 import { notify } from '../../utils/notifications';
 import { Button, Modal } from '@mantine/core';
+import { useUserStore } from '../../utils/userStore';
 
 type DeleteRouteProps = {
   routeId: string;
   onDelete: () => void;
 };
 function DeleteRoute({ routeId, onDelete }: DeleteRouteProps): JSX.Element {
-  const { account } = useAccount();
+  const account = useUserStore((state) => state.account);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
 

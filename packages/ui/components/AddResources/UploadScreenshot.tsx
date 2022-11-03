@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { useAccount } from '../../contexts/UserContext';
 import { notify } from '../../utils/notifications';
 import { classNames } from '../../utils/styles';
+import { useUserStore } from '../../utils/userStore';
 import { uploadScreenshot } from './api';
 import styles from './UploadScreenshot.module.css';
 
@@ -9,7 +9,7 @@ type UploadScreenshotProps = {
   onUpload: (path?: string) => void;
 };
 function UploadScreenshot({ onUpload }: UploadScreenshotProps): JSX.Element {
-  const { account } = useAccount();
+  const account = useUserStore((state) => state.account);
   const [screenshot, setScreenshot] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isUploading, setIsUploading] = useState(false);

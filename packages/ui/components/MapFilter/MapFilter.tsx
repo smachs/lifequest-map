@@ -27,9 +27,9 @@ import type { MarkerFull } from '../MarkerDetails/useMarker';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import MarkerRouteDetails from '../MarkerRoutes/MarkerRouteDetails';
-import { useAccount } from '../../contexts/UserContext';
 import shallow from 'zustand/shallow';
 import { useSettingsStore } from '../../utils/settingsStore';
+import { useUserStore } from '../../utils/userStore';
 
 type MarkerFilterProps = {
   onMarkerCreate: () => void;
@@ -46,7 +46,7 @@ function MapFilter({
     'aeternum-map-client.sidebar-state',
     true
   );
-  const { account } = useAccount();
+  const account = useUserStore((state) => state.account);
   const { following, toggleFollowing } = useSettingsStore(
     (state) => ({
       following: state.following,

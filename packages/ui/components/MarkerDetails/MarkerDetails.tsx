@@ -7,7 +7,6 @@ import type { MarkerFull } from './useMarker';
 import useMarker from './useMarker';
 import { findMapDetails, mapFilters } from 'static';
 import HideMarkerInput from './HideMarkerInput';
-import { useAccount } from '../../contexts/UserContext';
 import Credit from './Credit';
 import Coordinates from './Coordinates';
 import Loot from './Loot/Loot';
@@ -28,6 +27,7 @@ import { lootableMapFilters } from 'static';
 import ReportIssueButton from './ReportIssueButton';
 import DeleteNode from './DeleteNode';
 import Markdown from '../Markdown/Markdown';
+import { useUserStore } from '../../utils/userStore';
 
 type MarkerDetailsProps = {
   nodeId?: string;
@@ -37,7 +37,7 @@ type MarkerDetailsProps = {
 function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
   const { marker, comments, refresh, loading } = useMarker(nodeId);
   const { setMarkers } = useMarkers();
-  const { account } = useAccount();
+  const account = useUserStore((state) => state.account);
   const navigate = useNavigate();
 
   // async function handleUploadScreenshot(screenshotId?: string) {

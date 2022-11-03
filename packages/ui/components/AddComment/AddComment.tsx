@@ -2,9 +2,9 @@ import { Anchor, Textarea } from '@mantine/core';
 import type { FormEvent, KeyboardEvent } from 'react';
 import { useState } from 'react';
 import { useMarkers } from '../../contexts/MarkersContext';
-import { useAccount } from '../../contexts/UserContext';
 import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
+import { useUserStore } from '../../utils/userStore';
 import { postComment } from './api';
 
 type AddCommentProps = {
@@ -13,7 +13,7 @@ type AddCommentProps = {
 };
 
 function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
-  const { account } = useAccount();
+  const account = useUserStore((state) => state.account);
   const [message, setMessage] = useState('');
   const { refresh: refreshMarkers } = useMarkers();
   const [loading, setLoading] = useState(false);

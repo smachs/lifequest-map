@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import type { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import type { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
-import { useAccount } from 'ui/contexts/UserContext';
 import { usePosition } from '../contexts/PositionContext';
 import { usePersistentState } from 'ui/utils/storage';
 import { toast } from 'react-toastify';
@@ -11,6 +10,7 @@ import useShareHotkeys from './useShareHotkeys';
 import type { DataConnection } from 'peerjs';
 import Peer from 'peerjs';
 import { useSettings } from 'ui/contexts/SettingsContext';
+import { useUserStore } from 'ui/utils/userStore';
 
 const peerConnections: { [key: string]: DataConnection } = {};
 
@@ -22,7 +22,7 @@ const sendToPeers = (data: unknown) => {
   });
 };
 
-function useShareLivePosition(token: string, serverUrl: string) {
+function useShareLivePosition() {
   const { peerToPeer } = useSettings();
   const [isSharing, setIsSharing] = usePersistentState(
     'share-live-position',
@@ -41,16 +41,17 @@ function useShareLivePosition(token: string, serverUrl: string) {
 
   const { position, location, region, worldName, map, username } =
     usePosition();
-  const { account } = useAccount();
+  const account = useUserStore((state) => state.account);
+
   const steamId = account!.steamId;
 
   useShareHotkeys(socket);
 
   useEffect(() => {
-    if (!isSharing || socket) {
+    if (!isSharing) {
       return;
     }
-    if (!token || !serverUrl) {
+    if (!account?.liveShareToken || !account.liveShareServerUrl) {
       setIsSharing(false);
       return;
     }
@@ -63,9 +64,9 @@ function useShareLivePosition(token: string, serverUrl: string) {
       });
     });
 
-    const newSocket = io(serverUrl, {
+    const newSocket = io(account.liveShareServerUrl, {
       query: {
-        token,
+        token: account.liveShareToken,
         steamId: account!.steamId,
         steamName: account!.name,
         isOverwolfApp: true,
@@ -164,14 +165,7 @@ function useShareLivePosition(token: string, serverUrl: string) {
       setStatus(null);
       toast.info('Stop sharing live status 🛑');
     };
-  }, [
-    isSharing,
-    account?.steamId,
-    peerToPeer,
-    token,
-    serverUrl,
-    peerConnections,
-  ]);
+  }, [isSharing, account, peerToPeer]);
 
   useEffect(() => {
     if (socket && isConnected) {

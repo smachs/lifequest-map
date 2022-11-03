@@ -1,18 +1,18 @@
 import { postMarkerRoute } from './api';
 import { useState } from 'react';
 import { writeError } from '../../utils/logs';
-import { useAccount } from '../../contexts/UserContext';
 import { notify } from '../../utils/notifications';
 import { Button, Modal, Stack, TextInput } from '@mantine/core';
 import type { MarkerRouteItem } from './MarkerRoutes';
 import { IconArrowFork } from '@tabler/icons';
+import { useUserStore } from '../../utils/userStore';
 
 type ForkRouteProps = {
   markerRoute: MarkerRouteItem;
   onFork: (markerRoute: MarkerRouteItem) => void;
 };
 function ForkRoute({ markerRoute, onFork }: ForkRouteProps): JSX.Element {
-  const { account } = useAccount();
+  const account = useUserStore((state) => state.account);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');

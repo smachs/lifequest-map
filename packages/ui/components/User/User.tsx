@@ -1,15 +1,23 @@
-import type { AccountDTO } from '../../contexts/UserContext';
-import { useAccount } from '../../contexts/UserContext';
 import { fetchJSON } from '../../utils/api';
 import styles from './User.module.css';
 import steamSrc from './steam.png';
 import { useEffect, useState } from 'react';
 import SyncStatusReceiver from '../SyncStatus/SyncStatusReceiver';
+import shallow from 'zustand/shallow';
+import type { AccountDTO } from '../../utils/userStore';
+import { useUserStore } from '../../utils/userStore';
 
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 function User(): JSX.Element {
-  const { account, setAccount, logoutAccount } = useAccount();
+  const { account, setAccount, logoutAccount } = useUserStore(
+    (state) => ({
+      account: state.account,
+      setAccount: state.setAccount,
+      logoutAccount: state.logoutAccount,
+    }),
+    shallow
+  );
 
   const [verifyingSessionId, setVerifyingSessionId] = useState('');
 

@@ -12,10 +12,10 @@ import { notify } from '../utils/notifications';
 import { isOverwolfApp } from '../utils/overwolf';
 import { usePersistentState } from '../utils/storage';
 import { useFilters } from './FiltersContext';
-import { useUser } from './UserContext';
 import type { MarkerSize } from 'static';
 import { useMarkerSearchStore } from '../components/MarkerSearch/markerSearchStore';
 import { useMap } from '../utils/routes';
+import { useUserStore } from '../utils/userStore';
 
 export type MarkerBasic = {
   type: string;
@@ -97,7 +97,9 @@ export function MarkersProvider({
   const { filters, setFilters } = useFilters();
   const map = useMap();
 
-  const user = useUser();
+  const hiddenMarkerIds = useUserStore(
+    (state) => state.user?.hiddenMarkerIds || []
+  );
   const searchValues = useMarkerSearchStore((state) => state.searchValues);
   const markerFilters = useMarkerSearchStore((state) => state.markerFilters);
 
@@ -151,7 +153,6 @@ export function MarkersProvider({
     setMarkerRoutes(selectedMarkerRoutes);
   }, [allMarkerRoutes]);
 
-  const hiddenMarkerIds = user?.hiddenMarkerIds || [];
   const visibleMarkers = useMemo(() => {
     const nameSearchValues = searchValues.filter((value) =>
       value.startsWith('name: ')

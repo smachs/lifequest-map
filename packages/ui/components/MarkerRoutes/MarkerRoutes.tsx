@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useFilters } from '../../contexts/FiltersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
-import type { AccountDTO } from '../../contexts/UserContext';
-import { useAccount } from '../../contexts/UserContext';
 import { escapeRegExp } from '../../utils/regExp';
 import { usePersistentState } from '../../utils/storage';
 import ActionButton from '../ActionControl/ActionButton';
@@ -11,6 +9,8 @@ import { mapFilters, regionNames } from 'static';
 import SearchInput from '../SearchInput/SearchInput';
 import MarkerRoute from './MarkerRoute';
 import styles from './MarkerRoutes.module.css';
+import type { AccountDTO } from '../../utils/userStore';
+import { useUserStore } from '../../utils/userStore';
 
 export type MarkerRouteItem = {
   _id: string;
@@ -111,7 +111,7 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
     refreshMarkerRoutes,
     visibleMarkerRoutes,
   } = useMarkers();
-  const { account } = useAccount();
+  const account = useUserStore((state) => state.account);
   const [sortBy, setSortBy] = usePersistentState<SortBy>(
     'markerRoutesSort',
     'match'

@@ -1,4 +1,3 @@
-import type { User } from '../../contexts/UserContext';
 import { notify } from '../../utils/notifications';
 import { patchUser } from '../MarkerDetails/api';
 import type CanvasMarker from './CanvasMarker';
@@ -9,6 +8,7 @@ import { latestLeafletMap } from './useWorldMap';
 import type { MarkerSize } from 'static';
 import { getWorld, getZone } from 'static';
 import { usePlayerStore } from '../../utils/playerStore';
+import { useUserStore } from '../../utils/userStore';
 
 const format = (value: number) => `0${Math.floor(value)}`.slice(-2);
 const formatTimer = (seconds: number) => {
@@ -157,11 +157,8 @@ const respawnSizeAction =
     return respawnAction(timer)(marker);
   };
 
-const hideMarker = async (
-  marker: CanvasMarker,
-  user: User | null,
-  refreshUser: () => void
-) => {
+const hideMarker = async (marker: CanvasMarker) => {
+  const { user, refreshUser } = useUserStore.getState();
   if (!user) {
     toast.warn('User not detected');
     return;
@@ -183,11 +180,7 @@ const hideMarker = async (
 };
 
 const actions: {
-  [type: string]: (
-    marker: CanvasMarker,
-    user: User | null,
-    refreshUser: () => void
-  ) => void;
+  [type: string]: (marker: CanvasMarker) => void;
 } = {
   lore_note: hideMarker,
   glyph: hideMarker,

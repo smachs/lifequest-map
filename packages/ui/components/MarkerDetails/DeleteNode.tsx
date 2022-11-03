@@ -1,16 +1,16 @@
 import { deleteMarker } from './api';
 import { useState } from 'react';
 import { writeError } from '../../utils/logs';
-import { useAccount } from '../../contexts/UserContext';
 import { notify } from '../../utils/notifications';
 import { Button, Modal } from '@mantine/core';
+import { useUserStore } from '../../utils/userStore';
 
 type DeleteNodeProps = {
   markerId: string;
   onDelete: () => void;
 };
 function DeleteNode({ markerId, onDelete }: DeleteNodeProps): JSX.Element {
-  const { account } = useAccount();
+  const account = useUserStore((state) => state.account);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
 

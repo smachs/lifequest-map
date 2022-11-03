@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import type { AccountDTO } from '../../contexts/UserContext';
-import { useAccount } from '../../contexts/UserContext';
 import { fetchJSON } from '../../utils/api';
 import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
@@ -12,13 +10,20 @@ import { toast } from 'react-toastify';
 import { useModal } from '../../contexts/ModalContext';
 import Confirm from '../Confirm/Confirm';
 import { escapeRegExp } from '../../utils/regExp';
+import type { AccountDTO } from '../../utils/userStore';
+import { useUserStore } from '../../utils/userStore';
+import shallow from 'zustand/shallow';
 
 type PresetSelectProps = {
   value: Preset | null;
   onChange: (value: Preset | null) => void;
 };
 function PresetSelect({ value, onChange }: PresetSelectProps): JSX.Element {
-  const { account, setAccount } = useAccount();
+  const { account, setAccount } = useUserStore(
+    (state) => ({ account: state.account, setAccount: state.setAccount }),
+    shallow
+  );
+
   const [search, setSearch] = useState('');
   const [isFocus, setIsFocus] = useState(false);
   const { addModal } = useModal();
