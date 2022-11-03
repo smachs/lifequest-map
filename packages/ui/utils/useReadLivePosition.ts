@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useAccount } from '../contexts/UserContext';
 import { toast } from 'react-toastify';
 import useGroupPositions from '../components/WorldMap/useGroupPositions';
 import { init } from 'realtime';
 import { usePlayerStore } from './playerStore';
 import { useSettingsStore } from './settingsStore';
 import shallow from 'zustand/shallow';
+import { useUserStore } from './userStore';
 
 export type Position = { location: [number, number]; rotation: number };
 export type Player = {
@@ -28,7 +28,7 @@ let latestGroup: Group | null = null;
 function useReadLivePosition() {
   const { setPlayer } = usePlayerStore();
   const [group, setGroup] = useState<Group>({});
-  const { account } = useAccount();
+  const account = useUserStore((state) => state.account);
   const { liveShareServerUrl, liveShareToken } = useSettingsStore(
     (state) => ({
       liveShareServerUrl: state.liveShareServerUrl,

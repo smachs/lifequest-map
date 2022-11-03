@@ -17,7 +17,6 @@ import type { FilterItem } from 'static';
 import { findMapDetails, mapFilters } from 'static';
 import { useFilters } from '../../contexts/FiltersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
-import { useAccount } from '../../contexts/UserContext';
 import { toTimeAgo } from '../../utils/dates';
 import Markdown from '../Markdown/Markdown';
 import Credit from '../MarkerDetails/Credit';
@@ -29,6 +28,8 @@ import { notify } from '../../utils/notifications';
 import { patchFavoriteMarkerRoute } from './api';
 import { writeError } from '../../utils/logs';
 import ForkRoute from './ForkRoute';
+import { useUserStore } from '../../utils/userStore';
+import shallow from 'zustand/shallow';
 
 type MarkerRouteDetailsProps = {
   markerRouteId?: string;
@@ -40,7 +41,13 @@ const MarkerRouteDetails = ({
 }: MarkerRouteDetailsProps) => {
   const { markerRoute, refresh, loading } = useMarkerRoute(markerRouteId);
   const navigate = useNavigate();
-  const { account, refreshAccount } = useAccount();
+  const { account, refreshAccount } = useUserStore(
+    (state) => ({
+      account: state.account,
+      refreshAccount: state.refreshAccount,
+    }),
+    shallow
+  );
   const { markerRoutes, toggleMarkerRoute, refreshMarkerRoutes } = useMarkers();
   const { setFilters } = useFilters();
 

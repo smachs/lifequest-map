@@ -4,12 +4,12 @@ import MarkerSection from './MarkerSection';
 import { useFilters } from '../../contexts/FiltersContext';
 import ActionButton from '../ActionControl/ActionButton';
 import { usePersistentState } from '../../utils/storage';
-import { useAccount } from '../../contexts/UserContext';
 import SearchInput from '../SearchInput/SearchInput';
 import PresetSelect from '../PresetSelect/PresetSelect';
 import { useState } from 'react';
 import type { Preset } from '../PresetSelect/presets';
 import MarkerSearch from '../MarkerSearch/MarkerSearch';
+import { useUserStore } from '../../utils/userStore';
 
 type MarkersViewProps = {
   onAdd: () => void;
@@ -18,7 +18,7 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
   const { filters, setFilters } = useFilters();
   const [search, setSearch] = usePersistentState('searchMarkerTypes', '');
   const [preset, setPreset] = useState<Preset | null>(null);
-  const { account } = useAccount();
+  const account = useUserStore((state) => state.account);
 
   function handleToggle(filterTypes: string[], checked: boolean) {
     const newFilters = [...filters];

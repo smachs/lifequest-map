@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { useAccount } from '../../contexts/UserContext';
+import { useUserStore } from '../../utils/userStore';
 
 const NitroPay = () => {
-  const { account } = useAccount();
+  const account = useUserStore((state) => state.account);
   useEffect(() => {
     if (
       account?.hideAds ||

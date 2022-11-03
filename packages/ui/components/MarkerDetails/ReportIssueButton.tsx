@@ -2,9 +2,9 @@ import { Anchor, Button, Modal, Stack, Textarea } from '@mantine/core';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
 import { useMarkers } from '../../contexts/MarkersContext';
-import { useAccount } from '../../contexts/UserContext';
 import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
+import { useUserStore } from '../../utils/userStore';
 import { postComment } from '../AddComment/api';
 
 type ReportIssueButtonProps = {
@@ -12,7 +12,7 @@ type ReportIssueButtonProps = {
   onReport: () => Promise<void>;
 };
 const ReportIssueButton = ({ markerId, onReport }: ReportIssueButtonProps) => {
-  const { account } = useAccount();
+  const account = useUserStore((state) => state.account);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState('');
   const { refresh: refreshMarkers } = useMarkers();

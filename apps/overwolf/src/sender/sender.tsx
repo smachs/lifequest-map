@@ -3,7 +3,6 @@ import '../globals.css';
 import { StrictMode } from 'react';
 import AppHeader from './AppHeader';
 import { SettingsProvider } from 'ui/contexts/SettingsContext';
-import { useAccount, UserProvider } from 'ui/contexts/UserContext';
 import { PositionProvider } from '../contexts/PositionContext';
 import { waitForOverwolf } from 'ui/utils/overwolf';
 import styles from './Sender.module.css';
@@ -16,11 +15,12 @@ import ErrorBoundary from 'ui/components/ErrorBoundary/ErrorBoundary';
 import { initPlausible } from 'ui/utils/stats';
 import { createRoot } from 'react-dom/client';
 import Ads from '../components/Ads/Ads';
+import { useUserStore } from 'ui/utils/userStore';
 
 const root = createRoot(document.querySelector('#root')!);
 
 function Sender(): JSX.Element {
-  const { account } = useAccount();
+  const account = useUserStore((state) => state.account);
 
   return (
     <div className={styles.container}>
@@ -51,11 +51,9 @@ waitForOverwolf().then(() => {
         }}
       >
         <SettingsProvider>
-          <UserProvider>
-            <PositionProvider>
-              <Sender />
-            </PositionProvider>
-          </UserProvider>
+          <PositionProvider>
+            <Sender />
+          </PositionProvider>
         </SettingsProvider>
       </MantineProvider>
     </StrictMode>

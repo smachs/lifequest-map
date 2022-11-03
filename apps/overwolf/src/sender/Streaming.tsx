@@ -1,4 +1,3 @@
-import { usePersistentState } from 'ui/utils/storage';
 import { patchLiveShareToken } from 'ui/components/ShareLiveStatus/api';
 import { copyTextToClipboard } from 'ui/utils/clipboard';
 import useShareLivePosition from './useShareLivePosition';
@@ -11,7 +10,6 @@ import { toast } from 'react-toastify';
 import { v4 as uuid } from 'uuid';
 import type { FormEvent } from 'react';
 import { useEffect, useState } from 'react';
-import { useAccount } from 'ui/contexts/UserContext';
 import styles from './Streaming.module.css';
 import MenuIcon from 'ui/components/icons/MenuIcon';
 import Settings from './Settings';
@@ -20,19 +18,23 @@ import useServers from 'ui/components/ShareLiveStatus/useServers';
 import SyncStatusSender from '../components/SyncStatus/SyncStatusSender';
 import useMinimap from '../components/useMinimap';
 import { useIsNewWorldRunning } from '../components/store';
+import { useUserStore } from 'ui/utils/userStore';
+import shallow from 'zustand/shallow';
 
 function Streaming(): JSX.Element {
-  const { account } = useAccount();
-  const [token, setToken] = usePersistentState(
-    'live-share-token',
-    account!.liveShareToken || ''
+  const { account, refreshAccount } = useUserStore(
+    (state) => ({
+      account: state.account!,
+      refreshAccount: state.refreshAccount,
+    }),
+    shallow
   );
-  const [serverUrl, setServerUrl] = usePersistentState(
-    'live-share-server-url',
-    account!.liveShareServerUrl || ''
+  const [token, setToken] = useState(() => account.liveShareToken || uuid());
+  const [serverUrl, setServerUrl] = useState(
+    () => account.liveShareServerUrl || null
   );
   const { status, isConnected, isSharing, setIsSharing, peerConnections } =
-    useShareLivePosition(token, serverUrl);
+    useShareLivePosition();
   const newWorldIsRunning = useIsNewWorldRunning();
   const [showSettings, setShowSettings] = useState(false);
   const [showMinimap, setShowMinimap] = useMinimap();
@@ -51,24 +53,13 @@ function Streaming(): JSX.Element {
   }, [servers, serverUrl]);
 
   useEffect(() => {
-    if (account!.liveShareToken) {
-      setToken(account!.liveShareToken);
+    if (account.liveShareToken) {
+      setToken(account.liveShareToken);
     }
-    if (account!.liveShareServerUrl) {
-      setServerUrl(account!.liveShareServerUrl);
+    if (account.liveShareServerUrl) {
+      setServerUrl(account.liveShareServerUrl);
     }
-  }, [account!.liveShareToken, account!.liveShareServerUrl]);
-
-  const accountNeedsUpdate =
-    account &&
-    (account.liveShareToken !== token ||
-      account.liveShareServerUrl !== serverUrl);
-
-  useEffect(() => {
-    if (isSharing && accountNeedsUpdate) {
-      patchLiveShareToken(token, serverUrl).catch((error) => writeError(error));
-    }
-  }, [isSharing, accountNeedsUpdate]);
+  }, [account.liveShareToken, account.liveShareServerUrl]);
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -82,7 +73,10 @@ function Streaming(): JSX.Element {
       return;
     }
 
-    setIsSharing(true);
+    patchLiveShareToken(token, serverUrl)
+      .then(() => refreshAccount())
+      .then(() => setIsSharing(true))
+      .catch((error) => writeError(error));
   }
 
   const players = status ? Object.values(status.group) : [];

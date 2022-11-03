@@ -1,6 +1,5 @@
 import CloseIcon from 'ui/components/icons/CloseIcon';
 import { useSettings } from 'ui/contexts/SettingsContext';
-import { useAccount } from 'ui/contexts/UserContext';
 import {
   SETUP_MINIMAP,
   SHOW_HIDE_DIRECTION,
@@ -15,6 +14,7 @@ import {
 } from '../utils/hotkeys';
 import Debug from '../components/Debug/Debug';
 import styles from './Settings.module.css';
+import { useUserStore } from 'ui/utils/userStore';
 
 type SettingsProps = {
   onClose: () => void;
@@ -39,7 +39,7 @@ function Settings({
   const zoomOutMapBinding = useHotkeyBinding(ZOOM_OUT_MAP);
   const markerActionBinding = useHotkeyBinding(MARKER_ACTION);
 
-  const { logoutAccount } = useAccount();
+  const logoutAccount = useUserStore((state) => state.logoutAccount);
 
   return (
     <div className={styles.container}>

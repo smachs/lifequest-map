@@ -1,7 +1,6 @@
 import { StrictMode, useEffect, useState } from 'react';
 import './globals.css';
 import { waitForOverwolf } from 'ui/utils/overwolf';
-import { UserProvider } from 'ui/contexts/UserContext';
 import { MarkersProvider } from 'ui/contexts/MarkersContext';
 import { PositionProvider } from './contexts/PositionContext';
 import WorldMapBlank from './components/WorldMapBlank';
@@ -194,15 +193,13 @@ const router = createMemoryRouter([
     path: '/',
     element: (
       <SettingsProvider>
-        <UserProvider>
-          <FiltersProvider>
-            <MarkersProvider readonly>
-              <PositionProvider>
-                <Minimap />
-              </PositionProvider>
-            </MarkersProvider>
-          </FiltersProvider>
-        </UserProvider>
+        <FiltersProvider>
+          <MarkersProvider readonly>
+            <PositionProvider>
+              <Minimap />
+            </PositionProvider>
+          </MarkersProvider>
+        </FiltersProvider>
       </SettingsProvider>
     ),
     children: [

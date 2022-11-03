@@ -1,7 +1,6 @@
 import { Group, Text } from '@mantine/core';
 import { getWorld, getZone } from 'static';
 import { useModal } from '../../contexts/ModalContext';
-import { useAccount } from '../../contexts/UserContext';
 import { usePlayerStore } from '../../utils/playerStore';
 import { useSettingsStore } from '../../utils/settingsStore';
 import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
@@ -9,9 +8,10 @@ import ServerTime from './ServerTime';
 import styles from './SyncStatus.module.css';
 import WorldName from './WorldName';
 import shallow from 'zustand/shallow';
+import { useUserStore } from '../../utils/userStore';
 
 function SyncStatusReceiver() {
-  const { account } = useAccount();
+  const account = useUserStore((state) => state.account);
   const player = usePlayerStore((state) => state.player);
 
   const { addModal, closeLatestModal } = useModal();

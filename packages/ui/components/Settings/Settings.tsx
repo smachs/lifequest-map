@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useSettings } from '../../contexts/SettingsContext';
+import ResetDiscoveredNodes from './ResetDiscoveredNodes';
 import styles from './Settings.module.css';
 
 function Settings(): JSX.Element {
@@ -115,6 +116,8 @@ function Settings(): JSX.Element {
       <em>Hotkeys are configured in the Overwolf app</em>
       <h3>GDPR</h3>
       <span id="ncmp-consent-link" className={styles.link} />
+      <h3>User</h3>
+      <ResetDiscoveredNodes />
     </div>
   );
 }

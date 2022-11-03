@@ -14,7 +14,6 @@ import { writeError } from '../../utils/logs';
 import { useRouteParams } from 'ui/utils/routes';
 import useEventListener from '../../utils/useEventListener';
 import { calcDistance } from '../../utils/positions';
-import { useRefreshUser, useUser } from '../../contexts/UserContext';
 import { getAction } from './actions';
 import { useNavigate } from 'react-router-dom';
 import { usePlayerStore } from '../../utils/playerStore';
@@ -49,8 +48,6 @@ function useLayerGroups({
   const playerLocation = usePlayerStore(
     (state) => state.player?.position?.location
   );
-  const user = useUser();
-  const refreshUser = useRefreshUser();
   const navigate = useNavigate();
 
   const [highlightedMapMarker, setHighlightedMapMarker] =
@@ -72,9 +69,9 @@ function useLayerGroups({
     });
     if (marker) {
       const action = getAction(marker.options.image.type);
-      action(marker, user, refreshUser);
+      action(marker);
     }
-  }, [playerLocation, user]);
+  }, [playerLocation]);
 
   useEventListener('hotkey-marker_action', onMarkerAction, [onMarkerAction]);
 
@@ -241,7 +238,7 @@ function useLayerGroups({
           ) {
             const action = getAction(mapMarker.options.image.type);
             if (action) {
-              action(mapMarker, user, refreshUser);
+              action(mapMarker);
             }
           }
         });
@@ -312,7 +309,7 @@ function useLayerGroups({
       leafletMap.off('moveend', placeMarkersInBounds);
       clearTimeout(trailingTimeoutId);
     };
-  }, [leafletMap, visibleMarkers, user]);
+  }, [leafletMap, visibleMarkers]);
 
   useEffect(() => {
     if (!leafletMap) {

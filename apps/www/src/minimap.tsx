@@ -1,6 +1,5 @@
 import { StrictMode, useState } from 'react';
 import './globals.css';
-import { UserProvider } from 'ui/contexts/UserContext';
 import { MarkersProvider } from 'ui/contexts/MarkersContext';
 import WorldMap from 'ui/components/WorldMap/WorldMap';
 import styles from './Minimap.module.css';
@@ -75,13 +74,11 @@ const router = createMemoryRouter([
         }}
       >
         <SettingsProvider>
-          <UserProvider>
-            <FiltersProvider>
-              <MarkersProvider readonly>
-                <Minimap />
-              </MarkersProvider>
-            </FiltersProvider>
-          </UserProvider>
+          <FiltersProvider>
+            <MarkersProvider readonly>
+              <Minimap />
+            </MarkersProvider>
+          </FiltersProvider>
         </SettingsProvider>
       </MantineProvider>
     ),

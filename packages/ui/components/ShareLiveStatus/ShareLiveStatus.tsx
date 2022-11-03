@@ -1,4 +1,3 @@
-import { useAccount } from '../../contexts/UserContext';
 import Button from '../Button/Button';
 import styles from './ShareLiveStatus.module.css';
 import { toast } from 'react-toastify';
@@ -8,12 +7,21 @@ import { useEffect } from 'react';
 import ServerRadioButton from '../LiveServer/ServerRadioButton';
 import useServers from './useServers';
 import { useSettingsStore } from '../../utils/settingsStore';
+import { useUserStore } from '../../utils/userStore';
+import shallow from 'zustand/shallow';
 
 type ShareLiveStatusProps = {
   onActivate: () => void;
 };
 function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
-  const { account, refreshAccount } = useAccount();
+  const { account, refreshAccount } = useUserStore(
+    (state) => ({
+      account: state.account,
+      refreshAccount: state.refreshAccount,
+    }),
+    shallow
+  );
+
   const {
     liveShareServerUrl,
     liveShareToken,

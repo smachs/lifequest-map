@@ -1,16 +1,19 @@
 import { Button } from '@mantine/core';
-import { useRefreshUser, useUser } from '../../contexts/UserContext';
 import { notify } from '../../utils/notifications';
 import { patchUser } from './api';
 import { IconEyeOff, IconEye } from '@tabler/icons';
 import { useState } from 'react';
+import { useUserStore } from '../../utils/userStore';
+import shallow from 'zustand/shallow';
 
 type HideMarkerInputProps = {
   markerId: string;
 };
 function HideMarkerInput({ markerId }: HideMarkerInputProps): JSX.Element {
-  const user = useUser();
-  const refreshUser = useRefreshUser();
+  const { user, refreshUser } = useUserStore(
+    (state) => ({ user: state.user, refreshUser: state.refreshUser }),
+    shallow
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   const discovered = user?.hiddenMarkerIds.includes(markerId);

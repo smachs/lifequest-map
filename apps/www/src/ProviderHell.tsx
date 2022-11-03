@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { UserProvider } from 'ui/contexts/UserContext';
 import { ModalProvider } from 'ui/contexts/ModalContext';
 import { MarkersProvider } from 'ui/contexts/MarkersContext';
 import { FiltersProvider } from 'ui/contexts/FiltersContext';
@@ -13,13 +12,11 @@ const ProviderHell = ({ children }: Props) => {
   return (
     <ThemeProvider>
       <SettingsProvider>
-        <UserProvider>
-          <FiltersProvider>
-            <MarkersProvider>
-              <ModalProvider>{children}</ModalProvider>
-            </MarkersProvider>
-          </FiltersProvider>
-        </UserProvider>
+        <FiltersProvider>
+          <MarkersProvider>
+            <ModalProvider>{children}</ModalProvider>
+          </MarkersProvider>
+        </FiltersProvider>
       </SettingsProvider>
     </ThemeProvider>
   );

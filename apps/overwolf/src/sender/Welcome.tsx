@@ -1,16 +1,16 @@
-import type { AccountDTO } from 'ui/contexts/UserContext';
-import { useAccount } from 'ui/contexts/UserContext';
 import steamSrc from 'ui/components/User/steam.png';
 import { fetchJSON } from 'ui/utils/api';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from './Welcome.module.css';
+import type { AccountDTO } from 'ui/utils/userStore';
+import { useUserStore } from 'ui/utils/userStore';
 
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 function Welcome(): JSX.Element {
   const [verifyingSessionId, setVerifyingSessionId] = useState('');
-  const { setAccount } = useAccount();
+  const setAccount = useUserStore((state) => state.setAccount);
 
   useEffect(() => {
     if (!verifyingSessionId) {
