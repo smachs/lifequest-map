@@ -14,10 +14,10 @@ import { writeError } from '../../utils/logs';
 import { useRouteParams } from 'ui/utils/routes';
 import useEventListener from '../../utils/useEventListener';
 import { calcDistance } from '../../utils/positions';
-import { usePlayer } from '../../contexts/PlayerContext';
 import { useRefreshUser, useUser } from '../../contexts/UserContext';
 import { getAction } from './actions';
 import { useNavigate } from 'react-router-dom';
+import { usePlayerStore } from '../../utils/playerStore';
 
 export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
   leaflet.Icon.extend({
@@ -46,7 +46,9 @@ function useLayerGroups({
     };
   }>({});
   const { map, nodeId } = useRouteParams();
-  const { player } = usePlayer();
+  const playerLocation = usePlayerStore(
+    (state) => state.player?.position?.location
+  );
   const user = useUser();
   const refreshUser = useRefreshUser();
   const navigate = useNavigate();
@@ -55,7 +57,6 @@ function useLayerGroups({
     useState<CanvasMarker | null>(null);
 
   const onMarkerAction = useCallback(async () => {
-    const playerLocation = player?.position?.location;
     if (!playerLocation) {
       return;
     }
@@ -73,7 +74,7 @@ function useLayerGroups({
       const action = getAction(marker.options.image.type);
       action(marker, user, refreshUser);
     }
-  }, [player?.position, user]);
+  }, [playerLocation, user]);
 
   useEventListener('hotkey-marker_action', onMarkerAction, [onMarkerAction]);
 

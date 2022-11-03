@@ -4,8 +4,8 @@ import { Server } from 'socket.io';
 export type Player = {
   steamId?: string;
   steamName?: string;
-  username: string | null;
-  position: { location: [number, number]; rotation: number } | null;
+  username?: string;
+  position?: { location: [number, number]; rotation: number };
   location?: string;
   region?: string;
   worldName?: string;
@@ -53,8 +53,6 @@ export function initSocket(server: http.Server) {
       activeGroups[token][client.id] = {
         steamId,
         steamName,
-        username: null,
-        position: null,
       };
       client.to(token).emit('status', activeGroups[token]);
     }

@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useAccount } from '../contexts/UserContext';
-import { getJSONItem } from './storage';
 import { toast } from 'react-toastify';
 import useGroupPositions from '../components/WorldMap/useGroupPositions';
-import { usePlayer } from '../contexts/PlayerContext';
 import { init } from 'realtime';
+import { usePlayerStore } from './playerStore';
+import { useSettingsStore } from './settingsStore';
+import shallow from 'zustand/shallow';
 
 export type Position = { location: [number, number]; rotation: number };
 export type Player = {
@@ -25,26 +26,23 @@ let latestPlayer: Player | null = null;
 let latestGroup: Group | null = null;
 
 function useReadLivePosition() {
-  const { setPlayer, isSyncing, setIsSyncing } = usePlayer();
+  const { setPlayer } = usePlayerStore();
   const [group, setGroup] = useState<Group>({});
   const { account } = useAccount();
-
+  const { liveShareServerUrl, liveShareToken } = useSettingsStore(
+    (state) => ({
+      liveShareServerUrl: state.liveShareServerUrl,
+      liveShareToken: state.liveShareToken,
+    }),
+    shallow
+  );
   useGroupPositions(group);
 
+  const token = account?.liveShareToken || liveShareToken;
+  const serverUrl = account?.liveShareServerUrl || liveShareServerUrl;
+
   useEffect(() => {
-    if (!isSyncing) {
-      return;
-    }
-
-    const token =
-      account?.liveShareToken ||
-      getJSONItem<string | null>('live-share-token', null);
-    const serverUrl =
-      account?.liveShareServerUrl ||
-      getJSONItem<string | null>('live-share-server-url', null);
-
     if (!token || !serverUrl) {
-      setIsSyncing(false);
       return;
     }
 
@@ -58,8 +56,11 @@ function useReadLivePosition() {
           }
           return true;
         }) || sessionIds[0];
-
-      latestPlayer = group[playerSessionId];
+      if (group[playerSessionId] && latestPlayer) {
+        Object.assign(latestPlayer, group[playerSessionId]);
+      } else {
+        latestPlayer = group[playerSessionId];
+      }
       setPlayer(latestPlayer);
       delete group[playerSessionId];
       latestGroup = group;
@@ -107,12 +108,7 @@ function useReadLivePosition() {
       setGroup({});
       toast.info('Stop sharing live status 🛑');
     };
-  }, [
-    account?.liveShareToken,
-    account?.liveShareServerUrl,
-    isSyncing,
-    account?.steamId,
-  ]);
+  }, [token, serverUrl, account?.steamId]);
 }
 
 export default useReadLivePosition;

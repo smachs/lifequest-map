@@ -1,17 +1,31 @@
 import { Group, Text } from '@mantine/core';
 import { getWorld, getZone } from 'static';
 import { useModal } from '../../contexts/ModalContext';
-import { usePlayer } from '../../contexts/PlayerContext';
+import { useAccount } from '../../contexts/UserContext';
+import { usePlayerStore } from '../../utils/playerStore';
+import { useSettingsStore } from '../../utils/settingsStore';
 import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
 import ServerTime from './ServerTime';
 import styles from './SyncStatus.module.css';
 import WorldName from './WorldName';
+import shallow from 'zustand/shallow';
 
 function SyncStatusReceiver() {
-  const { player, isSyncing, setIsSyncing } = usePlayer();
+  const { account } = useAccount();
+  const player = usePlayerStore((state) => state.player);
 
   const { addModal, closeLatestModal } = useModal();
+  const { liveShareServerUrl, liveShareToken } = useSettingsStore(
+    (state) => ({
+      liveShareServerUrl: state.liveShareServerUrl,
+      liveShareToken: state.liveShareToken,
+    }),
+    shallow
+  );
 
+  const isSyncing =
+    (account?.liveShareToken || liveShareToken) &&
+    (account?.liveShareServerUrl || liveShareServerUrl);
   if (!isSyncing) {
     return (
       <small>
@@ -23,7 +37,6 @@ function SyncStatusReceiver() {
               children: (
                 <ShareLiveStatus
                   onActivate={() => {
-                    setIsSyncing(true);
                     closeLatestModal();
                   }}
                 />
@@ -31,7 +44,7 @@ function SyncStatusReceiver() {
             });
           }}
         >
-          share live status
+          setup position syncing
         </a>
         .
       </small>

@@ -1,6 +1,5 @@
 import leaflet from 'leaflet';
 import { useEffect, useMemo, useState } from 'react';
-import { usePlayer } from '../../contexts/PlayerContext';
 import { useSettings } from '../../contexts/SettingsContext';
 import { isOverwolfApp } from '../../utils/overwolf';
 import type { Position } from '../../utils/useReadLivePosition';
@@ -13,6 +12,8 @@ import useDirectionLine from './useDirectionLine';
 import { useMap } from 'ui/utils/routes';
 import { useNavigate } from 'react-router-dom';
 import { findMapDetails, mapIsAeternumMap } from 'static';
+import { usePlayerStore } from '../../utils/playerStore';
+import { useSettingsStore } from '../../utils/settingsStore';
 
 const divElement = leaflet.DomUtil.create('div', 'leaflet-player-position');
 const CoordinatesControl = leaflet.Control.extend({
@@ -54,7 +55,8 @@ function usePlayerPosition({
   let isFollowing: boolean | null = null;
   let playerPosition: Position | null = null;
   let playerMap: string | null = null;
-  const { player, following } = usePlayer();
+  const { player } = usePlayerStore();
+  const following = useSettingsStore((state) => state.following);
   useDirectionLine(player?.username ? player.position : null);
   if (!isMinimap) {
     useAdaptiveZoom(player?.username ? player : null);

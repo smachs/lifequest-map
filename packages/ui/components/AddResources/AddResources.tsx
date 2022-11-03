@@ -13,8 +13,9 @@ import { postMarker } from './api';
 import { notify } from '../../utils/notifications';
 import Button from '../Button/Button';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
-import { usePlayer } from '../../contexts/PlayerContext';
 import { useMap } from 'ui/utils/routes';
+import { usePlayerStore } from '../../utils/playerStore';
+import { useSettingsStore } from '../../utils/settingsStore';
 
 export type Details = {
   description?: string;
@@ -42,7 +43,8 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
   );
 
   const [details, setDetails] = useState<Details>({});
-  const { player, following } = usePlayer();
+  const { player } = usePlayerStore();
+  const following = useSettingsStore((state) => state.following);
 
   const [location, setLocation] = useState<[number, number, number]>(() => {
     if (marker) {

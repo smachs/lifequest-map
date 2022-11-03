@@ -1,4 +1,4 @@
-import { usePlayer } from '../../contexts/PlayerContext';
+import { usePlayerStore } from '../../utils/playerStore';
 import type { Position } from '../../utils/useReadLivePosition';
 import Button from '../Button/Button';
 import PlayerIcon from '../icons/PlayerIcon';
@@ -8,7 +8,7 @@ type PlayerPositionButtonProps = {
   onClick: (position: Position) => void;
 };
 function PlayerPositionButton({ onClick }: PlayerPositionButtonProps) {
-  const { player } = usePlayer();
+  const player = usePlayerStore((state) => state.player);
 
   return (
     <Button

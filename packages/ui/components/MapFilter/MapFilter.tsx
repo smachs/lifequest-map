@@ -20,7 +20,6 @@ import useDebounce from '../../utils/useDebounce';
 import BroadcastIcon from '../icons/BroadcastIcon';
 import ShareLiveStatus from '../ShareLiveStatus/ShareLiveStatus';
 import Footer from '../Footer/Footer';
-import { usePlayer } from '../../contexts/PlayerContext';
 import SelectMap from './SelectMap';
 import { useRouteParams, useView } from '../../utils/routes';
 import MarkerDetails from '../MarkerDetails/MarkerDetails';
@@ -28,6 +27,9 @@ import type { MarkerFull } from '../MarkerDetails/useMarker';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import MarkerRouteDetails from '../MarkerRoutes/MarkerRouteDetails';
+import { useAccount } from '../../contexts/UserContext';
+import shallow from 'zustand/shallow';
+import { useSettingsStore } from '../../utils/settingsStore';
 
 type MarkerFilterProps = {
   onMarkerCreate: () => void;
@@ -44,10 +46,23 @@ function MapFilter({
     'aeternum-map-client.sidebar-state',
     true
   );
-  const { following, toggleFollowing, isSyncing, setIsSyncing } = usePlayer();
+  const { account } = useAccount();
+  const { following, toggleFollowing } = useSettingsStore(
+    (state) => ({
+      following: state.following,
+      toggleFollowing: state.toggleFollowing,
+    }),
+    shallow
+  );
   const { nodeId, routeId } = useRouteParams();
   const { view, toView } = useView();
-
+  const { liveShareServerUrl, liveShareToken } = useSettingsStore(
+    (state) => ({
+      liveShareServerUrl: state.liveShareServerUrl,
+      liveShareToken: state.liveShareToken,
+    }),
+    shallow
+  );
   useDebounce(
     isOpen,
     () => latestLeafletMap?.invalidateSize({ pan: true, animate: true }),
@@ -57,6 +72,10 @@ function MapFilter({
   useEffect(() => {
     setIsOpen(true);
   }, [view.section]);
+
+  const isSyncing =
+    (account?.liveShareToken || liveShareToken) &&
+    (account?.liveShareServerUrl || liveShareServerUrl);
 
   return (
     <aside className={classNames(styles.container, isOpen && styles.open)}>
@@ -112,21 +131,16 @@ function MapFilter({
           data-tooltip="Share live status"
           data-tooltip-position="right"
           onClick={() => {
-            if (!isSyncing) {
-              addModal({
-                title: 'Share Live Status',
-                children: (
-                  <ShareLiveStatus
-                    onActivate={() => {
-                      setIsSyncing(true);
-                      closeLatestModal();
-                    }}
-                  />
-                ),
-              });
-            } else {
-              setIsSyncing(false);
-            }
+            addModal({
+              title: 'Share Live Status',
+              children: (
+                <ShareLiveStatus
+                  onActivate={() => {
+                    closeLatestModal();
+                  }}
+                />
+              ),
+            });
           }}
           className={classNames(
             styles.nav__button,
