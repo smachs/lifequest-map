@@ -9,6 +9,7 @@ import useRegionBorders from './useRegionBorders';
 import { mapIsAeternumMap, findMapDetails, AETERNUM_MAP } from 'static';
 import { useView } from 'ui/utils/routes';
 import { useNavigate } from 'react-router-dom';
+import { initOtherPlayers } from './otherPlayers';
 
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
@@ -113,20 +114,19 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
     };
 
     if (latestLeafletMap) {
-      const leafletMap = latestLeafletMap;
       const worldTiles = new (WorldTiles(mapDetail.folder))();
-      worldTiles.addTo(leafletMap);
-      leafletMap.setMaxZoom(mapDetail.maxZoom);
-      leafletMap.setMinZoom(mapDetail.minZoom);
-      leafletMap.setMaxBounds(latLngBounds);
-      updateView(leafletMap);
+      worldTiles.addTo(latestLeafletMap);
+      latestLeafletMap.setMaxZoom(mapDetail.maxZoom);
+      latestLeafletMap.setMinZoom(mapDetail.minZoom);
+      latestLeafletMap.setMaxBounds(latLngBounds);
+      updateView(latestLeafletMap);
 
       return () => {
         worldTiles.remove();
       };
     }
 
-    const leafletMap = leaflet.map(mapElement, {
+    latestLeafletMap = leaflet.map(mapElement, {
       preferCanvas: true,
       crs: worldCRS,
       maxZoom: mapDetail.maxZoom,
@@ -140,17 +140,15 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
       wheelPxPerZoomLevel: 120,
     });
 
-    leafletMap.on('contextmenu', () => {
+    latestLeafletMap.on('contextmenu', () => {
       // Disable default context menu
     });
 
-    setLeafletMap(leafletMap);
-
-    latestLeafletMap = leafletMap;
-    updateView(leafletMap);
+    setLeafletMap(latestLeafletMap);
+    updateView(latestLeafletMap);
 
     if (!hideControls) {
-      leaflet.control.zoom({ position: 'bottomleft' }).addTo(leafletMap);
+      leaflet.control.zoom({ position: 'bottomleft' }).addTo(latestLeafletMap);
 
       const divElement = leaflet.DomUtil.create('div', 'leaflet-position');
       const handleMouseMove = (event: leaflet.LeafletMouseEvent) => {
@@ -175,13 +173,13 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
       });
 
       const coordinates = new CoordinatesControl({ position: 'bottomright' });
-      playerCoordinates.addTo(leafletMap);
+      playerCoordinates.addTo(latestLeafletMap);
 
-      coordinates.addTo(leafletMap);
+      coordinates.addTo(latestLeafletMap);
     }
     const worldTiles = new (WorldTiles(mapDetail.folder))();
-    worldTiles.addTo(leafletMap);
-
+    worldTiles.addTo(latestLeafletMap);
+    initOtherPlayers(latestLeafletMap);
     return () => {
       worldTiles.remove();
     };

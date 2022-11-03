@@ -30,6 +30,7 @@ import MarkerRouteDetails from '../MarkerRoutes/MarkerRouteDetails';
 import shallow from 'zustand/shallow';
 import { useSettingsStore } from '../../utils/settingsStore';
 import { useUserStore } from '../../utils/userStore';
+import { IconUsers } from '@tabler/icons';
 
 type MarkerFilterProps = {
   onMarkerCreate: () => void;
@@ -47,10 +48,17 @@ function MapFilter({
     true
   );
   const account = useUserStore((state) => state.account);
-  const { following, toggleFollowing } = useSettingsStore(
+  const {
+    following,
+    toggleFollowing,
+    showOtherPlayers,
+    toggleShowOtherPlayers,
+  } = useSettingsStore(
     (state) => ({
       following: state.following,
       toggleFollowing: state.toggleFollowing,
+      showOtherPlayers: state.showOtherPlayers,
+      toggleShowOtherPlayers: state.toggleShowOtherPlayers,
     }),
     shallow
   );
@@ -163,6 +171,19 @@ function MapFilter({
           )}
         >
           <PlayerIcon />
+        </button>
+        <button
+          data-tooltip="Show other players (all servers)"
+          data-tooltip-position="right"
+          onClick={() => {
+            toggleShowOtherPlayers();
+          }}
+          className={classNames(
+            styles.nav__button,
+            showOtherPlayers && styles.nav__active
+          )}
+        >
+          <IconUsers />
         </button>
         <button
           data-tooltip="Show minimap"
