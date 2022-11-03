@@ -17,6 +17,8 @@ const ServerTime = ({ zone }: Props) => {
   );
 
   useEffect(() => {
+    setLocaleString(getLocaleDateString(zone.timeZone));
+
     const intervalId = setInterval(() => {
       setLocaleString(getLocaleDateString(zone.timeZone));
     }, 1000 * 60);
