@@ -20,6 +20,7 @@
     "@tabler/icons": "1.108.0",
     "color-hash": "2.0.1",
     "leaflet": "1.9.2",
+    "lzwcompress": "^1.1.0",
     "markdown-to-jsx": "7.1.7",
     "plausible-tracker": "0.3.8",
     "react": "18.2.0",

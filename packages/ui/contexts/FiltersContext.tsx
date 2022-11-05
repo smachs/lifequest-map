@@ -35,7 +35,7 @@ export function FiltersProvider({
 }: FiltersProviderProps): JSX.Element {
   const [filters, setFilters] = usePersistentState<string[]>(
     'selected-filters',
-    allFilters
+    []
   );
 
   return (

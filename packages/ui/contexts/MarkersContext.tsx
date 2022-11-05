@@ -73,18 +73,23 @@ type MarkersProviderProps = {
 
 type Mode = 'route' | 'marker' | null;
 
+// Remove old storage (deprecated)
+localStorage.removeItem('markers');
+localStorage.removeItem('all-marker-routes');
+
 export function MarkersProvider({
   children,
   readonly,
 }: MarkersProviderProps): JSX.Element {
   const [markers, setMarkers] = usePersistentState<MarkerBasic[]>(
-    'markers',
-    []
+    'cached-markers',
+    [],
+    true,
+    true
   );
   const [allMarkerRoutes, setAllMarkerRoutes] = usePersistentState<
     MarkerRouteItem[]
-  >('all-marker-routes', []);
-
+  >('cached-marker-routes', [], true, true);
   const [markerRoutes, setMarkerRoutes] = usePersistentState<MarkerRouteItem[]>(
     'markers-routes',
     []
