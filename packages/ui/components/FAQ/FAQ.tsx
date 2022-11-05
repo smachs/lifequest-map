@@ -1,14 +1,24 @@
 import { useState } from 'react';
-import { Anchor, List, Modal, ScrollArea } from '@mantine/core';
+import {
+  Anchor,
+  List,
+  Modal,
+  ScrollArea,
+  Accordion,
+  MantineProvider,
+} from '@mantine/core';
 import HelpIcon from '../icons/HelpIcon';
 import classes from './FAQ.module.css';
-import { Accordion } from '@mantine/core';
 
 const FAQ = () => {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <>
+    <MantineProvider
+      theme={{
+        colorScheme: 'dark',
+      }}
+    >
       <Modal
         zIndex={999999}
         centered
@@ -121,7 +131,7 @@ const FAQ = () => {
                       target="_blank"
                     >
                       Skeleton
-                    </Anchor>
+                    </Anchor>{' '}
                     (skeleton-win32-x64.zip) and then run skeleton.exe
                   </List.Item>
                   <List.Item>
@@ -184,7 +194,7 @@ const FAQ = () => {
       >
         <HelpIcon />
       </button>
-    </>
+    </MantineProvider>
   );
 };
 
