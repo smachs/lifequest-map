@@ -1,20 +1,39 @@
 import { useEffect, useState } from 'react';
 import { writeError } from './logs';
 import useDebounce from './useDebounce';
+// @ts-ignore
+import lzwCompress from 'lzwcompress';
 
-export function getJSONItem<T>(key: string, defaultValue: T): T {
+export function getJSONItem<T>(
+  key: string,
+  defaultValue: T,
+  compression = false
+): T {
   try {
     const item = localStorage.getItem(key);
-    return item !== null ? JSON.parse(item) : defaultValue;
+    if (item === null) {
+      return defaultValue;
+    }
+    return compression ? lzwCompress.unpack(item) : JSON.parse(item);
   } catch (e) {
     writeError(e);
     return defaultValue;
   }
 }
 
-export function setJSONItem<T>(key: string, item: T): void {
+export function setJSONItem<T>(
+  key: string,
+  item: T,
+  compression = false
+): void {
   try {
-    localStorage.setItem(key, JSON.stringify(item));
+    if (compression) {
+      if (Array.isArray(item) && item.length > 0) {
+        localStorage.setItem(key, lzwCompress.pack(item));
+      }
+    } else {
+      localStorage.setItem(key, JSON.stringify(item));
+    }
   } catch (e) {
     writeError(e);
   }
@@ -48,16 +67,17 @@ export function deserializeMapView(map: string) {
 export function usePersistentState<T>(
   key: string,
   initialValue: T | (() => T),
-  listener = true
+  listener = true,
+  compression = false
 ): [T, (value: T | ((value: T) => T)) => void] {
   const [state, setState] = useState<T>(() => {
     const value =
       typeof initialValue === 'function'
         ? (initialValue as () => T)()
         : initialValue;
-    return getJSONItem<T>(key, value);
+    return getJSONItem<T>(key, value, compression);
   });
-  useDebounce(state, (value) => setJSONItem<T>(key, value));
+  useDebounce(state, (value) => setJSONItem<T>(key, value, compression));
 
   function setValue(value: T | ((value: T) => T)) {
     try {
@@ -79,8 +99,10 @@ export function usePersistentState<T>(
           return;
         }
         if (event.newValue) {
-          const item = JSON.parse(event.newValue);
-          setValue(item);
+          const value = compression
+            ? lzwCompress.unpack(event.newValue)
+            : JSON.parse(event.newValue);
+          setValue(value);
         }
       } catch (e) {
         writeError(e);
