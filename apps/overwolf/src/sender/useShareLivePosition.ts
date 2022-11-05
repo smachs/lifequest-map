@@ -158,7 +158,7 @@ function useShareLivePosition() {
 
       peer?.destroy();
       Object.entries(peerConnections).forEach(([clientId, peerConnection]) => {
-        peerConnection.close();
+        peerConnection?.close();
         delete peerConnections[clientId];
       });
       setSocket(null);
