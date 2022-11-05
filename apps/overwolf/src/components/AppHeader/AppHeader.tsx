@@ -8,13 +8,14 @@ import CloseIcon from 'ui/components/icons/CloseIcon';
 import DiscordIcon from 'ui/components/icons/DiscordIcon';
 import GitHubIcon from 'ui/components/icons/GitHubIcon';
 import MinimizeIcon from 'ui/components/icons/MinimizeIcon';
+import FAQ from 'ui/components/FAQ/FAQ';
 import classes from './AppHeader.module.css';
 
-function AppHeader(): JSX.Element {
-  async function openExternalLink(url: string) {
-    overwolf.utils.openUrlInDefaultBrowser(url);
-  }
+async function openExternalLink(url: string) {
+  overwolf.utils.openUrlInDefaultBrowser(url);
+}
 
+function AppHeader(): JSX.Element {
   return (
     <header className={classes.header} onMouseDown={dragMoveWindow}>
       <img src="/icon.png" alt="" className={classes.logo} />
@@ -37,6 +38,7 @@ function AppHeader(): JSX.Element {
         >
           <DiscordIcon />
         </button>
+        <FAQ />
         <button
           className={classNames(classes.button, classes['button--padded'])}
           onClick={minimizeCurrentWindow}

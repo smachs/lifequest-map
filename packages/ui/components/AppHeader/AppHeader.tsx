@@ -1,10 +1,8 @@
-import { useModal } from '../../contexts/ModalContext';
 import { trackOutboundLinkClick } from '../../utils/stats';
 import { classNames } from '../../utils/styles';
-import Changelog from '../Changelog/Changelog';
+import FAQ from '../FAQ/FAQ';
 import DiscordIcon from '../icons/DiscordIcon';
 import GitHubIcon from '../icons/GitHubIcon';
-import HelpIcon from '../icons/HelpIcon';
 import classes from './AppHeader.module.css';
 
 type AppHeaderProps = {
@@ -12,8 +10,6 @@ type AppHeaderProps = {
 };
 
 function AppHeader({ className }: AppHeaderProps): JSX.Element {
-  const { addModal } = useModal();
-
   return (
     <header className={classNames(classes.header, className)}>
       <img src="/icon.png" alt="" className={classes.logo} />
@@ -40,18 +36,7 @@ function AppHeader({ className }: AppHeaderProps): JSX.Element {
         >
           <DiscordIcon />
         </a>
-        <button
-          className={classes.button}
-          onClick={() =>
-            addModal({
-              title: 'Changelog',
-              children: <Changelog />,
-            })
-          }
-          title={'Changelog'}
-        >
-          <HelpIcon />
-        </button>
+        <FAQ />
       </div>
     </header>
   );
