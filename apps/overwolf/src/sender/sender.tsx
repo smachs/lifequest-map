@@ -1,7 +1,6 @@
 import { MantineProvider } from '@mantine/core';
 import '../globals.css';
 import { StrictMode } from 'react';
-import AppHeader from './AppHeader';
 import { SettingsProvider } from 'ui/contexts/SettingsContext';
 import { PositionProvider } from '../contexts/PositionContext';
 import { waitForOverwolf } from 'ui/utils/overwolf';
@@ -16,6 +15,7 @@ import { initPlausible } from 'ui/utils/stats';
 import { createRoot } from 'react-dom/client';
 import Ads from '../components/Ads/Ads';
 import { useUserStore } from 'ui/utils/userStore';
+import AppHeader from '../components/AppHeader/AppHeader';
 
 const root = createRoot(document.querySelector('#root')!);
 
