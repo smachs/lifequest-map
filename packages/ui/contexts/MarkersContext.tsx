@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect } from 'react';
 import { getMarkerRoutes } from '../components/MarkerRoutes/api';
 import type { MarkerRouteItem } from '../components/MarkerRoutes/MarkerRoutes';
 import { latestLeafletMap } from '../components/WorldMap/useWorldMap';
-import { findMapDetails, mapFilters, mapIsAeternumMap } from 'static';
+import { findMapDetails, mapIsAeternumMap } from 'static';
 import { fetchJSON } from '../utils/api';
 import { writeError } from '../utils/logs';
 import { notify } from '../utils/notifications';
@@ -14,8 +14,9 @@ import { usePersistentState } from '../utils/storage';
 import { useFilters } from './FiltersContext';
 import type { MarkerSize } from 'static';
 import { useMarkerSearchStore } from '../components/MarkerSearch/markerSearchStore';
-import { useMap } from '../utils/routes';
+import { useRouteParams } from '../utils/routes';
 import { useUserStore } from '../utils/userStore';
+import useMarkerRoute from '../components/MarkerRoutes/useMarkerRoute';
 
 export type MarkerBasic = {
   type: string;
@@ -99,8 +100,9 @@ export function MarkersProvider({
     string[]
   >([]);
 
-  const { filters, setFilters } = useFilters();
-  const map = useMap();
+  const { filters } = useFilters();
+  const { map, nodeId, routeId } = useRouteParams();
+  const { data: markerRoute } = useMarkerRoute(routeId);
 
   const hiddenMarkerIds = useUserStore(
     (state) => state.user?.hiddenMarkerIds || []
@@ -165,6 +167,7 @@ export function MarkersProvider({
 
     const isAeternumMap = mapIsAeternumMap(map);
     const mapDetails = findMapDetails(map);
+
     return markers.filter((marker) => {
       if (marker.map) {
         if (mapDetails !== findMapDetails(marker.map)) {
@@ -174,6 +177,29 @@ export function MarkersProvider({
         return false;
       }
 
+      if (marker._id === nodeId) {
+        return true;
+      }
+      if (
+        markerRoute?.positions.some(
+          (position) =>
+            position[0] === marker.position[1] &&
+            position[1] === marker.position[0]
+        )
+      ) {
+        return true;
+      }
+      if (
+        markerRoutes.some((markerRoute) =>
+          markerRoute.positions.some(
+            (position) =>
+              position[0] === marker.position[1] &&
+              position[1] === marker.position[0]
+          )
+        )
+      ) {
+        return true;
+      }
       if (
         markerFilters.length > 0 &&
         !markerFilters.some((limit) => limit.markerIds.includes(marker._id))
@@ -228,6 +254,9 @@ export function MarkersProvider({
     map,
     markerFilters,
     searchValues,
+    nodeId,
+    markerRoutes,
+    markerRoute,
   ]);
 
   const toggleMarkerRoute = (markerRoute: MarkerRouteItem, force?: boolean) => {
@@ -238,30 +267,6 @@ export function MarkersProvider({
     if (index > -1 && force !== true) {
       markerRoutesClone.splice(index, 1);
     } else if (force !== false) {
-      const types = Object.keys(markerRoute.markersByType);
-
-      const requiredFilters: string[] = [];
-      types.forEach((markerType) => {
-        const mapFilter = mapFilters.find(
-          (mapFilter) => mapFilter.type === markerType
-        );
-        if (mapFilter) {
-          if (mapFilter.category === 'chests') {
-            const tierTypes = Array(mapFilter.maxTier || 5)
-              .fill(null)
-              .map((_, index) => `${mapFilter.type}-${index + 1}`);
-            requiredFilters.push(...tierTypes);
-          } else if (mapFilter.sizes) {
-            requiredFilters.push(
-              ...mapFilter.sizes.map((size) => `${mapFilter.type}-${size}`)
-            );
-          } else {
-            requiredFilters.push(mapFilter.type);
-          }
-        }
-      });
-
-      setFilters((filters) => [...filters, ...requiredFilters]);
       markerRoutesClone.push(markerRoute);
       if (latestLeafletMap) {
         latestLeafletMap.fitBounds(markerRoute.positions);

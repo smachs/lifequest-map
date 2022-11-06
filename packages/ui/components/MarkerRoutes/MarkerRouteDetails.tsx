@@ -39,7 +39,11 @@ const MarkerRouteDetails = ({
   markerRouteId,
   onEdit,
 }: MarkerRouteDetailsProps) => {
-  const { markerRoute, refresh, loading } = useMarkerRoute(markerRouteId);
+  const {
+    data: markerRoute,
+    refetch,
+    isLoading,
+  } = useMarkerRoute(markerRouteId);
   const navigate = useNavigate();
   const { account, refreshAccount } = useUserStore(
     (state) => ({
@@ -146,7 +150,7 @@ const MarkerRouteDetails = ({
         success: 'Favored route changed 👌',
       });
       refreshAccount();
-      refresh();
+      refetch();
     } catch (error) {
       writeError(error);
     }
@@ -205,10 +209,10 @@ const MarkerRouteDetails = ({
                 },
               }}
             >
-              {markerMapFilters.length === 0 && loading && (
+              {markerMapFilters.length === 0 && isLoading && (
                 <Skeleton height={40} />
               )}
-              {markerMapFilters.length === 0 && !loading && 'No markers'}
+              {markerMapFilters.length === 0 && !isLoading && 'No markers'}
               {markerMapFilters.map((markerMapFilter) => (
                 <List.Item
                   key={markerMapFilter.type}

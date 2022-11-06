@@ -1,36 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import { fetchJSON } from '../../utils/api';
-import { notify } from '../../utils/notifications';
 import type { MarkerRouteItem } from './MarkerRoutes';
 
-const useMarkerRoute = (markerRouteId?: string) => {
-  const [result, setResult] = useState<MarkerRouteItem | null>(null);
-  const [loading, setLoading] = useState(false);
+const getMarkerRoute = (id?: string) =>
+  fetchJSON<MarkerRouteItem>(`/api/marker-routes/${id}`);
 
-  const refresh = useCallback(async () => {
-    if (!markerRouteId) {
-      setResult(null);
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    return await notify(
-      fetchJSON<MarkerRouteItem>(`/api/marker-routes/${markerRouteId}`)
-        .then((markerRoute) => setResult(markerRoute))
-        .catch(() => setResult(null))
-        .finally(() => setLoading(false))
-    );
-  }, [markerRouteId]);
-
-  useEffect(() => {
-    refresh();
-  }, [refresh]);
-
-  return {
-    markerRoute: result,
-    loading,
-    refresh,
-  };
-};
+const useMarkerRoute = (markerRouteId?: string) =>
+  useQuery(['routes', markerRouteId], () => getMarkerRoute(markerRouteId), {
+    enabled: !!markerRouteId,
+  });
 
 export default useMarkerRoute;
