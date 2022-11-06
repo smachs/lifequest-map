@@ -22,7 +22,9 @@ import {
   ZOOM_IN_MINIMAP,
   ZOOM_OUT_MINIMAP,
 } from './utils/hotkeys';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
+const queryClient = new QueryClient();
 const root = createRoot(document.querySelector('#root')!);
 
 function Minimap(): JSX.Element {
@@ -192,15 +194,17 @@ const router = createMemoryRouter([
   {
     path: '/',
     element: (
-      <SettingsProvider>
-        <FiltersProvider>
-          <MarkersProvider readonly>
-            <PositionProvider>
-              <Minimap />
-            </PositionProvider>
-          </MarkersProvider>
-        </FiltersProvider>
-      </SettingsProvider>
+      <QueryClientProvider client={queryClient}>
+        <SettingsProvider>
+          <FiltersProvider>
+            <MarkersProvider readonly>
+              <PositionProvider>
+                <Minimap />
+              </PositionProvider>
+            </MarkersProvider>
+          </FiltersProvider>
+        </SettingsProvider>
+      </QueryClientProvider>
     ),
     children: [
       {

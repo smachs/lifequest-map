@@ -13,7 +13,9 @@ import { initPlausible } from 'ui/utils/stats';
 import { createRoot } from 'react-dom/client';
 import { MantineProvider } from '@mantine/core';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
+const queryClient = new QueryClient();
 const root = createRoot(document.querySelector('#root')!);
 
 function Minimap(): JSX.Element {
@@ -73,13 +75,15 @@ const router = createMemoryRouter([
           colorScheme: 'dark',
         }}
       >
-        <SettingsProvider>
-          <FiltersProvider>
-            <MarkersProvider readonly>
-              <Minimap />
-            </MarkersProvider>
-          </FiltersProvider>
-        </SettingsProvider>
+        <QueryClientProvider client={queryClient}>
+          <SettingsProvider>
+            <FiltersProvider>
+              <MarkersProvider readonly>
+                <Minimap />
+              </MarkersProvider>
+            </FiltersProvider>
+          </SettingsProvider>
+        </QueryClientProvider>
       </MantineProvider>
     ),
     children: [
