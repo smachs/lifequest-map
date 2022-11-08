@@ -14,7 +14,7 @@ export default function ImagePreview({ src }: ImagePreviewProps) {
         centered
         onClose={() => setOpened(false)}
         zIndex={100000}
-        size="xl"
+        fullScreen
       >
         <Image
           src={src}
@@ -23,6 +23,7 @@ export default function ImagePreview({ src }: ImagePreviewProps) {
           radius="sm"
           withPlaceholder
           sx={{ maxWidth: 'max-content', margin: '0 auto' }}
+          onClick={() => setOpened(false)}
         />
       </Modal>
       <Image

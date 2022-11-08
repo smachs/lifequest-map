@@ -40,32 +40,6 @@ function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
   const account = useUserStore((state) => state.account);
   const navigate = useNavigate();
 
-  // async function handleUploadScreenshot(screenshotId?: string) {
-  //   try {
-  //     closeLatestModal();
-  //     if (!screenshotId || !marker) {
-  //       return;
-  //     }
-  //     const patchedMarker = await notify(
-  //       patchMarker(marker._id, { ...marker, screenshotId })
-  //     );
-  //     marker.screenshotFilename = patchedMarker.screenshotFilename;
-  //     setMarkers((markers) => {
-  //       const markersClone = [...markers];
-  //       const index = markersClone.findIndex(
-  //         (marker) => marker._id === patchedMarker._id
-  //       );
-  //       if (index === -1) {
-  //         return markers;
-  //       }
-  //       markersClone[index] = patchedMarker;
-  //       return markersClone;
-  //     });
-  //   } catch (error) {
-  //     writeError(error);
-  //   }
-  // }
-
   const handleClose = () => {
     if (!marker || !marker.map) {
       navigate(`/${location.search}`);
@@ -211,17 +185,6 @@ function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
                 />
               </>
             )}
-          {/* <button
-          onClick={() =>
-            addModal({
-              title: 'Add screenshot',
-              children: <UploadScreenshot onUpload={handleUploadScreenshot} />,
-            })
-          }
-        >
-          <img className={styles.preview} src={'/icon.png'} alt="" />
-          Take a screenshot
-        </button> */}
         </Stack>
       )}
     </Drawer>

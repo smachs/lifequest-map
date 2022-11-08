@@ -15,6 +15,7 @@ export type MarkerDTO = {
   customRespawnTimer?: number;
   hp?: number;
   description?: string;
+  screenshotFilename?: string;
   screenshotId?: string;
 };
 
