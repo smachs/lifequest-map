@@ -12,7 +12,7 @@ import {
 } from 'static';
 import { writeError, writeLog } from 'ui/utils/logs';
 import { useIsNewWorldRunning } from '../components/store';
-import { getGameInfo } from '../utils/games';
+import { getGameInfo, getNewWorldRunning } from '../utils/games';
 import {
   getLocation,
   getScreenshotFromNewWorld,
@@ -42,6 +42,20 @@ const PositionContext = createContext<PositionContextProps>({
 
 type PositionProviderProps = {
   children: ReactNode;
+};
+
+const calcRotation = (
+  location: [number, number],
+  lastLocation: [number, number] | null
+) => {
+  return (
+    (Math.atan2(
+      location[0] - (lastLocation?.[0] || location[0]),
+      location[1] - (lastLocation?.[1] || location[1])
+    ) *
+      180) /
+    Math.PI
+  );
 };
 
 export function PositionProvider({
@@ -83,7 +97,6 @@ export function PositionProvider({
     let active = true;
 
     let lastLocation: [number, number] | null = position?.location || null;
-    let lastRotation: number | null = position?.rotation || null;
     let hasError = false;
     let lastUsername = username;
     let lastWorldName = worldName;
@@ -105,14 +118,17 @@ export function PositionProvider({
             +locationList.match(/position.y,(\d+.\d+)/)[1],
             +locationList.match(/position.x,(\d+.\d+)/)[1],
           ];
-          const rotation = +locationList.match(/rotation.z,(\d+)/)[1];
+          let rotation: number;
+          if (locationList.includes('player.compass,NONE')) {
+            rotation = calcRotation(location, lastLocation);
+          } else {
+            rotation = +locationList.match(/rotation.z,(\d+)/)[1];
+          }
           if (
             lastLocation?.[0] !== location[0] ||
-            lastLocation?.[1] !== location[1] ||
-            lastRotation !== rotation
+            lastLocation?.[1] !== location[1]
           ) {
             lastLocation = location;
-            lastRotation = rotation;
             setPosition({
               location,
               rotation,
@@ -125,50 +141,47 @@ export function PositionProvider({
         } else {
           // OCR is too fast, delay it
           await new Promise((resolve) => setTimeout(resolve, 80));
-          // OCR fallback
-          const url = await getScreenshotFromNewWorld();
-          const locationString = await getLocation(url);
-          try {
-            const location = toLocation(locationString);
-            if (location) {
-              const rotation =
-                (Math.atan2(
-                  location[0] - (lastLocation?.[0] || location[0]),
-                  location[1] - (lastLocation?.[1] || location[1])
-                ) *
-                  180) /
-                Math.PI;
 
-              if (
-                lastLocation?.[0] !== location[0] ||
-                lastLocation?.[1] !== location[1]
-              ) {
-                const distance = lastLocation
-                  ? Math.sqrt(
-                      Math.pow(location[0] - lastLocation[0], 2) +
-                        Math.pow(location[1] - lastLocation[1], 2)
-                    )
-                  : 0;
-                if (distance > 50 && falsePositiveCount < 5) {
-                  // Might be false positive
-                  falsePositiveCount++;
-                } else {
-                  falsePositiveCount = 0;
-                  lastLocation = location;
-                  lastRotation = rotation;
-                  setPosition({
-                    location,
-                    rotation,
-                  });
+          const newWorld = await getNewWorldRunning();
+          if (newWorld?.isInFocus) {
+            // OCR fallback
+            const url = await getScreenshotFromNewWorld();
+            const locationString = await getLocation(url);
+            try {
+              const location = toLocation(locationString);
+              if (location) {
+                const rotation = calcRotation(location, lastLocation);
+
+                if (
+                  lastLocation?.[0] !== location[0] ||
+                  lastLocation?.[1] !== location[1]
+                ) {
+                  const distance = lastLocation
+                    ? Math.sqrt(
+                        Math.pow(location[0] - lastLocation[0], 2) +
+                          Math.pow(location[1] - lastLocation[1], 2)
+                      )
+                    : 0;
+                  if (distance > 50 && falsePositiveCount < 5) {
+                    // Might be false positive
+                    falsePositiveCount++;
+                  } else {
+                    falsePositiveCount = 0;
+                    lastLocation = location;
+                    setPosition({
+                      location,
+                      rotation,
+                    });
+                  }
+                }
+                if (!lastIsOCR) {
+                  lastIsOCR = true;
+                  setIsOCR(true);
                 }
               }
-              if (!lastIsOCR) {
-                lastIsOCR = true;
-                setIsOCR(true);
-              }
+            } catch (error) {
+              //
             }
-          } catch (error) {
-            //
           }
         }
         if (username && username !== lastUsername) {
