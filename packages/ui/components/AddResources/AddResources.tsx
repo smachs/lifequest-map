@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useMarkers } from '../../contexts/MarkersContext';
 import type { FilterItem, MarkerSize } from 'static';
 import { mapFilters, mapIsAeternumMap } from 'static';
@@ -8,6 +8,7 @@ import SelectPosition from './SelectPosition';
 import DetailsInput from './DetailsInput';
 import { writeError } from '../../utils/logs';
 import type { MarkerDTO } from './api';
+import { uploadScreenshot } from './api';
 import { patchMarker } from './api';
 import { postMarker } from './api';
 import { notify } from '../../utils/notifications';
@@ -16,6 +17,9 @@ import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import { useMap } from 'ui/utils/routes';
 import { usePlayerStore } from '../../utils/playerStore';
 import { useSettingsStore } from '../../utils/settingsStore';
+import ImageDropzone from './ImageDropzone';
+import type { FileWithPath } from '@mantine/dropzone';
+import { getScreenshotUrl } from '../../utils/api';
 
 export type Details = {
   description?: string;
@@ -26,6 +30,7 @@ export type Details = {
   size?: MarkerSize;
   customRespawnTimer?: number;
   hp?: number;
+  screenshotFilename?: string;
 };
 
 type AddResourcesProps = {
@@ -40,6 +45,9 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
     () =>
       (marker && mapFilters.find((filter) => filter.type === marker.type)) ||
       null
+  );
+  const [fileScreenshot, setFileScreenshot] = useState<FileWithPath | null>(
+    null
   );
 
   const [details, setDetails] = useState<Details>({});
@@ -98,6 +106,7 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
     if (filter.hasHP) {
       details.hp = marker?.hp || 0;
     }
+    details.screenshotFilename = marker?.screenshotFilename;
     setDetails(details);
   }, [filter]);
 
@@ -109,6 +118,11 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
       ? details.tier && (details.chestType || !filter.type.includes('Supplies'))
       : true) &&
     (filter.sizes ? Boolean(details.size) : true);
+
+  const base64Image = useMemo(
+    () => fileScreenshot && URL.createObjectURL(fileScreenshot),
+    [fileScreenshot]
+  );
 
   async function handleSave() {
     if (!isValid) {
@@ -122,6 +136,11 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
       };
       if (!mapIsAeternumMap(map)) {
         newMarker.map = map;
+      }
+
+      if (fileScreenshot) {
+        const { screenshotId } = await notify(uploadScreenshot(fileScreenshot));
+        newMarker.screenshotId = screenshotId;
       }
 
       if (marker) {
@@ -165,6 +184,19 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
       />
       <SelectType onSelect={setFilter} filter={filter} />
       <DetailsInput filter={filter} onChange={setDetails} details={details} />
+      <ImageDropzone
+        src={
+          base64Image ||
+          (details.screenshotFilename &&
+            getScreenshotUrl(details.screenshotFilename))
+        }
+        onDrop={(files) => setFileScreenshot(files[0])}
+        onClear={() => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          setDetails(({ screenshotFilename, ...rest }) => rest);
+          setFileScreenshot(null);
+        }}
+      />
       <Button onClick={handleSave} disabled={!isValid}>
         Save Marker
       </Button>

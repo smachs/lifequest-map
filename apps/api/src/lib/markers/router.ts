@@ -201,6 +201,27 @@ markersRouter.patch(
         unset.hp = 1;
       }
 
+      const oldMarker = await getMarkersCollection().findOne(query);
+      if (
+        oldMarker?.screenshotFilename &&
+        oldMarker.screenshotFilename !== marker.screenshotFilename
+      ) {
+        await getScreenshotsCollection().deleteOne({
+          filename: oldMarker.screenshotFilename,
+        });
+        await fs
+          .rm(`${SCREENSHOTS_PATH}/${oldMarker.screenshotFilename}`)
+          .catch(() =>
+            console.warn(
+              `Could not remove screenshot ${oldMarker.screenshotFilename}`
+            )
+          );
+      }
+
+      if (!marker.screenshotFilename) {
+        unset.screenshotFilename = 1;
+      }
+
       marker.isPrivate = mapFilter.category === 'private';
       marker.updatedAt = new Date();
       const result = await getMarkersCollection().findOneAndUpdate(
@@ -215,6 +236,7 @@ markersRouter.patch(
         res.status(404).end(`No marker updated for id ${markerId}`);
         return;
       }
+
       res.status(200).json(result.value);
       let nameType = marker.name
         ? `${marker.type} ${marker.name}`
