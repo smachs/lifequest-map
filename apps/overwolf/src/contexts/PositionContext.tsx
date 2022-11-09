@@ -12,7 +12,7 @@ import {
 } from 'static';
 import { writeError, writeLog } from 'ui/utils/logs';
 import { useIsNewWorldRunning } from '../components/store';
-import { getGameInfo, getNewWorldRunning } from '../utils/games';
+import { getGameInfo } from '../utils/games';
 import {
   getLocation,
   getScreenshotFromNewWorld,
@@ -107,96 +107,97 @@ export function PositionProvider({
     async function updatePosition() {
       try {
         const gameInfo = await getGameInfo();
-        const {
-          player_name: username,
-          location: locationList,
-          world_name: worldName,
-          map,
-        } = gameInfo?.game_info || {};
-        if (locationList) {
-          const location: [number, number] = [
-            +locationList.match(/position.y,(\d+.\d+)/)[1],
-            +locationList.match(/position.x,(\d+.\d+)/)[1],
-          ];
-          let rotation: number;
-          if (locationList.includes('player.compass,NONE')) {
-            rotation = calcRotation(location, lastLocation);
+        if (gameInfo?.game_info) {
+          const {
+            player_name: username,
+            location: locationList,
+            world_name: worldName,
+            map,
+          } = gameInfo?.game_info || {};
+          if (locationList) {
+            const location: [number, number] = [
+              +locationList.match(/position.y,(\d+.\d+)/)[1],
+              +locationList.match(/position.x,(\d+.\d+)/)[1],
+            ];
+            let rotation: number;
+            if (locationList.includes('player.compass,NONE')) {
+              rotation = calcRotation(location, lastLocation);
+            } else {
+              rotation = +locationList.match(/rotation.z,(\d+)/)[1];
+            }
+            if (
+              lastLocation?.[0] !== location[0] ||
+              lastLocation?.[1] !== location[1]
+            ) {
+              lastLocation = location;
+              setPosition({
+                location,
+                rotation,
+              });
+            }
+            if (lastIsOCR) {
+              lastIsOCR = false;
+              setIsOCR(false);
+            }
           } else {
-            rotation = +locationList.match(/rotation.z,(\d+)/)[1];
-          }
-          if (
-            lastLocation?.[0] !== location[0] ||
-            lastLocation?.[1] !== location[1]
-          ) {
-            lastLocation = location;
-            setPosition({
-              location,
-              rotation,
-            });
-          }
-          if (lastIsOCR) {
-            lastIsOCR = false;
-            setIsOCR(false);
-          }
-        } else {
-          // OCR is too fast, delay it
-          await new Promise((resolve) => setTimeout(resolve, 80));
+            // OCR is too fast, delay it
+            await new Promise((resolve) => setTimeout(resolve, 80));
 
-          const newWorld = await getNewWorldRunning();
-          if (newWorld?.isInFocus) {
             // OCR fallback
             const url = await getScreenshotFromNewWorld();
-            const locationString = await getLocation(url);
-            try {
-              const location = toLocation(locationString);
-              if (location) {
-                const rotation = calcRotation(location, lastLocation);
+            if (url) {
+              const locationString = await getLocation(url);
+              try {
+                const location = toLocation(locationString);
+                if (location) {
+                  const rotation = calcRotation(location, lastLocation);
 
-                if (
-                  lastLocation?.[0] !== location[0] ||
-                  lastLocation?.[1] !== location[1]
-                ) {
-                  const distance = lastLocation
-                    ? Math.sqrt(
-                        Math.pow(location[0] - lastLocation[0], 2) +
-                          Math.pow(location[1] - lastLocation[1], 2)
-                      )
-                    : 0;
-                  if (distance > 50 && falsePositiveCount < 5) {
-                    // Might be false positive
-                    falsePositiveCount++;
-                  } else {
-                    falsePositiveCount = 0;
-                    lastLocation = location;
-                    setPosition({
-                      location,
-                      rotation,
-                    });
+                  if (
+                    lastLocation?.[0] !== location[0] ||
+                    lastLocation?.[1] !== location[1]
+                  ) {
+                    const distance = lastLocation
+                      ? Math.sqrt(
+                          Math.pow(location[0] - lastLocation[0], 2) +
+                            Math.pow(location[1] - lastLocation[1], 2)
+                        )
+                      : 0;
+                    if (distance > 50 && falsePositiveCount < 5) {
+                      // Might be false positive
+                      falsePositiveCount++;
+                    } else {
+                      falsePositiveCount = 0;
+                      lastLocation = location;
+                      setPosition({
+                        location,
+                        rotation,
+                      });
+                    }
+                  }
+                  if (!lastIsOCR) {
+                    lastIsOCR = true;
+                    setIsOCR(true);
                   }
                 }
-                if (!lastIsOCR) {
-                  lastIsOCR = true;
-                  setIsOCR(true);
-                }
+              } catch (error) {
+                //
               }
-            } catch (error) {
-              //
             }
           }
+          if (username && username !== lastUsername) {
+            lastUsername = username;
+            setUsername(username);
+          }
+          if (worldName && worldName !== lastWorldName) {
+            lastWorldName = worldName;
+            setWorldName(worldName);
+          }
+          if (map && map !== lastMap) {
+            lastMap = map;
+            setMap(lastMap);
+          }
+          hasError = false;
         }
-        if (username && username !== lastUsername) {
-          lastUsername = username;
-          setUsername(username);
-        }
-        if (worldName && worldName !== lastWorldName) {
-          lastWorldName = worldName;
-          setWorldName(worldName);
-        }
-        if (map && map !== lastMap) {
-          lastMap = map;
-          setMap(lastMap);
-        }
-        hasError = false;
       } catch (error) {
         if (!hasError) {
           writeError(error);

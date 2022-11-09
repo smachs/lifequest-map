@@ -1,5 +1,6 @@
 import { takeScreenshot } from './media';
 import defaultProfile from './default_profile.json';
+import { getNewWorldRunning } from './games';
 
 const WIDTH = 288;
 const HEIGHT = 14;
@@ -42,15 +43,13 @@ async function preprocessorImage(url: string): Promise<number[][]> {
 }
 
 export async function getScreenshotFromNewWorld() {
-  const gameInfo = await new Promise<overwolf.games.GetRunningGameInfoResult>(
-    (resolve) => overwolf.games.getRunningGameInfo((result) => resolve(result))
-  );
-  if (!gameInfo || gameInfo.classId !== 21816) {
-    throw new Error('Game is not running');
+  const newWorld = await getNewWorldRunning();
+  if (!newWorld?.isInFocus) {
+    return null;
   }
   const url = await takeScreenshot({
     crop: {
-      x: gameInfo.logicalWidth - 293,
+      x: newWorld.logicalWidth - 293,
       y: 20,
       width: WIDTH,
       height: HEIGHT,
