@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSettings } from 'ui/contexts/SettingsContext';
 import { copyTextToClipboard } from 'ui/utils/clipboard';
 import { getGameInfo } from '../../utils/games';
 import {
@@ -9,22 +10,31 @@ import {
 import styles from './Debug.module.css';
 
 const Debug = () => {
-  const [ocrUrl, setOcrUrl] = useState('');
+  const [ocrUrl, setOcrUrl] = useState<string | null>('');
   const [errorMessage, setErrorMessage] = useState('');
   const [locationString, setLocationString] = useState<null | string>(null);
   const [location, setLocation] = useState<null | [number, number]>(null);
+  const { ocr } = useSettings();
 
   useEffect(() => {
+    if (!ocr) {
+      return;
+    }
     let timeoutId: NodeJS.Timeout | null = null;
     const startTimeout = () => {
       timeoutId = setTimeout(() => {
         getScreenshotFromNewWorld()
           .then((ocrUrl) => {
             setOcrUrl(ocrUrl);
-            getLocation(ocrUrl).then((locationString) => {
-              setLocationString(locationString);
-              setLocation(toLocation(locationString));
-            });
+            if (ocrUrl) {
+              getLocation(ocrUrl).then((locationString) => {
+                setLocationString(locationString);
+                setLocation(toLocation(locationString));
+              });
+            } else {
+              setLocationString(null);
+              setLocation(null);
+            }
           })
           .catch((error) => setErrorMessage(error.message))
           .finally(startTimeout);
@@ -37,7 +47,7 @@ const Debug = () => {
         clearTimeout(timeoutId);
       }
     };
-  }, []);
+  }, [ocr]);
 
   return (
     <>
@@ -49,6 +59,8 @@ const Debug = () => {
           onError={() => setErrorMessage('Can not load image')}
           className={styles.ocr}
         />
+      ) : !ocr ? (
+        'Please enable OCR'
       ) : (
         'Waiting for image'
       )}

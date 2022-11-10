@@ -11,6 +11,7 @@ import {
   AETERNUM_MAP,
 } from 'static';
 import { writeError, writeLog } from 'ui/utils/logs';
+import { getJSONItem } from 'ui/utils/storage';
 import { useIsNewWorldRunning } from '../components/store';
 import { getGameInfo } from '../utils/games';
 import {
@@ -139,7 +140,7 @@ export function PositionProvider({
               lastIsOCR = false;
               setIsOCR(false);
             }
-          } else if (username && map && worldName) {
+          } else if (getJSONItem('ocr', false)) {
             // OCR is too fast, delay it
             await new Promise((resolve) => setTimeout(resolve, 80));
 

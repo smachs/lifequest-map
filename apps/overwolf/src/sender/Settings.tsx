@@ -27,8 +27,14 @@ function Settings({
   showMinimap,
   onShowMinimap,
 }: SettingsProps): JSX.Element {
-  const { showRegionBorders, setShowRegionBorders, peerToPeer, setPeerToPeer } =
-    useSettings();
+  const {
+    showRegionBorders,
+    setShowRegionBorders,
+    peerToPeer,
+    setPeerToPeer,
+    ocr,
+    setOCR,
+  } = useSettings();
   const showHideAppBinding = useHotkeyBinding(SHOW_HIDE_APP);
   const setupMinimapBinding = useHotkeyBinding(SETUP_MINIMAP);
   const showHideMinimapBinding = useHotkeyBinding(SHOW_HIDE_MINIMAP);
@@ -128,6 +134,14 @@ function Settings({
             type="checkbox"
             checked={peerToPeer}
             onChange={(event) => setPeerToPeer(event.target.checked)}
+          />
+        </label>
+        <label className={styles.label}>
+          OCR / Screen capturing
+          <input
+            type="checkbox"
+            checked={ocr}
+            onChange={(event) => setOCR(event.target.checked)}
           />
         </label>
         <button onClick={logoutAccount} className={styles.logout}>

@@ -24,6 +24,8 @@ type SettingsContextValue = {
   setTraceLineColor: (traceLineColor: string) => void;
   peerToPeer: boolean;
   setPeerToPeer: (peerToPeer: boolean) => void;
+  ocr: boolean;
+  setOCR: (ocr: boolean) => void;
 };
 const SettingsContext = createContext<SettingsContextValue>({
   markerSize: 30,
@@ -46,6 +48,8 @@ const SettingsContext = createContext<SettingsContextValue>({
   setTraceLineColor: () => undefined,
   peerToPeer: true,
   setPeerToPeer: () => undefined,
+  ocr: false,
+  setOCR: () => undefined,
 });
 
 type SettingsProviderProps = {
@@ -88,6 +92,7 @@ export function SettingsProvider({
     '#F78166'
   );
   const [peerToPeer, setPeerToPeer] = usePersistentState('peer-to-peer', true);
+  const [ocr, setOCR] = usePersistentState('ocr', false);
 
   return (
     <SettingsContext.Provider
@@ -112,6 +117,8 @@ export function SettingsProvider({
         setTraceLineColor,
         peerToPeer,
         setPeerToPeer,
+        ocr,
+        setOCR,
       }}
     >
       {children}
