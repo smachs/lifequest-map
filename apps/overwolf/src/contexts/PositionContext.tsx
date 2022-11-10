@@ -113,7 +113,7 @@ export function PositionProvider({
             location: locationList,
             world_name: worldName,
             map,
-          } = gameInfo?.game_info || {};
+          } = gameInfo.game_info;
           if (locationList) {
             const location: [number, number] = [
               +locationList.match(/position.y,(\d+.\d+)/)[1],
@@ -139,7 +139,7 @@ export function PositionProvider({
               lastIsOCR = false;
               setIsOCR(false);
             }
-          } else {
+          } else if (username && map && worldName) {
             // OCR is too fast, delay it
             await new Promise((resolve) => setTimeout(resolve, 80));
 
