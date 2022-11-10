@@ -296,6 +296,12 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'skinning',
+    type: 'scorpion',
+    title: 'Scorpion',
+    iconUrl: '/pois/scorpion.webp',
+  },
+  {
+    category: 'skinning',
     type: 'turkey',
     title: 'Turkey',
     iconUrl: '/pois/turkey.webp',
