@@ -43,15 +43,15 @@ function useShareLivePosition() {
     usePosition();
   const account = useUserStore((state) => state.account);
 
-  const steamId = account!.steamId;
+  const steamId = account?.steamId;
 
   useShareHotkeys(socket);
 
   useEffect(() => {
-    if (!isSharing) {
+    if (!isSharing || !account) {
       return;
     }
-    if (!account?.liveShareToken || !account.liveShareServerUrl) {
+    if (!account.liveShareToken || !account.liveShareServerUrl) {
       setIsSharing(false);
       return;
     }
@@ -67,8 +67,8 @@ function useShareLivePosition() {
     const newSocket = io(account.liveShareServerUrl, {
       query: {
         token: account.liveShareToken,
-        steamId: account!.steamId,
-        steamName: account!.name,
+        steamId: account.steamId,
+        steamName: account.name,
         isOverwolfApp: true,
       },
       transports: ['websocket'],
@@ -165,7 +165,14 @@ function useShareLivePosition() {
       setStatus(null);
       toast.info('Stop sharing live status 🛑');
     };
-  }, [isSharing, account, peerToPeer]);
+  }, [
+    isSharing,
+    peerToPeer,
+    account?.steamId,
+    account?.liveShareServerUrl,
+    account?.liveShareToken,
+    account?.name,
+  ]);
 
   useEffect(() => {
     if (socket && isConnected) {

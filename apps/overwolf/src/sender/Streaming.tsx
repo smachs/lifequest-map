@@ -87,7 +87,7 @@ function Streaming(): JSX.Element {
 
   return (
     <div className={styles.streaming}>
-      <p className={styles.user}>
+      <div className={styles.user}>
         <span>
           Welcome back, {account!.name}!<br />
           <SyncStatusSender newWorldIsRunning={newWorldIsRunning} />
@@ -98,7 +98,7 @@ function Streaming(): JSX.Element {
         >
           <MenuIcon />
         </button>
-      </p>
+      </div>
       <form onSubmit={handleSubmit} className={styles.form}>
         <p className={styles.guide}>
           Use the token shown below on{' '}
@@ -162,7 +162,7 @@ function Streaming(): JSX.Element {
             <ul className={styles.list}>
               {players.length > 0 ? (
                 players.map((player) => (
-                  <li key={player.username}>
+                  <li key={player.steamName}>
                     {player.username ? player.username : player.steamName}
                   </li>
                 ))
