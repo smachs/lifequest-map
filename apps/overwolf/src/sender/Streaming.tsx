@@ -6,9 +6,7 @@ import CopyIcon from 'ui/components/icons/CopyIcon';
 import RefreshIcon from 'ui/components/icons/RefreshIcon';
 import BroadcastIcon from 'ui/components/icons/BroadcastIcon';
 import { classNames } from 'ui/utils/styles';
-import { toast } from 'react-toastify';
 import { v4 as uuid } from 'uuid';
-import type { FormEvent } from 'react';
 import { useEffect, useState } from 'react';
 import styles from './Streaming.module.css';
 import MenuIcon from 'ui/components/icons/MenuIcon';
@@ -20,6 +18,8 @@ import useMinimap from '../components/useMinimap';
 import { useIsNewWorldRunning } from '../components/store';
 import { useUserStore } from 'ui/utils/userStore';
 import shallow from 'zustand/shallow';
+import { Tooltip } from '@mantine/core';
+import DebouncedInput from '../components/DebouncedInput/DebouncedInput';
 
 function Streaming(): JSX.Element {
   const { account, refreshAccount } = useUserStore(
@@ -29,59 +29,39 @@ function Streaming(): JSX.Element {
     }),
     shallow
   );
-  const [token, setToken] = useState(() => account.liveShareToken || uuid());
-  const [serverUrl, setServerUrl] = useState(
-    () => account.liveShareServerUrl || null
-  );
-  const { status, isConnected, isSharing, setIsSharing, peerConnections } =
-    useShareLivePosition();
+  const { status, isConnected, peerConnections } = useShareLivePosition();
   const newWorldIsRunning = useIsNewWorldRunning();
   const [showSettings, setShowSettings] = useState(false);
   const [showMinimap, setShowMinimap] = useMinimap();
   const servers = useServers();
 
   useEffect(() => {
-    if (!serverUrl || !servers.some((server) => server.url === serverUrl)) {
+    refreshAccount();
+  }, []);
+
+  useEffect(() => {
+    if (
+      !account.liveShareServerUrl ||
+      !servers.some((server) => server.url === account.liveShareServerUrl)
+    ) {
       const onlineServers = [...servers]
         .filter((server) => server.delay)
         .sort((a, b) => a.delay! - b.delay!);
       const server = onlineServers[0];
       if (server) {
-        setServerUrl(server.url);
+        updateAccount(account.liveShareToken, server.url);
       }
     }
-  }, [servers, serverUrl]);
+  }, [servers, account.liveShareServerUrl]);
 
-  useEffect(() => {
-    refreshAccount();
-  }, []);
-
-  useEffect(() => {
-    if (account.liveShareToken) {
-      setToken(account.liveShareToken);
-    }
-    if (account.liveShareServerUrl) {
-      setServerUrl(account.liveShareServerUrl);
-    }
-  }, [account.liveShareToken, account.liveShareServerUrl]);
-
-  function handleSubmit(event: FormEvent) {
-    event.preventDefault();
-    if (isSharing) {
-      setIsSharing(false);
-      return;
-    }
-
-    if (!token || !serverUrl) {
-      toast.error('Token and server are required 🙄');
-      return;
-    }
-
-    patchLiveShareToken(token, serverUrl)
+  const updateAccount = (
+    token: string | undefined,
+    serverUrl: string | undefined
+  ) => {
+    patchLiveShareToken(token || uuid(), serverUrl || servers[0].url)
       .then(() => refreshAccount())
-      .then(() => setIsSharing(true))
       .catch((error) => writeError(error));
-  }
+  };
 
   const players = status ? Object.values(status.group) : [];
 
@@ -99,7 +79,7 @@ function Streaming(): JSX.Element {
           <MenuIcon />
         </button>
       </div>
-      <form onSubmit={handleSubmit} className={styles.form}>
+      <div className={styles.form}>
         <p className={styles.guide}>
           Use the token shown below on{' '}
           <a href="https://aeternum-map.gg" target="_blank">
@@ -118,43 +98,52 @@ function Streaming(): JSX.Element {
           {servers.map((server) => (
             <ServerRadioButton
               key={server.name}
-              disabled={isSharing}
               server={server}
-              checked={serverUrl === server.url}
-              onChange={setServerUrl}
+              checked={account.liveShareServerUrl === server.url}
+              onChange={(serverUrl) =>
+                updateAccount(account.liveShareToken, serverUrl)
+              }
             />
           ))}
         </div>
         <div className={styles.tokenContainer}>
-          <label className={styles.label}>
-            Token
-            <input
-              disabled={isSharing}
-              value={token}
-              placeholder="Use this token to access your live status..."
-              onChange={(event) => setToken(event.target.value)}
-            />
-          </label>
-          <button
-            className={styles.action}
-            type="button"
-            onClick={() => setToken(uuid())}
-            title="Generate Random Token"
-            disabled={isSharing}
+          <Tooltip
+            multiline
+            label="This token is used to identify you on the map. You can use the
+            same token in your group to see each other 🤘."
           >
-            <RefreshIcon />
-          </button>
-          <button
-            className={styles.action}
-            type="button"
-            disabled={!token || !serverUrl}
-            onClick={() => {
-              copyTextToClipboard(token);
-            }}
-            title="Copy Token"
-          >
-            <CopyIcon />
-          </button>
+            <label className={styles.label}>
+              Token
+              <DebouncedInput
+                value={account.liveShareToken}
+                placeholder="Use this token to access your live status..."
+                onChange={(value) =>
+                  updateAccount(value, account.liveShareServerUrl)
+                }
+              />
+            </label>
+          </Tooltip>
+          <Tooltip label="Generate Random Token">
+            <button
+              className={styles.action}
+              type="button"
+              onClick={() => updateAccount(uuid(), account.liveShareServerUrl)}
+            >
+              <RefreshIcon />
+            </button>
+          </Tooltip>
+          <Tooltip label="Copy Token">
+            <button
+              className={styles.action}
+              type="button"
+              disabled={!account.liveShareToken}
+              onClick={() => {
+                copyTextToClipboard(account.liveShareToken!);
+              }}
+            >
+              <CopyIcon />
+            </button>
+          </Tooltip>
         </div>
         <div className={styles.status}>
           <aside>
@@ -171,20 +160,17 @@ function Streaming(): JSX.Element {
               )}
             </ul>
           </aside>
-          <button
-            disabled={!token}
-            type="submit"
+          <div
             className={classNames(
-              styles.submit,
-              isSharing && !isConnected && styles.connecting,
-              isSharing && isConnected && styles.connected
+              styles.sharing,
+              !isConnected && styles.connecting,
+              isConnected && styles.connected
             )}
           >
             <BroadcastIcon />
-            {isSharing && !isConnected && 'Connecting'}
-            {isSharing && isConnected && 'Sharing'}
-            {!isSharing && 'Share'}
-          </button>
+            {!isConnected && 'Connecting'}
+            {isConnected && 'Sharing'}
+          </div>
 
           <aside>
             <h5>Receivers</h5>
@@ -204,7 +190,7 @@ function Streaming(): JSX.Element {
             </ul>
           </aside>
         </div>
-      </form>
+      </div>
       {showSettings && (
         <Settings
           onClose={() => setShowSettings(false)}

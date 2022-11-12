@@ -3,7 +3,6 @@ import type { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import type { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
 import { usePosition } from '../contexts/PositionContext';
-import { usePersistentState } from 'ui/utils/storage';
 import { toast } from 'react-toastify';
 import type { Group } from 'ui/utils/useReadLivePosition';
 import useShareHotkeys from './useShareHotkeys';
@@ -24,10 +23,6 @@ const sendToPeers = (data: unknown) => {
 
 function useShareLivePosition() {
   const { peerToPeer } = useSettings();
-  const [isSharing, setIsSharing] = usePersistentState(
-    'share-live-position',
-    false
-  );
   const [socket, setSocket] = useState<Socket<
     DefaultEventsMap,
     DefaultEventsMap
@@ -48,11 +43,7 @@ function useShareLivePosition() {
   useShareHotkeys(socket);
 
   useEffect(() => {
-    if (!isSharing || !account) {
-      return;
-    }
-    if (!account.liveShareToken || !account.liveShareServerUrl) {
-      setIsSharing(false);
+    if (!account || !account.liveShareToken || !account.liveShareServerUrl) {
       return;
     }
 
@@ -109,7 +100,6 @@ function useShareLivePosition() {
 
     newSocket.on('connect', () => {
       setIsConnected(true);
-      toast.success('Sharing live status 👌');
       console.log('Sharing live status 👌');
       updateStatus();
     });
@@ -163,10 +153,8 @@ function useShareLivePosition() {
       });
       setSocket(null);
       setStatus(null);
-      toast.info('Stop sharing live status 🛑');
     };
   }, [
-    isSharing,
     peerToPeer,
     account?.steamId,
     account?.liveShareServerUrl,
@@ -216,7 +204,7 @@ function useShareLivePosition() {
     }
   }, [socket, isConnected, username]);
 
-  return { status, isConnected, isSharing, setIsSharing, peerConnections };
+  return { status, isConnected, peerConnections };
 }
 
 export default useShareLivePosition;

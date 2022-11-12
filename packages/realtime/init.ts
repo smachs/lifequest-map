@@ -21,7 +21,6 @@ export const init = ({
     query: {
       token,
     },
-    upgrade: false,
     transports: ['websocket'],
   });
 
@@ -73,18 +72,18 @@ export const init = ({
         }
       });
 
-      // @ts-ignore
       conn.on('data', (data: { group: Group } & Partial<Player>) => {
         if (data.group) {
           onGroup(data.group);
-          return;
         }
-        if (data.steamId && !peerConnectedSteamIds.includes(data.steamId)) {
-          peerConnectedSteamIds.push(data.steamId);
-          connSteamId = data.steamId;
-        }
+        if (data.steamId) {
+          if (!peerConnectedSteamIds.includes(data.steamId)) {
+            peerConnectedSteamIds.push(data.steamId);
+            connSteamId = data.steamId;
+          }
 
-        onPlayer(data as Partial<Player>);
+          onPlayer(data as Partial<Player>);
+        }
       });
     });
 

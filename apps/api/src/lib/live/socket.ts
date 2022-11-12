@@ -59,10 +59,10 @@ export function initSocket(server: http.Server) {
     client.to(token).emit('connected', isOverwolfApp, steamName, client.id);
 
     client.on('status', async (callback) => {
-      const roomSockets = await io!.in(token).allSockets();
-      const connections = [...roomSockets.values()].filter(
-        (id) => !activeGroups[token][id]
-      );
+      const roomSockets = await io!.in(token).fetchSockets();
+      const connections = roomSockets
+        .map((roomSocket) => roomSocket.id)
+        .filter((id) => !activeGroups[token][id]);
       callback(activeGroups[token], connections);
     });
 
@@ -72,7 +72,7 @@ export function initSocket(server: http.Server) {
       }
       activeGroups[token][client.id].position = position;
       client.to(token).emit('data', {
-        steamId: activeGroups[token][client.id].steamId,
+        steamId,
         position,
       });
     });
@@ -83,7 +83,7 @@ export function initSocket(server: http.Server) {
       }
       activeGroups[token][client.id].location = location;
       client.to(token).emit('data', {
-        steamId: activeGroups[token][client.id].steamId,
+        steamId,
         location,
       });
     });
@@ -94,7 +94,7 @@ export function initSocket(server: http.Server) {
       }
       activeGroups[token][client.id].region = region;
       client.to(token).emit('data', {
-        steamId: activeGroups[token][client.id].steamId,
+        steamId,
         region,
       });
     });
@@ -105,7 +105,7 @@ export function initSocket(server: http.Server) {
       }
       activeGroups[token][client.id].worldName = worldName;
       client.to(token).emit('data', {
-        steamId: activeGroups[token][client.id].steamId,
+        steamId,
         worldName,
       });
     });
@@ -115,9 +115,7 @@ export function initSocket(server: http.Server) {
         return;
       }
       activeGroups[token][client.id].map = map;
-      client
-        .to(token)
-        .emit('data', { steamId: activeGroups[token][client.id].steamId, map });
+      client.to(token).emit('data', { steamId, map });
     });
 
     client.on('username', (username) => {
@@ -126,7 +124,7 @@ export function initSocket(server: http.Server) {
       }
       activeGroups[token][client.id].username = username;
       client.to(token).emit('data', {
-        steamId: activeGroups[token][client.id].steamId,
+        steamId,
         username,
       });
     });

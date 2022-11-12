@@ -54,7 +54,7 @@
   padding: 0.4em;
 }
 
-.submit {
+.sharing {
   border: 1px solid var(--color-shade-two);
   border-radius: 50%;
   justify-self: center;
@@ -66,30 +66,17 @@
   justify-items: center;
   gap: 0.5em;
   background: var(--color-shade-two);
+  font-size: 13px;
 }
 
-.submit:disabled {
-  color: var(--color-disabled);
-  cursor: default;
-  background: var(--color-shade-one);
-  border-color: var(--color-shade-three);
-}
-
-.submit.connected {
+.sharing.connected {
   color: #07bc0c;
   border-color: #07bc0c;
 }
 
-.submit.connecting {
+.sharing.connecting {
   color: var(--color-secondary);
   border-color: var(--color-secondary);
-}
-
-.submit:hover,
-.submit.connected:hover,
-.submit.connecting:hover {
-  color: var(--color-primary);
-  border-color: var(--color-primary);
 }
 
 .status {
