@@ -3,14 +3,13 @@ import type { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import type { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
 import { usePosition } from '../contexts/PositionContext';
-import { usePersistentState } from 'ui/utils/storage';
 import { toast } from 'react-toastify';
-import type { Group } from 'ui/utils/useReadLivePosition';
 import useShareHotkeys from './useShareHotkeys';
 import type { DataConnection } from 'peerjs';
 import Peer from 'peerjs';
 import { useSettings } from 'ui/contexts/SettingsContext';
 import { useUserStore } from 'ui/utils/userStore';
+import type { Group } from 'realtime/types';
 
 const peerConnections: { [key: string]: DataConnection } = {};
 
@@ -24,10 +23,6 @@ const sendToPeers = (data: unknown) => {
 
 function useShareLivePosition() {
   const { peerToPeer } = useSettings();
-  const [isSharing, setIsSharing] = usePersistentState(
-    'share-live-position',
-    false
-  );
   const [socket, setSocket] = useState<Socket<
     DefaultEventsMap,
     DefaultEventsMap
@@ -43,16 +38,12 @@ function useShareLivePosition() {
     usePosition();
   const account = useUserStore((state) => state.account);
 
-  const steamId = account!.steamId;
+  const steamId = account?.steamId;
 
   useShareHotkeys(socket);
 
   useEffect(() => {
-    if (!isSharing) {
-      return;
-    }
-    if (!account?.liveShareToken || !account.liveShareServerUrl) {
-      setIsSharing(false);
+    if (!account || !account.liveShareToken || !account.liveShareServerUrl) {
       return;
     }
 
@@ -67,8 +58,8 @@ function useShareLivePosition() {
     const newSocket = io(account.liveShareServerUrl, {
       query: {
         token: account.liveShareToken,
-        steamId: account!.steamId,
-        steamName: account!.name,
+        steamId: account.steamId,
+        steamName: account.name,
         isOverwolfApp: true,
       },
       transports: ['websocket'],
@@ -94,7 +85,21 @@ function useShareLivePosition() {
 
               peerConnections[connection].on('open', () => {
                 console.log(`Peer ${peerId} opened`);
-                peerConnections[connection].send({ group });
+                console.log(JSON.stringify(group, null, 2));
+                const sessionIds = Object.keys(group);
+                const playerSessionId =
+                  sessionIds.find((sessionId) => {
+                    if (account) {
+                      const player = group[sessionId];
+                      return player.steamId === account.steamId;
+                    }
+                    return true;
+                  }) || sessionIds[0];
+
+                peerConnections[connection].send({
+                  group,
+                  ...group[playerSessionId],
+                });
               });
 
               peerConnections[connection].on('close', () => {
@@ -109,7 +114,6 @@ function useShareLivePosition() {
 
     newSocket.on('connect', () => {
       setIsConnected(true);
-      toast.success('Sharing live status 👌');
       console.log('Sharing live status 👌');
       updateStatus();
     });
@@ -163,9 +167,14 @@ function useShareLivePosition() {
       });
       setSocket(null);
       setStatus(null);
-      toast.info('Stop sharing live status 🛑');
     };
-  }, [isSharing, account, peerToPeer]);
+  }, [
+    peerToPeer,
+    account?.steamId,
+    account?.liveShareServerUrl,
+    account?.liveShareToken,
+    account?.name,
+  ]);
 
   useEffect(() => {
     if (socket && isConnected) {
@@ -209,7 +218,7 @@ function useShareLivePosition() {
     }
   }, [socket, isConnected, username]);
 
-  return { status, isConnected, isSharing, setIsSharing, peerConnections };
+  return { status, isConnected, peerConnections };
 }
 
 export default useShareLivePosition;

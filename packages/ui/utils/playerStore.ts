@@ -1,5 +1,5 @@
+import type { Player } from 'realtime/types';
 import create from 'zustand';
-import type { Player } from './useReadLivePosition';
 import { subscribeWithSelector } from 'zustand/middleware';
 
 type Store = {

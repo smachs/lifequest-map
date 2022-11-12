@@ -5,7 +5,7 @@ import styles from './ServerRadioButton.module.css';
 type ServerRadioButtonProps = {
   server: LiveServer;
   checked: boolean;
-  disabled: boolean;
+  disabled?: boolean;
   onChange: (value: string) => void;
 };
 function ServerRadioButton({

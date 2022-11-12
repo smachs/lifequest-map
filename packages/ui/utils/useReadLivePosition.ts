@@ -6,22 +6,9 @@ import { usePlayerStore } from './playerStore';
 import { useSettingsStore } from './settingsStore';
 import shallow from 'zustand/shallow';
 import { useUserStore } from './userStore';
+import type { Group, Player } from 'realtime/types';
 
 export type Position = { location: [number, number]; rotation: number };
-export type Player = {
-  steamId: string;
-  steamName: string;
-  username: string | null;
-  position: Position | null;
-  location: string | null;
-  region: string | null;
-  worldName: string | null;
-  map: string | null;
-};
-export type Group = {
-  [playerToken: string]: Player;
-};
-
 let latestPlayer: Player | null = null;
 let latestGroup: Group | null = null;
 

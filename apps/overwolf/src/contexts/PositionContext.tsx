@@ -117,8 +117,8 @@ export function PositionProvider({
           } = gameInfo.game_info;
           if (locationList) {
             const location: [number, number] = [
-              +locationList.match(/position.y,(\d+.\d+)/)[1],
-              +locationList.match(/position.x,(\d+.\d+)/)[1],
+              +locationList.match(/position.y,(\d+.\d{3})/)[1],
+              +locationList.match(/position.x,(\d+.\d{3})/)[1],
             ];
             let rotation: number;
             if (locationList.includes('player.compass,NONE')) {

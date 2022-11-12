@@ -18,6 +18,10 @@ export const activeGroups: {
   };
 } = {};
 
+const peerConnections: {
+  [steamId: string]: string[];
+} = {};
+
 let io: Server | null = null;
 export function initSocket(server: http.Server) {
   io = new Server(server, {
@@ -43,6 +47,8 @@ export function initSocket(server: http.Server) {
       typeof query.steamName === 'string' && query.steamName !== 'undefined'
         ? query.steamName
         : undefined;
+    let peerConnectedSteamId: string | null = null;
+
     client.join(token);
 
     if (!activeGroups[token]) {
@@ -59,76 +65,92 @@ export function initSocket(server: http.Server) {
     client.to(token).emit('connected', isOverwolfApp, steamName, client.id);
 
     client.on('status', async (callback) => {
-      const roomSockets = await io!.in(token).allSockets();
-      const connections = [...roomSockets.values()].filter(
-        (id) => !activeGroups[token][id]
-      );
+      const roomSockets = await io!.in(token).fetchSockets();
+      const connections = roomSockets
+        .map((roomSocket) => roomSocket.id)
+        .filter((id) => !activeGroups[token][id]);
       callback(activeGroups[token], connections);
     });
 
     client.on('position', (position) => {
-      if (!isOverwolfApp || !activeGroups[token][client.id]) {
+      if (!isOverwolfApp || !activeGroups[token][client.id] || !steamId) {
         return;
       }
       activeGroups[token][client.id].position = position;
-      client.to(token).emit('data', {
-        steamId: activeGroups[token][client.id].steamId,
-        position,
-      });
+      client
+        .to(token)
+        .except(peerConnections[steamId] || [])
+        .emit('data', {
+          steamId,
+          position,
+        });
     });
 
     client.on('location', (location) => {
-      if (!isOverwolfApp || !activeGroups[token][client.id]) {
+      if (!isOverwolfApp || !activeGroups[token][client.id] || !steamId) {
         return;
       }
       activeGroups[token][client.id].location = location;
-      client.to(token).emit('data', {
-        steamId: activeGroups[token][client.id].steamId,
-        location,
-      });
+      client
+        .to(token)
+        .except(peerConnections[steamId] || [])
+        .emit('data', {
+          steamId,
+          location,
+        });
     });
 
     client.on('region', (region) => {
-      if (!isOverwolfApp || !activeGroups[token][client.id]) {
+      if (!isOverwolfApp || !activeGroups[token][client.id] || !steamId) {
         return;
       }
       activeGroups[token][client.id].region = region;
-      client.to(token).emit('data', {
-        steamId: activeGroups[token][client.id].steamId,
-        region,
-      });
+      client
+        .to(token)
+        .except(peerConnections[steamId] || [])
+        .emit('data', {
+          steamId,
+          region,
+        });
     });
 
     client.on('worldName', (worldName) => {
-      if (!isOverwolfApp || !activeGroups[token][client.id]) {
+      if (!isOverwolfApp || !activeGroups[token][client.id] || !steamId) {
         return;
       }
       activeGroups[token][client.id].worldName = worldName;
-      client.to(token).emit('data', {
-        steamId: activeGroups[token][client.id].steamId,
-        worldName,
-      });
+      client
+        .to(token)
+        .except(peerConnections[steamId] || [])
+        .emit('data', {
+          steamId,
+          worldName,
+        });
     });
 
     client.on('map', (map) => {
-      if (!isOverwolfApp || !activeGroups[token][client.id]) {
+      if (!isOverwolfApp || !activeGroups[token][client.id] || !steamId) {
         return;
       }
       activeGroups[token][client.id].map = map;
       client
         .to(token)
-        .emit('data', { steamId: activeGroups[token][client.id].steamId, map });
+        .except(peerConnections[steamId] || [])
+        .emit('data', { steamId, map });
     });
 
     client.on('username', (username) => {
-      if (!isOverwolfApp || !activeGroups[token][client.id]) {
+      if (!isOverwolfApp || !activeGroups[token][client.id] || !steamId) {
         return;
       }
       activeGroups[token][client.id].username = username;
-      client.to(token).emit('data', {
-        steamId: activeGroups[token][client.id].steamId,
-        username,
-      });
+      client
+        .to(token)
+        .except(peerConnections[steamId] || [])
+        .emit('data', {
+          steamId,
+          username,
+        });
     });
 
     client.on('hotkey', (hotkey) => {
@@ -140,12 +162,45 @@ export function initSocket(server: http.Server) {
         client
           .to(token)
           .emit('disconnected', isOverwolfApp, steamName, client.id);
+        if (peerConnectedSteamId && peerConnections[peerConnectedSteamId]) {
+          const index = peerConnections[peerConnectedSteamId].indexOf(
+            client.id
+          );
+          if (index !== -1) {
+            peerConnections[peerConnectedSteamId].splice(index, 1);
+          }
+        }
         return;
       }
       if (activeGroups[token]?.[client.id]) {
         delete activeGroups[token][client.id];
       }
+      if (steamId && peerConnections[steamId]) {
+        delete peerConnections[steamId];
+      }
       client.to(token).emit('status', activeGroups[token]);
+    });
+
+    client.on('peer:on', (steamId: string) => {
+      if (!peerConnections[steamId]) {
+        peerConnections[steamId] = [];
+      }
+      if (!peerConnections[steamId].includes(client.id)) {
+        peerConnections[steamId].push(client.id);
+      }
+      peerConnectedSteamId = steamId;
+    });
+
+    client.on('peer:off', (steamId: string) => {
+      console.log('peer:off');
+      if (!peerConnections[steamId]) {
+        return;
+      }
+      const index = peerConnections[steamId].indexOf(client.id);
+      if (index !== -1) {
+        peerConnections[steamId].splice(index, 1);
+      }
+      peerConnectedSteamId = null;
     });
   });
 

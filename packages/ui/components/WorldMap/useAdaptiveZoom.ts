@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
+import type { Player } from 'realtime/types';
 import { useSettings } from '../../contexts/SettingsContext';
 import { usePersistentState } from '../../utils/storage';
-import type { Player } from '../../utils/useReadLivePosition';
 import { latestLeafletMap } from './useWorldMap';
 
 function useAdaptiveZoom(player: Player | null) {

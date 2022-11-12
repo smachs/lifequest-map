@@ -135,8 +135,9 @@ function SyncStatusSender({ newWorldIsRunning }: SyncStatusProps) {
       {newWorldIsRunning && position && (
         <small>
           <span className={styles.success}>Playing</span>
-          {username && ` as ${username}`} at [{position.location?.[1]},{' '}
-          {position.location?.[0]}]{' '}
+          {username && ` as ${username}`} at [
+          {position.location?.[1].toFixed(3)},{' '}
+          {position.location?.[0].toFixed(3)}]{' '}
           <Group spacing="xs">
             <Text size="xs">{region && `${location || region}`}</Text>
             {world && zone && <WorldName world={world} zone={zone} />}

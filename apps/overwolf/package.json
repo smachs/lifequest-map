@@ -23,6 +23,7 @@
     "peerjs": "1.4.7",
     "socket.io-client": "4.5.3",
     "@mantine/core": "5.7.1",
+    "@mantine/hooks": "5.7.1",
     "@tabler/icons": "1.108.0",
     "leaflet": "1.9.2",
     "react": "18.2.0",
