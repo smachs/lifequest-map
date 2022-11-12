@@ -61,7 +61,9 @@ function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
       <ShareFromWebsite />
       <p className={styles.guide}>
         Use the same token and server in the app and on the website to share
-        your live status. Connect with your friends by using the same token 🤗.
+        your live status. If you are logged in, you only need to reload this
+        page after changing the token in the app. Connect with your friends by
+        using the same token 🤗.
       </p>
       <div>
         Server

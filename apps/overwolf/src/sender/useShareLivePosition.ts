@@ -4,12 +4,12 @@ import type { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
 import { usePosition } from '../contexts/PositionContext';
 import { toast } from 'react-toastify';
-import type { Group } from 'ui/utils/useReadLivePosition';
 import useShareHotkeys from './useShareHotkeys';
 import type { DataConnection } from 'peerjs';
 import Peer from 'peerjs';
 import { useSettings } from 'ui/contexts/SettingsContext';
 import { useUserStore } from 'ui/utils/userStore';
+import type { Group } from 'realtime/types';
 
 const peerConnections: { [key: string]: DataConnection } = {};
 
@@ -85,7 +85,21 @@ function useShareLivePosition() {
 
               peerConnections[connection].on('open', () => {
                 console.log(`Peer ${peerId} opened`);
-                peerConnections[connection].send({ group });
+                console.log(JSON.stringify(group, null, 2));
+                const sessionIds = Object.keys(group);
+                const playerSessionId =
+                  sessionIds.find((sessionId) => {
+                    if (account) {
+                      const player = group[sessionId];
+                      return player.steamId === account.steamId;
+                    }
+                    return true;
+                  }) || sessionIds[0];
+
+                peerConnections[connection].send({
+                  group,
+                  ...group[playerSessionId],
+                });
               });
 
               peerConnections[connection].on('close', () => {
