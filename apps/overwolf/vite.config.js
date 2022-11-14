@@ -27,6 +27,7 @@ export default defineConfig({
         minimap: resolve(__dirname, 'minimap.html'),
         background: resolve(__dirname, 'background.html'),
         sender: resolve(__dirname, 'sender.html'),
+        influence: resolve(__dirname, 'influence.html'),
       },
     },
   },

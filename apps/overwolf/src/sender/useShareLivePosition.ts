@@ -85,7 +85,6 @@ function useShareLivePosition() {
 
               peerConnections[connection].on('open', () => {
                 console.log(`Peer ${peerId} opened`);
-                console.log(JSON.stringify(group, null, 2));
                 const sessionIds = Object.keys(group);
                 const playerSessionId =
                   sessionIds.find((sessionId) => {

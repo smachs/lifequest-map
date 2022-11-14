@@ -20,6 +20,8 @@ import { useUserStore } from 'ui/utils/userStore';
 import shallow from 'zustand/shallow';
 import { Tooltip } from '@mantine/core';
 import DebouncedInput from '../components/DebouncedInput/DebouncedInput';
+import { addInfluenceScreenshot } from '../utils/media';
+import { restoreWindow, WINDOWS } from 'ui/utils/windows';
 
 function Streaming(): JSX.Element {
   const { account, refreshAccount } = useUserStore(
@@ -71,6 +73,7 @@ function Streaming(): JSX.Element {
         <span>
           Welcome back, {account!.name}!<br />
           <SyncStatusSender newWorldIsRunning={newWorldIsRunning} />
+          <button onClick={() => restoreWindow(WINDOWS.INFLUENCE)}>Test</button>
         </span>{' '}
         <button
           onClick={() => setShowSettings(true)}

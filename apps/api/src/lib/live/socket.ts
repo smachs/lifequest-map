@@ -192,7 +192,6 @@ export function initSocket(server: http.Server) {
     });
 
     client.on('peer:off', (steamId: string) => {
-      console.log('peer:off');
       if (!peerConnections[steamId]) {
         return;
       }
