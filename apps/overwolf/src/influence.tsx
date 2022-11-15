@@ -4,12 +4,13 @@ import { createRoot } from 'react-dom/client';
 import { StrictMode, useRef } from 'react';
 import { closeCurrentWindow, dragMoveWindow } from 'ui/utils/windows';
 import { ActionIcon, Box, Group, MantineProvider } from '@mantine/core';
+import { getImageData } from './utils/media';
 import {
   addInfluenceScreenshot,
-  getImageData,
-  getInfluenceImageData,
+  getInfluence,
+  regions,
   takeInfluenceScreenshot,
-} from './utils/media';
+} from './utils/influence';
 import { IconHandMove, IconScreenshot, IconX } from '@tabler/icons';
 
 const root = createRoot(document.querySelector('#root')!);
@@ -25,16 +26,25 @@ const Influences = () => {
     canvasRef.current.width = canvas.width;
     canvasRef.current.height = canvas.height;
     const imageData = getImageData(canvas);
-    const influenceImageData = getInfluenceImageData(imageData);
+    const influence = getInfluence(imageData);
     const context = canvasRef.current.getContext('2d')!;
-    context.putImageData(influenceImageData, 0, 0);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.font = '20px Arial';
+    context.textAlign = 'center';
+    influence.forEach(({ regionName, factionName }) => {
+      const region = regions.find((region) => region.name === regionName);
+      if (region) {
+        context.fillText(factionName, region.center[0], region.center[1]);
+      }
+    });
+    // context.putageData(influenceImageData, 0, 0);
     // const array2d = to2d(influenceImageData);
     // overwolf.utils.placeOnClipboard(array2d);
   };
 
   return (
     <Box
-      // onMouseDown={dragMoveWindow}
+      onMouseDown={dragMoveWindow}
       sx={{
         width: '100vw',
         height: '100vh',
@@ -58,7 +68,10 @@ const Influences = () => {
           <IconX />
         </ActionIcon>
       </Group>
-      <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0 }} />
+      <canvas
+        ref={canvasRef}
+        style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
+      />
     </Box>
   );
 };
