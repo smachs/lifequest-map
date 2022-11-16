@@ -959,6 +959,12 @@ export const mapFilters: FilterItem[] = [
     title: 'Baalphazu',
     iconUrl: '/pois/baalphazu.webp',
   },
+  {
+    category: 'events',
+    type: 'turkulon',
+    title: 'Turkulon',
+    iconUrl: '/pois/turkulon.webp',
+  },
 ];
 
 export type MapFiltersCategory = {
