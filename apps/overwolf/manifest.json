@@ -4,7 +4,7 @@
   "meta": {
     "name": "Aeternum Map-DEV",
     "author": "Leon Machens",
-    "version": "2.22.0",
+    "version": "2.22.1",
     "minimum-overwolf-version": "0.169.0",
     "description": "New World Interactive Map",
     "dock_button_title": "Aeternum Map",
@@ -74,6 +74,29 @@
           "left": 50
         },
         "allow_local_file_access": true,
+        "popup_blocker": true,
+        "mute": true,
+        "keep_window_location": true,
+        "restrict_to_game_bounds": true
+      },
+      "influence": {
+        "file": "influence.html",
+        "debug_url": "http://localhost:5173/influence.html",
+        "desktop_only": false,
+        "in_game_only": true,
+        "resizable": false,
+        "transparent": true,
+        "override_on_update": true,
+        "size": {
+          "width": 642,
+          "height": 640
+        },
+        "start_position": {
+          "top": 100,
+          "left": "100"
+        },
+        "allow_local_file_access": true,
+        "topmost": true,
         "popup_blocker": true,
         "mute": true,
         "keep_window_location": true,

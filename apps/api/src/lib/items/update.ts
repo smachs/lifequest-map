@@ -1,5 +1,5 @@
 import { getMarkersCollection } from '../markers/collection.js';
-import fetch from 'isomorphic-fetch';
+import fetch from 'node-fetch';
 import { getItemsCollection } from './collection.js';
 
 type CreatureLootResult = {
@@ -67,12 +67,12 @@ export const updateItems = async () => {
     [itemId: string]: string[];
   } = {};
 
-  const rafflebones25 = await fetch(
+  const rafflebones25 = (await fetch(
     'https://api.newworldfans.com/api/v2/db/creature/vitals_id/Loot_Goblin/loot'
-  ).then((response) => response.json());
-  const rafflebones66 = await fetch(
+  ).then((response) => response.json())) as CreatureLootResult;
+  const rafflebones66 = (await fetch(
     'https://api.newworldfans.com/api/v2/db/creature/vitals_id/Loot_Goblin_60/loot'
-  ).then((response) => response.json());
+  ).then((response) => response.json())) as CreatureLootResult;
 
   const invalidNames: string[] = [];
   for (const creature of creatures) {

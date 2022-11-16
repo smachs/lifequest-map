@@ -9,7 +9,6 @@ import { classNames } from 'ui/utils/styles';
 import { v4 as uuid } from 'uuid';
 import { useEffect, useState } from 'react';
 import styles from './Streaming.module.css';
-import MenuIcon from 'ui/components/icons/MenuIcon';
 import Settings from './Settings';
 import ServerRadioButton from 'ui/components/LiveServer/ServerRadioButton';
 import useServers from 'ui/components/ShareLiveStatus/useServers';
@@ -18,8 +17,10 @@ import useMinimap from '../components/useMinimap';
 import { useIsNewWorldRunning } from '../components/store';
 import { useUserStore } from 'ui/utils/userStore';
 import shallow from 'zustand/shallow';
-import { Tooltip } from '@mantine/core';
+import { ActionIcon, Group, Tooltip } from '@mantine/core';
 import DebouncedInput from '../components/DebouncedInput/DebouncedInput';
+import { IconMenu2, IconScreenshot, IconX } from '@tabler/icons';
+import { toggleWindow, WINDOWS } from 'ui/utils/windows';
 
 function Streaming(): JSX.Element {
   const { account, refreshAccount } = useUserStore(
@@ -67,17 +68,35 @@ function Streaming(): JSX.Element {
 
   return (
     <div className={styles.streaming}>
+      <Group
+        spacing="xs"
+        sx={{
+          position: 'absolute',
+          right: '0.2em',
+          top: '0',
+          zIndex: 2,
+        }}
+      >
+        {account.isModerator && (
+          <Tooltip label="Toggle influence screenshot overlay">
+            <ActionIcon onClick={() => toggleWindow(WINDOWS.INFLUENCE, true)}>
+              <IconScreenshot />
+            </ActionIcon>
+          </Tooltip>
+        )}
+        <Tooltip label="Toggle settings">
+          <ActionIcon
+            onClick={() => setShowSettings((showSettings) => !showSettings)}
+          >
+            {showSettings ? <IconX /> : <IconMenu2 />}
+          </ActionIcon>
+        </Tooltip>
+      </Group>
       <div className={styles.user}>
         <span>
           Welcome back, {account!.name}!<br />
           <SyncStatusSender newWorldIsRunning={newWorldIsRunning} />
-        </span>{' '}
-        <button
-          onClick={() => setShowSettings(true)}
-          style={{ alignSelf: 'baseline' }}
-        >
-          <MenuIcon />
-        </button>
+        </span>
       </div>
       <div className={styles.form}>
         <p className={styles.guide}>
@@ -192,11 +211,7 @@ function Streaming(): JSX.Element {
         </div>
       </div>
       {showSettings && (
-        <Settings
-          onClose={() => setShowSettings(false)}
-          showMinimap={showMinimap}
-          onShowMinimap={setShowMinimap}
-        />
+        <Settings showMinimap={showMinimap} onShowMinimap={setShowMinimap} />
       )}
     </div>
   );
