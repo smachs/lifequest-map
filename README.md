@@ -5,52 +5,11 @@ Get all the locations, farming spots, resources, lore documents, chests, mobs an
 - [Website](https://aeternum-map.gg)
 - [Download Overwolf app](https://www.overwolf.com/app/Leon_Machens-Aeternum_Map)
 
-## Features
-
-- Live Tracking of your In-Game position
-- Check markers as done (like lore documents)
-- Automatic detection of your In-Game character
-- Auto start with New World
-- Private and guild markers (Coming Soon)
-- Areas (Coming Soon)
-- Near by (Coming Soon)
-- Dungeons (Coming Soon)
-
 ## Contribution
 
 This app is Open Source. Contributors are highly welcome!
 
 Join us on our [Discord](https://discord.com/invite/NTZu8Px).
-
-## Development
-
-Please follow the instructions on [Overwolf Developer](http://developers.overwolf.com/documentation/odk-2-0-introduction/creating-your-first-app/) to get white listed in Overwolf. Then you can start developing!
-In addition, you need access to a [MongoDB](https://docs.mongodb.com/manual/).
-
-### Set environment variables
-
-You can start by copying the template environment variables file.
-
-```
-cp template.env .env
-```
-
-The following list shows the variables you need to set:
-
-| KEY                         | VALUE                                                                                                   |
-| --------------------------- | ------------------------------------------------------------------------------------------------------- |
-| PORT                        | Port for the server environment                                                                         |
-| MONGODB_URI                 | URI of your MongoDB server                                                                              |
-| VITE_API_ENDPOINT           | URL of your server environment                                                                          |
-| SCREENSHOTS_PATH            | Server side path to a folder in which screenshots will be saved                                         |
-| DISCORD_PUBLIC_WEBHOOK_URL  | Discord Webhook for public activity log                                                                 |
-| DISCORD_PRIVATE_WEBHOOK_URL | Discord Webhook for private activity log                                                                |
-| STEAM_API_KEY               | [Steam API](https://steamcommunity.com/dev/apikey) key required for oAuth                               |
-| SESSION_SECRET              | Secret used to sign the session cookie                                                                  |
-| NO_SOCKET                   | Run server without Socket for live position. Useful if you run multiple servers. Possible value: "true" |
-| NO_API                      | Run server without API and database. Useful if you run multiple servers. . Possible value: "true"       |
-| VITE_PLAUSIBLE_API_HOST     | Hostname of Plausible service                                                                           |
-| VITE_PLAUSIBLE_DOMAIN       | Name of the website on Plausible                                                                        |
 
 ### Install dependencies
 
@@ -60,7 +19,15 @@ This project is based on [Node.js](https://nodejs.org/). Make sure you have Node
 npm install
 ```
 
-You need to install [Overwolf](https://download.overwolf.com/install/Download) too.
+Please take a look at the README files in the apps subfolders to setup the environment variables.
+
+### Run development
+
+```
+npm run dev
+```
+
+This will run all apps in this project in development mode.
 
 ### Build project
 
@@ -71,32 +38,6 @@ npm run build
 ```
 
 It is required to call this at least once before you can run this app in development mode.
-
-### Install as "unpacked extension"
-
-Based on this [guide](https://overwolf.github.io/docs/start/sample-app-overview#5-install-the-app-as-unpacked-extension) you can install the app.
-
-- Open the Overwolf desktop client settings (by right-clicking the client and selecting "Packages"
-  Or by clicking on the wrench icon in the dock and going to the "About" tab => "Development Options").
-
-- Click on "Development options".
-
-- In the opened window, click on "Load unpacked extension" and select the extracted '/dist/overwolf' folder.
-  This will add the app to your Overwolf dock.
-
-- Make sure you are logged in to the OW client. Otherwise, you will get an "Unauthorized App" error message. (Click on the "Appstore" icon in the OW dock to login to the OW client).
-
-### Run development
-
-```
-npm run dev
-```
-
-This will run the server and client in development mode.
-
-### Start the app
-
-Click on the app's icon in your OW dock to run the app. This will open the app if you run `npm run dev` before.
 
 ## Licensing
 
