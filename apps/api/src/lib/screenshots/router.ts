@@ -47,22 +47,42 @@ screenshotsRouter.post(
   ensureAuthenticated,
   async (req, res, next) => {
     try {
-      const worldName = req.body.worldName;
-      if (!req.file || !worldName) {
+      if (!req.file || !req.body.worldName || !req.body.influence) {
         res.status(400).send('Invalid payload');
         return;
       }
-      const world = worlds.find((world) => world.worldName === worldName);
+      const world = worlds.find(
+        (world) => world.worldName === req.body.worldName
+      );
       if (!world) {
-        res.status(404).send(`Can not find ${worldName}`);
+        res.status(404).send(`Can not find ${req.body.worldName}`);
         return;
       }
+
+      const influence = JSON.parse(req.body.influence);
       const buffer = await sharp(req.file.path).webp().toBuffer();
       await fs.rm(req.file.path);
 
+      const influenceMessage = influence
+        .map(
+          ({
+            regionName,
+            factionName,
+          }: {
+            regionName: string;
+            factionName: string;
+          }) => `**${regionName}**: ${factionName}`
+        )
+        .join('\n');
+
+      const webhookUrl =
+        process.env[`DISCORD_${world.publicName.toUpperCase()}_WEBHOOK_URL`] ||
+        'https://discord.com/api/webhooks/1041621984896892939/HKaFtMurX4nWgnphfcayBjXgLDzKOrpPwSZleJ4tZpcM8syIgZnoWe1wNpf0kLjeJjZ9';
+
       const response = await uploadToDiscord(
         buffer,
-        `Server: ${world.publicName}`
+        `**Server**: ${world.publicName}\n${influenceMessage}`,
+        webhookUrl
       );
       const result = await response.json();
       res.status(response.status).json(result);

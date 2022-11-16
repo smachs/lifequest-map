@@ -47,7 +47,11 @@ export const getMarkerRoutesURL = (id: string, map?: string) => {
   return getURL('routes', id, map);
 };
 
-export const uploadToDiscord = (buffer: Buffer, message: string) => {
+export const uploadToDiscord = (
+  buffer: Buffer,
+  message: string,
+  webhookUrl: string
+) => {
   const formData = new FormData();
 
   // @ts-ignore Buffer instead of Blob is fine
@@ -55,15 +59,13 @@ export const uploadToDiscord = (buffer: Buffer, message: string) => {
   formData.append(
     'payload_json',
     JSON.stringify({
-      username: 'AeternumMap',
+      username: 'aeternum-map.gg',
+      avatar_url: 'https://aeternum-map.gg/icon.png',
       content: message,
     })
   );
-  return fetch(
-    'https://discord.com/api/webhooks/1041621984896892939/HKaFtMurX4nWgnphfcayBjXgLDzKOrpPwSZleJ4tZpcM8syIgZnoWe1wNpf0kLjeJjZ9',
-    {
-      method: 'POST',
-      body: formData,
-    }
-  );
+  return fetch(webhookUrl, {
+    method: 'POST',
+    body: formData,
+  });
 };

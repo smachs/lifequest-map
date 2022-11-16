@@ -1,4 +1,3 @@
-import CloseIcon from 'ui/components/icons/CloseIcon';
 import { useSettings } from 'ui/contexts/SettingsContext';
 import {
   SETUP_MINIMAP,
@@ -17,16 +16,11 @@ import styles from './Settings.module.css';
 import { useUserStore } from 'ui/utils/userStore';
 
 type SettingsProps = {
-  onClose: () => void;
   showMinimap: boolean;
   onShowMinimap: (show: boolean) => void;
 };
 
-function Settings({
-  onClose,
-  showMinimap,
-  onShowMinimap,
-}: SettingsProps): JSX.Element {
+function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
   const {
     showRegionBorders,
     setShowRegionBorders,
@@ -49,9 +43,6 @@ function Settings({
 
   return (
     <div className={styles.container}>
-      <button onClick={onClose} className={styles.close}>
-        <CloseIcon />
-      </button>
       <h3>Settings</h3>
       <div className={styles.settings}>
         <h4>Minimap</h4>

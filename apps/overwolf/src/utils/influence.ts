@@ -1,7 +1,7 @@
 import { fetchJSON } from 'ui/utils/api';
 import { getCurrentWindow } from 'ui/utils/windows';
 import { getGameInfo } from './games';
-import { getImageData, imageToCanvas, takeScreenshot, toBlob } from './media';
+import { imageToCanvas, takeScreenshot } from './media';
 
 type RGB = {
   r: number;
@@ -71,7 +71,7 @@ export const regions = [
     left: 20,
     right: 240,
     bottom: 200,
-    center: [120, 120],
+    center: [115, 120],
   },
   {
     name: 'Cutlass Keys',
@@ -79,7 +79,7 @@ export const regions = [
     left: 35,
     right: 260,
     bottom: 655,
-    center: [180, 550],
+    center: [190, 570],
   },
   {
     name: 'Ebonscale Reach',
@@ -87,7 +87,7 @@ export const regions = [
     left: 150,
     right: 260,
     bottom: 335,
-    center: [180, 280],
+    center: [180, 300],
   },
   {
     name: 'Edengrove',
@@ -103,7 +103,7 @@ export const regions = [
     left: 270,
     right: 370,
     bottom: 405,
-    center: [300, 360],
+    center: [305, 365],
   },
   {
     name: 'First Light',
@@ -127,7 +127,7 @@ export const regions = [
     left: 35,
     right: 260,
     bottom: 505,
-    center: [150, 450],
+    center: [165, 450],
   },
   {
     name: 'Mourningdale',
@@ -135,7 +135,7 @@ export const regions = [
     left: 540,
     right: 650,
     bottom: 220,
-    center: [560, 170],
+    center: [565, 175],
   },
   {
     name: 'Reekwater',
@@ -143,7 +143,7 @@ export const regions = [
     left: 380,
     right: 505,
     bottom: 505,
-    center: [420, 420],
+    center: [430, 430],
   },
   {
     name: 'Restless Shore',
@@ -151,7 +151,7 @@ export const regions = [
     left: 530,
     right: 650,
     bottom: 385,
-    center: [570, 300],
+    center: [570, 320],
   },
   {
     name: 'Shattered Mountain',
@@ -159,7 +159,7 @@ export const regions = [
     left: 280,
     right: 380,
     bottom: 100,
-    center: [320, 70],
+    center: [330, 65],
   },
   {
     name: "Weaver's Fen",
@@ -175,7 +175,7 @@ export const regions = [
     left: 270,
     right: 370,
     bottom: 510,
-    center: [300, 460],
+    center: [305, 465],
   },
 ];
 
@@ -189,7 +189,12 @@ const getRegion = (row: number, col: number) => {
   );
 };
 
-export const getInfluence = (imageData: ImageData) => {
+export type Influence = {
+  regionName: string;
+  factionName: string;
+}[];
+
+export const getInfluence = (imageData: ImageData): Influence => {
   const influenceByRegion: {
     [regionName: string]: {
       [factionName: string]: number;
@@ -248,17 +253,6 @@ export const getInfluence = (imageData: ImageData) => {
   return influence;
 };
 
-export const uploadInfluenceScreenshot = (blob: Blob, worldName: string) => {
-  const formData = new FormData();
-  formData.append('screenshot', blob);
-  formData.append('worldName', worldName);
-
-  return fetchJSON<{ screenshotId: string }>('/api/screenshots/influences', {
-    method: 'POST',
-    body: formData,
-  });
-};
-
 export const takeInfluenceScreenshot = async () => {
   const currentWindow = await getCurrentWindow();
 
@@ -274,19 +268,19 @@ export const takeInfluenceScreenshot = async () => {
   return canvas;
 };
 
-export const addInfluenceScreenshot = async () => {
+export const uploadInfluence = async (blob: Blob, influence: Influence) => {
   const gameInfo = await getGameInfo();
   if (!gameInfo?.game_info?.world_name) {
     throw new Error('Can not read world name');
   }
   const worldName = gameInfo.game_info.world_name;
+  const formData = new FormData();
+  formData.append('screenshot', blob);
+  formData.append('worldName', worldName);
+  formData.append('influence', JSON.stringify(influence));
 
-  const canvas = await takeInfluenceScreenshot();
-
-  const blob = await toBlob(canvas);
-
-  const imageData = getImageData(canvas);
-  //   getInfluenceImageData(imageData);
-  // const result = await uploadInfluenceScreenshot(blob, worldName);
-  // console.log(result);
+  return fetchJSON('/api/screenshots/influences', {
+    method: 'POST',
+    body: formData,
+  });
 };
