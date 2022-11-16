@@ -627,7 +627,7 @@ export const mapFilters: FilterItem[] = [
   {
     category: 'essences',
     type: 'essences_lightning_beetle',
-    title: 'Ligthning Beetle',
+    title: 'Lightning Beetle',
     iconUrl: '/pois/wind_boid.webp',
   },
   {
