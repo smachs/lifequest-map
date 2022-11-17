@@ -56,3 +56,13 @@ export const getImageData = (canvas: HTMLCanvasElement) => {
   const context = canvas.getContext('2d')!;
   return context.getImageData(0, 0, canvas.width, canvas.height);
 };
+
+export const loadImage = (path: string) => {
+  return new Promise<HTMLImageElement>((resolve) => {
+    const image = new Image();
+    image.src = path;
+    image.onload = () => {
+      resolve(image);
+    };
+  });
+};

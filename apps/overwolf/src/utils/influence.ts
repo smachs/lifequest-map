@@ -14,7 +14,7 @@ type Faction = {
 } & RGB;
 
 const THRESHOLD = 25;
-const factions: Faction[] = [
+export const factions: Faction[] = [
   {
     name: 'Syndicate',
     r: 124,
@@ -28,7 +28,7 @@ const factions: Faction[] = [
     b: 76,
   },
   {
-    name: 'Marauders',
+    name: 'Marauder',
     r: 85,
     g: 132,
     b: 76,
@@ -63,7 +63,7 @@ export const regions = [
     left: 300,
     right: 390,
     bottom: 325,
-    center: [330, 270],
+    center: [315, 255],
   },
   {
     name: 'Brimstone Sands',
@@ -71,7 +71,7 @@ export const regions = [
     left: 20,
     right: 240,
     bottom: 200,
-    center: [115, 120],
+    center: [110, 97],
   },
   {
     name: 'Cutlass Keys',
@@ -79,7 +79,7 @@ export const regions = [
     left: 35,
     right: 260,
     bottom: 655,
-    center: [190, 570],
+    center: [176, 555],
   },
   {
     name: 'Ebonscale Reach',
@@ -87,7 +87,7 @@ export const regions = [
     left: 150,
     right: 260,
     bottom: 335,
-    center: [180, 300],
+    center: [160, 285],
   },
   {
     name: 'Edengrove',
@@ -95,7 +95,7 @@ export const regions = [
     left: 400,
     right: 500,
     bottom: 220,
-    center: [440, 160],
+    center: [430, 140],
   },
   {
     name: 'Everfall',
@@ -103,7 +103,7 @@ export const regions = [
     left: 270,
     right: 370,
     bottom: 405,
-    center: [305, 365],
+    center: [305, 330],
   },
   {
     name: 'First Light',
@@ -111,7 +111,7 @@ export const regions = [
     left: 270,
     right: 400,
     bottom: 635,
-    center: [300, 580],
+    center: [285, 550],
   },
   {
     name: 'Great Cleave',
@@ -119,7 +119,7 @@ export const regions = [
     left: 280,
     right: 380,
     bottom: 200,
-    center: [310, 160],
+    center: [300, 140],
   },
   {
     name: "Monarch's Bluffs",
@@ -127,7 +127,7 @@ export const regions = [
     left: 35,
     right: 260,
     bottom: 505,
-    center: [165, 450],
+    center: [170, 420],
   },
   {
     name: 'Mourningdale',
@@ -135,7 +135,7 @@ export const regions = [
     left: 540,
     right: 650,
     bottom: 220,
-    center: [565, 175],
+    center: [555, 155],
   },
   {
     name: 'Reekwater',
@@ -143,7 +143,7 @@ export const regions = [
     left: 380,
     right: 505,
     bottom: 505,
-    center: [430, 430],
+    center: [425, 425],
   },
   {
     name: 'Restless Shore',
@@ -151,7 +151,7 @@ export const regions = [
     left: 530,
     right: 650,
     bottom: 385,
-    center: [570, 320],
+    center: [550, 300],
   },
   {
     name: 'Shattered Mountain',
@@ -159,7 +159,7 @@ export const regions = [
     left: 280,
     right: 380,
     bottom: 100,
-    center: [330, 65],
+    center: [315, 45],
   },
   {
     name: "Weaver's Fen",
@@ -167,7 +167,7 @@ export const regions = [
     left: 410,
     right: 530,
     bottom: 365,
-    center: [440, 300],
+    center: [425, 280],
   },
   {
     name: 'Windsward',
@@ -175,7 +175,7 @@ export const regions = [
     left: 270,
     right: 370,
     bottom: 510,
-    center: [305, 465],
+    center: [300, 435],
   },
 ];
 
@@ -205,7 +205,7 @@ export const getInfluence = (imageData: ImageData): Influence => {
       [curr.name]: {
         Syndicate: 0,
         Covenant: 0,
-        Marauders: 0,
+        Marauder: 0,
         Neutral: 0,
       },
     }),
