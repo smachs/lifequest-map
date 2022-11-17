@@ -1,4 +1,5 @@
 import type { Response } from 'node-fetch';
+import https from 'https';
 import fetch from 'node-fetch';
 import { findMapDetails, mapIsAeternumMap } from 'static';
 import {
@@ -47,6 +48,10 @@ export const getMarkerRoutesURL = (id: string, map?: string) => {
   return getURL('routes', id, map);
 };
 
+const agent = new https.Agent({
+  rejectUnauthorized: false,
+});
+
 export const uploadToDiscord = (
   buffer: Buffer,
   message: string,
@@ -67,5 +72,6 @@ export const uploadToDiscord = (
   return fetch(webhookUrl, {
     method: 'POST',
     body: formData,
+    agent,
   });
 };
