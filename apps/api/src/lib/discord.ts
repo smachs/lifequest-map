@@ -1,12 +1,11 @@
 import type { Response } from 'node-fetch';
-import https from 'https';
 import fetch from 'node-fetch';
 import { findMapDetails, mapIsAeternumMap } from 'static';
 import {
   DISCORD_PUBLIC_WEBHOOK_URL,
   DISCORD_PRIVATE_WEBHOOK_URL,
 } from './env.js';
-import FormData from 'form-data';
+import { FormData } from 'formdata-node';
 
 const MAX_DISCORD_MESSAGE_LENGTH = 2000;
 export const postToDiscord = (
@@ -48,19 +47,14 @@ export const getMarkerRoutesURL = (id: string, map?: string) => {
   return getURL('routes', id, map);
 };
 
-const agent = new https.Agent({
-  rejectUnauthorized: false,
-});
-
 export const uploadToDiscord = (
-  buffer: Buffer,
+  blob: Blob,
   message: string,
   webhookUrl: string
 ) => {
   const formData = new FormData();
 
-  // @ts-ignore Buffer instead of Blob is fine
-  formData.append('files[0]', buffer, { filename: 'screenshot.webp' });
+  formData.append('files[0]', blob, 'screenshot.webp');
   formData.append(
     'payload_json',
     JSON.stringify({
@@ -72,6 +66,5 @@ export const uploadToDiscord = (
   return fetch(webhookUrl, {
     method: 'POST',
     body: formData,
-    agent,
   });
 };

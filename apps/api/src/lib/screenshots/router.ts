@@ -7,6 +7,7 @@ import { getScreenshotsCollection } from './collection.js';
 import { ensureAuthenticated } from '../auth/middlewares.js';
 import { uploadToDiscord } from '../discord.js';
 import { worlds } from 'static';
+import { Blob } from 'node-fetch';
 
 const screenshotsUpload = multer({ dest: SCREENSHOTS_PATH });
 
@@ -67,8 +68,8 @@ screenshotsRouter.post(
 
       const influence = JSON.parse(req.body.influence);
       const buffer = await sharp(req.file.path).webp().toBuffer();
+      const blob = new Blob([buffer]);
       await fs.rm(req.file.path);
-
       const influenceMessage = influence
         .map(
           ({
@@ -86,7 +87,7 @@ screenshotsRouter.post(
         'https://discord.com/api/webhooks/1041621984896892939/HKaFtMurX4nWgnphfcayBjXgLDzKOrpPwSZleJ4tZpcM8syIgZnoWe1wNpf0kLjeJjZ9';
 
       const response = await uploadToDiscord(
-        buffer,
+        blob,
         `**Server**: ${world.publicName}\n${influenceMessage}`,
         webhookUrl
       );
