@@ -83,7 +83,11 @@ screenshotsRouter.post(
         .join('\n');
 
       const webhookUrl =
-        process.env[`DISCORD_${world.publicName.toUpperCase()}_WEBHOOK_URL`] ||
+        process.env[
+          `DISCORD_${world.publicName
+            .toUpperCase()
+            .replaceAll(' ', '')}_WEBHOOK_URL`
+        ] ||
         'https://discord.com/api/webhooks/1041621984896892939/HKaFtMurX4nWgnphfcayBjXgLDzKOrpPwSZleJ4tZpcM8syIgZnoWe1wNpf0kLjeJjZ9';
 
       const response = await uploadToDiscord(

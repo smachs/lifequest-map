@@ -13,24 +13,24 @@ type Faction = {
   name: string;
 } & RGB;
 
-const THRESHOLD = 25;
+const THRESHOLD = 30;
 export const factions: Faction[] = [
   {
     name: 'Syndicate',
-    r: 124,
-    g: 90,
-    b: 125,
+    r: 130,
+    g: 95,
+    b: 130,
   },
   {
     name: 'Covenant',
-    r: 168,
-    g: 130,
-    b: 76,
+    r: 152,
+    g: 100,
+    b: 43,
   },
   {
     name: 'Marauder',
-    r: 85,
-    g: 132,
+    r: 95,
+    g: 135,
     b: 76,
   },
   {
@@ -68,17 +68,17 @@ export const regions = [
   {
     name: 'Brimstone Sands',
     top: 40,
-    left: 20,
+    left: 25,
     right: 240,
-    bottom: 200,
+    bottom: 195,
     center: [110, 97],
   },
   {
     name: 'Cutlass Keys',
     top: 535,
-    left: 35,
-    right: 260,
-    bottom: 655,
+    left: 60,
+    right: 250,
+    bottom: 650,
     center: [176, 555],
   },
   {
@@ -109,8 +109,8 @@ export const regions = [
     name: 'First Light',
     top: 535,
     left: 270,
-    right: 400,
-    bottom: 635,
+    right: 380,
+    bottom: 600,
     center: [285, 550],
   },
   {
@@ -123,10 +123,10 @@ export const regions = [
   },
   {
     name: "Monarch's Bluffs",
-    top: 395,
+    top: 400,
     left: 35,
-    right: 260,
-    bottom: 505,
+    right: 257,
+    bottom: 495,
     center: [170, 420],
   },
   {
@@ -140,17 +140,17 @@ export const regions = [
   {
     name: 'Reekwater',
     top: 385,
-    left: 380,
-    right: 505,
-    bottom: 505,
+    left: 390,
+    right: 490,
+    bottom: 500,
     center: [425, 425],
   },
   {
     name: 'Restless Shore',
     top: 265,
-    left: 530,
-    right: 650,
-    bottom: 385,
+    left: 540,
+    right: 630,
+    bottom: 375,
     center: [550, 300],
   },
   {
@@ -163,18 +163,18 @@ export const regions = [
   },
   {
     name: "Weaver's Fen",
-    top: 265,
+    top: 250,
     left: 410,
-    right: 530,
-    bottom: 365,
+    right: 490,
+    bottom: 350,
     center: [425, 280],
   },
   {
     name: 'Windsward',
-    top: 430,
+    top: 435,
     left: 270,
     right: 370,
-    bottom: 510,
+    bottom: 505,
     center: [300, 435],
   },
 ];
@@ -239,8 +239,18 @@ export const getInfluence = (imageData: ImageData): Influence => {
       imageData.data[i + 3] = 255;
     }
   }
-  const influence = Object.entries(influenceByRegion).map(
-    ([regionName, factionPoints]) => {
+
+  const influence = Object.entries(influenceByRegion)
+    .filter(([regionName, factionPoints]) => {
+      const region = regions.find((region) => region.name === regionName)!;
+      const pixels =
+        (region.bottom - region.top) * (region.right - region.left);
+
+      return Object.values(factionPoints).some(
+        (points) => points / pixels > 0.15
+      );
+    })
+    .map(([regionName, factionPoints]) => {
       const highestFaction = Object.entries(factionPoints)
         .map(([faction, influence]) => ({ faction, influence }))
         .sort((a, b) => b.influence - a.influence)[0];
@@ -248,8 +258,7 @@ export const getInfluence = (imageData: ImageData): Influence => {
         regionName,
         factionName: highestFaction.faction,
       };
-    }
-  );
+    });
   return influence;
 };
 

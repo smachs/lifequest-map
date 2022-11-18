@@ -22,49 +22,65 @@ const Influences = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [blob, setBlob] = useState<Blob | null>(null);
   const [influence, setInfluence] = useState<Influence | null>(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+
   useCenterWindow();
 
   const handleScreenshot = async () => {
     if (!canvasRef.current) {
       return;
     }
-    const canvas = await takeInfluenceScreenshot();
-    canvasRef.current.width = canvas.width;
-    canvasRef.current.height = canvas.height;
-    const imageData = getImageData(canvas);
-    const influence = getInfluence(imageData);
-    const context = canvasRef.current.getContext('2d')!;
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    const frame = await loadImage('/influences.webp');
-    context.drawImage(frame, 0, 0);
-    context.font = '20px Arial';
-    context.textAlign = 'center';
-    context.shadowColor = 'black';
-    context.shadowBlur = 5;
-    context.shadowOffsetX = 3;
-    context.shadowOffsetY = 3;
-    context.fillStyle = 'white';
+    try {
+      setLoading(true);
+      setErrorMessage('');
+      const canvas = await takeInfluenceScreenshot();
+      canvasRef.current.width = canvas.width;
+      canvasRef.current.height = canvas.height;
+      const imageData = getImageData(canvas);
+      const influence = getInfluence(imageData);
+      const context = canvasRef.current.getContext('2d')!;
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      const frame = await loadImage('/influences.webp');
+      context.drawImage(frame, 0, 0);
+      context.font = '20px Arial';
+      context.textAlign = 'center';
+      context.shadowColor = 'black';
+      context.shadowBlur = 5;
+      context.shadowOffsetX = 3;
+      context.shadowOffsetY = 3;
+      context.fillStyle = 'white';
 
-    const images: {
-      [key: string]: HTMLImageElement;
-    } = {
-      covenant: await loadImage('/covenant.webp'),
-      marauder: await loadImage('/marauder.webp'),
-      syndicate: await loadImage('/syndicate.webp'),
-    };
+      const images: {
+        [key: string]: HTMLImageElement;
+      } = {
+        covenant: await loadImage('/covenant.webp'),
+        marauder: await loadImage('/marauder.webp'),
+        syndicate: await loadImage('/syndicate.webp'),
+      };
 
-    influence.forEach(({ regionName, factionName }) => {
-      const region = regions.find((region) => region.name === regionName);
-      const faction = factions.find((faction) => faction.name === factionName);
-      const image = images[factionName.toLowerCase()];
+      influence.forEach(({ regionName, factionName }) => {
+        const region = regions.find((region) => region.name === regionName);
+        const faction = factions.find(
+          (faction) => faction.name === factionName
+        );
+        const image = images[factionName.toLowerCase()];
 
-      if (region && faction && image) {
-        context.drawImage(image, region.center[0], region.center[1]);
+        if (region && faction && image) {
+          context.drawImage(image, region.center[0], region.center[1]);
+        }
+      });
+      setInfluence(influence);
+      const blob = await toBlob(canvas);
+      setBlob(blob);
+      if (influence.length !== 15) {
+        setErrorMessage('Could not detect influences');
       }
-    });
-    setInfluence(influence);
-    const blob = await toBlob(canvasRef.current);
-    setBlob(blob);
+    } catch (error) {
+      setErrorMessage((error as Error).message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -75,8 +91,8 @@ const Influences = () => {
         backgroundRepeat: 'no-repeat',
         background: 'url(/influences.webp)',
         display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
+        flexDirection: 'column',
         position: 'relative',
       }}
     >
@@ -85,13 +101,14 @@ const Influences = () => {
           <IconScreenshot />
         </ActionIcon>
         <ActionIcon
-          disabled={!blob}
+          disabled={!blob || !!errorMessage}
           onClick={() =>
             blob &&
             influence &&
             uploadInfluence(blob, influence).then(closeCurrentWindow)
           }
           variant="default"
+          loading={loading}
         >
           <IconUpload />
         </ActionIcon>
@@ -99,6 +116,7 @@ const Influences = () => {
           <IconX />
         </ActionIcon>
       </Group>
+
       <canvas
         ref={canvasRef}
         style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
