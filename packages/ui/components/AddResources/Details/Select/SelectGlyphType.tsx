@@ -21,7 +21,8 @@ function SelectGlyphType({
   onChange,
   isRequired,
 }: SelectGlyphTypeIsRequired): JSX.Element {
-  const [glyph, setGlyph] = useState<Glyph | null>(() => null);
+  const glyph =
+    details && glyphs.find((glyph) => glyph.id === details.requiredGlyphId);
   const [search, setSearch] = useState('');
   const [isFocus, setIsFocus] = useState(false);
 
@@ -36,7 +37,6 @@ function SelectGlyphType({
       ...details,
       requiredGlyphId: glyph?.id,
     });
-    setGlyph(glyph);
   };
 
   const GlyphLabel = 'Glyph ' + (isRequired ? '(required)' : '(optional)');
