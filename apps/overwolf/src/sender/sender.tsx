@@ -16,21 +16,27 @@ import { createRoot } from 'react-dom/client';
 import Ads from '../components/Ads/Ads';
 import { useUserStore } from 'ui/utils/userStore';
 import AppHeader from '../components/AppHeader/AppHeader';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 const root = createRoot(document.querySelector('#root')!);
 
 function Sender(): JSX.Element {
   const account = useUserStore((state) => state.account);
 
+  const showAds = !account || !account.isSupporter;
   return (
-    <div className={styles.container}>
-      <AppHeader />
-      <main className={styles.main}>
-        {account ? <Streaming /> : <Welcome />}
-      </main>
-      <ErrorBoundary>
-        <Ads active />
-      </ErrorBoundary>
+    <>
+      <div className={styles.container}>
+        <AppHeader />
+        <main className={styles.main}>
+          {account ? <Streaming /> : <Welcome />}
+        </main>
+        {showAds && (
+          <ErrorBoundary>
+            <Ads />
+          </ErrorBoundary>
+        )}
+      </div>
       <ToastContainer
         theme="dark"
         pauseOnHover={false}
@@ -38,24 +44,28 @@ function Sender(): JSX.Element {
         pauseOnFocusLoss={false}
         style={{ marginTop: 32 }}
       />
-    </div>
+    </>
   );
 }
+
+const queryClient = new QueryClient();
 
 waitForOverwolf().then(() => {
   root.render(
     <StrictMode>
-      <MantineProvider
-        theme={{
-          colorScheme: 'dark',
-        }}
-      >
-        <SettingsProvider>
-          <PositionProvider>
-            <Sender />
-          </PositionProvider>
-        </SettingsProvider>
-      </MantineProvider>
+      <QueryClientProvider client={queryClient}>
+        <MantineProvider
+          theme={{
+            colorScheme: 'dark',
+          }}
+        >
+          <SettingsProvider>
+            <PositionProvider>
+              <Sender />
+            </PositionProvider>
+          </SettingsProvider>
+        </MantineProvider>
+      </QueryClientProvider>
     </StrictMode>
   );
 });

@@ -1,3 +1,4 @@
+import { Button, Title } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useSettings } from 'ui/contexts/SettingsContext';
 import { copyTextToClipboard } from 'ui/utils/clipboard';
@@ -51,7 +52,7 @@ const Debug = () => {
 
   return (
     <>
-      <h4>OCR preview (Please focus New World)</h4>
+      <Title order={4}>OCR preview (Focus New World)</Title>
       {ocrUrl ? (
         <img
           src={ocrUrl}
@@ -68,16 +69,15 @@ const Debug = () => {
       <div>{location ? `[${location[1]}, ${location[0]}]` : 'No location'}</div>
       {errorMessage && <div>Last error: {errorMessage}</div>}
       <h4>Debug</h4>
-      <button
+      <Button
         onClick={() => {
           getGameInfo().then((result) =>
             copyTextToClipboard(JSON.stringify(result, null, 2))
           );
         }}
-        className={styles.dump}
       >
         Copy game info
-      </button>
+      </Button>
     </>
   );
 };

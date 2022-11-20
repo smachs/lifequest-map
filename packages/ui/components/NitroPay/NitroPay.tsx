@@ -5,7 +5,7 @@ const NitroPay = () => {
   const account = useUserStore((state) => state.account);
   useEffect(() => {
     if (
-      account?.hideAds ||
+      account?.isSupporter ||
       window.location.href.startsWith('http://localhost')
     ) {
       return;
@@ -19,7 +19,7 @@ const NitroPay = () => {
     });
   }, []);
 
-  if (account?.hideAds) {
+  if (account?.isSupporter) {
     return <></>;
   }
   return <div id="nitro" />;
