@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useSettings } from '../../contexts/SettingsContext';
+import SupporterInput from '../SupporterInput/SupporterInput';
 import ResetDiscoveredNodes from './ResetDiscoveredNodes';
 import styles from './Settings.module.css';
 
@@ -118,6 +119,7 @@ function Settings(): JSX.Element {
       <span id="ncmp-consent-link" className={styles.link} />
       <h3>User</h3>
       <ResetDiscoveredNodes />
+      <SupporterInput />
     </div>
   );
 }

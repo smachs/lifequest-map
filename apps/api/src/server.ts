@@ -37,6 +37,8 @@ import liveRouter from './lib/live/router.js';
 import searchRouter from './lib/search/router.js';
 import { initItemsCollection } from './lib/items/collection.js';
 import itemsRouter from './lib/items/router.js';
+import supportersRouter from './lib/supporters/router.js';
+import { initSupportersCollection } from './lib/supporters/collection.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -125,6 +127,7 @@ async function runServer() {
     app.use('/api/screenshots', screenshotsRouter);
     app.use('/api/search', searchRouter);
     app.use('/api/items', itemsRouter);
+    app.use('/api/supporters', supportersRouter);
 
     // Static screenshots folder
     app.use('/screenshots', express.static(SCREENSHOTS_PATH!));
@@ -165,6 +168,7 @@ async function runServer() {
       initUsersCollection(),
       initScreenshotsCollection(),
       initItemsCollection(),
+      initSupportersCollection(),
     ]);
     console.log('Collection initialized');
 

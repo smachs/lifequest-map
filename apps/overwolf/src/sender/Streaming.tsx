@@ -9,7 +9,7 @@ import { classNames } from 'ui/utils/styles';
 import { v4 as uuid } from 'uuid';
 import { useEffect, useState } from 'react';
 import styles from './Streaming.module.css';
-import Settings from './Settings';
+import Settings from '../components/Settings/Settings';
 import ServerRadioButton from 'ui/components/LiveServer/ServerRadioButton';
 import useServers from 'ui/components/ShareLiveStatus/useServers';
 import SyncStatusSender from '../components/SyncStatus/SyncStatusSender';

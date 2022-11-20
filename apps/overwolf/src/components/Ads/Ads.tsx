@@ -1,3 +1,4 @@
+import { Anchor } from '@mantine/core';
 import type { OwAd } from '@overwolf/types/owads';
 import { useEffect, useRef, useState } from 'react';
 import useWindowIsVisible from '../useWindowIsVisible';
@@ -9,18 +10,14 @@ declare global {
   }
 }
 
-type AdsProps = {
-  active: boolean;
-};
-
-function Ads({ active }: AdsProps): JSX.Element {
+function Ads(): JSX.Element {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [owAd, setOwAd] = useState<OwAd>();
   const isDisplayedFirstTime = useRef(true);
   const windowIsVisible = useWindowIsVisible();
 
   useEffect(() => {
-    if (!active || owAd) {
+    if (owAd) {
       return;
     }
 
@@ -44,7 +41,7 @@ function Ads({ active }: AdsProps): JSX.Element {
     return () => {
       document.body.removeChild(script);
     };
-  }, [active, owAd]);
+  }, [owAd]);
 
   useEffect(() => {
     if (!owAd) {
@@ -55,17 +52,19 @@ function Ads({ active }: AdsProps): JSX.Element {
       return;
     }
 
-    if (windowIsVisible && active) {
+    if (windowIsVisible) {
       owAd.refreshAd({});
     } else {
       owAd.removeAd();
     }
-  }, [owAd, active, windowIsVisible]);
+  }, [owAd, windowIsVisible]);
 
   return (
     <aside className={classes.container}>
       <div className={classes.text}>
-        Ads support the development of this app
+        Ads support the development of this app.
+        <br />
+        Become a supporter to deactivate ads 🤘.
       </div>
       <div ref={containerRef} className={classes.ads} />
     </aside>

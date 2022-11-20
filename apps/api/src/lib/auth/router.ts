@@ -10,6 +10,8 @@ import type { AccountDTO } from './types.js';
 import { getMarkerRoutesCollection } from '../markerRoutes/collection.js';
 import type { MarkerRouteDTO } from '../markerRoutes/types.js';
 import { getMarkersCollection } from '../markers/collection.js';
+import { getSupportersCollection } from '../supporters/collection.js';
+import { isPatron } from '../supporters/utils.js';
 
 declare module 'express-session' {
   interface SessionData {
@@ -37,8 +39,16 @@ authRouter.get('/session', (_req, res) => {
   res.json(sessionId);
 });
 
-authRouter.get('/account', ensureAuthenticated, (req, res) => {
+authRouter.get('/account', ensureAuthenticated, async (req, res) => {
+  const supporter = await getSupportersCollection().findOne({
+    steamId: req.account!.steamId,
+  });
+  const isSupporter =
+    supporter &&
+    ((supporter.patronId && (await isPatron(supporter.patronId))) ||
+      !supporter.patronId);
   const account = {
+    isSupporter,
     ...req.account!,
     sessionId: req.account!.sessionIds[req.account!.sessionIds.length - 1],
   };
@@ -228,7 +238,24 @@ authRouter.patch(
 
 authRouter.patch('/account', ensureAuthenticated, async (req, res, next) => {
   try {
-    const { presets } = req.body;
+    const { presets, supporterSecret } = req.body;
+
+    if (typeof supporterSecret === 'string') {
+      await getSupportersCollection().updateOne(
+        { steamId: req.account!.steamId },
+        { $unset: { steamId: true } }
+      );
+      const result = await getSupportersCollection().updateOne(
+        { secret: supporterSecret },
+        { $set: { steamId: req.account!.steamId } }
+      );
+      if (!result.matchedCount) {
+        res.status(404).send('Invalid supporters secret');
+        return;
+      }
+      res.status(200).json({ message: 'Thx for supporting me 🤘' });
+      return;
+    }
 
     if (!Array.isArray(presets)) {
       res.status(400).send('Invalid payload');
