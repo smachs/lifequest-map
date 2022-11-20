@@ -4,6 +4,7 @@ import styles from './DetailsInput.module.css';
 import generalStyles from './AddResources.module.css';
 import TierInput from './TierInput';
 import SizeInput from './SizeInput';
+import SelectGlyphType from './Details/Select/SelectGlyphType';
 
 type DetailsInputProps = {
   filter: FilterItem | null;
@@ -126,6 +127,13 @@ function DetailsInput({
               }
             />
           </label>
+        )}
+        {filter?.glyph && (
+          <SelectGlyphType
+            details={details}
+            onChange={onChange}
+            isRequired={filter.glyph?.isRequired}
+          />
         )}
         <label className={styles.label}>
           <span className={generalStyles.key}>Description (optional)</span>

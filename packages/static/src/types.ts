@@ -19,6 +19,7 @@ export type MarkerDTO = {
   isPrivate?: boolean;
   customRespawnTimer?: number;
   hp?: number;
+  requiredGlyphId?: number;
   updatedAt?: Date;
   createdAt: Date;
 };

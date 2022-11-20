@@ -5,7 +5,8 @@ import AddComment from '../AddComment/AddComment';
 import Comment from '../Comment/Comment';
 import type { MarkerFull } from './useMarker';
 import useMarker from './useMarker';
-import { findMapDetails, mapFilters } from 'static';
+import type { Glyph } from 'static';
+import { findMapDetails, glyphs, mapFilters } from 'static';
 import HideMarkerInput from './HideMarkerInput';
 import Credit from './Credit';
 import Coordinates from './Coordinates';
@@ -13,6 +14,7 @@ import Loot from './Loot/Loot';
 import {
   Badge,
   Button,
+  Avatar,
   Drawer,
   Group,
   Image,
@@ -52,6 +54,9 @@ function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
   };
   const filterItem =
     marker && mapFilters.find((mapFilter) => mapFilter.type === marker.type);
+  const glyph =
+    marker?.requiredGlyphId &&
+    glyphs.find((glyph: Glyph) => glyph.id === marker?.requiredGlyphId);
   return (
     <Drawer
       opened={!!nodeId}
@@ -100,6 +105,18 @@ function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
             )}
             <Coordinates position={marker.position} />
           </Group>
+          {glyph && (
+            <Group spacing="xs">
+              <Text size="xs">Requires Glyph</Text>
+              <Badge
+                size="sm"
+                color="red"
+                leftSection={<Avatar size={18} mr={0} src={glyph.iconUrl} />}
+              >
+                <Text size="xs">{glyph.name + ' (' + glyph.id + ')'}</Text>
+              </Badge>
+            </Group>
+          )}
           <Text size="xs">
             Added {marker && toTimeAgo(new Date(marker.createdAt))}{' '}
             {marker.username && <Credit username={marker.username} />}

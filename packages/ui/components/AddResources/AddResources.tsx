@@ -31,6 +31,7 @@ export type Details = {
   customRespawnTimer?: number;
   hp?: number;
   screenshotFilename?: string;
+  requiredGlyphId?: number;
 };
 
 type AddResourcesProps = {
@@ -117,7 +118,10 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
     (filter.category === 'chests'
       ? details.tier && (details.chestType || !filter.type.includes('Supplies'))
       : true) &&
-    (filter.sizes ? Boolean(details.size) : true);
+    (filter.sizes ? Boolean(details.size) : true) &&
+    (filter.glyph && filter.glyph.isRequired
+      ? details.requiredGlyphId && details.requiredGlyphId > 0
+      : true);
 
   const base64Image = useMemo(
     () => fileScreenshot && URL.createObjectURL(fileScreenshot),

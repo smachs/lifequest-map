@@ -27,6 +27,7 @@ export type MarkerFull = {
   comments?: number;
   chestType?: string;
   tier?: number;
+  requiredGlyphId?: number;
   customRespawnTimer?: number;
   _id: string;
 };

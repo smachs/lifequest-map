@@ -86,6 +86,9 @@ function ensureMarkersSchema(): Promise<Document> {
           hp: {
             bsonType: 'int',
           },
+          requiredGlyphId: {
+            bsonType: 'int',
+          },
           isPrivate: {
             bsonType: 'bool',
           },

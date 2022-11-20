@@ -428,6 +428,7 @@ async function bodyToMarker(
     screenshotId,
     customRespawnTimer,
     hp,
+    requiredGlyphId,
   } = body;
 
   const marker: Partial<MarkerDTO> = {};
@@ -473,6 +474,10 @@ async function bodyToMarker(
   if (typeof hp === 'number') {
     marker.hp = hp;
   }
+  if (typeof requiredGlyphId === 'number') {
+    marker.requiredGlyphId = requiredGlyphId;
+  }
+
   if (description) {
     marker.description = description.substring(0, MAX_DESCRIPTION_LENGTH);
   }

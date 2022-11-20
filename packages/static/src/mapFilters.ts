@@ -2,7 +2,7 @@ import type { MarkerSize } from './types.js';
 
 export const defaultSizes: MarkerSize[] = ['?', 'S', 'M', 'L'];
 export const treeSizes: MarkerSize[] = ['?', 'XS', 'S', 'M', 'L', 'XL'];
-
+export type MarkerGlyph = { isRequired: boolean };
 export type FilterItem = {
   type: string;
   category: string;
@@ -13,6 +13,7 @@ export type FilterItem = {
   hasHP?: boolean;
   hasCustomRespawnTimer?: boolean;
   maxTier?: number;
+  glyph?: MarkerGlyph;
   sizes?: MarkerSize[];
 };
 
@@ -64,6 +65,16 @@ export const mapFilters: FilterItem[] = [
     title: 'Vista View',
     iconUrl: '/pois/vista_view.webp',
     hasName: true,
+  },
+  {
+    category: 'locations',
+    type: 'glyphPortal',
+    title: 'Glyph Portal',
+    iconUrl: '/pois/glyph_portal.webp',
+    hasName: true,
+    glyph: {
+      isRequired: true,
+    },
   },
   {
     category: 'chests',
