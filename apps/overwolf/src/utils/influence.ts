@@ -13,7 +13,7 @@ type Faction = {
   name: string;
 } & RGB;
 
-const THRESHOLD = 30;
+const THRESHOLD = 32;
 export const factions: Faction[] = [
   {
     name: 'Syndicate',
@@ -76,9 +76,9 @@ export const regions = [
   {
     name: 'Cutlass Keys',
     top: 535,
-    left: 60,
+    left: 135,
     right: 250,
-    bottom: 650,
+    bottom: 640,
     center: [176, 555],
   },
   {
@@ -107,10 +107,10 @@ export const regions = [
   },
   {
     name: 'First Light',
-    top: 535,
+    top: 513,
     left: 270,
-    right: 380,
-    bottom: 600,
+    right: 360,
+    bottom: 605,
     center: [285, 550],
   },
   {
@@ -124,7 +124,7 @@ export const regions = [
   {
     name: "Monarch's Bluffs",
     top: 400,
-    left: 35,
+    left: 135,
     right: 257,
     bottom: 495,
     center: [170, 420],
@@ -149,7 +149,7 @@ export const regions = [
     name: 'Restless Shore',
     top: 265,
     left: 540,
-    right: 630,
+    right: 620,
     bottom: 375,
     center: [550, 300],
   },
