@@ -113,16 +113,11 @@ export const useView = (): {
         section: internalView.section,
       }));
     } else {
-      setSearchParams(
-        (searchParams) => ({
-          ...searchParams,
-          x: internalView.x.toString(),
-          y: internalView.y.toString(),
-          zoom: internalView.zoom.toString(),
-          section: internalView.section,
-        }),
-        { replace: true }
-      );
+      serializeMapView(map, {
+        x: internalView.x,
+        y: internalView.y,
+        zoom: internalView.zoom,
+      });
     }
   }, [internalView]);
 
