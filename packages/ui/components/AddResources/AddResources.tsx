@@ -107,6 +107,9 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
     if (filter.hasHP) {
       details.hp = marker?.hp || 0;
     }
+    if (filter.glyph) {
+      details.requiredGlyphId = marker?.requiredGlyphId;
+    }
     details.screenshotFilename = marker?.screenshotFilename;
     setDetails(details);
   }, [filter]);
