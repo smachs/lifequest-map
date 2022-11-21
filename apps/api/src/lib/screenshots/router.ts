@@ -8,6 +8,7 @@ import { ensureAuthenticated } from '../auth/middlewares.js';
 import { uploadToDiscord } from '../discord.js';
 import { worlds } from 'static';
 import { Blob } from 'node-fetch';
+import { getInfluencesCollection } from '../influences/collection.js';
 
 const screenshotsUpload = multer({ dest: SCREENSHOTS_PATH });
 
@@ -70,17 +71,31 @@ screenshotsRouter.post(
       const buffer = await sharp(req.file.path).webp().toBuffer();
       const blob = new Blob([buffer]);
       await fs.rm(req.file.path);
-      const influenceMessage = influence
-        .map(
-          ({
-            regionName,
-            factionName,
-          }: {
-            regionName: string;
-            factionName: string;
-          }) => `**${regionName}**: ${factionName}`
-        )
-        .join('\n');
+      const now = new Date();
+      const midnight = new Date();
+      midnight.setHours(0, 0, 0, 0);
+
+      const todaysInfluences = await getInfluencesCollection().countDocuments({
+        worldName: world.worldName,
+        influence,
+        createdAt: {
+          $gte: midnight,
+        },
+      });
+      if (todaysInfluences > 0) {
+        res.status(400).send('Same influence for today already exists');
+        return;
+      }
+
+      const insertResult = await getInfluencesCollection().insertOne({
+        worldName: world.worldName,
+        influence,
+        createdAt: now,
+      });
+      if (!insertResult.acknowledged) {
+        res.status(500).send('Could not insert influence');
+        return;
+      }
 
       const webhookUrl =
         process.env[
@@ -92,7 +107,9 @@ screenshotsRouter.post(
 
       const response = await uploadToDiscord(
         blob,
-        `**Server**: ${world.publicName}\n${influenceMessage}`,
+        `**Server**: ${world.publicName}\n**User**: ${
+          account.name
+        }\n**Date**: ${now.toLocaleDateString()}`,
         webhookUrl
       );
       const result = await response.json();

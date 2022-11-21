@@ -39,6 +39,8 @@ import { initItemsCollection } from './lib/items/collection.js';
 import itemsRouter from './lib/items/router.js';
 import supportersRouter from './lib/supporters/router.js';
 import { initSupportersCollection } from './lib/supporters/collection.js';
+import { initInfluencesCollection } from './lib/influences/collection.js';
+import influencesRouter from './lib/influences/router.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -128,6 +130,7 @@ async function runServer() {
     app.use('/api/search', searchRouter);
     app.use('/api/items', itemsRouter);
     app.use('/api/supporters', supportersRouter);
+    app.use('/api/influences', influencesRouter);
 
     // Static screenshots folder
     app.use('/screenshots', express.static(SCREENSHOTS_PATH!));
@@ -169,6 +172,7 @@ async function runServer() {
       initScreenshotsCollection(),
       initItemsCollection(),
       initSupportersCollection(),
+      initInfluencesCollection(),
     ]);
     console.log('Collection initialized');
 
