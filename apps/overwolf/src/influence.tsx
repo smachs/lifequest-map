@@ -3,7 +3,13 @@ import { waitForOverwolf } from 'ui/utils/overwolf';
 import { createRoot } from 'react-dom/client';
 import { StrictMode, useRef, useState } from 'react';
 import { closeCurrentWindow } from 'ui/utils/windows';
-import { ActionIcon, Box, Group, MantineProvider } from '@mantine/core';
+import {
+  ActionIcon,
+  Box,
+  Group,
+  MantineProvider,
+  Notification,
+} from '@mantine/core';
 import { getImageData, loadImage, toBlob } from './utils/media';
 import type { Influence } from './utils/influence';
 import { factions } from './utils/influence';
@@ -105,7 +111,11 @@ const Influences = () => {
           onClick={() =>
             blob &&
             influence &&
-            uploadInfluence(blob, influence).then(closeCurrentWindow)
+            uploadInfluence(blob, influence)
+              .then(closeCurrentWindow)
+              .catch((error) => {
+                setErrorMessage((error as Error).message);
+              })
           }
           variant="default"
           loading={loading}
@@ -116,10 +126,24 @@ const Influences = () => {
           <IconX />
         </ActionIcon>
       </Group>
-
+      {errorMessage && (
+        <Notification
+          onClose={() => setErrorMessage('')}
+          icon={<IconX size={18} />}
+          color="red"
+          mt="xs"
+        >
+          {errorMessage}
+        </Notification>
+      )}
       <canvas
         ref={canvasRef}
-        style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          zIndex: -1,
+        }}
       />
     </Box>
   );
