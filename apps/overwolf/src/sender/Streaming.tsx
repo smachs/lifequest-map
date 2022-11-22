@@ -77,7 +77,7 @@ function Streaming(): JSX.Element {
           zIndex: 2,
         }}
       >
-        {account.isModerator && <InfluenceIcon />}
+        <InfluenceIcon />
         <Tooltip label="Toggle settings">
           <ActionIcon
             onClick={() => setShowSettings((showSettings) => !showSettings)}
