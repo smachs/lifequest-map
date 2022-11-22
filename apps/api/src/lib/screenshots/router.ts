@@ -51,10 +51,6 @@ screenshotsRouter.post(
     try {
       const account = req.account!;
 
-      if (!account.isModerator) {
-        res.status(401).send('Moderators only');
-        return;
-      }
       if (!req.file || !req.body.worldName || !req.body.influence) {
         res.status(400).send('Invalid payload');
         return;
