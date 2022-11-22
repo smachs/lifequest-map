@@ -11,7 +11,7 @@ export function isNewWorldRunning(): Promise<boolean> {
 export function getNewWorldRunning(): Promise<overwolf.games.GetRunningGameInfoResult | null> {
   return new Promise((resolve) => {
     overwolf.games.getRunningGameInfo((result) => {
-      if (result.classId === NEW_WORLD_CLASS_ID) {
+      if (result?.classId === NEW_WORLD_CLASS_ID) {
         resolve(result);
       } else {
         resolve(null);

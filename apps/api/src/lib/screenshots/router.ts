@@ -77,19 +77,16 @@ screenshotsRouter.post(
 
       const todaysInfluences = await getInfluencesCollection().countDocuments({
         worldName: world.worldName,
-        influence,
         createdAt: {
           $gte: midnight,
         },
       });
-      if (todaysInfluences > 0) {
-        res.status(400).send('Same influence for today already exists');
-        return;
-      }
 
       const insertResult = await getInfluencesCollection().insertOne({
         worldName: world.worldName,
         influence,
+        userId: account.steamId,
+        username: account.name,
         createdAt: now,
       });
       if (!insertResult.acknowledged) {
@@ -102,8 +99,14 @@ screenshotsRouter.post(
           `DISCORD_${world.publicName
             .toUpperCase()
             .replaceAll(' ', '')}_WEBHOOK_URL`
-        ] ||
-        'https://discord.com/api/webhooks/1041621984896892939/HKaFtMurX4nWgnphfcayBjXgLDzKOrpPwSZleJ4tZpcM8syIgZnoWe1wNpf0kLjeJjZ9';
+        ];
+
+      if (!webhookUrl || todaysInfluences > 0) {
+        res
+          .status(200)
+          .json({ message: 'Influence added without Discord webhook' });
+        return;
+      }
 
       const response = await uploadToDiscord(
         blob,
