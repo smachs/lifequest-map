@@ -9,6 +9,7 @@ import {
   Group,
   MantineProvider,
   Notification,
+  Tooltip,
 } from '@mantine/core';
 import { getImageData, loadImage, toBlob } from './utils/media';
 import type { Influence } from './utils/influence';
@@ -30,6 +31,7 @@ const Influences = () => {
   const [influence, setInfluence] = useState<Influence | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [uploaded, setUploaded] = useState(false);
 
   useCenterWindow();
 
@@ -38,7 +40,6 @@ const Influences = () => {
       return;
     }
     try {
-      setLoading(true);
       setErrorMessage('');
       const canvas = await takeInfluenceScreenshot();
       canvasRef.current.width = canvas.width;
@@ -76,14 +77,34 @@ const Influences = () => {
           context.drawImage(image, region.center[0], region.center[1]);
         }
       });
-      setInfluence(influence);
+      if (influence.length !== 15) {
+        throw new Error('Could not detect influences');
+      }
       const blob = await toBlob(canvas);
       setBlob(blob);
-      if (influence.length !== 15) {
-        setErrorMessage('Could not detect influences');
-      }
+      setInfluence(influence);
     } catch (error) {
-      setErrorMessage((error as Error).message);
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Could not take screenshot'
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!blob || !influence || uploaded) {
+      return;
+    }
+    try {
+      setErrorMessage('');
+      setLoading(true);
+      await uploadInfluence(blob, influence);
+      setUploaded(true);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Could not upload data'
+      );
     } finally {
       setLoading(false);
     }
@@ -103,28 +124,40 @@ const Influences = () => {
       }}
     >
       <Group spacing="xs">
-        <ActionIcon onClick={handleScreenshot} variant="default">
-          <IconScreenshot />
-        </ActionIcon>
-        <ActionIcon
-          disabled={!blob || !!errorMessage}
-          onClick={() =>
-            blob &&
-            influence &&
-            uploadInfluence(blob, influence)
-              .then(closeCurrentWindow)
-              .catch((error) => {
-                setErrorMessage((error as Error).message);
-              })
-          }
-          variant="default"
-          loading={loading}
-        >
-          <IconUpload />
-        </ActionIcon>
-        <ActionIcon onClick={closeCurrentWindow} variant="default">
-          <IconX />
-        </ActionIcon>
+        <Tooltip label="Take screenshot">
+          <div>
+            <ActionIcon
+              onClick={handleScreenshot}
+              variant="filled"
+              disabled={!!influence}
+              color="cyan"
+            >
+              <IconScreenshot />
+            </ActionIcon>
+          </div>
+        </Tooltip>
+        <Tooltip label="Upload influence data">
+          <div>
+            <ActionIcon
+              disabled={!influence || uploaded}
+              onClick={handleUpload}
+              variant="filled"
+              loading={loading}
+              color="cyan"
+            >
+              <IconUpload />
+            </ActionIcon>
+          </div>
+        </Tooltip>
+        <Tooltip label="Close overlay">
+          <ActionIcon
+            onClick={closeCurrentWindow}
+            variant="default"
+            color={uploaded ? 'cyan' : 'gray'}
+          >
+            <IconX />
+          </ActionIcon>
+        </Tooltip>
       </Group>
       {errorMessage && (
         <Notification
@@ -134,6 +167,11 @@ const Influences = () => {
           mt="xs"
         >
           {errorMessage}
+        </Notification>
+      )}
+      {uploaded && (
+        <Notification color="teal" mt="xs" disallowClose>
+          You are awesome 🤘
         </Notification>
       )}
       <canvas

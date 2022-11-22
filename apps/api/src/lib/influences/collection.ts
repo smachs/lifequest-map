@@ -26,6 +26,12 @@ function ensureInfluencesSchema(): Promise<Document> {
           worldName: {
             bsonType: 'string',
           },
+          userId: {
+            bsonType: 'string',
+          },
+          username: {
+            bsonType: 'string',
+          },
           influence: {
             bsonType: 'array',
             items: {

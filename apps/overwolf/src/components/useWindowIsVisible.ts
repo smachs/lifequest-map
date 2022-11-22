@@ -1,60 +1,58 @@
 import { useEffect, useState } from 'react';
-import { getCurrentWindow } from 'ui/utils/windows';
-import { NEW_WORLD_CLASS_ID } from '../utils/games';
+import { getCurrentWindow, getWindowState } from 'ui/utils/windows';
 
-function useWindowIsVisible() {
+function useWindowIsVisible(windowName?: string) {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    async function handleWindowStateChanged(
+    if (!windowName) {
+      getCurrentWindow().then((result) => {
+        setIsVisible(
+          result.stateEx === 'normal' || result.stateEx === 'maximized'
+        );
+      });
+    } else {
+      getWindowState(windowName).then((result) => {
+        setIsVisible(
+          result.window_state_ex === 'normal' ||
+            result.window_state_ex === 'maximized'
+        );
+      });
+    }
+
+    const handleWindowStateChanged = async (
       state: overwolf.windows.WindowStateChangedEvent
-    ) {
-      const currentWindow = await getCurrentWindow();
-      if (currentWindow.id !== state.window_id) {
-        return;
+    ) => {
+      if (windowName) {
+        if (windowName !== state.window_name) {
+          return;
+        }
+      } else {
+        const currentWindow = await getCurrentWindow();
+        if (currentWindow.id !== state.window_id) {
+          return;
+        }
       }
       if (
         state.window_state_ex === 'minimized' ||
-        state.window_state_ex === 'hidden'
+        state.window_state_ex === 'hidden' ||
+        state.window_state_ex === 'closed'
       ) {
         setIsVisible(false);
       } else if (
         (state.window_previous_state_ex === 'minimized' ||
-          state.window_previous_state_ex === 'hidden') &&
+          state.window_previous_state_ex === 'hidden' ||
+          state.window_previous_state_ex === 'closed') &&
         (state.window_state_ex === 'normal' ||
           state.window_state_ex === 'maximized')
       ) {
         setIsVisible(true);
       }
-    }
-
-    async function handleGameInfoUpdated(
-      res: overwolf.games.GameInfoUpdatedEvent
-    ) {
-      const currentWindow = await getCurrentWindow();
-      if (currentWindow.name !== 'overlay') {
-        return;
-      }
-      const { gameInfo, focusChanged } = res;
-      if (gameInfo && gameInfo.classId === NEW_WORLD_CLASS_ID && focusChanged) {
-        if (
-          gameInfo.isInFocus &&
-          (currentWindow.stateEx === 'normal' ||
-            currentWindow.stateEx === 'maximized')
-        ) {
-          setIsVisible(true);
-        } else {
-          setIsVisible(false);
-        }
-      }
-    }
+    };
 
     overwolf.windows.onStateChanged.addListener(handleWindowStateChanged);
-    overwolf.games.onGameInfoUpdated.addListener(handleGameInfoUpdated);
-
     return () => {
       overwolf.windows.onStateChanged.removeListener(handleWindowStateChanged);
-      overwolf.games.onGameInfoUpdated.removeListener(handleGameInfoUpdated);
     };
   }, []);
 

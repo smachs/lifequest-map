@@ -13,6 +13,14 @@ export async function getCurrentWindow(): Promise<overwolf.windows.WindowInfo> {
   );
 }
 
+export async function getWindowState(
+  windowName: string
+): Promise<overwolf.windows.GetWindowStateResult> {
+  return await new Promise<overwolf.windows.GetWindowStateResult>((resolve) =>
+    overwolf.windows.getWindowState(windowName, (result) => resolve(result))
+  );
+}
+
 const declaredWindows: {
   [windowName: string]: overwolf.windows.WindowInfo;
 } = {};

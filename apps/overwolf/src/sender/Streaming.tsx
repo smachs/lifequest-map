@@ -19,8 +19,8 @@ import { useUserStore } from 'ui/utils/userStore';
 import shallow from 'zustand/shallow';
 import { ActionIcon, Group, Tooltip } from '@mantine/core';
 import DebouncedInput from '../components/DebouncedInput/DebouncedInput';
-import { IconMenu2, IconScreenshot, IconX } from '@tabler/icons';
-import { toggleWindow, WINDOWS } from 'ui/utils/windows';
+import { IconMenu2, IconX } from '@tabler/icons';
+import InfluenceIcon from '../components/InfluenceIcon/InfluenceIcon';
 
 function Streaming(): JSX.Element {
   const { account, refreshAccount } = useUserStore(
@@ -77,13 +77,7 @@ function Streaming(): JSX.Element {
           zIndex: 2,
         }}
       >
-        {account.isModerator && (
-          <Tooltip label="Toggle influence screenshot overlay">
-            <ActionIcon onClick={() => toggleWindow(WINDOWS.INFLUENCE, true)}>
-              <IconScreenshot />
-            </ActionIcon>
-          </Tooltip>
-        )}
+        {account.isModerator && <InfluenceIcon />}
         <Tooltip label="Toggle settings">
           <ActionIcon
             onClick={() => setShowSettings((showSettings) => !showSettings)}
