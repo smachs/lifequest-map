@@ -5,14 +5,13 @@ import { IconAlertCircle, IconCircleCheck, IconEyeCheck } from '@tabler/icons';
 import { Group, Tooltip, ActionIcon, Stack, Text } from '@mantine/core';
 import WorldName from 'ui/components/SyncStatus/WorldName';
 import { getWorld, getZone } from 'static';
+import { useNewWorldGameInfo } from '../store';
 
-type SyncStatusProps = {
-  newWorldIsRunning: boolean;
-};
-function SyncStatusSender({ newWorldIsRunning }: SyncStatusProps) {
+function SyncStatusSender() {
   const activated = useOverlayActivated();
   const { position, location, region, username, worldName, isOCR } =
     usePosition();
+  const newWorldGameInfo = useNewWorldGameInfo();
 
   if (!activated) {
     return (
@@ -132,7 +131,7 @@ function SyncStatusSender({ newWorldIsRunning }: SyncStatusProps) {
           </ActionIcon>
         </Tooltip>
       )}
-      {newWorldIsRunning && position && (
+      {newWorldGameInfo?.isRunning && position && (
         <small>
           <span className={styles.success}>Playing</span>
           {username && ` as ${username}`} at [
@@ -144,7 +143,7 @@ function SyncStatusSender({ newWorldIsRunning }: SyncStatusProps) {
           </Group>
         </small>
       )}
-      {newWorldIsRunning && !position && (
+      {newWorldGameInfo?.isRunning && !position && (
         <small>
           <span className={styles.waiting}>Connected</span> to New World.
           Waiting for position.
@@ -154,7 +153,7 @@ function SyncStatusSender({ newWorldIsRunning }: SyncStatusProps) {
           </span>
         </small>
       )}
-      {!newWorldIsRunning && (
+      {!newWorldGameInfo?.isRunning && (
         <small>
           <span className={styles.warning}>Not connected</span> to New World.
           Please run the game first.

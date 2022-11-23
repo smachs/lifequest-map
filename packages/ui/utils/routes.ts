@@ -3,8 +3,13 @@ import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { AETERNUM_MAP, findMapDetails, mapDetails } from 'static';
 import { deserializeMapView, serializeMapView } from './storage';
 
-export type Section = 'nodes' | 'routes' | 'settings';
-export const SECTIONS: Section[] = ['nodes', 'routes', 'settings'];
+export type Section = 'nodes' | 'routes' | 'settings' | 'influences';
+export const SECTIONS: Section[] = [
+  'nodes',
+  'routes',
+  'settings',
+  'influences',
+];
 
 export const useRouteParams = () => {
   const { map = mapDetails[0].title, nodeId, routeId } = useParams();

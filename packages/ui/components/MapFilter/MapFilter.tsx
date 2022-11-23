@@ -30,7 +30,9 @@ import MarkerRouteDetails from '../MarkerRoutes/MarkerRouteDetails';
 import shallow from 'zustand/shallow';
 import { useSettingsStore } from '../../utils/settingsStore';
 import { useUserStore } from '../../utils/userStore';
-import { IconUsers } from '@tabler/icons';
+import { IconFlag, IconUsers } from '@tabler/icons';
+import Influences from '../Influences/Influences';
+import { Tooltip } from '@mantine/core';
 
 type MarkerFilterProps = {
   onMarkerCreate: () => void;
@@ -102,110 +104,127 @@ function MapFilter({
           <MarkerRoutes onEdit={onMarkerRouteUpsert} />
         )}
         {view.section === 'settings' && <Settings />}
+        {view.section === 'influences' && <Influences />}
         <Footer />
       </div>
       <nav className={styles.nav}>
         <MapSearch className={styles.nav__button} />
-        <Link
-          to={toView({ section: 'nodes' })}
-          className={classNames(
-            styles.nav__button,
-            styles.nav__border,
-            view.section === 'nodes' && styles.nav__active
-          )}
-        >
-          <MarkerIcon />
-        </Link>
-        <Link
-          to={toView({ section: 'routes' })}
-          className={classNames(
-            styles.nav__button,
-            view.section === 'routes' && styles.nav__active
-          )}
-        >
-          <RoutesIcon />
-        </Link>
-        <Link
-          to={toView({ section: 'settings' })}
-          className={classNames(
-            styles.nav__button,
-            view.section === 'settings' && styles.nav__active
-          )}
-        >
-          <SettingsIcon />
-        </Link>
-
-        <button
-          data-tooltip="Share live status"
-          data-tooltip-position="right"
-          onClick={() => {
-            addModal({
-              title: 'Share Live Status',
-              children: (
-                <ShareLiveStatus
-                  onActivate={() => {
-                    closeLatestModal();
-                  }}
-                />
-              ),
-            });
-          }}
-          className={classNames(
-            styles.nav__button,
-            styles.nav__border,
-            isSyncing && styles.nav__active
-          )}
-        >
-          <BroadcastIcon />
-        </button>
-        <button
-          data-tooltip="Follow position"
-          data-tooltip-position="right"
-          disabled={!isSyncing}
-          onClick={() => {
-            toggleFollowing();
-          }}
-          className={classNames(
-            styles.nav__button,
-            following && styles.nav__active
-          )}
-        >
-          <PlayerIcon />
-        </button>
-        <button
-          data-tooltip="Show other players (all servers)"
-          data-tooltip-position="right"
-          onClick={() => {
-            toggleShowOtherPlayers();
-          }}
-          className={classNames(
-            styles.nav__button,
-            showOtherPlayers && styles.nav__active
-          )}
-        >
-          <IconUsers />
-        </button>
-        <button
-          data-tooltip="Show minimap"
-          data-tooltip-position="right"
-          onClick={() => {
-            addModal({
-              title: 'Setup minimap',
-              children: <MinimapSetup />,
-            });
-          }}
-          className={classNames(styles.nav__button, styles.nav__border)}
-        >
-          <CompassIcon />
-        </button>
-        <button
-          data-tooltip="Show/Hide menu"
-          data-tooltip-position="right"
-          className={classNames(styles.nav__button, styles.nav__border)}
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <MenuOpenIcon />
-        </button>
+        <Tooltip label="Nodes" position="right">
+          <Link
+            to={toView({ section: 'nodes' })}
+            className={classNames(
+              styles.nav__button,
+              styles.nav__border,
+              view.section === 'nodes' && styles.nav__active
+            )}
+          >
+            <MarkerIcon />
+          </Link>
+        </Tooltip>
+        <Tooltip label="Routes" position="right">
+          <Link
+            to={toView({ section: 'routes' })}
+            className={classNames(
+              styles.nav__button,
+              view.section === 'routes' && styles.nav__active
+            )}
+          >
+            <RoutesIcon />
+          </Link>
+        </Tooltip>
+        <Tooltip label="Influences (under construction)" position="right">
+          <Link
+            to={toView({ section: 'influences' })}
+            className={classNames(
+              styles.nav__button,
+              view.section === 'influences' && styles.nav__active
+            )}
+          >
+            <IconFlag />
+          </Link>
+        </Tooltip>
+        <Tooltip label="Settings" position="right">
+          <Link
+            to={toView({ section: 'settings' })}
+            className={classNames(
+              styles.nav__button,
+              view.section === 'settings' && styles.nav__active
+            )}
+          >
+            <SettingsIcon />
+          </Link>
+        </Tooltip>
+        <Tooltip label="Share live status" position="right">
+          <button
+            onClick={() => {
+              addModal({
+                title: 'Share Live Status',
+                children: (
+                  <ShareLiveStatus
+                    onActivate={() => {
+                      closeLatestModal();
+                    }}
+                  />
+                ),
+              });
+            }}
+            className={classNames(
+              styles.nav__button,
+              styles.nav__border,
+              isSyncing && styles.nav__active
+            )}
+          >
+            <BroadcastIcon />
+          </button>
+        </Tooltip>
+        <Tooltip label="Follow position" position="right">
+          <button
+            disabled={!isSyncing}
+            onClick={() => {
+              toggleFollowing();
+            }}
+            className={classNames(
+              styles.nav__button,
+              following && styles.nav__active
+            )}
+          >
+            <PlayerIcon />
+          </button>
+        </Tooltip>
+        <Tooltip label="Show other players (all servers)" position="right">
+          <button
+            onClick={() => {
+              toggleShowOtherPlayers();
+            }}
+            className={classNames(
+              styles.nav__button,
+              showOtherPlayers && styles.nav__active
+            )}
+          >
+            <IconUsers />
+          </button>
+        </Tooltip>
+        <Tooltip label="Setup minimap" position="right">
+          <button
+            onClick={() => {
+              addModal({
+                title: 'Setup minimap',
+                children: <MinimapSetup />,
+              });
+            }}
+            className={classNames(styles.nav__button, styles.nav__border)}
+          >
+            <CompassIcon />
+          </button>
+        </Tooltip>
+        <Tooltip label="Toggle sidebar" position="right">
+          <button
+            className={classNames(styles.nav__button, styles.nav__border)}
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <MenuOpenIcon />
+          </button>
+        </Tooltip>
       </nav>
     </aside>
   );

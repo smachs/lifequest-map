@@ -8,18 +8,6 @@ export function isNewWorldRunning(): Promise<boolean> {
   });
 }
 
-export function getNewWorldRunning(): Promise<overwolf.games.GetRunningGameInfoResult | null> {
-  return new Promise((resolve) => {
-    overwolf.games.getRunningGameInfo((result) => {
-      if (result?.classId === NEW_WORLD_CLASS_ID) {
-        resolve(result);
-      } else {
-        resolve(null);
-      }
-    });
-  });
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getGameInfo(): Promise<any> {
   return new Promise((resolve, reject) => {
