@@ -1,4 +1,3 @@
-import { Anchor } from '@mantine/core';
 import type { OwAd } from '@overwolf/types/owads';
 import { useEffect, useRef, useState } from 'react';
 import useWindowIsVisible from '../useWindowIsVisible';
