@@ -20,7 +20,7 @@ const InfluenceIcon = () => {
   const { data: todaysCount } = useQuery(
     ['influence', worldName],
     () => fetchJSON<number>(`/api/influences/today?worldName=${worldName}`),
-    { enabled: !!worldName }
+    { enabled: !!worldName && worldName !== 'Unknown' }
   );
   const [sawTooltip, setSawTooltip] = useState(false);
   return (

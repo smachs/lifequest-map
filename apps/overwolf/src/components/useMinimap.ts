@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { usePersistentState } from 'ui/utils/storage';
 import { closeWindow, restoreWindow, WINDOWS } from 'ui/utils/windows';
 import { SHOW_HIDE_MINIMAP } from '../utils/hotkeys';
-import { useIsNewWorldRunning } from './store';
+import { useNewWorldGameInfo } from './store';
 
 function useMinimap(): [
   boolean,
@@ -13,7 +13,7 @@ function useMinimap(): [
     false
   );
 
-  const newWorldIsRunning = useIsNewWorldRunning();
+  const newWorldGameInfo = useNewWorldGameInfo();
 
   useEffect(() => {
     async function handleHotkeyPressed(
@@ -31,12 +31,12 @@ function useMinimap(): [
   }, [showMinimap]);
 
   useEffect(() => {
-    if (newWorldIsRunning && showMinimap) {
+    if (newWorldGameInfo?.isRunning && showMinimap) {
       restoreWindow(WINDOWS.MINIMAP);
     } else {
       closeWindow(WINDOWS.MINIMAP);
     }
-  }, [newWorldIsRunning, showMinimap]);
+  }, [newWorldGameInfo?.isRunning, showMinimap]);
 
   return [showMinimap, setShowMinimap];
 }

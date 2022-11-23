@@ -1,6 +1,6 @@
 import { takeScreenshot } from './media';
 import defaultProfile from './default_profile.json';
-import { getNewWorldRunning } from './games';
+import { useStore } from '../components/store';
 
 const WIDTH = 288;
 const HEIGHT = 14;
@@ -43,13 +43,13 @@ async function preprocessorImage(url: string): Promise<number[][]> {
 }
 
 export async function getScreenshotFromNewWorld() {
-  const newWorld = await getNewWorldRunning();
-  if (!newWorld?.isInFocus) {
+  const { newWorldGameInfo } = useStore.getState();
+  if (!newWorldGameInfo?.isInFocus) {
     return null;
   }
   const url = await takeScreenshot({
     crop: {
-      x: newWorld.logicalWidth - 293,
+      x: newWorldGameInfo.logicalWidth - 293,
       y: 20,
       width: WIDTH,
       height: HEIGHT,

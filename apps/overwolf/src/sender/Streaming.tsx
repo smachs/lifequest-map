@@ -14,7 +14,6 @@ import ServerRadioButton from 'ui/components/LiveServer/ServerRadioButton';
 import useServers from 'ui/components/ShareLiveStatus/useServers';
 import SyncStatusSender from '../components/SyncStatus/SyncStatusSender';
 import useMinimap from '../components/useMinimap';
-import { useIsNewWorldRunning } from '../components/store';
 import { useUserStore } from 'ui/utils/userStore';
 import shallow from 'zustand/shallow';
 import { ActionIcon, Group, Tooltip } from '@mantine/core';
@@ -31,7 +30,7 @@ function Streaming(): JSX.Element {
     shallow
   );
   const { status, isConnected, peerConnections } = useShareLivePosition();
-  const newWorldIsRunning = useIsNewWorldRunning();
+
   const [showSettings, setShowSettings] = useState(false);
   const [showMinimap, setShowMinimap] = useMinimap();
   const servers = useServers();
@@ -89,7 +88,7 @@ function Streaming(): JSX.Element {
       <div className={styles.user}>
         <span>
           Welcome back, {account!.name}!<br />
-          <SyncStatusSender newWorldIsRunning={newWorldIsRunning} />
+          <SyncStatusSender />
         </span>
       </div>
       <div className={styles.form}>

@@ -3,29 +3,34 @@ import create from 'zustand';
 import { NEW_WORLD_CLASS_ID } from '../utils/games';
 
 type Store = {
-  isNewWorldRunning: boolean;
-  setIsNewWorldRunning: (isNewWorldRunning: boolean) => void;
+  newWorldGameInfo: overwolf.games.RunningGameInfo | null;
+  setNewWorldGameInfo: (
+    newWorldGameInfo: overwolf.games.RunningGameInfo | null
+  ) => void;
 };
 
 export const useStore = create<Store>((set) => {
   waitForOverwolf().then(() => {
     overwolf.games.onGameInfoUpdated.addListener((event) => {
-      if (event.gameChanged) {
-        const isNewWorldRunning =
-          event.gameInfo?.classId === NEW_WORLD_CLASS_ID;
-        set({ isNewWorldRunning });
+      if (event.gameInfo?.classId === NEW_WORLD_CLASS_ID) {
+        set({ newWorldGameInfo: event.gameInfo });
+      } else {
+        set({ newWorldGameInfo: null });
       }
     });
 
     overwolf.games.getRunningGameInfo((result) => {
-      const isNewWorldRunning = result?.classId === NEW_WORLD_CLASS_ID;
-      set({ isNewWorldRunning });
+      if (result?.classId === NEW_WORLD_CLASS_ID) {
+        set({ newWorldGameInfo: result });
+      } else {
+        set({ newWorldGameInfo: null });
+      }
     });
   });
   return {
-    isNewWorldRunning: false,
-    setIsNewWorldRunning: (isNewWorldRunning) => set({ isNewWorldRunning }),
+    newWorldGameInfo: null,
+    setNewWorldGameInfo: (newWorldGameInfo) => set({ newWorldGameInfo }),
   };
 });
 
-export const useIsNewWorldRunning = () => useStore().isNewWorldRunning;
+export const useNewWorldGameInfo = () => useStore().newWorldGameInfo;

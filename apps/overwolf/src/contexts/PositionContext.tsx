@@ -12,7 +12,7 @@ import {
 } from 'static';
 import { writeError, writeLog } from 'ui/utils/logs';
 import { getJSONItem } from 'ui/utils/storage';
-import { useIsNewWorldRunning } from '../components/store';
+import { useNewWorldGameInfo } from '../components/store';
 import { getGameInfo } from '../utils/games';
 import {
   getLocation,
@@ -66,7 +66,8 @@ export function PositionProvider({
   const [worldName, setWorldName] = useState<string>('Unknown');
   const [map, setMap] = useState<string>(AETERNUM_MAP.name);
   const [username, setUsername] = useState<string | null>(null);
-  const newWorldIsRunning = useIsNewWorldRunning();
+  const newWorldGameInfo = useNewWorldGameInfo();
+
   const [isOCR, setIsOCR] = useState(false);
 
   const location = useMemo(
@@ -87,7 +88,7 @@ export function PositionProvider({
   }, [position, map]);
 
   useEffect(() => {
-    if (!newWorldIsRunning) {
+    if (!newWorldGameInfo?.isRunning) {
       return;
     }
     overwolf.games.events.setRequiredFeatures(['game_info'], (event) =>
@@ -215,7 +216,7 @@ export function PositionProvider({
       active = false;
       clearTimeout(handler);
     };
-  }, [newWorldIsRunning]);
+  }, [newWorldGameInfo?.isRunning]);
 
   return (
     <PositionContext.Provider
