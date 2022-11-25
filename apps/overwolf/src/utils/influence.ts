@@ -1,3 +1,4 @@
+import { validateInfluence } from 'static';
 import { fetchJSON } from 'ui/utils/api';
 import { getCurrentWindow } from 'ui/utils/windows';
 import { getGameInfo } from './games';
@@ -254,11 +255,16 @@ export const getInfluence = (imageData: ImageData): Influence => {
       const highestFaction = Object.entries(factionPoints)
         .map(([faction, influence]) => ({ faction, influence }))
         .sort((a, b) => b.influence - a.influence)[0];
+      const factionName = highestFaction.faction;
+
       return {
         regionName,
-        factionName: highestFaction.faction,
+        factionName,
       };
     });
+
+  validateInfluence(influence);
+
   return influence;
 };
 

@@ -6,7 +6,7 @@ import { SCREENSHOTS_PATH } from '../env.js';
 import { getScreenshotsCollection } from './collection.js';
 import { ensureAuthenticated } from '../auth/middlewares.js';
 import { uploadToDiscord } from '../discord.js';
-import { worlds } from 'static';
+import { validateInfluence, worlds } from 'static';
 import { Blob } from 'node-fetch';
 import { getInfluencesCollection } from '../influences/collection.js';
 
@@ -63,7 +63,12 @@ screenshotsRouter.post(
         return;
       }
 
-      const influence = JSON.parse(req.body.influence);
+      const influence = JSON.parse(req.body.influence) as {
+        regionName: string;
+        factionName: string;
+      }[];
+      validateInfluence(influence);
+
       const buffer = await sharp(req.file.path).webp().toBuffer();
       const blob = new Blob([buffer]);
       await fs.rm(req.file.path);

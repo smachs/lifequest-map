@@ -77,9 +77,6 @@ const Influences = () => {
           context.drawImage(image, region.center[0], region.center[1]);
         }
       });
-      if (influence.length !== 15) {
-        throw new Error('Could not detect influences');
-      }
       const blob = await toBlob(canvas);
       setBlob(blob);
       setInfluence(influence);
