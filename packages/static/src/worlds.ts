@@ -15,5 +15,27 @@ export const getZonesWithWorlds = () => {
     worlds: worlds.filter((world) => world.zone === zone.id),
   }));
 };
+
+export const validateInfluence = (
+  influence: {
+    regionName: string;
+    factionName: string;
+  }[]
+) => {
+  if (influence.length !== 15) {
+    throw new Error('Could not detect all 15 regions');
+  }
+  influence.forEach(({ regionName, factionName }) => {
+    if (
+      ['Great Cleave', 'Edengrove', 'Shattered Mountain'].includes(regionName)
+    ) {
+      if (factionName !== 'Neutral') {
+        throw new Error(`${regionName} is invalid`);
+      }
+    } else if (factionName === 'Neutral') {
+      throw new Error(`${regionName} is invalid`);
+    }
+  });
+};
 export type World = typeof worlds[0];
 export type Zone = typeof zones[0];
