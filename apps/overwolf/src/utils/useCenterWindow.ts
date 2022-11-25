@@ -11,9 +11,16 @@ const useCenterWindow = () => {
         return;
       }
       const currentWindow = await getCurrentWindow();
-      const x = newWorldGameInfo.logicalWidth / 2 - currentWindow.width / 2;
-      const y = newWorldGameInfo.logicalHeight / 2 - currentWindow.height / 2;
-
+      // @ts-ignore (dpiScale is not documentated)
+      const dpiScale = currentWindow.dpiScale ?? 1;
+      const x = Math.floor(
+        (newWorldGameInfo.logicalWidth / 2 - currentWindow.width / 2) / dpiScale
+      );
+      const y = Math.floor(
+        (newWorldGameInfo.logicalHeight / 2 - currentWindow.height / 2) /
+          dpiScale
+      );
+      console.log(newWorldGameInfo, currentWindow);
       overwolf.windows.changePosition(currentWindow.id, x, y);
     })();
   }, [
