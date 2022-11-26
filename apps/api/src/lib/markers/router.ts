@@ -426,6 +426,7 @@ async function bodyToMarker(
     size,
     description,
     screenshotId,
+    screenshotFilename,
     customRespawnTimer,
     hp,
     requiredGlyphId,
@@ -481,7 +482,10 @@ async function bodyToMarker(
   if (description) {
     marker.description = description.substring(0, MAX_DESCRIPTION_LENGTH);
   }
-  if (ObjectId.isValid(screenshotId)) {
+
+  if (screenshotFilename) {
+    marker.screenshotFilename = screenshotFilename;
+  } else if (ObjectId.isValid(screenshotId)) {
     const screenshot = await getScreenshotsCollection().findOne({
       _id: new ObjectId(screenshotId),
     });
