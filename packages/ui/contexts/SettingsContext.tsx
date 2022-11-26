@@ -22,6 +22,8 @@ type SettingsContextValue = {
   setAdaptiveZoom: (adaptiveZoom: boolean) => void;
   traceLineColor: string;
   setTraceLineColor: (traceLineColor: string) => void;
+  playerIconColor: string;
+  setPlayerIconColor: (playerIconColor: string) => void;
   peerToPeer: boolean;
   setPeerToPeer: (peerToPeer: boolean) => void;
   ocr: boolean;
@@ -46,6 +48,8 @@ const SettingsContext = createContext<SettingsContextValue>({
   setAdaptiveZoom: () => undefined,
   traceLineColor: '#F78166',
   setTraceLineColor: () => undefined,
+  playerIconColor: '#A7A7A7',
+  setPlayerIconColor: () => undefined,
   peerToPeer: true,
   setPeerToPeer: () => undefined,
   ocr: false,
@@ -91,6 +95,10 @@ export function SettingsProvider({
     'trace-line-color',
     '#F78166'
   );
+  const [playerIconColor, setPlayerIconColor] = usePersistentState(
+    'player-icon-color',
+    '#A7A7A7'
+  );
   const [peerToPeer, setPeerToPeer] = usePersistentState('peer-to-peer', true);
   const [ocr, setOCR] = usePersistentState('ocr', false);
 
@@ -115,6 +123,8 @@ export function SettingsProvider({
         setAdaptiveZoom,
         traceLineColor,
         setTraceLineColor,
+        playerIconColor,
+        setPlayerIconColor,
         peerToPeer,
         setPeerToPeer,
         ocr,

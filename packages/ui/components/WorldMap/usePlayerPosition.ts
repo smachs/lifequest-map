@@ -48,7 +48,8 @@ function usePlayerPosition({
   const traceDotsGroup = useMemo(() => new leaflet.LayerGroup(), []);
   const traceDots = useMemo<leaflet.Circle[]>(() => [], []);
 
-  const { showTraceLines, maxTraceLines, traceLineColor } = useSettings();
+  const { showTraceLines, maxTraceLines, traceLineColor, playerIconColor } =
+    useSettings();
   const map = useMap();
   const navigate = useNavigate();
 
@@ -96,7 +97,7 @@ function usePlayerPosition({
     if (!leafletMap || !playerPosition || !isOnSameWorld) {
       return;
     }
-    const icon = createPlayerIcon();
+    const icon = createPlayerIcon(playerIconColor);
     const newMarker = new PositionMarker(playerPosition.location, {
       icon,
       zIndexOffset: 9000,

@@ -24,6 +24,8 @@ function Settings(): JSX.Element {
     setAdaptiveZoom,
     traceLineColor,
     setTraceLineColor,
+    playerIconColor,
+    setPlayerIconColor,
   } = useSettings();
 
   useEffect(() => {
@@ -87,6 +89,14 @@ function Settings(): JSX.Element {
           type="color"
           value={traceLineColor}
           onChange={(event) => setTraceLineColor(event.target.value)}
+        />
+      </label>
+      <label className={styles.label}>
+        Player icon color
+        <input
+          type="color"
+          value={playerIconColor}
+          onChange={(event) => setPlayerIconColor(event.target.value)}
         />
       </label>
       <label className={styles.label}>
