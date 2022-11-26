@@ -87,6 +87,9 @@ export const mapFilters: FilterItem[] = [
     type: 'glyphChest',
     title: 'Glyph Chest',
     iconUrl: '/pois/chest_glyph.webp',
+    glyph: {
+      isRequired: false,
+    },
   },
   {
     category: 'chests',
