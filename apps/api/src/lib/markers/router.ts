@@ -479,8 +479,8 @@ async function bodyToMarker(
     marker.requiredGlyphId = requiredGlyphId;
   }
 
-  if (description) {
-    marker.description = description.substring(0, MAX_DESCRIPTION_LENGTH);
+  if (description?.length >= 0) {
+    marker.description = description?.substring(0, MAX_DESCRIPTION_LENGTH);
   }
 
   if (screenshotFilename) {
