@@ -200,7 +200,9 @@ markersRouter.patch(
       if (!mapFilter.hasHP) {
         unset.hp = 1;
       }
-
+      if (!marker.description) {
+        unset.description = 1;
+      }
       const oldMarker = await getMarkersCollection().findOne(query);
       if (
         oldMarker?.screenshotFilename &&
@@ -479,8 +481,8 @@ async function bodyToMarker(
     marker.requiredGlyphId = requiredGlyphId;
   }
 
-  if (description?.length >= 0) {
-    marker.description = description?.substring(0, MAX_DESCRIPTION_LENGTH);
+  if (description) {
+    marker.description = description.substring(0, MAX_DESCRIPTION_LENGTH);
   }
 
   if (screenshotFilename) {
