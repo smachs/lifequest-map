@@ -13,8 +13,7 @@ export const SECTIONS: Section[] = [
 
 export const useRouteParams = () => {
   const { map = mapDetails[0].title, nodeId, routeId } = useParams();
-  const existingMap = findMapDetails(map) ? map : AETERNUM_MAP.title;
-
+  const existingMap = findMapDetails(map)?.title || AETERNUM_MAP.title;
   return { map: existingMap, nodeId, routeId };
 };
 
@@ -57,10 +56,19 @@ const getView = (
     !sectionParam || !SECTIONS.includes(sectionParam as Section)
       ? 'nodes'
       : (sectionParam as Section);
+  const embedParam = searchParams.get('embed');
+  const embed = embedParam === 'true';
 
   const existingMap = findMapDetails(map) ? map : AETERNUM_MAP.title;
 
-  return { ...searchParamsView, map: existingMap, nodeId, routeId, section };
+  return {
+    ...searchParamsView,
+    map: existingMap,
+    nodeId,
+    routeId,
+    section,
+    embed,
+  };
 };
 
 export const useView = (): {
@@ -73,6 +81,7 @@ export const useView = (): {
         x: number;
         zoom: number;
         section: Section;
+        embed: boolean;
       }
     | {
         map: string;
@@ -82,6 +91,7 @@ export const useView = (): {
         y: null;
         zoom: null;
         section: Section;
+        embed: boolean;
       };
   setView: (
     props: { x: number; y: number; zoom: number } | { section: Section }
@@ -113,9 +123,15 @@ export const useView = (): {
 
   useEffect(() => {
     if (!internalView.x) {
+      const newSearchParams: { [key: string]: string } = {
+        section: internalView.section,
+      };
+      if (internalView.embed) {
+        newSearchParams.embed = 'true';
+      }
       setSearchParams((searchParams) => ({
         ...searchParams,
-        section: internalView.section,
+        ...newSearchParams,
       }));
     } else {
       serializeMapView(map, {
