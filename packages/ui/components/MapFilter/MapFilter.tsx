@@ -25,7 +25,6 @@ import { useRouteParams, useView } from '../../utils/routes';
 import MarkerDetails from '../MarkerDetails/MarkerDetails';
 import type { MarkerFull } from '../MarkerDetails/useMarker';
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
 import MarkerRouteDetails from '../MarkerRoutes/MarkerRouteDetails';
 import shallow from 'zustand/shallow';
 import { useSettingsStore } from '../../utils/settingsStore';
@@ -33,6 +32,7 @@ import { useUserStore } from '../../utils/userStore';
 import { IconFlag, IconUsers } from '@tabler/icons';
 import Influences from '../Influences/Influences';
 import { Tooltip } from '@mantine/core';
+import { useDidUpdate } from '@mantine/hooks';
 
 type MarkerFilterProps = {
   onMarkerCreate: () => void;
@@ -45,9 +45,11 @@ function MapFilter({
   onMarkerEdit,
 }: MarkerFilterProps): JSX.Element {
   const { addModal, closeLatestModal } = useModal();
+  const { view, toView } = useView();
+
   const [isOpen, setIsOpen] = usePersistentState(
     'aeternum-map-client.sidebar-state',
-    true
+    !view.embed
   );
   const account = useUserStore((state) => state.account);
   const {
@@ -65,7 +67,6 @@ function MapFilter({
     shallow
   );
   const { nodeId, routeId } = useRouteParams();
-  const { view, toView } = useView();
   const { liveShareServerUrl, liveShareToken } = useSettingsStore(
     (state) => ({
       liveShareServerUrl: state.liveShareServerUrl,
@@ -79,7 +80,7 @@ function MapFilter({
     400
   );
 
-  useEffect(() => {
+  useDidUpdate(() => {
     setIsOpen(true);
   }, [view.section]);
 
