@@ -85,7 +85,7 @@ function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
     >
       {(!filterItem || loading) && <Skeleton height={50} />}
       {filterItem && !loading && (
-        <Stack style={{ height: 'calc(100% - 50px)' }} spacing="xs">
+        <Stack style={{ height: 'calc(100vh - 64px)' }} spacing="xs">
           <Group>
             {marker.name && (
               <Badge size="sm" color="cyan">
