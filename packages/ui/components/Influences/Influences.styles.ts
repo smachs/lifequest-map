@@ -42,6 +42,7 @@ const useStyles = createStyles((theme) => ({
 
   world: {
     fontWeight: 500,
+    width: '100%',
     display: 'block',
     textDecoration: 'none',
     padding: `${theme.spacing.xs}px ${theme.spacing.md}px`,
@@ -52,17 +53,16 @@ const useStyles = createStyles((theme) => ({
       theme.colorScheme === 'dark'
         ? theme.colors.dark[0]
         : theme.colors.gray[7],
-    borderLeft: `1px solid ${
-      theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]
-    }`,
+    borderLeft: `1px solid ${theme.colors.dark[4]}`,
 
     '&:hover': {
-      backgroundColor:
-        theme.colorScheme === 'dark'
-          ? theme.colors.dark[7]
-          : theme.colors.gray[0],
-      color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+      backgroundColor: theme.colors.dark[7],
+      color: theme.white,
     },
+  },
+
+  selected: {
+    backgroundColor: theme.colors.dark[5],
   },
 
   chevron: {

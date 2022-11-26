@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Group,
   Box,
@@ -15,10 +15,12 @@ import {
   ActionIcon,
 } from '@mantine/core';
 import { IconChevronRight, IconInfoCircle } from '@tabler/icons';
-import { getZonesWithWorlds, Zone } from 'static';
+import { getZonesWithWorlds, regions, Zone } from 'static';
 import { useQuery } from 'react-query';
 import { fetchJSON } from '../../utils/api';
 import useStyles from './Influences.styles';
+import leaflet from 'leaflet';
+import { latestLeafletMap } from '../WorldMap/useWorldMap';
 
 const zonesWithWorlds = getZonesWithWorlds();
 
@@ -47,12 +49,26 @@ const Influence = ({ influence }: InfluenceProps) => {
 interface ZoneProps {
   zone: ReturnType<typeof getZonesWithWorlds>[0];
   influences: InfluenceDTO[];
+  selectedWorldName: string | null;
+  onWorldClick: (worldName: string) => void;
 }
-const Zone = ({ zone, influences }: ZoneProps) => {
-  const { classes, theme } = useStyles();
+const Zone = ({
+  zone,
+  influences,
+  selectedWorldName,
+  onWorldClick,
+}: ZoneProps) => {
+  const { classes, theme, cx } = useStyles();
   const [opened, setOpened] = useState(false);
   const items = zone.worlds.map((world) => (
-    <div key={world.worldName} className={classes.world}>
+    <UnstyledButton
+      key={world.worldName}
+      className={cx(
+        classes.world,
+        selectedWorldName === world.worldName && classes.selected
+      )}
+      onClick={() => onWorldClick(world.worldName)}
+    >
       <Text size="sm" weight={500}>
         {world.publicName}
       </Text>
@@ -61,7 +77,7 @@ const Zone = ({ zone, influences }: ZoneProps) => {
           (influence) => influence.worldName === world.worldName
         )}
       />
-    </div>
+    </UnstyledButton>
   ));
 
   return (
@@ -99,6 +115,11 @@ type InfluenceDTO = {
   createdAt: string;
 };
 
+const SYNDICATE_COLOR = 'rgb(130, 95, 130)';
+const COVENANT_COLOR = 'rgb(152, 100, 43)';
+const MARAUDER_COLOR = 'rgb(95, 135, 76)';
+const NEUTRAL_COLOR = 'rgb(200 200 200)';
+
 const getFactionRanking = (influences: InfluenceDTO[]) => {
   const rankingByFaction = influences.reduce(
     (acc, cur) => {
@@ -111,17 +132,17 @@ const getFactionRanking = (influences: InfluenceDTO[]) => {
     },
     {
       Syndicate: {
-        color: 'rgb(130, 95, 130)',
+        color: SYNDICATE_COLOR,
         count: 0,
         icon: '/syndicate.webp',
       },
       Covenant: {
-        color: 'rgb(152, 100, 43)',
+        color: COVENANT_COLOR,
         count: 0,
         icon: '/covenant.webp',
       },
       Marauder: {
-        color: 'rgb(95, 135, 76)',
+        color: MARAUDER_COLOR,
         count: 0,
         icon: '/marauder.webp',
       },
@@ -152,6 +173,54 @@ const Influences = () => {
     fetchJSON<InfluenceDTO[]>('/api/influences')
   );
   const { classes } = useStyles();
+  const [selectedWorldName, setSelectedWorldName] = useState<string | null>(
+    null
+  );
+
+  useEffect(() => {
+    if (!selectedWorldName) {
+      return;
+    }
+    const influence = influences.find(
+      (influence) => influence.worldName === selectedWorldName
+    );
+    if (!influence) {
+      return;
+    }
+
+    const polygons = regions.map((region) => {
+      const factionName = influence.influence.find(
+        (item) => item.regionName === region.name
+      )?.factionName;
+      if (!factionName) {
+        return null;
+      }
+      let color = '';
+      if (factionName === 'Syndicate') {
+        color = SYNDICATE_COLOR;
+      } else if (factionName === 'Covenant') {
+        color = COVENANT_COLOR;
+      } else if (factionName === 'Marauder') {
+        color = MARAUDER_COLOR;
+      } else {
+        color = NEUTRAL_COLOR;
+      }
+      return leaflet.polygon(region.coordinates as [number, number][], {
+        fillColor: color,
+        fill: true,
+        stroke: false,
+        weight: 1.2,
+        fillOpacity: 0.75,
+        interactive: false,
+        pmIgnore: true,
+      });
+    });
+
+    polygons.forEach((polygon) => polygon?.addTo(latestLeafletMap!));
+    return () => {
+      polygons.forEach((polygon) => polygon?.removeFrom(latestLeafletMap!));
+    };
+  }, [selectedWorldName, influences]);
 
   const { rankings, total } = getFactionRanking(influences);
   const segments = rankings.map((ranking) => ({
@@ -246,7 +315,17 @@ const Influences = () => {
       </Paper>
       <Box p="sm">
         {zonesWithWorlds.map((zone) => (
-          <Zone key={zone.id} zone={zone} influences={influences} />
+          <Zone
+            key={zone.id}
+            zone={zone}
+            influences={influences}
+            selectedWorldName={selectedWorldName}
+            onWorldClick={(worldName) =>
+              setSelectedWorldName((prev) =>
+                prev === worldName ? null : worldName
+              )
+            }
+          />
         ))}
       </Box>
     </ScrollArea>
