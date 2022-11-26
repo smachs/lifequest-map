@@ -200,7 +200,9 @@ markersRouter.patch(
       if (!mapFilter.hasHP) {
         unset.hp = 1;
       }
-
+      if (!marker.description) {
+        unset.description = 1;
+      }
       const oldMarker = await getMarkersCollection().findOne(query);
       if (
         oldMarker?.screenshotFilename &&
