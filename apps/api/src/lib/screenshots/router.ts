@@ -73,15 +73,40 @@ screenshotsRouter.post(
       const blob = new Blob([buffer]);
       await fs.rm(req.file.path);
       const now = new Date();
-      const midnight = new Date();
-      midnight.setHours(0, 0, 0, 0);
 
-      const todaysInfluences = await getInfluencesCollection().countDocuments({
-        worldName: world.worldName,
-        createdAt: {
-          $gte: midnight,
+      const lastInfluence = await getInfluencesCollection().findOne(
+        {
+          worldName: world.worldName,
         },
-      });
+        {
+          sort: {
+            createdAt: -1,
+          },
+        }
+      );
+
+      const changedInfluence = influence.reduce<
+        { regionName: string; before: string; after: string }[]
+      >((pre, item) => {
+        const previousItem = lastInfluence
+          ? lastInfluence.influence.find(
+              (lastItem) =>
+                lastItem.regionName === item.regionName &&
+                lastItem.factionName !== item.factionName
+            )
+          : { regionName: item.regionName, factionName: 'Neutral' };
+        if (previousItem) {
+          return [
+            ...pre,
+            {
+              regionName: item.regionName,
+              before: previousItem.factionName,
+              after: item.factionName,
+            },
+          ];
+        }
+        return pre;
+      }, []);
 
       const insertResult = await getInfluencesCollection().insertOne({
         worldName: world.worldName,
@@ -102,18 +127,19 @@ screenshotsRouter.post(
             .replaceAll(' ', '')}_WEBHOOK_URL`
         ];
 
-      if (!webhookUrl || todaysInfluences > 0) {
-        res
-          .status(200)
-          .json({ message: 'Influence added without Discord webhook' });
+      if (!webhookUrl || changedInfluence.length === 0) {
+        res.status(200).json({ message: 'Influence added without change' });
         return;
       }
 
+      const changedInfluenceMessage = changedInfluence
+        .map((item) => `${item.regionName}: ${item.before} -> ${item.after}`)
+        .join('\n');
       const response = await uploadToDiscord(
         blob,
         `**Server**: ${world.publicName}\n**User**: ${
           account.name
-        }\n**Date**: ${now.toLocaleDateString()}`,
+        }\n**Date**: ${now.toLocaleDateString()}\n**Changes**:\n${changedInfluenceMessage}`,
         webhookUrl
       );
       const result = await response.json();
