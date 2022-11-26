@@ -4,7 +4,7 @@
   cursor: pointer;
 }
 
-.label:not(.checked):not(.disabled):hover {
+.label:not(.checked, .disabled):hover {
   color: var(--color-text);
 }
 

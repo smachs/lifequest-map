@@ -65,6 +65,7 @@ export const uploadToDiscord = (
   );
   return fetch(webhookUrl, {
     method: 'POST',
+    // @ts-ignore (https://github.com/octet-stream/form-data/issues/57)
     body: formData,
   });
 };
