@@ -21,6 +21,7 @@ import { fetchJSON } from '../../utils/api';
 import useStyles from './Influences.styles';
 import leaflet from 'leaflet';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
+import { toTimeAgo } from '../../utils/dates';
 
 const zonesWithWorlds = getZonesWithWorlds();
 
@@ -60,25 +61,33 @@ const Zone = ({
 }: ZoneProps) => {
   const { classes, theme, cx } = useStyles();
   const [opened, setOpened] = useState(false);
-  const items = zone.worlds.map((world) => (
-    <UnstyledButton
-      key={world.worldName}
-      className={cx(
-        classes.world,
-        selectedWorldName === world.worldName && classes.selected
-      )}
-      onClick={() => onWorldClick(world.worldName)}
-    >
-      <Text size="sm" weight={500}>
-        {world.publicName}
-      </Text>
-      <Influence
-        influence={influences.find(
-          (influence) => influence.worldName === world.worldName
+  const items = zone.worlds.map((world) => {
+    const influence = influences.find(
+      (influence) => influence.worldName === world.worldName
+    );
+    return (
+      <UnstyledButton
+        key={world.worldName}
+        className={cx(
+          classes.world,
+          selectedWorldName === world.worldName && classes.selected
         )}
-      />
-    </UnstyledButton>
-  ));
+        onClick={() => onWorldClick(world.worldName)}
+      >
+        <Text size="sm" weight={500}>
+          {world.publicName}
+        </Text>
+        <Influence influence={influence} />
+        <Text color="dimmed" size="xs">
+          {influence
+            ? `Updated ${toTimeAgo(new Date(influence.createdAt))} by ${
+                influence.username
+              } ❤️`
+            : 'Never updated'}
+        </Text>
+      </UnstyledButton>
+    );
+  });
 
   return (
     <>

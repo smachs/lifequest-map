@@ -42,7 +42,7 @@ const useStyles = createStyles((theme) => ({
 
   world: {
     fontWeight: 500,
-    width: '100%',
+    width: 'calc(100% - 30px)',
     display: 'block',
     textDecoration: 'none',
     padding: `${theme.spacing.xs}px ${theme.spacing.md}px`,
