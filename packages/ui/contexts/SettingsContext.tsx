@@ -97,7 +97,7 @@ export function SettingsProvider({
   );
   const [playerIconColor, setPlayerIconColor] = usePersistentState(
     'player-icon-color',
-    '#A7A7A7'
+    '#FEFEFE'
   );
   const [peerToPeer, setPeerToPeer] = usePersistentState('peer-to-peer', true);
   const [ocr, setOCR] = usePersistentState('ocr', false);
