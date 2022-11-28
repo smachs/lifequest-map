@@ -7,6 +7,7 @@ import PositionMarker from 'ui/components/WorldMap//PositionMarker';
 import { useMap } from 'ui/utils/routes';
 import { useNavigate } from 'react-router-dom';
 import { findMapDetails, mapIsAeternumMap } from 'static';
+import { useSettings } from 'ui/contexts/SettingsContext';
 
 const divElement = leaflet.DomUtil.create('div', 'leaflet-player-position');
 
@@ -22,6 +23,7 @@ function usePlayerPosition({
   const [marker, setMarker] = useState<PositionMarker | null>(null);
   const map = useMap();
   const navigate = useNavigate();
+  const { playerIconColor } = useSettings();
 
   let playerPosition: Position | null = null;
   let playerMap: string | null = null;
@@ -49,7 +51,7 @@ function usePlayerPosition({
     if (!leafletMap || !playerPosition || !isOnSameWorld) {
       return;
     }
-    const icon = createPlayerIcon();
+    const icon = createPlayerIcon(playerIconColor);
     const newMarker = new PositionMarker(playerPosition.location, {
       icon,
       zIndexOffset: 9000,
@@ -61,7 +63,7 @@ function usePlayerPosition({
     return () => {
       newMarker.remove();
     };
-  }, [leafletMap, Boolean(playerPosition), isOnSameWorld]);
+  }, [leafletMap, Boolean(playerPosition), isOnSameWorld, playerIconColor]);
 
   useEffect(() => {
     if (
