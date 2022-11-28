@@ -110,7 +110,7 @@ function usePlayerPosition({
     return () => {
       newMarker.remove();
     };
-  }, [leafletMap, Boolean(playerPosition), isOnSameWorld]);
+  }, [leafletMap, Boolean(playerPosition), isOnSameWorld, playerIconColor]);
 
   useEffect(() => {
     // @ts-ignore
