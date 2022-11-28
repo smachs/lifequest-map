@@ -49,9 +49,20 @@ function useShareLivePosition() {
 
     const peer = peerToPeer ? new Peer({ debug: 2 }) : null;
     const openPromise = new Promise((resolve) => {
-      peer?.on('open', (id) => {
+      if (!peer) {
+        resolve(true);
+        return;
+      }
+      peer.on('open', (id) => {
         console.log('My peer ID is: ' + id);
         resolve(id);
+      });
+      peer.on('error', (error) => {
+        console.error('Peer error', error);
+      });
+      peer.on('disconnected', () => {
+        console.log('Peer disconnected -> reconnecting');
+        peer.reconnect();
       });
     });
 
@@ -77,7 +88,11 @@ function useShareLivePosition() {
             if (!peerConnections[connection]) {
               const peerId = connection.replace(/[^a-zA-Z ]/g, '');
               console.log(`Connecting to peer ${peerId}`);
-              peerConnections[connection] = peer.connect(peerId);
+              const dataConnection = peer.connect(peerId);
+              if (!dataConnection) {
+                return;
+              }
+              peerConnections[connection] = dataConnection;
 
               peerConnections[connection].on('error', (error: Error) => {
                 console.error(`Peer ${peerId} error`, error);
