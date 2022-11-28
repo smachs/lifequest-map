@@ -15,7 +15,7 @@ function useGroupPositions(group: Group): void {
     [username: string]: PositionMarker;
   }>({});
 
-  const { showPlayerNames } = useSettings();
+  const { showPlayerNames, playerIconColor } = useSettings();
   const map = useMap();
 
   useEffect(() => {
@@ -55,7 +55,7 @@ function useGroupPositions(group: Group): void {
 
           if (!existingMarker) {
             marker = new PositionMarker(player.position!.location, {
-              icon: createPlayerIcon(colorHash.hex(username)),
+              icon: createPlayerIcon(playerIconColor, colorHash.hex(username)),
               zIndexOffset: 8999,
               pmIgnore: true,
             });
@@ -99,7 +99,7 @@ function useGroupPositions(group: Group): void {
       );
     Object.values(removeablePlayerMarkers).forEach((marker) => marker.remove());
     setPlayerMarkers(newPlayerMarkers);
-  }, [latestLeafletMap, group, map]);
+  }, [latestLeafletMap, group, map, playerIconColor]);
 }
 
 export default useGroupPositions;

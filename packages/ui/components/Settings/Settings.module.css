@@ -6,16 +6,6 @@
   overflow: auto;
 }
 
-.label {
-  display: grid;
-  grid-template-columns: 50% 50%;
-  align-items: center;
-}
-
-.label input {
-  padding: 0;
-}
-
 .link button {
   padding: 0;
 }

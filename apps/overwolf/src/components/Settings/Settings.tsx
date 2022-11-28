@@ -19,6 +19,7 @@ import {
   Box,
   Button,
   Checkbox,
+  ColorInput,
   Group,
   Input,
   Kbd,
@@ -41,6 +42,8 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
     setPeerToPeer,
     ocr,
     setOCR,
+    playerIconColor,
+    setPlayerIconColor,
   } = useSettings();
   const showHideAppBinding = useHotkeyBinding(SHOW_HIDE_APP);
   const setupMinimapBinding = useHotkeyBinding(SETUP_MINIMAP);
@@ -84,6 +87,11 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
             checked={showRegionBorders}
             description="You'll see thin lines on the map which indicates the regions."
             onChange={(event) => setShowRegionBorders(event.target.checked)}
+          />
+          <ColorInput
+            label="Player icon color"
+            value={playerIconColor}
+            onChange={setPlayerIconColor}
           />
           <Title order={4}>Website Hotkeys</Title>
           <Group grow>
