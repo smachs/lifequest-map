@@ -93,7 +93,6 @@ function useReadLivePosition() {
     return () => {
       destroy();
       setGroup({});
-      toast.info('Stop sharing live status 🛑');
     };
   }, [token, serverUrl, account?.steamId]);
 }

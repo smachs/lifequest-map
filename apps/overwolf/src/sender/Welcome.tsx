@@ -1,10 +1,10 @@
-import steamSrc from 'ui/components/User/steam.png';
 import { fetchJSON } from 'ui/utils/api';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from './Welcome.module.css';
 import type { AccountDTO } from 'ui/utils/userStore';
 import { useUserStore } from 'ui/utils/userStore';
+import { Image, UnstyledButton } from '@mantine/core';
 
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
@@ -84,9 +84,17 @@ function Welcome(): JSX.Element {
           </a>
         </li>
       </ul>
-      <button onClick={handleLogin}>
-        <img src={steamSrc} alt="Sign in through Steam" />
-      </button>
+      <UnstyledButton onClick={handleLogin}>
+        <Image
+          src="/steam.png"
+          width={180}
+          height={35}
+          alt="Sign in through Steam"
+          sx={{
+            margin: '0 auto',
+          }}
+        />
+      </UnstyledButton>
     </div>
   );
 }

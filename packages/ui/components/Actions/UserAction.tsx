@@ -85,12 +85,25 @@ const UserAction = () => {
   }
 
   return (
-    <>
+    <Group spacing="xs">
       <FAQModal opened={showFAQ} onClose={() => setShowFAQ(false)} />
       <SettingsDialog
         opened={showSettings}
         onClose={() => setShowSettings(false)}
       />
+      <Tooltip label="Settings">
+        <ActionIcon
+          size="lg"
+          variant="default"
+          radius="xl"
+          onClick={() => {
+            setShowSettings(true);
+            setOpened(false);
+          }}
+        >
+          <IconSettings />
+        </ActionIcon>
+      </Tooltip>
       <Popover
         width={300}
         withArrow
@@ -159,20 +172,6 @@ const UserAction = () => {
             <Divider />
 
             <Group spacing="xs" position="center">
-              <Tooltip label="Settings">
-                <ActionIcon
-                  variant="default"
-                  size="xl"
-                  radius="sm"
-                  onClick={() => {
-                    setShowSettings(true);
-                    setOpened(false);
-                  }}
-                >
-                  <IconSettings />
-                </ActionIcon>
-              </Tooltip>
-
               <Tooltip label="FAQ">
                 <ActionIcon
                   variant="default"
@@ -272,7 +271,7 @@ const UserAction = () => {
           </Stack>
         </Popover.Dropdown>
       </Popover>
-    </>
+    </Group>
   );
 };
 
