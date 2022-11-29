@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { classNames } from '../../utils/styles';
 import styles from './Checkbox.module.css';
@@ -21,11 +21,11 @@ function Checkbox({
   onChange,
 }: CheckboxProps): JSX.Element {
   const { markers } = useMarkers();
+  const [count, setCount] = useState(0);
 
-  const count = useMemo(
-    () => markers.filter((marker) => marker.type === countType).length,
-    [markers, countType]
-  );
+  useEffect(() => {
+    setCount(markers.filter((marker) => marker.type === countType).length);
+  }, [markers, countType]);
 
   return (
     <label

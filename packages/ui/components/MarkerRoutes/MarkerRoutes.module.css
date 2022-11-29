@@ -4,11 +4,6 @@
   overflow: auto;
 }
 
-.items {
-  overflow: auto;
-  min-height: 100px;
-}
-
 .actions {
   display: flex;
   gap: 0.5em;

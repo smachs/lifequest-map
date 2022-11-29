@@ -3,7 +3,7 @@ import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { AETERNUM_MAP, findMapDetails, mapDetails } from 'static';
 import { deserializeMapView, serializeMapView } from './storage';
 
-export type Section = 'nodes' | 'routes' | 'settings' | 'influences';
+export type Section = 'nodes' | 'routes' | 'settings' | 'influences' | null;
 export const SECTIONS: Section[] = [
   'nodes',
   'routes',
@@ -54,7 +54,7 @@ const getView = (
   const sectionParam = searchParams.get('section');
   const section: Section =
     !sectionParam || !SECTIONS.includes(sectionParam as Section)
-      ? 'nodes'
+      ? null
       : (sectionParam as Section);
   const embedParam = searchParams.get('embed');
   const embed = embedParam === 'true';
@@ -122,27 +122,6 @@ export const useView = (): {
   }, [map, nodeId, searchParams]);
 
   useEffect(() => {
-    if (!internalView.x) {
-      const newSearchParams: { [key: string]: string } = {
-        section: internalView.section,
-      };
-      if (internalView.embed) {
-        newSearchParams.embed = 'true';
-      }
-      setSearchParams((searchParams) => ({
-        ...searchParams,
-        ...newSearchParams,
-      }));
-    } else {
-      serializeMapView(map, {
-        x: internalView.x,
-        y: internalView.y,
-        zoom: internalView.zoom,
-      });
-    }
-  }, [internalView]);
-
-  useEffect(() => {
     const searchParamsView = getMapView(searchParams);
     if (!searchParamsView) {
       return;
@@ -153,16 +132,39 @@ export const useView = (): {
 
   const setView = useCallback(
     (props: { x: number; y: number; zoom: number } | { section: Section }) => {
-      setInternalView((internalView) => ({ ...internalView, ...props }));
+      if ('section' in props) {
+        const newSearchParams: { [key: string]: string } = {};
+        if (props.section) {
+          newSearchParams.section = props.section;
+        }
+        if (internalView.embed) {
+          newSearchParams.embed = 'true';
+        }
+        setSearchParams((searchParams) => ({
+          ...searchParams,
+          ...newSearchParams,
+        }));
+      } else {
+        setInternalView((internalView) => ({ ...internalView, ...props }));
+        serializeMapView(map, {
+          x: props.x,
+          y: props.y,
+          zoom: props.zoom,
+        });
+      }
     },
-    []
+    [internalView.embed, map]
   );
 
   const toView = useCallback(
     (props: { x: number; y: number; zoom: number } | { section: Section }) => {
       const newSearchParams = new URLSearchParams(searchParams);
       if ('section' in props) {
-        newSearchParams.set('section', props.section);
+        if (props.section === null) {
+          newSearchParams.delete('section');
+        } else {
+          newSearchParams.set('section', props.section);
+        }
       } else {
         newSearchParams.set('x', props.x.toString());
         newSearchParams.set('y', props.y.toString());

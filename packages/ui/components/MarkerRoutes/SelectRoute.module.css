@@ -1,7 +1,6 @@
 .container {
   display: grid;
   row-gap: 0.5em;
-  background: var(--color-shade-one);
   padding: 0.5em;
 }
 

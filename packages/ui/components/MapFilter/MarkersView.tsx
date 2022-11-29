@@ -2,7 +2,6 @@ import styles from './MarkersView.module.css';
 import { mapFiltersCategories } from 'static';
 import MarkerSection from './MarkerSection';
 import { useFilters } from '../../contexts/FiltersContext';
-import ActionButton from '../ActionControl/ActionButton';
 import { usePersistentState } from '../../utils/storage';
 import SearchInput from '../SearchInput/SearchInput';
 import PresetSelect from '../PresetSelect/PresetSelect';
@@ -10,6 +9,7 @@ import { useState } from 'react';
 import type { Preset } from '../PresetSelect/presets';
 import MarkerSearch from '../MarkerSearch/MarkerSearch';
 import { useUserStore } from '../../utils/userStore';
+import { Button, ScrollArea } from '@mantine/core';
 
 type MarkersViewProps = {
   onAdd: () => void;
@@ -39,9 +39,9 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
   return (
     <section className={styles.container}>
       <div className={styles.actions}>
-        <ActionButton disabled={!account} onClick={onAdd}>
-          {account ? 'Add resource' : 'Login to add resource'}
-        </ActionButton>
+        <Button disabled={!account} onClick={onAdd}>
+          {account ? 'Add node' : 'Login to add nodes'}
+        </Button>
       </div>
       <MarkerSearch />
       <div className={styles.actions}>
@@ -60,7 +60,7 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
           }}
         />
       </div>
-      <div className={styles.list}>
+      <ScrollArea style={{ height: 'calc(100vh - 210px)' }} offsetScrollbars>
         {mapFiltersCategories.map((mapFilterCategory) => (
           <MarkerSection
             key={mapFilterCategory.value}
@@ -70,7 +70,7 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
             search={search}
           />
         ))}
-      </div>
+      </ScrollArea>
     </section>
   );
 }

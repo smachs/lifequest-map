@@ -35,8 +35,10 @@ export const initOtherPlayers = (leafletMap: leaflet.Map) => {
       if (showOtherPlayers) {
         const updateOtherPlayers = async (leafletMap: leaflet.Map) => {
           const players = await fetchPlayers();
+          if (!useSettingsStore.getState().showOtherPlayers) {
+            return;
+          }
           layerGroup.addTo(leafletMap);
-
           layerGroup.clearLayers();
           players.forEach(({ position }) => {
             if (position.location[0] && position.location[1]) {

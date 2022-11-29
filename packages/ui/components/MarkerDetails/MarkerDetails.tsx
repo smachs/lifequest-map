@@ -30,13 +30,15 @@ import ReportIssueButton from './ReportIssueButton';
 import DeleteNode from './DeleteNode';
 import Markdown from '../Markdown/Markdown';
 import { useUserStore } from '../../utils/userStore';
+import { useRouteParams } from '../../utils/routes';
 
 type MarkerDetailsProps = {
-  nodeId?: string;
   onEdit: (marker: MarkerFull) => void;
 };
 
-function MarkerDetails({ nodeId, onEdit }: MarkerDetailsProps): JSX.Element {
+function MarkerDetails({ onEdit }: MarkerDetailsProps): JSX.Element {
+  const { nodeId } = useRouteParams();
+
   const { marker, comments, refresh, loading } = useMarker(nodeId);
   const { setMarkers } = useMarkers();
   const account = useUserStore((state) => state.account);

@@ -3,14 +3,13 @@ import { useFilters } from '../../contexts/FiltersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { escapeRegExp } from '../../utils/regExp';
 import { usePersistentState } from '../../utils/storage';
-import ActionButton from '../ActionControl/ActionButton';
-import Button from '../Button/Button';
 import { mapFilters, regionNames } from 'static';
 import SearchInput from '../SearchInput/SearchInput';
 import MarkerRoute from './MarkerRoute';
 import styles from './MarkerRoutes.module.css';
 import type { AccountDTO } from '../../utils/userStore';
 import { useUserStore } from '../../utils/userStore';
+import { Button, ScrollArea } from '@mantine/core';
 
 export type MarkerRouteItem = {
   _id: string;
@@ -143,15 +142,15 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
   return (
     <section className={styles.container}>
       <div className={styles.actions}>
-        <ActionButton
+        <Button
           disabled={!account}
           onClick={() => {
             onEdit(true);
           }}
         >
-          {account ? 'Add route' : 'Login to add route'}
-        </ActionButton>
-        <ActionButton onClick={clearMarkerRoutes}>Hide all</ActionButton>
+          {account ? 'Add route' : 'Sign in to add routes'}
+        </Button>
+        <Button onClick={clearMarkerRoutes}>Hide all</Button>
       </div>
       <div className={styles.actions}>
         <SearchInput
@@ -184,7 +183,7 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
           ))}
         </select>
       </div>
-      <div className={styles.items}>
+      <ScrollArea style={{ height: 'calc(100vh - 160px)' }} offsetScrollbars>
         {sortedMarkerRoutes.length === 0 && 'No routes available'}
         {sortedMarkerRoutes.slice(0, limit).map((markerRoute) => (
           <MarkerRoute
@@ -199,14 +198,11 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
           />
         ))}
         {sortedMarkerRoutes.length > limit && (
-          <Button
-            className={styles.loadMore}
-            onClick={() => setLimit((limit) => limit + 10)}
-          >
+          <Button onClick={() => setLimit((limit) => limit + 10)} fullWidth>
             Load more
           </Button>
         )}
-      </div>
+      </ScrollArea>
     </section>
   );
 }

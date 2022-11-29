@@ -30,20 +30,14 @@ import { writeError } from '../../utils/logs';
 import ForkRoute from './ForkRoute';
 import { useUserStore } from '../../utils/userStore';
 import shallow from 'zustand/shallow';
+import { useRouteParams } from '../../utils/routes';
 
 type MarkerRouteDetailsProps = {
-  markerRouteId?: string;
   onEdit: (markerRoute: MarkerRouteItem) => void;
 };
-const MarkerRouteDetails = ({
-  markerRouteId,
-  onEdit,
-}: MarkerRouteDetailsProps) => {
-  const {
-    data: markerRoute,
-    refetch,
-    isLoading,
-  } = useMarkerRoute(markerRouteId);
+const MarkerRouteDetails = ({ onEdit }: MarkerRouteDetailsProps) => {
+  const { routeId } = useRouteParams();
+  const { data: markerRoute, refetch, isLoading } = useMarkerRoute(routeId);
   const navigate = useNavigate();
   const { account, refreshAccount } = useUserStore(
     (state) => ({
@@ -141,12 +135,12 @@ const MarkerRouteDetails = ({
   );
 
   async function handleFavorite(): Promise<void> {
-    if (!account || !markerRouteId) {
+    if (!account || !routeId) {
       return;
     }
 
     try {
-      await notify(patchFavoriteMarkerRoute(markerRouteId, !isFavorite), {
+      await notify(patchFavoriteMarkerRoute(routeId, !isFavorite), {
         success: 'Favored route changed 👌',
       });
       refreshAccount();
@@ -158,9 +152,8 @@ const MarkerRouteDetails = ({
 
   return (
     <Drawer
-      opened={!!markerRouteId}
+      opened={!!routeId}
       withOverlay={false}
-      zIndex={99999}
       padding="sm"
       size="xl"
       styles={(theme) => ({
@@ -179,7 +172,7 @@ const MarkerRouteDetails = ({
     >
       {!markerRoute && <Skeleton height={50} />}
       {markerRoute && (
-        <Stack style={{ height: 'calc(100% - 50px)' }} spacing="xs">
+        <Stack style={{ height: 'calc(100vh - 64px)' }} spacing="xs">
           <Group>
             <Badge size="sm" color="cyan">
               {markerRoute.regions.join(', ')}

@@ -1,7 +1,4 @@
 import { ToastContainer } from 'react-toastify';
-import styles from './App.module.css';
-import AppHeader from 'ui/components/AppHeader/AppHeader';
-import MapFilter from 'ui/components/MapFilter/MapFilter';
 import WorldMap from 'ui/components/WorldMap/WorldMap';
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, useState } from 'react';
@@ -13,6 +10,11 @@ import NitroPay from 'ui/components/NitroPay/NitroPay';
 import { useMap } from 'ui/utils/routes';
 import Head from './Head';
 import type { MarkerFull } from 'ui/components/MarkerDetails/useMarker';
+import { Box } from '@mantine/core';
+import UserAction from 'ui/components/Actions/UserAction';
+import NavActions from 'ui/components/Actions/NavActions';
+import MapActions from 'ui/components/Actions/MapActions';
+import MapAction from 'ui/components/Actions/MapAction';
 
 function App(): JSX.Element {
   const [targetMarker, setTargetMarker] = useState<
@@ -51,15 +53,55 @@ function App(): JSX.Element {
   );
 
   return (
-    <div className={styles.container}>
+    <Box>
+      <Box
+        sx={{
+          position: 'fixed',
+          left: 7,
+          top: 7,
+          zIndex: 1,
+        }}
+      >
+        <NavActions
+          onMarkerEdit={setTargetMarker}
+          onMarkerCreate={() => setTargetMarker(true)}
+          onMarkerRouteUpsert={setTargetMarkerRoute}
+        />
+      </Box>
+      <Box
+        sx={{
+          position: 'fixed',
+          right: 7,
+          top: 7,
+          zIndex: 2,
+        }}
+      >
+        <UserAction />
+      </Box>
+      <Box
+        sx={{
+          position: 'fixed',
+          top: 'calc(50% - 45px)',
+          right: 12,
+          zIndex: 1,
+        }}
+      >
+        <MapActions />
+      </Box>
+      <Box
+        sx={{
+          position: 'fixed',
+          bottom: 7,
+          left: 7,
+          zIndex: 1,
+        }}
+      >
+        <MapAction />
+      </Box>
+      <Box sx={{ width: '100vw', height: '100vh' }}>
+        <WorldMap isEditing={Boolean(targetMarker || targetMarkerRoute)} />
+      </Box>
       <Head map={map} />
-      <AppHeader />
-      <MapFilter
-        onMarkerEdit={setTargetMarker}
-        onMarkerCreate={() => setTargetMarker(true)}
-        onMarkerRouteUpsert={setTargetMarkerRoute}
-      />
-      <WorldMap isEditing={Boolean(targetMarker || targetMarkerRoute)} />
       <ToastContainer theme="dark" pauseOnFocusLoss={false} />
       <UpsertArea
         marker={targetMarker}
@@ -68,7 +110,7 @@ function App(): JSX.Element {
         onRouteClose={() => setTargetMarkerRoute(undefined)}
       />
       <NitroPay />
-    </div>
+    </Box>
   );
 }
 

@@ -6,14 +6,12 @@ import MarkersView from './MarkersView';
 import MenuOpenIcon from '../icons/MenuOpenIcon';
 import type { MarkerRouteItem } from '../MarkerRoutes/MarkerRoutes';
 import MarkerRoutes from '../MarkerRoutes/MarkerRoutes';
-import User from '../User/User';
 import RoutesIcon from '../icons/RoutesIcon';
 import PlayerIcon from '../icons/PlayerIcon';
 import CompassIcon from '../icons/CompassIcon';
 import MinimapSetup from '../Minimap/MinimapSetup';
 import usePersistentState from '../../utils/usePersistentState';
 import SettingsIcon from '../icons/SettingsIcon';
-import Settings from '../Settings/Settings';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import MapSearch from '../MapSearch/MapSearch';
 import useDebounce from '../../utils/useDebounce';
@@ -31,7 +29,7 @@ import { useSettingsStore } from '../../utils/settingsStore';
 import { useUserStore } from '../../utils/userStore';
 import { IconFlag, IconUsers } from '@tabler/icons';
 import Influences from '../Influences/Influences';
-import { Tooltip } from '@mantine/core';
+import { Navbar, Tooltip } from '@mantine/core';
 import { useDidUpdate } from '@mantine/hooks';
 
 type MarkerFilterProps = {
@@ -66,7 +64,6 @@ function MapFilter({
     }),
     shallow
   );
-  const { nodeId, routeId } = useRouteParams();
   const { liveShareServerUrl, liveShareToken } = useSettingsStore(
     (state) => ({
       liveShareServerUrl: state.liveShareServerUrl,
@@ -89,22 +86,16 @@ function MapFilter({
     (account?.liveShareServerUrl || liveShareServerUrl);
 
   return (
-    <aside className={classNames(styles.container, isOpen && styles.open)}>
+    <Navbar width={{ base: 400 }} hidden={!isOpen}>
       <div className={styles.content}>
-        <User />
         <SelectMap />
-        <MarkerDetails nodeId={nodeId} onEdit={onMarkerEdit} />
-        <MarkerRouteDetails
-          markerRouteId={routeId}
-          onEdit={onMarkerRouteUpsert}
-        />
+        <MarkerRouteDetails onEdit={onMarkerRouteUpsert} />
         {view.section === 'nodes' && (
           <MarkersView onAdd={() => onMarkerCreate()} />
         )}
         {view.section === 'routes' && (
           <MarkerRoutes onEdit={onMarkerRouteUpsert} />
         )}
-        {view.section === 'settings' && <Settings />}
         {view.section === 'influences' && <Influences />}
         <Footer />
       </div>
@@ -227,7 +218,7 @@ function MapFilter({
           </button>
         </Tooltip>
       </nav>
-    </aside>
+    </Navbar>
   );
 }
 
