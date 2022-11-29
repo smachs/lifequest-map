@@ -87,10 +87,6 @@ const UserAction = () => {
   return (
     <Group spacing="xs">
       <FAQModal opened={showFAQ} onClose={() => setShowFAQ(false)} />
-      <SettingsDialog
-        opened={showSettings}
-        onClose={() => setShowSettings(false)}
-      />
       <Tooltip label="Settings">
         <ActionIcon
           size="lg"
@@ -271,6 +267,10 @@ const UserAction = () => {
           </Stack>
         </Popover.Dropdown>
       </Popover>
+      <SettingsDialog
+        opened={showSettings}
+        onClose={() => setShowSettings(false)}
+      />
     </Group>
   );
 };
