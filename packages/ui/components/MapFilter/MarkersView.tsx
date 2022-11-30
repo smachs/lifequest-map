@@ -1,15 +1,12 @@
-import styles from './MarkersView.module.css';
 import { mapFiltersCategories } from 'static';
 import MarkerSection from './MarkerSection';
 import { useFilters } from '../../contexts/FiltersContext';
 import { usePersistentState } from '../../utils/storage';
-import SearchInput from '../SearchInput/SearchInput';
 import PresetSelect from '../PresetSelect/PresetSelect';
-import { useState } from 'react';
-import type { Preset } from '../PresetSelect/presets';
 import MarkerSearch from '../MarkerSearch/MarkerSearch';
 import { useUserStore } from '../../utils/userStore';
-import { Button, ScrollArea } from '@mantine/core';
+import { Button, ScrollArea, Stack, TextInput } from '@mantine/core';
+import { IconFilter } from '@tabler/icons';
 
 type MarkersViewProps = {
   onAdd: () => void;
@@ -17,7 +14,6 @@ type MarkersViewProps = {
 function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
   const { filters, setFilters } = useFilters();
   const [search, setSearch] = usePersistentState('searchMarkerTypes', '');
-  const [preset, setPreset] = useState<Preset | null>(null);
   const account = useUserStore((state) => state.account);
 
   function handleToggle(filterTypes: string[], checked: boolean) {
@@ -34,33 +30,21 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
     }
     const uniqueFilters = Array.from(new Set(newFilters));
     setFilters(uniqueFilters);
-    setPreset(null);
   }
   return (
-    <section className={styles.container}>
-      <div className={styles.actions}>
-        <Button disabled={!account} onClick={onAdd}>
-          {account ? 'Add node' : 'Login to add nodes'}
-        </Button>
-      </div>
+    <Stack>
+      <Button disabled={!account} onClick={onAdd}>
+        {account ? 'Add node' : 'Login to add nodes'}
+      </Button>
       <MarkerSearch />
-      <div className={styles.actions}>
-        <SearchInput
-          placeholder="Filter marker types..."
-          value={search}
-          onChange={setSearch}
-        />
-        <PresetSelect
-          value={preset}
-          onChange={(preset) => {
-            setPreset(preset);
-            if (preset) {
-              setFilters(preset.types);
-            }
-          }}
-        />
-      </div>
-      <ScrollArea style={{ height: 'calc(100vh - 210px)' }} offsetScrollbars>
+      <TextInput
+        placeholder="Filter marker types..."
+        value={search}
+        onChange={(event) => setSearch(event.target.value)}
+        icon={<IconFilter />}
+      />
+      <PresetSelect onChange={setFilters} />
+      <ScrollArea style={{ height: 'calc(100vh - 270px)' }} offsetScrollbars>
         {mapFiltersCategories.map((mapFilterCategory) => (
           <MarkerSection
             key={mapFilterCategory.value}
@@ -71,7 +55,7 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
           />
         ))}
       </ScrollArea>
-    </section>
+    </Stack>
   );
 }
 
