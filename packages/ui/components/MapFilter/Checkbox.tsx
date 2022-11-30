@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { Image } from '@mantine/core';
+import { useMemo } from 'react';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { classNames } from '../../utils/styles';
 import styles from './Checkbox.module.css';
@@ -21,11 +22,11 @@ function Checkbox({
   onChange,
 }: CheckboxProps): JSX.Element {
   const { markers } = useMarkers();
-  const [count, setCount] = useState(0);
 
-  useEffect(() => {
-    setCount(markers.filter((marker) => marker.type === countType).length);
-  }, [markers, countType]);
+  const count = useMemo(
+    () => markers.filter((marker) => marker.type === countType).length,
+    [markers, countType]
+  );
 
   return (
     <label
@@ -40,7 +41,17 @@ function Checkbox({
         onChange={(event) => onChange(event.target.checked)}
         checked={checked}
       />
-      {imgSrc && <img src={imgSrc} alt="" />}
+      {imgSrc && (
+        <Image
+          src={imgSrc}
+          width={19}
+          height={19}
+          alt=""
+          imageProps={{
+            loading: 'lazy',
+          }}
+        />
+      )}
       {title}
       <span>{countType && count}</span>
     </label>
