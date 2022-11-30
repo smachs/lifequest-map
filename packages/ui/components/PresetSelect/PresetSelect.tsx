@@ -12,7 +12,6 @@ import {
   Button,
   CheckIcon,
   Flex,
-  Group,
   Loader,
   Popover,
   ScrollArea,

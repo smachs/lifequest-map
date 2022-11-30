@@ -12,7 +12,6 @@ import {
 } from '@mantine/core';
 import {
   IconCurrentLocation,
-  IconCurrentLocationOff,
   IconKey,
   IconMinus,
   IconPlus,
@@ -77,11 +76,7 @@ const MapActions = () => {
               }
             }}
           >
-            {player?.position?.location ? (
-              <IconCurrentLocation size={20} />
-            ) : (
-              <IconCurrentLocationOff size={20} />
-            )}
+            <IconCurrentLocation size={20} />
           </ActionIcon>
         </HoverCard.Target>
         <HoverCard.Dropdown>
@@ -144,7 +139,7 @@ const MapActions = () => {
                 </Text>
               )}
               {player && !player.position && (
-                <Text size="xs">
+                <Text>
                   <Text component="span" color="teal">
                     Connected
                   </Text>{' '}

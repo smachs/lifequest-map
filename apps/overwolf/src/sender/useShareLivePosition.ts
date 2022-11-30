@@ -128,7 +128,6 @@ function useShareLivePosition() {
 
     newSocket.on('connect', () => {
       setIsConnected(true);
-      console.log('Sharing live status 👌');
       updateStatus();
     });
 

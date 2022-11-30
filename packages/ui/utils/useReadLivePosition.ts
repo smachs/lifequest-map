@@ -87,7 +87,7 @@ function useReadLivePosition() {
       onGroup: updateStatus,
       onPlayer: updateData,
       onHotkey: handleHotkey,
-      onConnect: () => toast.success('Sharing live status 👌'),
+      onConnect: () => console.log('Sharing live status 👌'),
     });
 
     return () => {
