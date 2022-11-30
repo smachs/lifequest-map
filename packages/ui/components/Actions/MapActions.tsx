@@ -116,7 +116,8 @@ const MapActions = () => {
             >
               Aeternum Map
             </Anchor>{' '}
-            on Overwolf.
+            on Overwolf. Use the same token in your group to see each other on
+            the map.
           </Text>
           {!account ? (
             <Text color="orange">You need to sign in to use this feature.</Text>
