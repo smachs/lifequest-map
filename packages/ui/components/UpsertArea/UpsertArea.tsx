@@ -20,7 +20,7 @@ function UpsertArea({
   return (
     <Dialog
       opened={Boolean(markerRoute || marker)}
-      position={{ top: 20, right: 20 }}
+      position={{ top: 58, right: 7 }}
     >
       {markerRoute && (
         <SelectRoute
