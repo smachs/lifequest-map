@@ -153,7 +153,7 @@ export const useView = (): {
         });
       }
     },
-    [internalView.embed, map]
+    [internalView.embed, map, nodeId, routeId]
   );
 
   const toView = useCallback(
