@@ -38,7 +38,7 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
       </Button>
       <MarkerSearch />
       <TextInput
-        placeholder="Filter marker types..."
+        placeholder="Filter node types..."
         value={search}
         onChange={(event) => setSearch(event.target.value)}
         icon={<IconFilter />}

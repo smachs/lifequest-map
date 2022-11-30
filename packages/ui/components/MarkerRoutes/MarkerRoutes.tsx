@@ -4,12 +4,18 @@ import { useMarkers } from '../../contexts/MarkersContext';
 import { escapeRegExp } from '../../utils/regExp';
 import { usePersistentState } from '../../utils/storage';
 import { mapFilters, regionNames } from 'static';
-import SearchInput from '../SearchInput/SearchInput';
 import MarkerRoute from './MarkerRoute';
-import styles from './MarkerRoutes.module.css';
 import type { AccountDTO } from '../../utils/userStore';
 import { useUserStore } from '../../utils/userStore';
-import { Button, ScrollArea } from '@mantine/core';
+import {
+  Button,
+  Group,
+  ScrollArea,
+  Select,
+  Stack,
+  TextInput,
+} from '@mantine/core';
+import { IconFilter } from '@tabler/icons';
 
 export type MarkerRouteItem = {
   _id: string;
@@ -140,8 +146,8 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
   );
 
   return (
-    <section className={styles.container}>
-      <div className={styles.actions}>
+    <Stack>
+      <Group spacing="xs" grow>
         <Button
           disabled={!account}
           onClick={() => {
@@ -151,39 +157,40 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
           {account ? 'Add route' : 'Sign in to add routes'}
         </Button>
         <Button onClick={clearMarkerRoutes}>Hide all</Button>
-      </div>
-      <div className={styles.actions}>
-        <SearchInput
-          placeholder="Marker or title..."
+      </Group>
+      <Group spacing="xs" grow>
+        <TextInput
+          placeholder="Node or title..."
           value={search}
-          onChange={setSearch}
+          onChange={(event) => setSearch(event.target.value)}
+          icon={<IconFilter />}
         />
-        <select
+        <Select
           value={sortBy}
-          onChange={(event) => setSortBy(event.target.value as SortBy)}
-        >
-          <option value="match">By match</option>
-          <option value="favorites">By favorites</option>
-          <option value="date">By date</option>
-          <option value="name">By name</option>
-          <option value="username">By username</option>
-        </select>
-        <select
+          onChange={(value) => setSortBy(value as SortBy)}
+          data={[
+            { value: 'match', label: 'By match' },
+            { value: 'favorites', label: 'By favorites' },
+            { value: 'date', label: 'By date' },
+            { value: 'name', label: 'By name' },
+            { value: 'username', label: 'By username' },
+          ]}
+        />
+        <Select
           value={filter}
-          onChange={(event) => setFilter(event.target.value as Filter)}
-        >
-          <option value="all">All</option>
-          <option value="favorites">Favorites</option>
-          <option value="myRoutes">My routes</option>
-          <option value="" disabled></option>
-          {regionNames.map((regionName) => (
-            <option key={regionName} value={regionName}>
-              {regionName}
-            </option>
-          ))}
-        </select>
-      </div>
-      <ScrollArea style={{ height: 'calc(100vh - 160px)' }} offsetScrollbars>
+          onChange={(value) => setFilter(value as Filter)}
+          data={[
+            { value: 'all', label: 'All' },
+            { value: 'favorites', label: 'Favorites' },
+            { value: 'myRoutes', label: 'My routes' },
+            ...regionNames.map((regionName) => ({
+              value: regionName,
+              label: regionName,
+            })),
+          ]}
+        />
+      </Group>
+      <ScrollArea style={{ height: 'calc(100vh - 170px)' }} offsetScrollbars>
         {sortedMarkerRoutes.length === 0 && 'No routes available'}
         {sortedMarkerRoutes.slice(0, limit).map((markerRoute) => (
           <MarkerRoute
@@ -203,7 +210,7 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
           </Button>
         )}
       </ScrollArea>
-    </section>
+    </Stack>
   );
 }
 

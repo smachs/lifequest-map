@@ -77,6 +77,7 @@ type Mode = 'route' | 'marker' | null;
 // Remove old storage (deprecated)
 localStorage.removeItem('markers');
 localStorage.removeItem('all-marker-routes');
+localStorage.removeItem('cached-marker-routes');
 
 export function MarkersProvider({
   children,
@@ -88,9 +89,7 @@ export function MarkersProvider({
     true,
     true
   );
-  const [allMarkerRoutes, setAllMarkerRoutes] = usePersistentState<
-    MarkerRouteItem[]
-  >('cached-marker-routes', [], true, true);
+  const [allMarkerRoutes, setAllMarkerRoutes] = useState<MarkerRouteItem[]>([]);
   const [markerRoutes, setMarkerRoutes] = usePersistentState<MarkerRouteItem[]>(
     'markers-routes',
     []
@@ -155,6 +154,8 @@ export function MarkersProvider({
       );
       if (newMarkerRoute) {
         selectedMarkerRoutes.push(newMarkerRoute);
+      } else {
+        selectedMarkerRoutes.push(markerRoute);
       }
     });
     setMarkerRoutes(selectedMarkerRoutes);
