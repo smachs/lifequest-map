@@ -3,14 +3,29 @@ import { useFilters } from '../../contexts/FiltersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { escapeRegExp } from '../../utils/regExp';
 import { usePersistentState } from '../../utils/storage';
-import ActionButton from '../ActionControl/ActionButton';
-import Button from '../Button/Button';
-import { mapFilters, regionNames } from 'static';
-import SearchInput from '../SearchInput/SearchInput';
+import {
+  findMapDetails,
+  mapFilters,
+  mapIsAeternumMap,
+  regionNames,
+} from 'static';
 import MarkerRoute from './MarkerRoute';
-import styles from './MarkerRoutes.module.css';
 import type { AccountDTO } from '../../utils/userStore';
 import { useUserStore } from '../../utils/userStore';
+import {
+  Button,
+  Group,
+  ScrollArea,
+  Select,
+  Skeleton,
+  Stack,
+  Text,
+  TextInput,
+} from '@mantine/core';
+import { IconFilter } from '@tabler/icons';
+import { useQuery } from 'react-query';
+import { getMarkerRoutes } from './api';
+import { useMap } from '../../utils/routes';
 
 export type MarkerRouteItem = {
   _id: string;
@@ -104,13 +119,11 @@ type MarkerRoutesProps = {
   onEdit: (target: MarkerRouteItem | true) => void;
 };
 function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
-  const {
-    markerRoutes,
-    clearMarkerRoutes,
-    toggleMarkerRoute,
-    refreshMarkerRoutes,
-    visibleMarkerRoutes,
-  } = useMarkers();
+  const { data: allMarkerRoutes = [], isLoading } = useQuery(
+    'routes',
+    getMarkerRoutes
+  );
+  const { markerRoutes, setMarkerRoutes, toggleMarkerRoute } = useMarkers();
   const account = useUserStore((state) => state.account);
   const [sortBy, setSortBy] = usePersistentState<SortBy>(
     'markerRoutesSort',
@@ -123,14 +136,44 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
   const [search, setSearch] = usePersistentState('searchRoutes', '');
   const { filters } = useFilters();
   const [limit, setLimit] = useState(10);
-
-  useEffect(() => {
-    refreshMarkerRoutes();
-  }, []);
+  const map = useMap();
 
   useEffect(() => {
     setLimit(10);
   }, [sortBy, filter, search]);
+
+  useEffect(() => {
+    const selectedMarkerRoutes: MarkerRouteItem[] = [];
+    markerRoutes.forEach((markerRoute) => {
+      const newMarkerRoute = allMarkerRoutes.find(
+        (targetMarkerRoute) => targetMarkerRoute._id === markerRoute._id
+      );
+      if (newMarkerRoute) {
+        selectedMarkerRoutes.push(newMarkerRoute);
+      } else {
+        selectedMarkerRoutes.push(markerRoute);
+      }
+    });
+    setMarkerRoutes(selectedMarkerRoutes);
+  }, [allMarkerRoutes]);
+
+  const visibleMarkerRoutes = useMemo(
+    () =>
+      allMarkerRoutes.filter((markerRoute) => {
+        if (markerRoute.map) {
+          if (mapIsAeternumMap(map)) {
+            return false;
+          }
+          if (findMapDetails(map) !== findMapDetails(markerRoute.map)) {
+            return false;
+          }
+        } else if (!mapIsAeternumMap(map)) {
+          return false;
+        }
+        return true;
+      }),
+    [allMarkerRoutes, map]
+  );
 
   const sortedMarkerRoutes = useMemo(
     () =>
@@ -141,73 +184,77 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
   );
 
   return (
-    <section className={styles.container}>
-      <div className={styles.actions}>
-        <ActionButton
+    <Stack>
+      <Group spacing="xs" grow>
+        <Button
           disabled={!account}
           onClick={() => {
             onEdit(true);
           }}
         >
-          {account ? 'Add route' : 'Login to add route'}
-        </ActionButton>
-        <ActionButton onClick={clearMarkerRoutes}>Hide all</ActionButton>
-      </div>
-      <div className={styles.actions}>
-        <SearchInput
-          placeholder="Marker or title..."
+          {account ? 'Add route' : 'Sign in to add routes'}
+        </Button>
+        <Button onClick={() => setMarkerRoutes([])}>Hide all</Button>
+      </Group>
+      <Group spacing="xs" grow>
+        <TextInput
+          placeholder="Node or title..."
           value={search}
-          onChange={setSearch}
+          onChange={(event) => setSearch(event.target.value)}
+          icon={<IconFilter />}
         />
-        <select
+        <Select
           value={sortBy}
-          onChange={(event) => setSortBy(event.target.value as SortBy)}
-        >
-          <option value="match">By match</option>
-          <option value="favorites">By favorites</option>
-          <option value="date">By date</option>
-          <option value="name">By name</option>
-          <option value="username">By username</option>
-        </select>
-        <select
+          onChange={(value) => setSortBy(value as SortBy)}
+          data={[
+            { value: 'match', label: 'By match' },
+            { value: 'favorites', label: 'By favorites' },
+            { value: 'date', label: 'By date' },
+            { value: 'name', label: 'By name' },
+            { value: 'username', label: 'By username' },
+          ]}
+        />
+        <Select
           value={filter}
-          onChange={(event) => setFilter(event.target.value as Filter)}
-        >
-          <option value="all">All</option>
-          <option value="favorites">Favorites</option>
-          <option value="myRoutes">My routes</option>
-          <option value="" disabled></option>
-          {regionNames.map((regionName) => (
-            <option key={regionName} value={regionName}>
-              {regionName}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className={styles.items}>
-        {sortedMarkerRoutes.length === 0 && 'No routes available'}
-        {sortedMarkerRoutes.slice(0, limit).map((markerRoute) => (
-          <MarkerRoute
-            key={markerRoute._id}
-            isOwner={markerRoute.userId === account?.steamId}
-            markerRoute={markerRoute}
-            selected={markerRoutes.some(
-              (selectedMarkerRoute) =>
-                selectedMarkerRoute._id == markerRoute._id
-            )}
-            onSelect={(checked) => toggleMarkerRoute(markerRoute, checked)}
-          />
-        ))}
+          onChange={(value) => setFilter(value as Filter)}
+          data={[
+            { value: 'all', label: 'All' },
+            { value: 'favorites', label: 'Favorites' },
+            { value: 'myRoutes', label: 'My routes' },
+            ...regionNames.map((regionName) => ({
+              value: regionName,
+              label: regionName,
+            })),
+          ]}
+        />
+      </Group>
+      <ScrollArea style={{ height: 'calc(100vh - 170px)' }} offsetScrollbars>
+        {isLoading && <Skeleton height={40} />}
+        {!isLoading && sortedMarkerRoutes.length === 0 && (
+          <Text color="orange">No routes found</Text>
+        )}
+        {!isLoading &&
+          sortedMarkerRoutes
+            .slice(0, limit)
+            .map((markerRoute) => (
+              <MarkerRoute
+                key={markerRoute._id}
+                isOwner={markerRoute.userId === account?.steamId}
+                markerRoute={markerRoute}
+                selected={markerRoutes.some(
+                  (selectedMarkerRoute) =>
+                    selectedMarkerRoute._id == markerRoute._id
+                )}
+                onSelect={(checked) => toggleMarkerRoute(markerRoute, checked)}
+              />
+            ))}
         {sortedMarkerRoutes.length > limit && (
-          <Button
-            className={styles.loadMore}
-            onClick={() => setLimit((limit) => limit + 10)}
-          >
+          <Button onClick={() => setLimit((limit) => limit + 10)} fullWidth>
             Load more
           </Button>
         )}
-      </div>
-    </section>
+      </ScrollArea>
+    </Stack>
   );
 }
 

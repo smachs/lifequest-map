@@ -1,54 +1,54 @@
-import styles from './Footer.module.css';
+import { Anchor, Group, Paper } from '@mantine/core';
 
 function Footer() {
   return (
-    <footer className={styles.footer}>
-      <small>
-        <a
+    <Paper component="footer" radius={0} p={1}>
+      <Group spacing="xs">
+        <Anchor
+          size="xs"
           href="https://www.overwolf.com/app/Leon_Machens-Aeternum_Map"
           title="Aeternum Map Companion"
           target="_blank"
         >
           Overwolf App
-        </a>
-        |
-        <a
+        </Anchor>
+        <Anchor
+          size="xs"
           href="https://www.arkesia.gg/"
           title="Interactive map for Lost Ark"
           target="_blank"
         >
           Arkesia.gg
-        </a>
-        |
-        <a
+        </Anchor>
+        <Anchor
+          size="xs"
           href="https://th.gl/"
           title="Trophies app for League of Legends"
           target="_blank"
         >
           Trophy Hunter
-        </a>
-        |
-        <a
+        </Anchor>
+        <Anchor
+          size="xs"
           href="https://www.soc.gg/"
           title="A Songs of Conquest fansite"
           target="_blank"
         >
           SoC.gg
-        </a>
-        |
-        <a
+        </Anchor>
+        <Anchor
+          size="xs"
           href="https://github.com/lmachens/skeleton"
           title="Simply display any website as customizable Overlay"
           target="_blank"
         >
           Skeleton
-        </a>
-        |
-        <a href="/privacy.html" target="_blank">
+        </Anchor>
+        <Anchor size="xs" href="/privacy.html" target="_blank">
           Privacy Policy
-        </a>
-      </small>
-    </footer>
+        </Anchor>
+      </Group>
+    </Paper>
   );
 }
 

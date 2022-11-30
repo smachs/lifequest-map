@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import useGroupPositions from '../components/WorldMap/useGroupPositions';
 import { init } from 'realtime';
 import { usePlayerStore } from './playerStore';
@@ -87,13 +86,12 @@ function useReadLivePosition() {
       onGroup: updateStatus,
       onPlayer: updateData,
       onHotkey: handleHotkey,
-      onConnect: () => toast.success('Sharing live status 👌'),
+      onConnect: () => console.log('Sharing live status 👌'),
     });
 
     return () => {
       destroy();
       setGroup({});
-      toast.info('Stop sharing live status 🛑');
     };
   }, [token, serverUrl, account?.steamId]);
 }

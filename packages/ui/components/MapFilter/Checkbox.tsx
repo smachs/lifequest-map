@@ -1,3 +1,4 @@
+import { Image } from '@mantine/core';
 import { useMemo } from 'react';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { classNames } from '../../utils/styles';
@@ -40,7 +41,17 @@ function Checkbox({
         onChange={(event) => onChange(event.target.checked)}
         checked={checked}
       />
-      {imgSrc && <img src={imgSrc} alt="" />}
+      {imgSrc && (
+        <Image
+          src={imgSrc}
+          width={19}
+          height={19}
+          alt=""
+          imageProps={{
+            loading: 'lazy',
+          }}
+        />
+      )}
       {title}
       <span>{countType && count}</span>
     </label>

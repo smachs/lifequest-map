@@ -148,8 +148,6 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
     updateView(latestLeafletMap);
 
     if (!hideControls) {
-      leaflet.control.zoom({ position: 'bottomleft' }).addTo(latestLeafletMap);
-
       const divElement = leaflet.DomUtil.create('div', 'leaflet-position');
       const handleMouseMove = (event: leaflet.LeafletMouseEvent) => {
         divElement.innerHTML = `<span>[${event.latlng.lng.toFixed(
@@ -207,7 +205,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
       clearTimeout(timeoutId);
       leafletMap.off('moveend', handleMoveEnd);
     };
-  }, [leafletMap]);
+  }, [leafletMap, setView]);
 
   return { elementRef, leafletMap };
 }

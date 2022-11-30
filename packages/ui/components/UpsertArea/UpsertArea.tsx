@@ -1,8 +1,8 @@
+import { Dialog } from '@mantine/core';
 import AddResources from '../AddResources/AddResources';
 import type { MarkerDTO } from '../AddResources/api';
 import type { MarkerRouteItem } from '../MarkerRoutes/MarkerRoutes';
 import SelectRoute from '../MarkerRoutes/SelectRoute';
-import styles from './UpsertArea.module.css';
 
 type UpsertAreaProps = {
   markerRoute?: MarkerRouteItem | true;
@@ -18,7 +18,10 @@ function UpsertArea({
   onMarkerClose,
 }: UpsertAreaProps) {
   return (
-    <aside className={styles.fixed}>
+    <Dialog
+      opened={Boolean(markerRoute || marker)}
+      position={{ top: 20, right: 20 }}
+    >
       {markerRoute && (
         <SelectRoute
           markerRoute={markerRoute === true ? undefined : markerRoute}
@@ -31,7 +34,7 @@ function UpsertArea({
           onClose={onMarkerClose}
         />
       )}
-    </aside>
+    </Dialog>
   );
 }
 

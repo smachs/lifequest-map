@@ -4,7 +4,7 @@ import { useView } from '../../utils/routes';
 
 const toMap = (title: string, section: Section) => {
   let to = mapIsAeternumMap(title) ? '/' : `/${title}`;
-  if (section !== 'nodes') {
+  if (section !== null) {
     if (!to.endsWith('/')) {
       to += '/';
     }

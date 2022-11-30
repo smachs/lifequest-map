@@ -30,20 +30,15 @@ import { writeError } from '../../utils/logs';
 import ForkRoute from './ForkRoute';
 import { useUserStore } from '../../utils/userStore';
 import shallow from 'zustand/shallow';
+import { useRouteParams } from '../../utils/routes';
+import { useQueryClient } from 'react-query';
 
 type MarkerRouteDetailsProps = {
-  markerRouteId?: string;
   onEdit: (markerRoute: MarkerRouteItem) => void;
 };
-const MarkerRouteDetails = ({
-  markerRouteId,
-  onEdit,
-}: MarkerRouteDetailsProps) => {
-  const {
-    data: markerRoute,
-    refetch,
-    isLoading,
-  } = useMarkerRoute(markerRouteId);
+const MarkerRouteDetails = ({ onEdit }: MarkerRouteDetailsProps) => {
+  const { routeId } = useRouteParams();
+  const { data: markerRoute, refetch, isLoading } = useMarkerRoute(routeId);
   const navigate = useNavigate();
   const { account, refreshAccount } = useUserStore(
     (state) => ({
@@ -52,8 +47,9 @@ const MarkerRouteDetails = ({
     }),
     shallow
   );
-  const { markerRoutes, toggleMarkerRoute, refreshMarkerRoutes } = useMarkers();
+  const { markerRoutes, toggleMarkerRoute } = useMarkers();
   const { setFilters } = useFilters();
+  const queryClient = useQueryClient();
 
   const editable =
     account &&
@@ -126,7 +122,7 @@ const MarkerRouteDetails = ({
   }, [markerRoute?.markersByType]);
 
   function handleEdit(markerRoute: MarkerRouteItem) {
-    toggleMarkerRoute(markerRoute, false);
+    toggleMarkerRoute(markerRoute, true);
     const types = Object.keys(markerRoute.markersByType);
     setFilters((filters) => [
       ...filters,
@@ -141,12 +137,12 @@ const MarkerRouteDetails = ({
   );
 
   async function handleFavorite(): Promise<void> {
-    if (!account || !markerRouteId) {
+    if (!account || !routeId) {
       return;
     }
 
     try {
-      await notify(patchFavoriteMarkerRoute(markerRouteId, !isFavorite), {
+      await notify(patchFavoriteMarkerRoute(routeId, !isFavorite), {
         success: 'Favored route changed 👌',
       });
       refreshAccount();
@@ -158,9 +154,8 @@ const MarkerRouteDetails = ({
 
   return (
     <Drawer
-      opened={!!markerRouteId}
+      opened={!!routeId}
       withOverlay={false}
-      zIndex={99999}
       padding="sm"
       size="xl"
       styles={(theme) => ({
@@ -179,7 +174,7 @@ const MarkerRouteDetails = ({
     >
       {!markerRoute && <Skeleton height={50} />}
       {markerRoute && (
-        <Stack style={{ height: 'calc(100% - 50px)' }} spacing="xs">
+        <Stack style={{ height: 'calc(100vh - 64px)' }} spacing="xs">
           <Group>
             <Badge size="sm" color="cyan">
               {markerRoute.regions.join(', ')}
@@ -240,7 +235,7 @@ const MarkerRouteDetails = ({
             variant={selected ? 'filled' : 'outline'}
             color="blue"
             onClick={() => {
-              toggleMarkerRoute(markerRoute, !selected);
+              toggleMarkerRoute(markerRoute);
             }}
           >
             {selected ? 'Deselect route' : 'Select route'}
@@ -257,8 +252,8 @@ const MarkerRouteDetails = ({
           <ForkRoute
             markerRoute={markerRoute}
             onFork={async (markerRoute) => {
-              toggleMarkerRoute(markerRoute, false);
-              await refreshMarkerRoutes();
+              toggleMarkerRoute(markerRoute, true);
+              queryClient.invalidateQueries('routes');
               if (!markerRoute || !markerRoute.map) {
                 navigate(`/routes/${markerRoute._id}/${location.search}`);
               } else {
@@ -286,8 +281,8 @@ const MarkerRouteDetails = ({
           <DeleteRoute
             routeId={markerRoute._id}
             onDelete={async () => {
-              toggleMarkerRoute(markerRoute, true);
-              await refreshMarkerRoutes();
+              toggleMarkerRoute(markerRoute, false);
+              queryClient.invalidateQueries('routes');
               handleClose();
             }}
           />

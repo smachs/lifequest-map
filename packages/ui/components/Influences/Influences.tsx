@@ -34,7 +34,7 @@ const Influence = ({ influence }: InfluenceProps) => {
   }
   const { rankings } = getFactionRanking([influence]);
   return (
-    <SimpleGrid cols={3} breakpoints={[{ maxWidth: 'xs', cols: 1 }]} mt="xs">
+    <SimpleGrid cols={3} mt="xs">
       {rankings.map((ranking) => (
         <Group key={ranking.factionName} spacing={1}>
           <Avatar src={ranking.icon} size="sm" />
@@ -266,7 +266,7 @@ const Influences = () => {
   ));
 
   return (
-    <ScrollArea>
+    <ScrollArea style={{ height: 'calc(100vh - 70px)' }} offsetScrollbars>
       <Paper withBorder p="md">
         <Group position="apart">
           <Group align="flex-end" spacing="xs">
@@ -322,21 +322,19 @@ const Influences = () => {
           {descriptions}
         </SimpleGrid>
       </Paper>
-      <Box p="sm">
-        {zonesWithWorlds.map((zone) => (
-          <Zone
-            key={zone.id}
-            zone={zone}
-            influences={influences}
-            selectedWorldName={selectedWorldName}
-            onWorldClick={(worldName) =>
-              setSelectedWorldName((prev) =>
-                prev === worldName ? null : worldName
-              )
-            }
-          />
-        ))}
-      </Box>
+      {zonesWithWorlds.map((zone) => (
+        <Zone
+          key={zone.id}
+          zone={zone}
+          influences={influences}
+          selectedWorldName={selectedWorldName}
+          onWorldClick={(worldName) =>
+            setSelectedWorldName((prev) =>
+              prev === worldName ? null : worldName
+            )
+          }
+        />
+      ))}
     </ScrollArea>
   );
 };

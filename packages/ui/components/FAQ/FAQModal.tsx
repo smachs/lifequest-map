@@ -1,18 +1,17 @@
-import { useState } from 'react';
 import {
+  Accordion,
   Anchor,
   List,
+  MantineProvider,
   Modal,
   ScrollArea,
-  Accordion,
-  MantineProvider,
 } from '@mantine/core';
-import HelpIcon from '../icons/HelpIcon';
-import classes from './FAQ.module.css';
 
-const FAQ = () => {
-  const [showModal, setShowModal] = useState(false);
-
+type FAQModalProps = {
+  opened: boolean;
+  onClose: () => void;
+};
+const FAQModal = ({ opened, onClose }: FAQModalProps) => {
   return (
     <MantineProvider
       theme={{
@@ -20,10 +19,9 @@ const FAQ = () => {
       }}
     >
       <Modal
-        zIndex={999999}
         centered
-        opened={showModal}
-        onClose={() => setShowModal(false)}
+        opened={opened}
+        onClose={onClose}
         title="FAQ"
         fullScreen
         styles={{
@@ -198,15 +196,8 @@ const FAQ = () => {
           </Accordion>
         </ScrollArea>
       </Modal>
-      <button
-        className={classes.button}
-        onClick={() => setShowModal(true)}
-        title="FAQ"
-      >
-        <HelpIcon />
-      </button>
     </MantineProvider>
   );
 };
 
-export default FAQ;
+export default FAQModal;

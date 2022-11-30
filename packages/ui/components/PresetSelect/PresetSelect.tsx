@@ -1,175 +1,204 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { fetchJSON } from '../../utils/api';
-import { writeError } from '../../utils/logs';
-import { notify } from '../../utils/notifications';
 import { getJSONItem } from '../../utils/storage';
 import type { Preset } from './presets';
 import { staticPresets } from './presets';
-import styles from './PresetSelect.module.css';
 import { toast } from 'react-toastify';
-import { useModal } from '../../contexts/ModalContext';
-import Confirm from '../Confirm/Confirm';
-import { escapeRegExp } from '../../utils/regExp';
 import type { AccountDTO } from '../../utils/userStore';
 import { useUserStore } from '../../utils/userStore';
 import shallow from 'zustand/shallow';
+import {
+  ActionIcon,
+  Button,
+  CheckIcon,
+  Flex,
+  Loader,
+  Popover,
+  ScrollArea,
+  Stack,
+  Text,
+  TextInput,
+} from '@mantine/core';
+import { allFilters } from '../../contexts/FiltersContext';
+import { IconDeviceFloppy, IconTrashX } from '@tabler/icons';
+import { useMutation } from 'react-query';
+
+const updatePresets = (presets: Preset[]) =>
+  fetchJSON<AccountDTO>('/api/auth/account', {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ presets }),
+  });
 
 type PresetSelectProps = {
-  value: Preset | null;
-  onChange: (value: Preset | null) => void;
+  onChange: (filters: string[]) => void;
 };
-function PresetSelect({ value, onChange }: PresetSelectProps): JSX.Element {
+function PresetSelect({ onChange }: PresetSelectProps): JSX.Element {
   const { account, setAccount } = useUserStore(
     (state) => ({ account: state.account, setAccount: state.setAccount }),
     shallow
   );
+  const [openedAdd, setOpenedAdd] = useState(false);
+  const [openedDelete, setOpenedDelete] = useState(false);
 
-  const [search, setSearch] = useState('');
-  const [isFocus, setIsFocus] = useState(false);
-  const { addModal } = useModal();
-
-  useEffect(() => {
-    if (!isFocus) {
-      setSearch('');
-    }
-  }, [value, isFocus]);
-
-  const regExp = new RegExp(escapeRegExp(search), 'ig');
-
-  const handleCreateClick = async () => {
-    try {
-      if (!account) {
-        return;
-      }
-      const presets = [...(account.presets || [])];
-      if (
-        presets.some((preset) => preset.name === search) ||
-        staticPresets.some((preset) => preset.name === search)
-      ) {
-        toast.error(`Preset ${search} already exists 🛑`);
-        return;
-      }
-      const newPreset: Preset = {
-        name: search,
-        types: getJSONItem('selected-filters', []),
-      };
-      presets.push(newPreset);
-
-      const updatedAccount = await notify(
-        fetchJSON<AccountDTO>('/api/auth/account', {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ presets }),
-        }),
-        {
-          success: 'Preset added 👌',
-        }
-      );
+  const [presetName, setPresetName] = useState('');
+  const updateMutation = useMutation(updatePresets, {
+    onSuccess: (updatedAccount) => {
       setAccount(updatedAccount);
-      onChange(newPreset);
-      setSearch('');
-    } catch (error) {
-      writeError(error);
+      setPresetName('');
+      setOpenedAdd(false);
+    },
+  });
+
+  const handleCreate = async () => {
+    if (!account || !presetName) {
+      return;
     }
+    const presets = [...(account.presets || [])];
+    if (
+      presets.some((preset) => preset.name === presetName) ||
+      staticPresets.some((preset) => preset.name === presetName)
+    ) {
+      toast.error(`Preset ${presetName} already exists 🛑`);
+      return;
+    }
+    const newPreset: Preset = {
+      name: presetName,
+      types: getJSONItem('selected-filters', []),
+    };
+    presets.push(newPreset);
+    updateMutation.mutate(presets);
   };
 
-  const handleDeleteClick = async (oldPreset: Preset) => {
-    try {
-      if (!account) {
-        return;
-      }
-      const presets = [...(account.presets || [])].filter(
-        (preset) => preset.name !== oldPreset.name
-      );
-
-      const updatedAccount = await notify(
-        fetchJSON<AccountDTO>('/api/auth/account', {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ presets }),
-        }),
-        {
-          success: 'Preset deleted 👌',
-        }
-      );
-      setAccount(updatedAccount);
-      if (value?.name === oldPreset.name) {
-        onChange(null);
-      }
-      setSearch('');
-    } catch (error) {
-      writeError(error);
+  const handleDelete = async (oldPreset: Preset) => {
+    if (!account) {
+      return;
     }
+    const presets = [...(account.presets || [])].filter(
+      (preset) => preset.name !== oldPreset.name
+    );
+    updateMutation.mutate(presets);
   };
 
+  const presets = account?.presets || [];
   return (
-    <div className={styles.container}>
-      <label className={styles.select}>
-        <input
-          value={isFocus ? search : value?.name || ''}
-          onChange={(event) => setSearch(event.target.value)}
-          placeholder="Select or create preset..."
-          onFocus={() => setIsFocus(true)}
-          onBlur={() => setIsFocus(false)}
-          maxLength={18}
-        />
-      </label>
-      {isFocus && (
-        <div className={styles.list}>
-          {staticPresets
-            .filter((preset) => preset.name.match(regExp))
-            .map((preset) => (
-              <button
-                key={preset.name}
-                className={styles.option}
-                onMouseDown={() => onChange(preset)}
-              >
-                {preset.name}
-              </button>
-            ))}
-          {account?.presets
-            ?.filter((preset) => preset.name.match(regExp))
-            .map((preset) => (
-              <div key={preset.name} className={styles.row}>
-                <button
-                  className={styles.option}
+    <Flex gap="xs" direction="row" wrap="nowrap">
+      <ScrollArea>
+        <Button.Group>
+          <Button
+            compact
+            variant="default"
+            onClick={() => onChange(allFilters)}
+          >
+            All
+          </Button>
+          <Button compact variant="default" onClick={() => onChange([])}>
+            None
+          </Button>
+          {presets.map((preset) => (
+            <Button
+              key={preset.name}
+              compact
+              variant="default"
+              onClick={() => onChange(preset.types)}
+            >
+              {preset.name}
+            </Button>
+          ))}
+        </Button.Group>
+      </ScrollArea>
+
+      <Flex gap="xs" direction="row" wrap="nowrap" align="center">
+        <Popover
+          width={200}
+          position="bottom"
+          withArrow
+          shadow="md"
+          opened={openedAdd}
+          onChange={setOpenedAdd}
+        >
+          <Popover.Target>
+            <ActionIcon
+              size="sm"
+              variant="default"
+              onClick={() => setOpenedAdd((o) => !o)}
+            >
+              <IconDeviceFloppy />
+            </ActionIcon>
+          </Popover.Target>
+          <Popover.Dropdown>
+            <Text size="sm">
+              You can save your selected filters as a preset
+            </Text>
+            {!account && (
+              <Text size="sm" color="orange">
+                Please sign-in to use this feature
+              </Text>
+            )}
+            <TextInput
+              disabled={!account}
+              label="Preset name"
+              placeholder="Enter a short name"
+              error={(updateMutation.error as Error)?.message}
+              rightSection={
+                updateMutation.isLoading ? (
+                  <Loader size="xs" />
+                ) : (
+                  <ActionIcon
+                    size="xs"
+                    onClick={handleCreate}
+                    disabled={!presetName}
+                    variant="transparent"
+                    color="green"
+                  >
+                    <CheckIcon width="100%" height="100%" />
+                  </ActionIcon>
+                )
+              }
+              value={presetName}
+              onChange={(event) => setPresetName(event.target.value)}
+            />
+          </Popover.Dropdown>
+        </Popover>
+        <Popover
+          width={200}
+          position="bottom"
+          withArrow
+          shadow="md"
+          opened={openedDelete}
+          onChange={setOpenedDelete}
+        >
+          <Popover.Target>
+            <ActionIcon
+              size="sm"
+              variant="default"
+              onClick={() => setOpenedDelete((o) => !o)}
+              disabled={presets.length === 0}
+            >
+              <IconTrashX />
+            </ActionIcon>
+          </Popover.Target>
+          <Popover.Dropdown>
+            <Stack spacing="xs">
+              <Text size="sm">Click on a preset you like to delete</Text>
+              {presets.map((preset) => (
+                <Button
                   key={preset.name}
-                  onMouseDown={() => onChange(preset)}
+                  onClick={() => handleDelete(preset)}
+                  compact
+                  color="red"
+                  fullWidth
                 >
                   {preset.name}
-                </button>
-                <button
-                  className={styles.option}
-                  onMouseDown={() => {
-                    addModal({
-                      title: 'Do you really want to delete this preset?',
-                      children: (
-                        <Confirm onConfirm={() => handleDeleteClick(preset)} />
-                      ),
-                      fitContent: true,
-                    });
-                  }}
-                >
-                  💀
-                </button>
-              </div>
-            ))}
-          {search && (
-            <button
-              className={styles.option}
-              disabled={!account}
-              onMouseDown={handleCreateClick}
-            >
-              {account ? `Create "${search}"` : 'Login to create preset'}
-            </button>
-          )}
-        </div>
-      )}
-    </div>
+                </Button>
+              ))}
+            </Stack>
+          </Popover.Dropdown>
+        </Popover>
+      </Flex>
+    </Flex>
   );
 }
 

@@ -43,6 +43,9 @@ function MarkerRoute({
           onChange={(event) => {
             onSelect(event.target.checked);
           }}
+          sx={{
+            display: 'inline-flex',
+          }}
         />
         <Badge size="sm" color={markerRoute.isPublic ? 'lime' : 'teal'}>
           {markerRoute.isPublic ? 'Public' : 'Private'}

@@ -8,14 +8,18 @@ import CloseIcon from 'ui/components/icons/CloseIcon';
 import DiscordIcon from 'ui/components/icons/DiscordIcon';
 import GitHubIcon from 'ui/components/icons/GitHubIcon';
 import MinimizeIcon from 'ui/components/icons/MinimizeIcon';
-import FAQ from 'ui/components/FAQ/FAQ';
+import FAQModal from 'ui/components/FAQ/FAQModal';
 import classes from './AppHeader.module.css';
+import { IconHelp } from '@tabler/icons';
+import { useState } from 'react';
 
 async function openExternalLink(url: string) {
   overwolf.utils.openUrlInDefaultBrowser(url);
 }
 
 function AppHeader(): JSX.Element {
+  const [showFAQ, setShowFAQ] = useState(false);
+
   return (
     <header className={classes.header} onMouseDown={dragMoveWindow}>
       <img src="/icon.png" alt="" className={classes.logo} />
@@ -38,7 +42,14 @@ function AppHeader(): JSX.Element {
         >
           <DiscordIcon />
         </button>
-        <FAQ />
+        <button
+          className={classes.button}
+          title="FAQ"
+          onClick={() => setShowFAQ(true)}
+        >
+          <IconHelp />
+        </button>
+        <FAQModal opened={showFAQ} onClose={() => setShowFAQ(false)} />
         <button
           className={classNames(classes.button, classes['button--padded'])}
           onClick={minimizeCurrentWindow}

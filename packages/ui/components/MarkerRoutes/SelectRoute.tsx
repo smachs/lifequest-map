@@ -14,6 +14,7 @@ import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import { findRegions } from 'static';
 import { writeError } from '../../utils/logs';
 import { useMap } from 'ui/utils/routes';
+import { useQueryClient } from 'react-query';
 
 type SelectRouteProps = {
   markerRoute?: MarkerRouteItem;
@@ -32,8 +33,9 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
   );
   const [regions, setRegions] = useState<string[]>([]);
   const [isPublic, setIsPublic] = useState(markerRoute?.isPublic || false);
-  const { markers, toggleMarkerRoute, refreshMarkerRoutes } = useMarkers();
+  const { markers, toggleMarkerRoute } = useMarkers();
   const map = useMap();
+  const queryClient = useQueryClient();
 
   const refreshMarkers = useCallback(
     (workingLayer: leaflet.Polyline | leaflet.Layer) => {
@@ -193,7 +195,7 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
       });
 
       toggleMarkerRoute(updatedMarkerRoute, true);
-      await refreshMarkerRoutes();
+      queryClient.invalidateQueries('routes');
       onClose();
     } catch (error) {
       writeError(error);

@@ -7,11 +7,11 @@ export type Preset = {
 
 export const staticPresets: Preset[] = [
   {
-    name: 'All markers',
+    name: 'All',
     types: allFilters,
   },
   {
-    name: 'No markers',
+    name: 'None',
     types: [],
   },
 ];

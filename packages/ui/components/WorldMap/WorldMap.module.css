@@ -3,6 +3,7 @@
   width: 100%;
   background: #859594 !important;
   transition: transform 1s linear;
+  z-index: 0;
 }
 
 .follow {
