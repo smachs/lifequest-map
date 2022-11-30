@@ -53,7 +53,7 @@ const SettingsDialog = ({ opened, onClose }: SettingsDialogProps) => {
       opened={opened}
       withCloseButton
       onClose={onClose}
-      position={{ bottom: 7, right: 7 }}
+      position={{ top: 7, right: 7 }}
     >
       <Title order={4}>Map</Title>
       <ScrollArea.Autosize maxHeight="80vh" offsetScrollbars>
