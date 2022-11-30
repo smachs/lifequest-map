@@ -6,11 +6,14 @@ import {
   Divider,
   Group,
   HoverCard,
+  Slider,
   Stack,
   Text,
+  TextInput,
   Tooltip,
 } from '@mantine/core';
 import {
+  IconCompass,
   IconCurrentLocation,
   IconKey,
   IconMinus,
@@ -27,6 +30,8 @@ import { getWorld, getZone } from 'static';
 import WorldName from '../SyncStatus/WorldName';
 import ServerTime from '../SyncStatus/ServerTime';
 import { useSettingsStore } from '../../utils/settingsStore';
+import { usePersistentState } from '../../utils/storage';
+import { trackOutboundLinkClick } from '../../utils/stats';
 
 const MapActions = () => {
   const { account, refreshAccount } = useUserStore(
@@ -53,10 +58,23 @@ const MapActions = () => {
     }),
     shallow
   );
+  const [minimapOpacity, setMinimapOpacity] = usePersistentState(
+    'minimapOpacity',
+    80
+  );
+  const [minimapBorderRadius, setMinimapBorderRadius] = usePersistentState(
+    'minimapBorderRadius',
+    50
+  );
+  const [minimapZoom, setMinimapZoom] = usePersistentState('minimapZoom', 5);
+  const [rotateMinimap, setRotateMinimap] = usePersistentState(
+    'rotateMinimap',
+    false
+  );
 
   return (
     <Stack spacing="xs">
-      <HoverCard width={280} shadow="md" position="left">
+      <HoverCard width={320} shadow="md" position="left">
         <HoverCard.Target>
           <ActionIcon
             variant="default"
@@ -89,6 +107,11 @@ const MapActions = () => {
             <Anchor
               href="https://www.overwolf.com/app/Leon_Machens-Aeternum_Map"
               target="_blank"
+              onClick={() =>
+                trackOutboundLinkClick(
+                  'https://www.overwolf.com/app/Leon_Machens-Aeternum_Map'
+                )
+              }
               inline
             >
               Aeternum Map
@@ -168,6 +191,75 @@ const MapActions = () => {
               />
             </Stack>
           )}
+        </HoverCard.Dropdown>
+      </HoverCard>
+      <HoverCard width={320} shadow="md" position="left">
+        <HoverCard.Target>
+          <ActionIcon variant="default" size="md" radius="sm">
+            <IconCompass size={20} />
+          </ActionIcon>
+        </HoverCard.Target>
+        <HoverCard.Dropdown>
+          <Text size="sm" weight={500}>
+            Minimap
+          </Text>
+          <Stack>
+            <Text>
+              You can use{' '}
+              <Anchor
+                href="https://github.com/lmachens/skeleton"
+                target="_blank"
+                onClick={() =>
+                  trackOutboundLinkClick('https://github.com/lmachens/skeleton')
+                }
+                inline
+              >
+                Skeleton
+              </Anchor>{' '}
+              to display a minimap as overlay 🤘 if location sharing is active.
+              Keep in mind, that this is definitly in the grey area of AGS ToS.
+              Use at own risk 💀!
+            </Text>
+            <Divider />
+            <TextInput
+              value="https://aeternum-map.gg/minimap.html"
+              label="URL"
+            />
+            <Text weight={500} size="sm">
+              Zoom
+              <Slider
+                value={minimapZoom}
+                min={0}
+                max={6}
+                step={0.5}
+                onChange={(value) => setMinimapZoom(value)}
+              />
+            </Text>
+            <Text weight={500} size="sm">
+              Border
+              <Slider
+                value={minimapBorderRadius}
+                min={0}
+                max={50}
+                onChange={(value) => setMinimapBorderRadius(value)}
+              />
+            </Text>
+            <Text weight={500} size="sm">
+              Opacity
+              <Slider
+                value={minimapOpacity}
+                min={20}
+                max={100}
+                onChange={(value) => setMinimapOpacity(value)}
+              />
+            </Text>
+            <Checkbox
+              label="Rotate minimap"
+              checked={rotateMinimap}
+              description="Rotate the minimap instead of the player cursor"
+              onChange={(event) => setRotateMinimap(event.target.checked)}
+            />
+          </Stack>
         </HoverCard.Dropdown>
       </HoverCard>
       <Tooltip
