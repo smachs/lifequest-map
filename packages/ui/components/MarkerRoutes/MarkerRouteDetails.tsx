@@ -31,6 +31,7 @@ import ForkRoute from './ForkRoute';
 import { useUserStore } from '../../utils/userStore';
 import shallow from 'zustand/shallow';
 import { useRouteParams } from '../../utils/routes';
+import { useQueryClient } from 'react-query';
 
 type MarkerRouteDetailsProps = {
   onEdit: (markerRoute: MarkerRouteItem) => void;
@@ -46,8 +47,9 @@ const MarkerRouteDetails = ({ onEdit }: MarkerRouteDetailsProps) => {
     }),
     shallow
   );
-  const { markerRoutes, toggleMarkerRoute, refreshMarkerRoutes } = useMarkers();
+  const { markerRoutes, toggleMarkerRoute } = useMarkers();
   const { setFilters } = useFilters();
+  const queryClient = useQueryClient();
 
   const editable =
     account &&
@@ -120,7 +122,7 @@ const MarkerRouteDetails = ({ onEdit }: MarkerRouteDetailsProps) => {
   }, [markerRoute?.markersByType]);
 
   function handleEdit(markerRoute: MarkerRouteItem) {
-    toggleMarkerRoute(markerRoute, false);
+    toggleMarkerRoute(markerRoute, true);
     const types = Object.keys(markerRoute.markersByType);
     setFilters((filters) => [
       ...filters,
@@ -233,7 +235,7 @@ const MarkerRouteDetails = ({ onEdit }: MarkerRouteDetailsProps) => {
             variant={selected ? 'filled' : 'outline'}
             color="blue"
             onClick={() => {
-              toggleMarkerRoute(markerRoute, !selected);
+              toggleMarkerRoute(markerRoute);
             }}
           >
             {selected ? 'Deselect route' : 'Select route'}
@@ -250,8 +252,8 @@ const MarkerRouteDetails = ({ onEdit }: MarkerRouteDetailsProps) => {
           <ForkRoute
             markerRoute={markerRoute}
             onFork={async (markerRoute) => {
-              toggleMarkerRoute(markerRoute, false);
-              await refreshMarkerRoutes();
+              toggleMarkerRoute(markerRoute, true);
+              queryClient.invalidateQueries('routes');
               if (!markerRoute || !markerRoute.map) {
                 navigate(`/routes/${markerRoute._id}/${location.search}`);
               } else {
@@ -279,8 +281,8 @@ const MarkerRouteDetails = ({ onEdit }: MarkerRouteDetailsProps) => {
           <DeleteRoute
             routeId={markerRoute._id}
             onDelete={async () => {
-              toggleMarkerRoute(markerRoute, true);
-              await refreshMarkerRoutes();
+              toggleMarkerRoute(markerRoute, false);
+              queryClient.invalidateQueries('routes');
               handleClose();
             }}
           />

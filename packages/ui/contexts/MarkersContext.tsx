@@ -2,12 +2,10 @@ import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { useMemo } from 'react';
 import { createContext, useContext, useEffect } from 'react';
-import { getMarkerRoutes } from '../components/MarkerRoutes/api';
 import type { MarkerRouteItem } from '../components/MarkerRoutes/MarkerRoutes';
 import { latestLeafletMap } from '../components/WorldMap/useWorldMap';
 import { findMapDetails, mapIsAeternumMap } from 'static';
 import { fetchJSON } from '../utils/api';
-import { writeError } from '../utils/logs';
 import { notify } from '../utils/notifications';
 import { isOverwolfApp } from '../utils/overwolf';
 import { usePersistentState } from '../utils/storage';
@@ -43,28 +41,24 @@ type MarkersContextProps = {
     value: string[] | ((value: string[]) => string[])
   ) => void;
   markerRoutes: MarkerRouteItem[];
-  clearMarkerRoutes: () => void;
+  setMarkerRoutes: (routes: MarkerRouteItem[]) => void;
   toggleMarkerRoute: (markerRoute: MarkerRouteItem, force?: boolean) => void;
   visibleMarkers: MarkerBasic[];
   refresh: () => void;
   mode: Mode;
   setMode: React.Dispatch<React.SetStateAction<Mode>>;
-  visibleMarkerRoutes: MarkerRouteItem[];
-  refreshMarkerRoutes: () => void;
 };
 const MarkersContext = createContext<MarkersContextProps>({
   markers: [],
   setMarkers: () => undefined,
   setTemporaryHiddenMarkerIDs: () => undefined,
   markerRoutes: [],
-  clearMarkerRoutes: () => undefined,
+  setMarkerRoutes: () => undefined,
   toggleMarkerRoute: () => undefined,
   visibleMarkers: [],
   refresh: () => undefined,
   mode: null,
   setMode: () => undefined,
-  visibleMarkerRoutes: [],
-  refreshMarkerRoutes: () => undefined,
 });
 
 type MarkersProviderProps = {
@@ -89,7 +83,6 @@ export function MarkersProvider({
     true,
     true
   );
-  const [allMarkerRoutes, setAllMarkerRoutes] = useState<MarkerRouteItem[]>([]);
   const [markerRoutes, setMarkerRoutes] = usePersistentState<MarkerRouteItem[]>(
     'markers-routes',
     []
@@ -112,9 +105,7 @@ export function MarkersProvider({
   const refresh = () => {
     if (!readonly) {
       if (isOverwolfApp) {
-        setMarkers([]);
-        setAllMarkerRoutes([]);
-        setMarkerRoutes([]);
+        return;
       } else {
         notify(
           Promise.all([
@@ -131,35 +122,9 @@ export function MarkersProvider({
     }
   };
 
-  const refreshMarkerRoutes = async () => {
-    try {
-      if (!isOverwolfApp) {
-        const newMarkerRoutes = await notify(getMarkerRoutes());
-        setAllMarkerRoutes(newMarkerRoutes);
-      }
-    } catch (error) {
-      writeError(error);
-    }
-  };
-
   useEffect(() => {
     refresh();
   }, []);
-
-  useEffect(() => {
-    const selectedMarkerRoutes: MarkerRouteItem[] = [];
-    markerRoutes.forEach((markerRoute) => {
-      const newMarkerRoute = allMarkerRoutes.find(
-        (targetMarkerRoute) => targetMarkerRoute._id === markerRoute._id
-      );
-      if (newMarkerRoute) {
-        selectedMarkerRoutes.push(newMarkerRoute);
-      } else {
-        selectedMarkerRoutes.push(markerRoute);
-      }
-    });
-    setMarkerRoutes(selectedMarkerRoutes);
-  }, [allMarkerRoutes]);
 
   const visibleMarkers = useMemo(() => {
     const nameSearchValues = searchValues.filter((value) =>
@@ -277,28 +242,6 @@ export function MarkersProvider({
     setMarkerRoutes(markerRoutesClone);
   };
 
-  function clearMarkerRoutes() {
-    setMarkerRoutes([]);
-  }
-
-  const visibleMarkerRoutes = useMemo(
-    () =>
-      allMarkerRoutes.filter((markerRoute) => {
-        if (markerRoute.map) {
-          if (mapIsAeternumMap(map)) {
-            return false;
-          }
-          if (findMapDetails(map) !== findMapDetails(markerRoute.map)) {
-            return false;
-          }
-        } else if (!mapIsAeternumMap(map)) {
-          return false;
-        }
-        return true;
-      }),
-    [allMarkerRoutes, map]
-  );
-
   return (
     <MarkersContext.Provider
       value={{
@@ -308,12 +251,10 @@ export function MarkersProvider({
         visibleMarkers,
         refresh,
         markerRoutes,
-        clearMarkerRoutes,
+        setMarkerRoutes,
         toggleMarkerRoute,
         mode,
         setMode,
-        visibleMarkerRoutes,
-        refreshMarkerRoutes,
       }}
     >
       {children}

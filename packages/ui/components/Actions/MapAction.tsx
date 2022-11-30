@@ -128,11 +128,12 @@ const MapAction = () => {
         opened={opened}
         onClose={() => setOpened(false)}
       >
-        <Grid>
+        <Grid gutter="xs">
           {mapDetails.map((mapDetail, index) => (
             <Grid.Col
               md={index === 0 ? 12 : 4}
               sm={6}
+              xs={6}
               key={mapDetail.name}
               sx={{
                 textAlign: 'center',

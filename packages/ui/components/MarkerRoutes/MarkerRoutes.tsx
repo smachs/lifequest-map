@@ -3,7 +3,12 @@ import { useFilters } from '../../contexts/FiltersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { escapeRegExp } from '../../utils/regExp';
 import { usePersistentState } from '../../utils/storage';
-import { mapFilters, regionNames } from 'static';
+import {
+  findMapDetails,
+  mapFilters,
+  mapIsAeternumMap,
+  regionNames,
+} from 'static';
 import MarkerRoute from './MarkerRoute';
 import type { AccountDTO } from '../../utils/userStore';
 import { useUserStore } from '../../utils/userStore';
@@ -12,10 +17,15 @@ import {
   Group,
   ScrollArea,
   Select,
+  Skeleton,
   Stack,
+  Text,
   TextInput,
 } from '@mantine/core';
 import { IconFilter } from '@tabler/icons';
+import { useQuery } from 'react-query';
+import { getMarkerRoutes } from './api';
+import { useMap } from '../../utils/routes';
 
 export type MarkerRouteItem = {
   _id: string;
@@ -109,13 +119,11 @@ type MarkerRoutesProps = {
   onEdit: (target: MarkerRouteItem | true) => void;
 };
 function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
-  const {
-    markerRoutes,
-    clearMarkerRoutes,
-    toggleMarkerRoute,
-    refreshMarkerRoutes,
-    visibleMarkerRoutes,
-  } = useMarkers();
+  const { data: allMarkerRoutes = [], isLoading } = useQuery(
+    'routes',
+    getMarkerRoutes
+  );
+  const { markerRoutes, setMarkerRoutes, toggleMarkerRoute } = useMarkers();
   const account = useUserStore((state) => state.account);
   const [sortBy, setSortBy] = usePersistentState<SortBy>(
     'markerRoutesSort',
@@ -128,14 +136,44 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
   const [search, setSearch] = usePersistentState('searchRoutes', '');
   const { filters } = useFilters();
   const [limit, setLimit] = useState(10);
-
-  useEffect(() => {
-    refreshMarkerRoutes();
-  }, []);
+  const map = useMap();
 
   useEffect(() => {
     setLimit(10);
   }, [sortBy, filter, search]);
+
+  useEffect(() => {
+    const selectedMarkerRoutes: MarkerRouteItem[] = [];
+    markerRoutes.forEach((markerRoute) => {
+      const newMarkerRoute = allMarkerRoutes.find(
+        (targetMarkerRoute) => targetMarkerRoute._id === markerRoute._id
+      );
+      if (newMarkerRoute) {
+        selectedMarkerRoutes.push(newMarkerRoute);
+      } else {
+        selectedMarkerRoutes.push(markerRoute);
+      }
+    });
+    setMarkerRoutes(selectedMarkerRoutes);
+  }, [allMarkerRoutes]);
+
+  const visibleMarkerRoutes = useMemo(
+    () =>
+      allMarkerRoutes.filter((markerRoute) => {
+        if (markerRoute.map) {
+          if (mapIsAeternumMap(map)) {
+            return false;
+          }
+          if (findMapDetails(map) !== findMapDetails(markerRoute.map)) {
+            return false;
+          }
+        } else if (!mapIsAeternumMap(map)) {
+          return false;
+        }
+        return true;
+      }),
+    [allMarkerRoutes, map]
+  );
 
   const sortedMarkerRoutes = useMemo(
     () =>
@@ -156,7 +194,7 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
         >
           {account ? 'Add route' : 'Sign in to add routes'}
         </Button>
-        <Button onClick={clearMarkerRoutes}>Hide all</Button>
+        <Button onClick={() => setMarkerRoutes([])}>Hide all</Button>
       </Group>
       <Group spacing="xs" grow>
         <TextInput
@@ -191,19 +229,25 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
         />
       </Group>
       <ScrollArea style={{ height: 'calc(100vh - 170px)' }} offsetScrollbars>
-        {sortedMarkerRoutes.length === 0 && 'No routes available'}
-        {sortedMarkerRoutes.slice(0, limit).map((markerRoute) => (
-          <MarkerRoute
-            key={markerRoute._id}
-            isOwner={markerRoute.userId === account?.steamId}
-            markerRoute={markerRoute}
-            selected={markerRoutes.some(
-              (selectedMarkerRoute) =>
-                selectedMarkerRoute._id == markerRoute._id
-            )}
-            onSelect={(checked) => toggleMarkerRoute(markerRoute, checked)}
-          />
-        ))}
+        {isLoading && <Skeleton height={40} />}
+        {!isLoading && sortedMarkerRoutes.length === 0 && (
+          <Text color="orange">No routes found</Text>
+        )}
+        {!isLoading &&
+          sortedMarkerRoutes
+            .slice(0, limit)
+            .map((markerRoute) => (
+              <MarkerRoute
+                key={markerRoute._id}
+                isOwner={markerRoute.userId === account?.steamId}
+                markerRoute={markerRoute}
+                selected={markerRoutes.some(
+                  (selectedMarkerRoute) =>
+                    selectedMarkerRoute._id == markerRoute._id
+                )}
+                onSelect={(checked) => toggleMarkerRoute(markerRoute, checked)}
+              />
+            ))}
         {sortedMarkerRoutes.length > limit && (
           <Button onClick={() => setLimit((limit) => limit + 10)} fullWidth>
             Load more

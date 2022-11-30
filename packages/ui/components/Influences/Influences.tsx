@@ -34,7 +34,7 @@ const Influence = ({ influence }: InfluenceProps) => {
   }
   const { rankings } = getFactionRanking([influence]);
   return (
-    <SimpleGrid cols={3} breakpoints={[{ maxWidth: 'xs', cols: 1 }]} mt="xs">
+    <SimpleGrid cols={3} mt="xs">
       {rankings.map((ranking) => (
         <Group key={ranking.factionName} spacing={1}>
           <Avatar src={ranking.icon} size="sm" />
