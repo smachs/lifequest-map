@@ -12,6 +12,7 @@ import {
 } from '@mantine/core';
 import {
   IconCurrentLocation,
+  IconCurrentLocationOff,
   IconKey,
   IconMinus,
   IconPlus,
@@ -76,7 +77,11 @@ const MapActions = () => {
               }
             }}
           >
-            <IconCurrentLocation size={20} />
+            {player?.position?.location ? (
+              <IconCurrentLocation size={20} />
+            ) : (
+              <IconCurrentLocationOff size={20} />
+            )}
           </ActionIcon>
         </HoverCard.Target>
         <HoverCard.Dropdown>
@@ -143,7 +148,8 @@ const MapActions = () => {
                   <Text component="span" color="teal">
                     Connected
                   </Text>{' '}
-                  to Overwolf app. Waiting for player position.
+                  to Overwolf app.
+                  <Text color="orange">Waiting for player position.</Text>
                 </Text>
               )}
               {!player && (
@@ -151,7 +157,8 @@ const MapActions = () => {
                   <Text component="span" color="teal">
                     Connected
                   </Text>{' '}
-                  to live server. Waiting for Overwolf app.
+                  to live server.
+                  <Text color="orange">Waiting for Overwolf app.</Text>
                 </Text>
               )}
               <Button onClick={refreshAccount} compact>
