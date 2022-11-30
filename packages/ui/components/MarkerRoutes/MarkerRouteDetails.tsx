@@ -122,7 +122,7 @@ const MarkerRouteDetails = ({ onEdit }: MarkerRouteDetailsProps) => {
   }, [markerRoute?.markersByType]);
 
   function handleEdit(markerRoute: MarkerRouteItem) {
-    toggleMarkerRoute(markerRoute, true);
+    toggleMarkerRoute(markerRoute, false);
     const types = Object.keys(markerRoute.markersByType);
     setFilters((filters) => [
       ...filters,

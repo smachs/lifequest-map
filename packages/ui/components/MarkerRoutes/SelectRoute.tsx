@@ -82,6 +82,7 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
         drawMarker: false,
         drawRectangle: false,
         drawPolygon: false,
+        drawText: false,
         rotateMode: false,
         dragMode: false,
         cutPolygon: false,
