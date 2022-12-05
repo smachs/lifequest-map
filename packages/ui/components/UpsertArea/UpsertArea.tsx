@@ -21,6 +21,15 @@ function UpsertArea({
     <Dialog
       opened={Boolean(markerRoute || marker)}
       position={{ top: 58, right: 7 }}
+      withCloseButton
+      onClose={() => {
+        if (markerRoute) {
+          onRouteClose();
+        }
+        if (marker) {
+          onMarkerClose();
+        }
+      }}
     >
       {markerRoute && (
         <SelectRoute

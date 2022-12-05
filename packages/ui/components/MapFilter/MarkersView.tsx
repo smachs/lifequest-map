@@ -5,8 +5,14 @@ import { usePersistentState } from '../../utils/storage';
 import PresetSelect from '../PresetSelect/PresetSelect';
 import MarkerSearch from '../MarkerSearch/MarkerSearch';
 import { useUserStore } from '../../utils/userStore';
-import { Button, ScrollArea, Stack, TextInput } from '@mantine/core';
-import { IconFilter } from '@tabler/icons';
+import {
+  ActionIcon,
+  Button,
+  ScrollArea,
+  Stack,
+  TextInput,
+} from '@mantine/core';
+import { IconFilter, IconX } from '@tabler/icons';
 
 type MarkersViewProps = {
   onAdd: () => void;
@@ -42,6 +48,11 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
         value={search}
         onChange={(event) => setSearch(event.target.value)}
         icon={<IconFilter />}
+        rightSection={
+          <ActionIcon onClick={() => setSearch('')}>
+            <IconX />
+          </ActionIcon>
+        }
       />
       <PresetSelect onChange={setFilters} />
       <ScrollArea style={{ height: 'calc(100vh - 270px)' }} offsetScrollbars>

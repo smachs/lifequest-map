@@ -9,6 +9,8 @@ export const ThemeProvider = ({ children }: Props) => (
     theme={{
       colorScheme: 'dark',
     }}
+    withGlobalStyles
+    withNormalizeCSS
   >
     {children}
   </MantineProvider>
