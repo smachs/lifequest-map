@@ -112,6 +112,7 @@ const UserAction = () => {
         <Popover.Target>
           <Button
             radius="xl"
+            color={account ? 'teal' : 'blue'}
             variant="filled"
             leftIcon={<IconUser />}
             onClick={() => setOpened((o) => !o)}

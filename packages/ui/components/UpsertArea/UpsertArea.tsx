@@ -4,6 +4,7 @@ import type { MarkerDTO } from '../AddResources/api';
 import type { MarkerRouteItem } from '../MarkerRoutes/MarkerRoutes';
 const AddResources = lazy(() => import('../AddResources/AddResources'));
 const SelectRoute = lazy(() => import('../MarkerRoutes/SelectRoute'));
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 
 type UpsertAreaProps = {
   markerRoute?: MarkerRouteItem | true;
@@ -33,20 +34,24 @@ function UpsertArea({
       }}
     >
       {markerRoute && (
-        <Suspense fallback={<Skeleton height={40} />}>
-          <SelectRoute
-            markerRoute={markerRoute === true ? undefined : markerRoute}
-            onClose={onRouteClose}
-          />
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={<Skeleton height={40} />}>
+            <SelectRoute
+              markerRoute={markerRoute === true ? undefined : markerRoute}
+              onClose={onRouteClose}
+            />
+          </Suspense>
+        </ErrorBoundary>
       )}
       {marker && (
-        <Suspense fallback={<Skeleton height={40} />}>
-          <AddResources
-            marker={marker === true ? undefined : marker}
-            onClose={onMarkerClose}
-          />
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={<Skeleton height={40} />}>
+            <AddResources
+              marker={marker === true ? undefined : marker}
+              onClose={onMarkerClose}
+            />
+          </Suspense>
+        </ErrorBoundary>
       )}
     </Dialog>
   );

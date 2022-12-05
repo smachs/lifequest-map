@@ -10,6 +10,7 @@ import { IconFlag, IconMapPin, IconRoute2 } from '@tabler/icons';
 import { lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { useView } from '../../utils/routes';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import MarkerDetails from '../MarkerDetails/MarkerDetails';
 import type { MarkerFull } from '../MarkerDetails/useMarker';
 import MarkerRouteDetails from '../MarkerRoutes/MarkerRouteDetails';
@@ -115,9 +116,11 @@ const NavActions = ({
         size="xl"
         withOverlay={false}
       >
-        <Suspense fallback={<Skeleton height={40} />}>
-          <MarkersView onAdd={onMarkerCreate} />
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={<Skeleton height={40} />}>
+            <MarkersView onAdd={onMarkerCreate} />
+          </Suspense>
+        </ErrorBoundary>
       </Drawer>
       <MarkerDetails onEdit={onMarkerEdit} />
       <Drawer
@@ -128,9 +131,11 @@ const NavActions = ({
         size="xl"
         withOverlay={false}
       >
-        <Suspense fallback={<Skeleton height={40} />}>
-          <MarkerRoutes onEdit={onMarkerRouteUpsert} />
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={<Skeleton height={40} />}>
+            <MarkerRoutes onEdit={onMarkerRouteUpsert} />
+          </Suspense>
+        </ErrorBoundary>
       </Drawer>
       <MarkerRouteDetails onEdit={onMarkerRouteUpsert} />
       <Drawer
@@ -141,9 +146,11 @@ const NavActions = ({
         size="xl"
         withOverlay={false}
       >
-        <Suspense fallback={<Skeleton height={40} />}>
-          <Influences />
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={<Skeleton height={40} />}>
+            <Influences />
+          </Suspense>
+        </ErrorBoundary>
       </Drawer>
     </>
   );
