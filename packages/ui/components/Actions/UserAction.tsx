@@ -116,7 +116,17 @@ const UserAction = () => {
             leftIcon={<IconUser />}
             onClick={() => setOpened((o) => !o)}
           >
-            {account?.name || 'Sign in'}
+            <Text
+              component="span"
+              sx={{
+                maxWidth: 100,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {account?.name || 'Sign in'}
+            </Text>
           </Button>
         </Popover.Target>
         <Popover.Dropdown>
