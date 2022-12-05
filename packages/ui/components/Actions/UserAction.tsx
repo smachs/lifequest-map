@@ -96,6 +96,7 @@ const UserAction = () => {
             setShowSettings(true);
             setOpened(false);
           }}
+          aria-label="Settings"
         >
           <IconSettings />
         </ActionIcon>
@@ -111,7 +112,6 @@ const UserAction = () => {
         <Popover.Target>
           <Button
             radius="xl"
-            color={account ? 'blue' : 'orange'}
             variant="filled"
             leftIcon={<IconUser />}
             onClick={() => setOpened((o) => !o)}
@@ -184,6 +184,7 @@ const UserAction = () => {
                   onClick={() => setShowFAQ(true)}
                   radius="sm"
                   size="xl"
+                  aria-label="FAQ"
                 >
                   <IconHelp />
                 </ActionIcon>
@@ -203,6 +204,7 @@ const UserAction = () => {
                   }
                   size="xl"
                   radius="sm"
+                  aria-label="Open Source on GitHub"
                 >
                   <GitHubIcon />
                 </ActionIcon>
@@ -223,6 +225,7 @@ const UserAction = () => {
                   }}
                   size="xl"
                   radius="sm"
+                  aria-label="Join Discord Community"
                 >
                   <DiscordIcon />
                 </ActionIcon>

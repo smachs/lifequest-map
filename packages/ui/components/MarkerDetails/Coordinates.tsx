@@ -15,6 +15,7 @@ function Coordinates({ position }: CoordinatesProps) {
           onClick={() => {
             copyTextToClipboard(coordinates);
           }}
+          aria-label="Copy coordinates"
         >
           <CopyIcon />
         </ActionIcon>

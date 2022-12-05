@@ -73,6 +73,7 @@ const NavActions = ({
             variant="default"
             component={Link}
             to={toView({ section: 'nodes' })}
+            aria-label="Nodes"
           >
             <IconMapPin />
           </ActionIcon>
@@ -82,6 +83,7 @@ const NavActions = ({
             variant="default"
             component={Link}
             to={toView({ section: 'routes' })}
+            aria-label="Routes"
           >
             <IconRoute2 />
           </ActionIcon>
@@ -91,6 +93,7 @@ const NavActions = ({
             variant="default"
             component={Link}
             to={toView({ section: 'influences' })}
+            aria-label="Influences"
           >
             <IconFlag />
           </ActionIcon>

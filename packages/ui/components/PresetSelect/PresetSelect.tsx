@@ -124,6 +124,7 @@ function PresetSelect({ onChange }: PresetSelectProps): JSX.Element {
               size="sm"
               variant="default"
               onClick={() => setOpenedAdd((o) => !o)}
+              aria-label="Create preset"
             >
               <IconDeviceFloppy />
             </ActionIcon>
@@ -152,6 +153,7 @@ function PresetSelect({ onChange }: PresetSelectProps): JSX.Element {
                     disabled={!presetName}
                     variant="transparent"
                     color="green"
+                    aria-label="Save preset"
                   >
                     <CheckIcon width="100%" height="100%" />
                   </ActionIcon>
@@ -176,6 +178,7 @@ function PresetSelect({ onChange }: PresetSelectProps): JSX.Element {
               variant="default"
               onClick={() => setOpenedDelete((o) => !o)}
               disabled={presets.length === 0}
+              aria-label="Delete preset"
             >
               <IconTrashX />
             </ActionIcon>

@@ -72,6 +72,7 @@ const SupporterInput = () => {
               onClick={() => mutation.mutate(secret)}
               disabled={!secret}
               variant="transparent"
+              aria-label="Save supporter secret"
             >
               <CheckIcon width="100%" height="100%" />
             </ActionIcon>

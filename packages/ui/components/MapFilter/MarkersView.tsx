@@ -49,7 +49,7 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
         onChange={(event) => setSearch(event.target.value)}
         icon={<IconFilter />}
         rightSection={
-          <ActionIcon onClick={() => setSearch('')}>
+          <ActionIcon onClick={() => setSearch('')} aria-label="Clear filter">
             <IconX />
           </ActionIcon>
         }
