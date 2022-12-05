@@ -5,25 +5,29 @@ import { FiltersProvider } from 'ui/contexts/FiltersContext';
 import { SettingsProvider } from 'ui/contexts/SettingsContext';
 import { ThemeProvider } from 'ui/contexts/ThemeProvider';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { HelmetProvider } from 'react-helmet-async';
 
 const queryClient = new QueryClient();
+const helmetContext = {};
 
 type Props = {
   children: ReactNode;
 };
 const ProviderHell = ({ children }: Props) => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <SettingsProvider>
-          <FiltersProvider>
-            <MarkersProvider>
-              <ModalProvider>{children}</ModalProvider>
-            </MarkersProvider>
-          </FiltersProvider>
-        </SettingsProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <HelmetProvider context={helmetContext}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <SettingsProvider>
+            <FiltersProvider>
+              <MarkersProvider>
+                <ModalProvider>{children}</ModalProvider>
+              </MarkersProvider>
+            </FiltersProvider>
+          </SettingsProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 };
 

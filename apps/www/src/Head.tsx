@@ -1,7 +1,5 @@
-import { Helmet, HelmetData } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { mapIsAeternumMap } from 'static';
-
-const helmetData = new HelmetData({});
 
 type Props = {
   map: string;
@@ -9,7 +7,7 @@ type Props = {
 const Head = ({ map }: Props) => {
   const isAeternumMap = mapIsAeternumMap(map);
   return (
-    <Helmet helmetData={helmetData} prioritizeSeoTags>
+    <Helmet prioritizeSeoTags>
       <title>{map} - New World Map</title>
       <meta
         name="description"
