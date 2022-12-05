@@ -45,11 +45,6 @@
     "zone": "gru"
   },
   {
-    "publicName": "Aukumea",
-    "worldName": "live-3-01-1",
-    "zone": "pdx"
-  },
-  {
     "publicName": "Avalon",
     "worldName": "live-2-fsw01-10",
     "zone": "iad"
@@ -115,11 +110,6 @@
     "zone": "fra"
   },
   {
-    "publicName": "Eden",
-    "worldName": "live-2-01-1",
-    "zone": "iad"
-  },
-  {
     "publicName": "El Dorado",
     "worldName": "live-3-03-1",
     "zone": "pdx"
@@ -140,19 +130,9 @@
     "zone": "fra"
   },
   {
-    "publicName": "Fae",
-    "worldName": "live-1-01-1",
-    "zone": "fra"
-  },
-  {
     "publicName": "Fate",
     "worldName": "live-1-fsw01-08",
     "zone": "fra"
-  },
-  {
-    "publicName": "Frislandia",
-    "worldName": "live-2-02-2",
-    "zone": "iad"
   },
   {
     "publicName": "Gaea",
@@ -315,11 +295,6 @@
     "zone": "fra"
   },
   {
-    "publicName": "Themiscyra",
-    "worldName": "live-2-01-3",
-    "zone": "iad"
-  },
-  {
     "publicName": "Titan",
     "worldName": "live-3-fsw01-01",
     "zone": "pdx"
@@ -327,11 +302,6 @@
   {
     "publicName": "Tir Na Nog",
     "worldName": "live-1-01-2",
-    "zone": "fra"
-  },
-  {
-    "publicName": "Tupia",
-    "worldName": "live-1-22-1",
     "zone": "fra"
   },
   {
