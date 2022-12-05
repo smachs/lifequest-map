@@ -1,8 +1,9 @@
-import { Dialog } from '@mantine/core';
-import AddResources from '../AddResources/AddResources';
+import { Dialog, Skeleton } from '@mantine/core';
+import { lazy, Suspense } from 'react';
 import type { MarkerDTO } from '../AddResources/api';
 import type { MarkerRouteItem } from '../MarkerRoutes/MarkerRoutes';
-import SelectRoute from '../MarkerRoutes/SelectRoute';
+const AddResources = lazy(() => import('../AddResources/AddResources'));
+const SelectRoute = lazy(() => import('../MarkerRoutes/SelectRoute'));
 
 type UpsertAreaProps = {
   markerRoute?: MarkerRouteItem | true;
@@ -32,16 +33,20 @@ function UpsertArea({
       }}
     >
       {markerRoute && (
-        <SelectRoute
-          markerRoute={markerRoute === true ? undefined : markerRoute}
-          onClose={onRouteClose}
-        />
+        <Suspense fallback={<Skeleton height={40} />}>
+          <SelectRoute
+            markerRoute={markerRoute === true ? undefined : markerRoute}
+            onClose={onRouteClose}
+          />
+        </Suspense>
       )}
       {marker && (
-        <AddResources
-          marker={marker === true ? undefined : marker}
-          onClose={onMarkerClose}
-        />
+        <Suspense fallback={<Skeleton height={40} />}>
+          <AddResources
+            marker={marker === true ? undefined : marker}
+            onClose={onMarkerClose}
+          />
+        </Suspense>
       )}
     </Dialog>
   );
