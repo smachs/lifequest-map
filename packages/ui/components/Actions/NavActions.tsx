@@ -1,4 +1,4 @@
-import { Button, Drawer, Group, MediaQuery, Stack } from '@mantine/core';
+import { ActionIcon, Button, Drawer, Group, MediaQuery } from '@mantine/core';
 import { IconFlag, IconMapPin, IconRoute2 } from '@tabler/icons';
 import { Link } from 'react-router-dom';
 import { useView } from '../../utils/routes';
@@ -22,17 +22,80 @@ const NavActions = ({
 }: NavActionsProps) => {
   const { view, toView, setView } = useView();
 
-  const actions = (
+  return (
     <>
-      <Button
-        variant="default"
-        component={Link}
-        to={toView({ section: 'nodes' })}
-        leftIcon={<IconMapPin />}
-        radius="xl"
+      <MediaQuery
+        smallerThan="sm"
+        styles={{
+          display: 'none',
+        }}
       >
-        Nodes
-      </Button>
+        <Group spacing="xs">
+          <Button
+            variant="default"
+            component={Link}
+            to={toView({ section: 'nodes' })}
+            leftIcon={<IconMapPin />}
+            radius="xl"
+          >
+            Nodes
+          </Button>
+          <Button
+            component={Link}
+            to={toView({ section: 'routes' })}
+            leftIcon={<IconRoute2 />}
+            variant="default"
+            radius="xl"
+          >
+            Routes
+          </Button>
+          <Button
+            component={Link}
+            to={toView({ section: 'influences' })}
+            leftIcon={<IconFlag />}
+            variant="default"
+            radius="xl"
+          >
+            Influences
+          </Button>
+        </Group>
+      </MediaQuery>
+      <MediaQuery
+        largerThan="sm"
+        styles={{
+          display: 'none',
+        }}
+      >
+        <Group spacing="xs">
+          <ActionIcon
+            size="lg"
+            radius="xl"
+            variant="default"
+            component={Link}
+            to={toView({ section: 'nodes' })}
+          >
+            <IconMapPin />
+          </ActionIcon>
+          <ActionIcon
+            size="lg"
+            radius="xl"
+            variant="default"
+            component={Link}
+            to={toView({ section: 'routes' })}
+          >
+            <IconRoute2 />
+          </ActionIcon>
+          <ActionIcon
+            size="lg"
+            radius="xl"
+            variant="default"
+            component={Link}
+            to={toView({ section: 'influences' })}
+          >
+            <IconFlag />
+          </ActionIcon>
+        </Group>
+      </MediaQuery>
       <Drawer
         opened={view.section === 'nodes'}
         onClose={() => setView({ section: null })}
@@ -44,15 +107,6 @@ const NavActions = ({
         <MarkersView onAdd={onMarkerCreate} />
       </Drawer>
       <MarkerDetails onEdit={onMarkerEdit} />
-      <Button
-        component={Link}
-        to={toView({ section: 'routes' })}
-        leftIcon={<IconRoute2 />}
-        variant="default"
-        radius="xl"
-      >
-        Routes
-      </Button>
       <Drawer
         opened={view.section === 'routes'}
         onClose={() => setView({ section: null })}
@@ -64,15 +118,6 @@ const NavActions = ({
         <MarkerRoutes onEdit={onMarkerRouteUpsert} />
       </Drawer>
       <MarkerRouteDetails onEdit={onMarkerRouteUpsert} />
-      <Button
-        component={Link}
-        to={toView({ section: 'influences' })}
-        leftIcon={<IconFlag />}
-        variant="default"
-        radius="xl"
-      >
-        Influences
-      </Button>
       <Drawer
         opened={view.section === 'influences'}
         onClose={() => setView({ section: null })}
@@ -83,27 +128,6 @@ const NavActions = ({
       >
         <Influences />
       </Drawer>
-    </>
-  );
-
-  return (
-    <>
-      <MediaQuery
-        smallerThan="sm"
-        styles={{
-          display: 'none',
-        }}
-      >
-        <Group spacing="xs">{actions}</Group>
-      </MediaQuery>
-      <MediaQuery
-        largerThan="sm"
-        styles={{
-          display: 'none',
-        }}
-      >
-        <Stack spacing="xs">{actions}</Stack>
-      </MediaQuery>
     </>
   );
 };

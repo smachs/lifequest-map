@@ -11,6 +11,8 @@ type Store = {
   toggleFollowing: () => void;
   showOtherPlayers: boolean;
   toggleShowOtherPlayers: () => void;
+  autoFade: boolean;
+  toggleAutoFade: () => void;
 };
 
 export const useSettingsStore = create(
@@ -28,6 +30,8 @@ export const useSettingsStore = create(
         showOtherPlayers: false,
         toggleShowOtherPlayers: () =>
           set((state) => ({ showOtherPlayers: !state.showOtherPlayers })),
+        autoFade: true,
+        toggleAutoFade: () => set((state) => ({ autoFade: !state.autoFade })),
       }),
       {
         name: 'settings-store',

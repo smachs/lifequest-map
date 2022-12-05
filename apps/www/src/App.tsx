@@ -15,6 +15,7 @@ import UserAction from 'ui/components/Actions/UserAction';
 import NavActions from 'ui/components/Actions/NavActions';
 import MapActions from 'ui/components/Actions/MapActions';
 import MapAction from 'ui/components/Actions/MapAction';
+import FadingBox from 'ui/components/FadingBox/FadingBox';
 
 function App(): JSX.Element {
   const [targetMarker, setTargetMarker] = useState<
@@ -54,50 +55,22 @@ function App(): JSX.Element {
 
   return (
     <Box>
-      <Box
-        sx={{
-          position: 'fixed',
-          left: 7,
-          top: 7,
-          zIndex: 1,
-        }}
-      >
+      <FadingBox left={7} top={7} fadeFrom="top">
         <NavActions
           onMarkerEdit={setTargetMarker}
           onMarkerCreate={() => setTargetMarker(true)}
           onMarkerRouteUpsert={setTargetMarkerRoute}
         />
-      </Box>
-      <Box
-        sx={{
-          position: 'fixed',
-          right: 7,
-          top: 7,
-          zIndex: 2,
-        }}
-      >
+      </FadingBox>
+      <FadingBox right={7} top={7} zIndex={2} fadeFrom="top">
         <UserAction />
-      </Box>
-      <Box
-        sx={{
-          position: 'fixed',
-          top: 'calc(50% - 45px)',
-          right: 12,
-          zIndex: 1,
-        }}
-      >
+      </FadingBox>
+      <FadingBox top="calc(50% - 45px)" right={12} fadeFrom="right">
         <MapActions />
-      </Box>
-      <Box
-        sx={{
-          position: 'fixed',
-          bottom: 7,
-          left: 7,
-          zIndex: 1,
-        }}
-      >
+      </FadingBox>
+      <FadingBox bottom={7} left={7} fadeFrom="bottom">
         <MapAction />
-      </Box>
+      </FadingBox>
       <Box sx={{ width: '100vw', height: '100vh' }}>
         <WorldMap isEditing={Boolean(targetMarker || targetMarkerRoute)} />
       </Box>

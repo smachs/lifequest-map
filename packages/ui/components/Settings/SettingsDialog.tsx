@@ -11,6 +11,7 @@ import {
 } from '@mantine/core';
 import { useEffect } from 'react';
 import { useSettings } from '../../contexts/SettingsContext';
+import { useSettingsStore } from '../../utils/settingsStore';
 
 type SettingsDialogProps = {
   opened: boolean;
@@ -39,6 +40,8 @@ const SettingsDialog = ({ opened, onClose }: SettingsDialogProps) => {
     playerIconColor,
     setPlayerIconColor,
   } = useSettings();
+
+  const settingsStore = useSettingsStore();
 
   useEffect(() => {
     // @ts-ignore
@@ -118,6 +121,12 @@ const SettingsDialog = ({ opened, onClose }: SettingsDialogProps) => {
             checked={adaptiveZoom}
             description="The zoom level will change if you enter/leave a settlement."
             onChange={(event) => setAdaptiveZoom(event.target.checked)}
+          />
+          <Checkbox
+            label="Auto fade UI"
+            checked={settingsStore.autoFade}
+            description="Fades out the control elements of this window if it's inactive."
+            onChange={() => settingsStore.toggleAutoFade()}
           />
           <Title order={4}>Hotkeys</Title>
           <Text fs="italic">Hotkeys are configured in the Overwolf app</Text>

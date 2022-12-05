@@ -29,6 +29,10 @@ const useStyles = createStyles((theme, _params, getRef) => {
       [`&:hover .${image}`]: {
         transform: 'scale(1.03)',
       },
+      [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
+        height: 80,
+        width: 80,
+      },
     },
 
     image: {
@@ -128,13 +132,11 @@ const MapAction = () => {
         opened={opened}
         onClose={() => setOpened(false)}
       >
-        <Grid gutter="xs">
+        <Grid gutter="xs" justify="space-around">
           {mapDetails.map((mapDetail, index) => (
             <Grid.Col
-              md={index === 0 ? 12 : 4}
-              sm={6}
-              xs={6}
               key={mapDetail.name}
+              span={index === 0 ? 12 : 4}
               sx={{
                 textAlign: 'center',
               }}
