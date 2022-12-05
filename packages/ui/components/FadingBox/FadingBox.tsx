@@ -1,5 +1,6 @@
 import { Box } from '@mantine/core';
 import type { ReactNode } from 'react';
+import { useSettingsStore } from '../../utils/settingsStore';
 import useActive from './useActive';
 
 type FadingBoxProps = {
@@ -19,6 +20,7 @@ const FadingBox = ({
   ...props
 }: FadingBoxProps) => {
   const active = useActive();
+  const autoFade = useSettingsStore((state) => state.autoFade);
   return (
     <Box
       sx={{
@@ -29,7 +31,7 @@ const FadingBox = ({
         ...props,
       }}
       style={
-        !active
+        !active && autoFade
           ? {
               [fadeFrom]: '-120px',
               transitionDelay: '1.5s',
