@@ -225,6 +225,7 @@ const MapActions = () => {
             <TextInput
               value="https://aeternum-map.gg/minimap.html"
               label="URL"
+              readOnly
             />
             <Text weight={500} size="sm">
               Zoom

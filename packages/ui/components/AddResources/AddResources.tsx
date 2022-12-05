@@ -1,8 +1,8 @@
+import type { FormEvent } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useMarkers } from '../../contexts/MarkersContext';
 import type { FilterItem, MarkerSize } from 'static';
 import { mapFilters, mapIsAeternumMap } from 'static';
-import styles from './AddResources.module.css';
 import SelectType from './SelectType';
 import SelectPosition from './SelectPosition';
 import DetailsInput from './DetailsInput';
@@ -12,7 +12,6 @@ import { uploadScreenshot } from './api';
 import { patchMarker } from './api';
 import { postMarker } from './api';
 import { notify } from '../../utils/notifications';
-import Button from '../Button/Button';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import { useMap } from 'ui/utils/routes';
 import { usePlayerStore } from '../../utils/playerStore';
@@ -20,6 +19,7 @@ import { useSettingsStore } from '../../utils/settingsStore';
 import ImageDropzone from './ImageDropzone';
 import type { FileWithPath } from '@mantine/dropzone';
 import { getScreenshotUrl } from '../../utils/api';
+import { Button, Stack, Text } from '@mantine/core';
 
 export type Details = {
   description?: string;
@@ -131,7 +131,8 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
     [fileScreenshot]
   );
 
-  async function handleSave() {
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
     if (!isValid) {
       return;
     }
@@ -154,7 +155,7 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
         const updatedMarker = await notify(
           patchMarker(marker._id!, newMarker),
           {
-            success: 'Marker edited 👌',
+            success: 'Node edited 👌',
           }
         );
         setMarkers((markers) => {
@@ -170,7 +171,7 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
         });
       } else {
         const createdMarker = await notify(postMarker(newMarker), {
-          success: 'Marker added 👌',
+          success: 'Node added 👌',
         });
         setMarkers((markers) => [createdMarker, ...markers]);
       }
@@ -182,34 +183,37 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
   }
 
   return (
-    <section className={styles.container}>
-      <SelectPosition
-        details={details}
-        filter={filter}
-        onSelectLocation={setLocation}
-        location={location}
-      />
-      <SelectType onSelect={setFilter} filter={filter} />
-      <DetailsInput filter={filter} onChange={setDetails} details={details} />
-      <ImageDropzone
-        src={
-          base64Image ||
-          (details.screenshotFilename &&
-            getScreenshotUrl(details.screenshotFilename))
-        }
-        onDrop={(files) => setFileScreenshot(files[0])}
-        onClear={() => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          setDetails(({ screenshotFilename, ...rest }) => rest);
-          setFileScreenshot(null);
-        }}
-      />
-      <Button onClick={handleSave} disabled={!isValid}>
-        Save Marker
-      </Button>
-      <Button onClick={onClose}>Cancel</Button>
-      <small>Move marker by dragging it</small>
-    </section>
+    <form onSubmit={handleSubmit}>
+      <Stack>
+        <SelectPosition
+          details={details}
+          filter={filter}
+          onSelectLocation={setLocation}
+          location={location}
+        />
+        <SelectType onSelect={setFilter} filter={filter} />
+        <DetailsInput filter={filter} onChange={setDetails} details={details} />
+        <ImageDropzone
+          src={
+            base64Image ||
+            (details.screenshotFilename &&
+              getScreenshotUrl(details.screenshotFilename))
+          }
+          onDrop={(files) => setFileScreenshot(files[0])}
+          onClear={() => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            setDetails(({ screenshotFilename, ...rest }) => rest);
+            setFileScreenshot(null);
+          }}
+        />
+        <Button type="submit" disabled={!isValid}>
+          Save node
+        </Button>
+        <Text color="dimmed" size="xs">
+          Move node by dragging it
+        </Text>
+      </Stack>
+    </form>
   );
 }
 

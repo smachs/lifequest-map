@@ -1,10 +1,10 @@
 import useGeoman from './useGeoman';
 import styles from './SelectPosition.module.css';
-import generalStyles from './AddResources.module.css';
 import type { FilterItem } from 'static';
 import type { Details } from './AddResources';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import PlayerPositionButton from './PlayerPositionButton';
+import { Text } from '@mantine/core';
 
 type SelectPositionType = {
   details: Details | null;
@@ -33,7 +33,7 @@ function SelectPosition({
   return (
     <div>
       <label>
-        <span className={generalStyles.key}>Position</span>[
+        <Text size="xs">Position</Text>[
         <input
           className={styles.input}
           type="number"

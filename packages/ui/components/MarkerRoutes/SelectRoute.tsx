@@ -1,5 +1,5 @@
+import type { FormEvent } from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import styles from './SelectRoute.module.css';
 import 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
@@ -9,12 +9,19 @@ import { notify } from '../../utils/notifications';
 import { patchMarkerRoute, postMarkerRoute } from './api';
 import { useMarkers } from '../../contexts/MarkersContext';
 import type { MarkerRouteItem } from './MarkerRoutes';
-import Button from '../Button/Button';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import { findRegions } from 'static';
 import { writeError } from '../../utils/logs';
 import { useMap } from 'ui/utils/routes';
 import { useQueryClient } from 'react-query';
+import {
+  Button,
+  Checkbox,
+  Stack,
+  Text,
+  Textarea,
+  TextInput,
+} from '@mantine/core';
 
 type SelectRouteProps = {
   markerRoute?: MarkerRouteItem;
@@ -177,7 +184,8 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
     };
   }, []);
 
-  async function handleSave() {
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
     try {
       const partialMarkerRoute = {
         name,
@@ -204,42 +212,35 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
   }
 
   return (
-    <div className={styles.container}>
-      <label className={styles.label}>
-        Name
-        <input
+    <form onSubmit={handleSubmit}>
+      <Stack spacing="xs">
+        <TextInput
+          label="Name"
           onChange={(event) => setName(event.target.value)}
           value={name || ''}
           placeholder="Give this route an explanatory name"
           required
         />
-      </label>
-      <label className={styles.label}>
-        Description
-        <textarea
-          className={styles.textarea}
+        <Textarea
+          label="Description"
           onChange={(event) => setDescription(event.target.value)}
           value={description || ''}
           placeholder="Add some information like 'how long does the route take', 'how often it is contested' or 'which level is required'"
-          rows={4}
+          minRows={4}
         />
-      </label>
-      <label className={styles.label}>
-        Make it available for everyone
-        <input
-          type="checkbox"
+        <Checkbox
+          label="Make it available for everyone"
           onChange={(event) => setIsPublic(event.target.checked)}
           checked={isPublic}
         />
-      </label>
-      <MarkerTypes markersByType={markersByType} />
-      <div className={styles.regions}>{regions.join(', ')}</div>
-      <Button onClick={handleSave} disabled={!name || positions.length === 0}>
-        Save Route {!name && '(Name missing)'}
-      </Button>
-      <Button onClick={onClose}>Cancel</Button>
-      <small>Right click in edit mode to remove a vertex</small>
-    </div>
+        <MarkerTypes markersByType={markersByType} />
+        <Text color="cyan">{regions.join(', ')}</Text>
+        <Button type="submit" disabled={!name || positions.length === 0}>
+          Save Route {!name && '(Name missing)'}
+        </Button>
+        <small>Right click in edit mode to remove a vertex</small>
+      </Stack>
+    </form>
   );
 }
 
