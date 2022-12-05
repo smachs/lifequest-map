@@ -1,3 +1,4 @@
+import { Button, CopyButton, Stack, Text } from '@mantine/core';
 import type { ReactNode } from 'react';
 import { Component } from 'react';
 import { writeError } from '../../utils/logs';
@@ -7,14 +8,16 @@ type MyProps = {
 };
 
 type MyState = {
-  hasError: boolean;
+  error: null | Error;
 };
 
 class ErrorBoundary extends Component<MyProps, MyState> {
-  state = { hasError: false };
+  state: MyState = {
+    error: null,
+  };
 
-  static getDerivedStateFromError() {
-    return { hasError: true };
+  static getDerivedStateFromError(error: Error) {
+    return { error: error };
   }
 
   componentDidCatch(error: Error) {
@@ -22,8 +25,26 @@ class ErrorBoundary extends Component<MyProps, MyState> {
   }
 
   render() {
-    if (this.state.hasError) {
-      return <strong>Something went wrong.</strong>;
+    if (this.state.error) {
+      return (
+        <Stack>
+          <Text weight={500}>Something went wrong.</Text>
+          <CopyButton
+            value={JSON.stringify({
+              name: this.state.error.name,
+              message: this.state.error.message,
+              stack: this.state.error.stack,
+              cause: this.state.error.cause,
+            })}
+          >
+            {({ copied, copy }) => (
+              <Button color={copied ? 'teal' : 'blue'} onClick={copy}>
+                {copied ? 'Copied 🤘' : 'Copy error message'}
+              </Button>
+            )}
+          </CopyButton>
+        </Stack>
+      );
     }
 
     return this.props.children;

@@ -16,6 +16,7 @@ import NavActions from 'ui/components/Actions/NavActions';
 import MapActions from 'ui/components/Actions/MapActions';
 import MapAction from 'ui/components/Actions/MapAction';
 import FadingBox from 'ui/components/FadingBox/FadingBox';
+import ErrorBoundary from 'ui/components/ErrorBoundary/ErrorBoundary';
 
 function App(): JSX.Element {
   const [targetMarker, setTargetMarker] = useState<
@@ -54,36 +55,40 @@ function App(): JSX.Element {
   );
 
   return (
-    <Box>
-      <FadingBox left={7} top={7} fadeFrom="top">
-        <NavActions
-          onMarkerEdit={setTargetMarker}
-          onMarkerCreate={() => setTargetMarker(true)}
-          onMarkerRouteUpsert={setTargetMarkerRoute}
+    <ErrorBoundary>
+      <Box>
+        <FadingBox left={7} top={7} fadeFrom="top">
+          <NavActions
+            onMarkerEdit={setTargetMarker}
+            onMarkerCreate={() => setTargetMarker(true)}
+            onMarkerRouteUpsert={setTargetMarkerRoute}
+          />
+        </FadingBox>
+        <FadingBox right={7} top={7} zIndex={2} fadeFrom="top">
+          <UserAction />
+        </FadingBox>
+        <FadingBox top="calc(50% - 45px)" right={12} fadeFrom="right">
+          <MapActions />
+        </FadingBox>
+        <FadingBox bottom={7} left={7} fadeFrom="bottom">
+          <MapAction />
+        </FadingBox>
+        <Box sx={{ width: '100vw', height: '100vh' }}>
+          <ErrorBoundary>
+            <WorldMap isEditing={Boolean(targetMarker || targetMarkerRoute)} />
+          </ErrorBoundary>
+        </Box>
+        <Head map={map} />
+        <ToastContainer theme="dark" pauseOnFocusLoss={false} />
+        <UpsertArea
+          marker={targetMarker}
+          markerRoute={targetMarkerRoute}
+          onMarkerClose={() => setTargetMarker(undefined)}
+          onRouteClose={() => setTargetMarkerRoute(undefined)}
         />
-      </FadingBox>
-      <FadingBox right={7} top={7} zIndex={2} fadeFrom="top">
-        <UserAction />
-      </FadingBox>
-      <FadingBox top="calc(50% - 45px)" right={12} fadeFrom="right">
-        <MapActions />
-      </FadingBox>
-      <FadingBox bottom={7} left={7} fadeFrom="bottom">
-        <MapAction />
-      </FadingBox>
-      <Box sx={{ width: '100vw', height: '100vh' }}>
-        <WorldMap isEditing={Boolean(targetMarker || targetMarkerRoute)} />
+        <NitroPay />
       </Box>
-      <Head map={map} />
-      <ToastContainer theme="dark" pauseOnFocusLoss={false} />
-      <UpsertArea
-        marker={targetMarker}
-        markerRoute={targetMarkerRoute}
-        onMarkerClose={() => setTargetMarker(undefined)}
-        onRouteClose={() => setTargetMarkerRoute(undefined)}
-      />
-      <NitroPay />
-    </Box>
+    </ErrorBoundary>
   );
 }
 

@@ -31,6 +31,8 @@ export default defineConfig({
         index: resolve(__dirname, 'src/index.html'),
       },
     },
+    sourcemap: true,
+    emptyOutDir: true
   },
   esbuild: {
     jsxInject: `import React from 'react'`,

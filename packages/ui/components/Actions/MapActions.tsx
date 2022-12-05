@@ -93,6 +93,7 @@ const MapActions = () => {
                 );
               }
             }}
+            aria-label="Current location"
           >
             <IconCurrentLocation size={20} />
           </ActionIcon>
@@ -196,7 +197,12 @@ const MapActions = () => {
       </HoverCard>
       <HoverCard width={320} shadow="md" position="left">
         <HoverCard.Target>
-          <ActionIcon variant="default" size="md" radius="sm">
+          <ActionIcon
+            variant="default"
+            size="md"
+            radius="sm"
+            aria-label="Minimap"
+          >
             <IconCompass size={20} />
           </ActionIcon>
         </HoverCard.Target>
@@ -274,6 +280,7 @@ const MapActions = () => {
           size="md"
           radius="sm"
           onClick={toggleShowOtherPlayers}
+          aria-label="Other players"
         >
           <IconUsers size={20} />
         </ActionIcon>
@@ -284,6 +291,7 @@ const MapActions = () => {
           variant="default"
           p={0}
           onClick={() => latestLeafletMap!.zoomIn()}
+          aria-label="Zoom in"
         >
           <IconPlus />
         </Button>
@@ -292,6 +300,7 @@ const MapActions = () => {
           variant="default"
           p={0}
           onClick={() => latestLeafletMap!.zoomOut()}
+          aria-label="Zoom out"
         >
           <IconMinus />
         </Button>

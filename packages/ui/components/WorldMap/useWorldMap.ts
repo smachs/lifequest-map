@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import type { TileLayer } from 'leaflet';
 import leaflet from 'leaflet';
+import '@geoman-io/leaflet-geoman-free';
+import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 import 'leaflet/dist/leaflet.css';
 import 'tilelayer-canvas';
 import { coordinates as playerCoordinates } from './usePlayerPosition';

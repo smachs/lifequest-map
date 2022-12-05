@@ -300,7 +300,7 @@ const Influences = () => {
               </>
             }
           >
-            <ActionIcon>
+            <ActionIcon aria-label="Influence screenshot overlay">
               <IconInfoCircle size={20} stroke={1.5} />
             </ActionIcon>
           </Tooltip>

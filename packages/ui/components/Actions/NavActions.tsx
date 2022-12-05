@@ -1,14 +1,23 @@
-import { ActionIcon, Button, Drawer, Group, MediaQuery } from '@mantine/core';
+import {
+  ActionIcon,
+  Button,
+  Drawer,
+  Group,
+  MediaQuery,
+  Skeleton,
+} from '@mantine/core';
 import { IconFlag, IconMapPin, IconRoute2 } from '@tabler/icons';
+import { lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { useView } from '../../utils/routes';
-import Influences from '../Influences/Influences';
-import MarkersView from '../MapFilter/MarkersView';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import MarkerDetails from '../MarkerDetails/MarkerDetails';
 import type { MarkerFull } from '../MarkerDetails/useMarker';
 import MarkerRouteDetails from '../MarkerRoutes/MarkerRouteDetails';
 import type { MarkerRouteItem } from '../MarkerRoutes/MarkerRoutes';
-import MarkerRoutes from '../MarkerRoutes/MarkerRoutes';
+const MarkersView = lazy(() => import('../MapFilter/MarkersView'));
+const MarkerRoutes = lazy(() => import('../MarkerRoutes/MarkerRoutes'));
+const Influences = lazy(() => import('../Influences/Influences'));
 
 type NavActionsProps = {
   onMarkerCreate: () => void;
@@ -73,6 +82,7 @@ const NavActions = ({
             variant="default"
             component={Link}
             to={toView({ section: 'nodes' })}
+            aria-label="Nodes"
           >
             <IconMapPin />
           </ActionIcon>
@@ -82,6 +92,7 @@ const NavActions = ({
             variant="default"
             component={Link}
             to={toView({ section: 'routes' })}
+            aria-label="Routes"
           >
             <IconRoute2 />
           </ActionIcon>
@@ -91,6 +102,7 @@ const NavActions = ({
             variant="default"
             component={Link}
             to={toView({ section: 'influences' })}
+            aria-label="Influences"
           >
             <IconFlag />
           </ActionIcon>
@@ -104,7 +116,11 @@ const NavActions = ({
         size="xl"
         withOverlay={false}
       >
-        <MarkersView onAdd={onMarkerCreate} />
+        <ErrorBoundary>
+          <Suspense fallback={<Skeleton height={40} />}>
+            <MarkersView onAdd={onMarkerCreate} />
+          </Suspense>
+        </ErrorBoundary>
       </Drawer>
       <MarkerDetails onEdit={onMarkerEdit} />
       <Drawer
@@ -115,7 +131,11 @@ const NavActions = ({
         size="xl"
         withOverlay={false}
       >
-        <MarkerRoutes onEdit={onMarkerRouteUpsert} />
+        <ErrorBoundary>
+          <Suspense fallback={<Skeleton height={40} />}>
+            <MarkerRoutes onEdit={onMarkerRouteUpsert} />
+          </Suspense>
+        </ErrorBoundary>
       </Drawer>
       <MarkerRouteDetails onEdit={onMarkerRouteUpsert} />
       <Drawer
@@ -126,7 +146,11 @@ const NavActions = ({
         size="xl"
         withOverlay={false}
       >
-        <Influences />
+        <ErrorBoundary>
+          <Suspense fallback={<Skeleton height={40} />}>
+            <Influences />
+          </Suspense>
+        </ErrorBoundary>
       </Drawer>
     </>
   );

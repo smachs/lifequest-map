@@ -72,7 +72,11 @@ function Comment({
           {toTimeAgo(createdAt)}
         </Text>
         {removable && (
-          <ActionIcon color="dark" onClick={() => setShowDeletingModal(true)}>
+          <ActionIcon
+            color="dark"
+            onClick={() => setShowDeletingModal(true)}
+            aria-label="Delete comment"
+          >
             <IconTrash size={16} />
           </ActionIcon>
         )}
