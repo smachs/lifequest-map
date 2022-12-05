@@ -20,7 +20,10 @@ import { initMarkerRoutesCollection } from './lib/markerRoutes/collection.js';
 import { initUsersCollection } from './lib/users/collection.js';
 import authRouter from './lib/auth/router.js';
 import commentsRouter from './lib/comments/router.js';
-import markersRouter, { refreshMarkers } from './lib/markers/router.js';
+import markersRouter, {
+  lastMarkers,
+  refreshMarkers,
+} from './lib/markers/router.js';
 import markerRoutesRouter from './lib/markerRoutes/router.js';
 import usersRouter from './lib/users/router.js';
 import screenshotsRouter from './lib/screenshots/router.js';
@@ -153,6 +156,24 @@ async function runServer() {
     );
     app.use('/assets', (_req, res) => {
       res.redirect('/assets/map/empty.webp');
+    });
+
+    app.get('/sitemap.xml', (_req, res) => {
+      const urls: string[] = [];
+      lastMarkers.forEach((marker) => {
+        urls.push(
+          `<url><loc>https://aeternum-map.gg/nodes/${marker._id.toString()}</loc></url>`
+        );
+      });
+
+      const content = `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.join(
+        ''
+      )}</urlset>`;
+
+      res.setHeader('Content-Type', 'application/xml');
+      res.setHeader('xml-version', '1.0');
+      res.setHeader('encoding', 'UTF-8');
+      res.send(content);
     });
 
     // All other requests are answered with a 404
