@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { getScreenshotUrl } from '../../utils/api';
 import { toTimeAgo } from '../../utils/dates';
@@ -88,6 +89,9 @@ function MarkerDetails({ onEdit }: MarkerDetailsProps): JSX.Element {
       {(!filterItem || loading) && <Skeleton height={50} />}
       {filterItem && !loading && (
         <Stack style={{ height: 'calc(100vh - 64px)' }} spacing="xs">
+          <Helmet prioritizeSeoTags>
+            <title>{marker.name || filterItem.title} - New World Map</title>
+          </Helmet>
           <Group>
             {marker.name && (
               <Badge size="sm" color="cyan">

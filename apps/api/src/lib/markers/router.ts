@@ -1,4 +1,4 @@
-import type { Filter } from 'mongodb';
+import type { Filter, WithId } from 'mongodb';
 import { Router } from 'express';
 import { getMarkersCollection } from './collection.js';
 import { Double, ObjectId } from 'mongodb';
@@ -18,11 +18,12 @@ const markersRouter = Router();
 const MAX_NAME_LENGTH = 50;
 const MAX_DESCRIPTION_LENGTH = 200;
 
+export let lastMarkers: WithId<MarkerDTO>[] = [];
 let lastMarkersJSON = '[]';
 let lastETag = '';
 
 export const refreshMarkers = async () => {
-  const lastMarkers = await getMarkersCollection()
+  lastMarkers = await getMarkersCollection()
     .find(
       {
         isPrivate: { $ne: true },
