@@ -158,6 +158,20 @@ async function runServer() {
       res.redirect('/assets/map/empty.webp');
     });
 
+    app.get('/robots.txt', (_req, res) => {
+      const robotText = `
+      User-agent: Googlebot
+      Disallow: /nogooglebot/
+  
+      User-agent: *
+      Allow: /
+  
+      Sitemap: https://aeternum-map.gg/sitemap.xml
+      `;
+
+      return res.send(robotText);
+    });
+
     app.get('/sitemap.xml', (_req, res) => {
       const urls: string[] = [];
       lastMarkers.forEach((marker) => {
