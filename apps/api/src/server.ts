@@ -155,7 +155,11 @@ async function runServer() {
       })
     );
     app.use('/assets', (_req, res) => {
-      res.redirect('/assets/map/empty.webp');
+      res.setHeader('Cache-Control', 'public, max-age=86400, immutable');
+      res.setHeader('Content-Type', 'image/gif');
+      res.send(
+        'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+      );
     });
 
     app.get('/robots.txt', (_req, res) => {

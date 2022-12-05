@@ -30,16 +30,13 @@ const worldCRS = leaflet.extend({}, leaflet.CRS.Simple, {
 const WorldTiles = (map: string): new () => TileLayer =>
   // @ts-ignore
   leaflet.TileLayer.Canvas.extend({
-    // options: {
-    //   errorTileUrl: `${VITE_API_ENDPOINT}/assets/map/empty.webp`,
-    // },
     getTileUrl(coords: { x: number; y: number; z: number }) {
       const zoom = 8 - coords.z - 1;
       const multiplicators = [1, 2, 4, 8, 16, 32, 64];
       const x = coords.x * multiplicators[zoom - 1];
       const y = (-coords.y - 1) * multiplicators[zoom - 1];
       if (x < 0 || y < 0 || y >= 64 || x >= 64) {
-        return `${VITE_API_ENDPOINT}/assets/map/empty.webp`;
+        return 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
       }
       return `${VITE_API_ENDPOINT}/assets/${map}/map_l${zoom}_y${toThreeDigits(
         y
