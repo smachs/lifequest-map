@@ -969,9 +969,17 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'events',
-    type: 'turkulon',
-    title: 'Turkulon',
-    iconUrl: '/pois/turkulon.webp',
+    type: 'winterVillage',
+    title: 'Winter Village',
+    iconUrl: '/pois/winterVillage.webp',
+  },
+  {
+    category: 'events',
+    type: 'winterWarrior',
+    title: 'Winter Warrior',
+    iconUrl: '/pois/winterWarrior.webp',
+    hasLevel: true,
+    hasHP: true,
   },
 ];
 
