@@ -33,16 +33,20 @@ const NavActions = ({
 
   if (isEmbed) {
     return (
-      <Button
-        variant="default"
-        component="a"
-        href="https://aeternum-map.gg"
-        target="_blank"
-        leftIcon={<IconMap />}
-        radius="xl"
-      >
-        Full Map
-      </Button>
+      <Group spacing="xs">
+        <Button
+          variant="default"
+          component="a"
+          href="https://aeternum-map.gg"
+          target="_blank"
+          leftIcon={<IconMap />}
+          radius="xl"
+        >
+          Full Map
+        </Button>
+        <MarkerDetails onEdit={onMarkerEdit} />
+        <MarkerRouteDetails onEdit={onMarkerRouteUpsert} />
+      </Group>
     );
   }
 

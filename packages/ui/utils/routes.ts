@@ -45,6 +45,7 @@ const getMapView = (searchParams: URLSearchParams) => {
 };
 
 export const isEmbed = location.search.includes('embed=true');
+export const isNWGuide = location.search.includes('ref=nwguide');
 
 const getView = (
   map: string,

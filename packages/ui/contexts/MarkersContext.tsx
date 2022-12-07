@@ -168,7 +168,7 @@ export function MarkersProvider({
         return true;
       }
       if (isEmbed) {
-        return true;
+        return !nodeId && !routeId;
       }
       if (
         markerFilters.length > 0 &&

@@ -9,7 +9,7 @@ import { coordinates as playerCoordinates } from './usePlayerPosition';
 import { useSettings } from '../../contexts/SettingsContext';
 import useRegionBorders from './useRegionBorders';
 import { mapIsAeternumMap, findMapDetails, AETERNUM_MAP } from 'static';
-import { useView } from 'ui/utils/routes';
+import { isEmbed, useView } from 'ui/utils/routes';
 import { useNavigate } from 'react-router-dom';
 import { initOtherPlayers } from './otherPlayers';
 
@@ -79,7 +79,8 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
         if (
           // @ts-ignore
           !event.originalEvent.propagatedFromMarker &&
-          (view.nodeId || view.routeId)
+          (view.nodeId || view.routeId) &&
+          !isEmbed
         ) {
           const mapDetail = findMapDetails(view.map);
           if (mapDetail === AETERNUM_MAP || !mapDetail) {

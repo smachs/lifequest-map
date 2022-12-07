@@ -124,7 +124,7 @@ const MapAction = () => {
   const mapDetail = findMapDetails(map) ?? AETERNUM_MAP;
 
   if (isEmbed) {
-    return;
+    return <></>;
   }
 
   return (

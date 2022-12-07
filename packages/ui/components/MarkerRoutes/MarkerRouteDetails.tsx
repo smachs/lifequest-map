@@ -30,8 +30,9 @@ import { writeError } from '../../utils/logs';
 import ForkRoute from './ForkRoute';
 import { useUserStore } from '../../utils/userStore';
 import shallow from 'zustand/shallow';
-import { useRouteParams } from '../../utils/routes';
+import { isEmbed, useRouteParams } from '../../utils/routes';
 import { useQueryClient } from 'react-query';
+import { IconRoute2 } from '@tabler/icons';
 
 type MarkerRouteDetailsProps = {
   onEdit: (markerRoute: MarkerRouteItem) => void;
@@ -150,6 +151,34 @@ const MarkerRouteDetails = ({ onEdit }: MarkerRouteDetailsProps) => {
     } catch (error) {
       writeError(error);
     }
+  }
+
+  if (isEmbed) {
+    if (!routeId) {
+      return <></>;
+    }
+    let url = 'https://aeternum-map.gg/';
+    if (markerRoute?.map) {
+      const mapDetails = findMapDetails(markerRoute.map);
+      if (mapDetails) {
+        url += `${mapDetails.title}/`;
+      }
+    }
+    url += `routes/${routeId}`;
+
+    return (
+      <Button
+        variant="default"
+        component="a"
+        href={url}
+        target="_blank"
+        leftIcon={<IconRoute2 />}
+        radius="xl"
+        loading={!markerRoute}
+      >
+        {markerRoute?.name || 'Route'}
+      </Button>
+    );
   }
 
   return (

@@ -86,7 +86,7 @@ const UserAction = () => {
   }
 
   if (isEmbed) {
-    return;
+    return <></>;
   }
 
   return (
