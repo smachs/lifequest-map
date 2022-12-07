@@ -969,6 +969,18 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'events',
+    type: 'gleamite',
+    title: 'Gleamite',
+    iconUrl: '/pois/gleamite.webp',
+  },
+  {
+    category: 'events',
+    type: 'lostPresent',
+    title: 'Lost present',
+    iconUrl: '/pois/lostPresent.webp',
+  },
+  {
+    category: 'events',
     type: 'winterVillage',
     title: 'Winter Village',
     iconUrl: '/pois/winterVillage.webp',
