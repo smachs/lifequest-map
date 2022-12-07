@@ -12,7 +12,7 @@ import { usePersistentState } from '../utils/storage';
 import { useFilters } from './FiltersContext';
 import type { MarkerSize } from 'static';
 import { useMarkerSearchStore } from '../components/MarkerSearch/markerSearchStore';
-import { useRouteParams } from '../utils/routes';
+import { isEmbed, useRouteParams } from '../utils/routes';
 import { useUserStore } from '../utils/userStore';
 import useMarkerRoute from '../components/MarkerRoutes/useMarkerRoute';
 
@@ -83,10 +83,11 @@ export function MarkersProvider({
     true,
     true
   );
-  const [markerRoutes, setMarkerRoutes] = usePersistentState<MarkerRouteItem[]>(
-    'markers-routes',
-    []
-  );
+  const [allMarkerRoutes, setMarkerRoutes] = usePersistentState<
+    MarkerRouteItem[]
+  >('markers-routes', []);
+  const markerRoutes = isEmbed ? [] : allMarkerRoutes;
+
   const [mode, setMode] = useState<Mode>(null);
   const [temporaryHiddenMarkerIDs, setTemporaryHiddenMarkerIDs] = useState<
     string[]
@@ -164,6 +165,9 @@ export function MarkersProvider({
           )
         )
       ) {
+        return true;
+      }
+      if (isEmbed) {
         return true;
       }
       if (

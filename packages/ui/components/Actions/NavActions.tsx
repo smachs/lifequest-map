@@ -6,10 +6,10 @@ import {
   MediaQuery,
   Skeleton,
 } from '@mantine/core';
-import { IconFlag, IconMapPin, IconRoute2 } from '@tabler/icons';
+import { IconFlag, IconMap, IconMapPin, IconRoute2 } from '@tabler/icons';
 import { lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
-import { useView } from '../../utils/routes';
+import { isEmbed, useView } from '../../utils/routes';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import MarkerDetails from '../MarkerDetails/MarkerDetails';
 import type { MarkerFull } from '../MarkerDetails/useMarker';
@@ -30,6 +30,21 @@ const NavActions = ({
   onMarkerRouteUpsert,
 }: NavActionsProps) => {
   const { view, toView, setView } = useView();
+
+  if (isEmbed) {
+    return (
+      <Button
+        variant="default"
+        component="a"
+        href="https://aeternum-map.gg"
+        target="_blank"
+        leftIcon={<IconMap />}
+        radius="xl"
+      >
+        Full Map
+      </Button>
+    );
+  }
 
   return (
     <>

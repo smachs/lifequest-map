@@ -3,6 +3,7 @@ import { writeError } from './logs';
 import useDebounce from './useDebounce';
 // @ts-ignore
 import lzwCompress from 'lzwcompress';
+import { isEmbed } from './routes';
 
 export function getJSONItem<T>(
   key: string,
@@ -47,20 +48,27 @@ export function serializeMapView(
     zoom: number;
   }
 ) {
+  if (isEmbed) {
+    return;
+  }
   setJSONItem(`mapView-${map}`, view);
 }
 
+const defaultMapView = {
+  x: null,
+  y: null,
+  zoom: null,
+};
 export function deserializeMapView(map: string) {
+  if (isEmbed) {
+    return defaultMapView;
+  }
   return (
     getJSONItem<{
       y: number;
       x: number;
       zoom: number;
-    } | null>(`mapView-${map}`, null) ?? {
-      x: null,
-      y: null,
-      zoom: null,
-    }
+    } | null>(`mapView-${map}`, null) ?? defaultMapView
   );
 }
 

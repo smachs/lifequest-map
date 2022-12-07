@@ -32,6 +32,7 @@ import ServerTime from '../SyncStatus/ServerTime';
 import { useSettingsStore } from '../../utils/settingsStore';
 import { usePersistentState } from '../../utils/storage';
 import { trackOutboundLinkClick } from '../../utils/stats';
+import { isEmbed } from '../../utils/routes';
 
 const MapActions = () => {
   const { account, refreshAccount } = useUserStore(
@@ -71,6 +72,32 @@ const MapActions = () => {
     'rotateMinimap',
     false
   );
+
+  const zoomControls = (
+    <Button.Group orientation="vertical">
+      <Button
+        compact
+        variant="default"
+        p={0}
+        onClick={() => latestLeafletMap!.zoomIn()}
+        aria-label="Zoom in"
+      >
+        <IconPlus />
+      </Button>
+      <Button
+        compact
+        variant="default"
+        p={0}
+        onClick={() => latestLeafletMap!.zoomOut()}
+        aria-label="Zoom out"
+      >
+        <IconMinus />
+      </Button>
+    </Button.Group>
+  );
+  if (isEmbed) {
+    return zoomControls;
+  }
 
   return (
     <Stack spacing="xs">
@@ -285,26 +312,7 @@ const MapActions = () => {
           <IconUsers size={20} />
         </ActionIcon>
       </Tooltip>
-      <Button.Group orientation="vertical">
-        <Button
-          compact
-          variant="default"
-          p={0}
-          onClick={() => latestLeafletMap!.zoomIn()}
-          aria-label="Zoom in"
-        >
-          <IconPlus />
-        </Button>
-        <Button
-          compact
-          variant="default"
-          p={0}
-          onClick={() => latestLeafletMap!.zoomOut()}
-          aria-label="Zoom out"
-        >
-          <IconMinus />
-        </Button>
-      </Button.Group>
+      {zoomControls}
     </Stack>
   );
 };

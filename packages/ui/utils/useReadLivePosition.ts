@@ -6,6 +6,7 @@ import { useSettingsStore } from './settingsStore';
 import shallow from 'zustand/shallow';
 import { useUserStore } from './userStore';
 import type { Group, Player } from 'realtime/types';
+import { isEmbed } from './routes';
 
 export type Position = { location: [number, number]; rotation: number };
 let latestPlayer: Player | null = null;
@@ -28,7 +29,7 @@ function useReadLivePosition() {
   const serverUrl = account?.liveShareServerUrl || liveShareServerUrl;
 
   useEffect(() => {
-    if (!token || !serverUrl) {
+    if (!token || !serverUrl || isEmbed) {
       return;
     }
 

@@ -11,7 +11,7 @@ import { useMarkers } from '../../contexts/MarkersContext';
 import CanvasMarker from './CanvasMarker';
 import { useSettings } from '../../contexts/SettingsContext';
 import { writeError } from '../../utils/logs';
-import { useRouteParams } from 'ui/utils/routes';
+import { isEmbed, useRouteParams } from 'ui/utils/routes';
 import useEventListener from '../../utils/useEventListener';
 import { calcDistance } from '../../utils/positions';
 import { getAction } from './actions';
@@ -226,8 +226,12 @@ function useLayerGroups({
               }
             }
             url += `nodes/${marker._id}${location.search}`;
-            navigate(url);
-            setHighlightedMapMarker(mapMarker);
+            if (isEmbed) {
+              window.open(`https://aeternum-map.gg${url}`);
+            } else {
+              navigate(url);
+              setHighlightedMapMarker(mapMarker);
+            }
           }
         });
         mapMarker.on('contextmenu', () => {

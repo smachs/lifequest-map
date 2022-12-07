@@ -24,6 +24,7 @@ import ResetDiscoveredNodes from '../Settings/ResetDiscoveredNodes';
 import SupporterInput from '../SupporterInput/SupporterInput';
 import FAQModal from '../FAQ/FAQModal';
 import SettingsDialog from '../Settings/SettingsDialog';
+import { isEmbed } from '../../utils/routes';
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 const UserAction = () => {
@@ -82,6 +83,10 @@ const UserAction = () => {
     window.open(url, '_blank');
 
     setVerifyingSessionId(newSessionId);
+  }
+
+  if (isEmbed) {
+    return;
   }
 
   return (
