@@ -1,5 +1,6 @@
 import { Box } from '@mantine/core';
 import type { ReactNode } from 'react';
+import { isEmbed } from '../../utils/routes';
 import { useSettingsStore } from '../../utils/settingsStore';
 import useActive from './useActive';
 
@@ -31,7 +32,7 @@ const FadingBox = ({
         ...props,
       }}
       style={
-        !active && autoFade
+        !isEmbed && !active && autoFade
           ? {
               [fadeFrom]: '-120px',
               transitionDelay: '1.5s',

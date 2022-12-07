@@ -6,7 +6,7 @@ import {
   Text,
   UnstyledButton,
 } from '@mantine/core';
-import { useMap } from '../../utils/routes';
+import { isEmbed, useMap } from '../../utils/routes';
 import useToMap from '../MapFilter/useToMap';
 import type { Map } from 'static';
 import { AETERNUM_MAP, findMapDetails, mapDetails } from 'static';
@@ -122,6 +122,10 @@ const MapAction = () => {
   const [opened, setOpened] = useState(false);
 
   const mapDetail = findMapDetails(map) ?? AETERNUM_MAP;
+
+  if (isEmbed) {
+    return <></>;
+  }
 
   return (
     <>

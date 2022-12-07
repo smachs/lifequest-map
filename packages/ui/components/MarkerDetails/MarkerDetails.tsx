@@ -31,7 +31,8 @@ import ReportIssueButton from './ReportIssueButton';
 import DeleteNode from './DeleteNode';
 import Markdown from '../Markdown/Markdown';
 import { useUserStore } from '../../utils/userStore';
-import { useRouteParams } from '../../utils/routes';
+import { isEmbed, useRouteParams } from '../../utils/routes';
+import { IconMapPin } from '@tabler/icons';
 
 type MarkerDetailsProps = {
   onEdit: (marker: MarkerFull) => void;
@@ -60,6 +61,33 @@ function MarkerDetails({ onEdit }: MarkerDetailsProps): JSX.Element {
   const glyph =
     marker?.requiredGlyphId &&
     glyphs.find((glyph: Glyph) => glyph.id === marker?.requiredGlyphId);
+
+  if (isEmbed) {
+    if (!nodeId) {
+      return <></>;
+    }
+    let url = 'https://aeternum-map.gg/';
+    if (marker?.map) {
+      const mapDetails = findMapDetails(marker.map);
+      if (mapDetails) {
+        url += `${mapDetails.title}/`;
+      }
+    }
+    url += `nodes/${marker?._id}`;
+    return (
+      <Button
+        variant="default"
+        component="a"
+        href={url}
+        target="_blank"
+        leftIcon={<IconMapPin />}
+        radius="xl"
+        loading={!marker}
+      >
+        {marker?.name || filterItem?.title || 'Node'}
+      </Button>
+    );
+  }
   return (
     <Drawer
       opened={!!nodeId}

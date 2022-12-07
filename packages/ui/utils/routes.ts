@@ -44,6 +44,9 @@ const getMapView = (searchParams: URLSearchParams) => {
   };
 };
 
+export const isEmbed = location.search.includes('embed=true');
+export const isNWGuide = location.search.includes('ref=nwguide');
+
 const getView = (
   map: string,
   searchParams: URLSearchParams,
@@ -56,8 +59,6 @@ const getView = (
     !sectionParam || !SECTIONS.includes(sectionParam as Section)
       ? null
       : (sectionParam as Section);
-  const embedParam = searchParams.get('embed');
-  const embed = embedParam === 'true';
 
   const existingMap = findMapDetails(map) ? map : AETERNUM_MAP.title;
 
@@ -67,7 +68,6 @@ const getView = (
     nodeId,
     routeId,
     section,
-    embed,
   };
 };
 
@@ -81,7 +81,6 @@ export const useView = (): {
         x: number;
         zoom: number;
         section: Section;
-        embed: boolean;
       }
     | {
         map: string;
@@ -91,7 +90,6 @@ export const useView = (): {
         y: null;
         zoom: null;
         section: Section;
-        embed: boolean;
       };
   setView: (
     props: { x: number; y: number; zoom: number } | { section: Section }
@@ -137,9 +135,6 @@ export const useView = (): {
         if (props.section) {
           newSearchParams.section = props.section;
         }
-        if (internalView.embed) {
-          newSearchParams.embed = 'true';
-        }
         setSearchParams((searchParams) => ({
           ...searchParams,
           ...newSearchParams,
@@ -153,7 +148,7 @@ export const useView = (): {
         });
       }
     },
-    [internalView.embed, map, nodeId, routeId]
+    [map, nodeId, routeId]
   );
 
   const toView = useCallback(
