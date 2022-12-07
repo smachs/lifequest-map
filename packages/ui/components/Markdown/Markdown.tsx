@@ -1,3 +1,4 @@
+import { Box } from '@mantine/core';
 import MarkdownToJSX from 'markdown-to-jsx';
 import { useEffect, useRef } from 'react';
 
@@ -14,9 +15,16 @@ function Markdown({ children }: MarkdownProps): JSX.Element {
   }, []);
 
   return (
-    <div ref={containerRef}>
+    <Box
+      ref={containerRef}
+      sx={{
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+      }}
+    >
       <MarkdownToJSX>{children}</MarkdownToJSX>
-    </div>
+    </Box>
   );
 }
 
