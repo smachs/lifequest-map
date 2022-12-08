@@ -135,10 +135,13 @@ export const useView = (): {
         if (props.section) {
           newSearchParams.section = props.section;
         }
-        setSearchParams((searchParams) => ({
-          ...searchParams,
-          ...newSearchParams,
-        }));
+        setSearchParams((searchParams) => {
+          searchParams.delete('bounds');
+          return {
+            ...searchParams,
+            ...newSearchParams,
+          };
+        });
       } else {
         setInternalView((internalView) => ({ ...internalView, ...props }));
         serializeMapView(map, {

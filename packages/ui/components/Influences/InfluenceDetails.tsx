@@ -100,7 +100,7 @@ const InfluenceDetails = () => {
       opened
       withCloseButton={!isEmbed}
       onClose={() => navigate('/' + location.search)}
-      position={{ top: 7, right: 7 }}
+      position={{ top: isEmbed ? 7 : 48, right: 7 }}
     >
       <Text size="sm" style={{ marginBottom: 10 }} weight={500}>
         {world.publicName}

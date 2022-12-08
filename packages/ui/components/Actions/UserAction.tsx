@@ -11,7 +11,13 @@ import {
   Tooltip,
   UnstyledButton,
 } from '@mantine/core';
-import { IconHelp, IconLogout, IconSettings, IconUser } from '@tabler/icons';
+import {
+  IconHelp,
+  IconLogout,
+  IconSettings,
+  IconShare,
+  IconUser,
+} from '@tabler/icons';
 import { trackOutboundLinkClick } from '../../utils/stats';
 import type { AccountDTO } from '../../utils/userStore';
 import { useUserStore } from '../../utils/userStore';
@@ -24,7 +30,11 @@ import ResetDiscoveredNodes from '../Settings/ResetDiscoveredNodes';
 import SupporterInput from '../SupporterInput/SupporterInput';
 import FAQModal from '../FAQ/FAQModal';
 import SettingsDialog from '../Settings/SettingsDialog';
-import { isEmbed } from '../../utils/routes';
+import { isEmbed, useRouteParams } from '../../utils/routes';
+import { useClipboard } from '@mantine/hooks';
+import { toast } from 'react-toastify';
+import { latestLeafletMap } from '../WorldMap/useWorldMap';
+import { AETERNUM_MAP } from 'static';
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 const UserAction = () => {
@@ -43,6 +53,8 @@ const UserAction = () => {
 
   const [showFAQ, setShowFAQ] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const clipboard = useClipboard({ timeout: 500 });
+  const { nodeId, map, routeId, world } = useRouteParams();
 
   useEffect(() => {
     if (account) {
@@ -76,14 +88,33 @@ const UserAction = () => {
     return () => clearInterval(intervalId);
   }, [verifyingSessionId]);
 
-  async function handleLogin() {
+  const handleLogin = async () => {
     const newSessionId = await fetchJSON<string>('/api/auth/session');
 
     const url = `${VITE_API_ENDPOINT}/api/auth/steam?sessionId=${newSessionId}`;
     window.open(url, '_blank');
 
     setVerifyingSessionId(newSessionId);
-  }
+  };
+
+  const handleShareLink = () => {
+    let url = 'https://aeternum-map.gg';
+    if (map !== AETERNUM_MAP.title) {
+      url += `/${map}`;
+    }
+
+    if (world) {
+      url += `/influences/${world}`;
+    } else if (nodeId) {
+      url += `/nodes/${nodeId}`;
+    } else if (routeId) {
+      url += `/routes/${routeId}`;
+    } else {
+      url += `?bounds=${latestLeafletMap!.getBounds().toBBoxString()}`;
+    }
+    clipboard.copy(url);
+    toast('Copied URL to clipboard');
+  };
 
   if (isEmbed) {
     return <></>;
@@ -113,6 +144,7 @@ const UserAction = () => {
         position="bottom"
         opened={opened}
         onChange={setOpened}
+        withinPortal
       >
         <Popover.Target>
           <Button
@@ -184,6 +216,18 @@ const UserAction = () => {
             <Divider />
 
             <Group spacing="xs" position="center">
+              <Tooltip label="Share link">
+                <ActionIcon
+                  variant="default"
+                  onClick={handleShareLink}
+                  radius="sm"
+                  size="xl"
+                  aria-label="Share link"
+                >
+                  <IconShare />
+                </ActionIcon>
+              </Tooltip>
+
               <Tooltip label="FAQ">
                 <ActionIcon
                   variant="default"
