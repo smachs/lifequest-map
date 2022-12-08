@@ -101,8 +101,24 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
       return;
     }
     const latLngBounds = leaflet.latLngBounds(mapDetail.maxBounds);
-
     const updateView = (leafletMap: leaflet.Map) => {
+      try {
+        const match = location.search.match(
+          /bounds=(-?\d+\.?\d+),(-?\d+\.?\d+),(-?\d+\.?\d+),(-?\d+\.?\d+)/
+        );
+        if (match?.length === 5) {
+          const initialBounds: [[number, number], [number, number]] = [
+            [+match[2], +match[1]],
+            [+match[4], +match[3]],
+          ];
+          console.log(initialBounds);
+          leafletMap.fitBounds(initialBounds, { animate: false });
+          return;
+        }
+      } catch (error) {
+        //
+      }
+
       if (view.x) {
         leafletMap.setView([view.y, view.x], initialZoom || view.zoom, {
           animate: false,
