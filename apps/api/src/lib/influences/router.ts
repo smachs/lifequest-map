@@ -39,6 +39,26 @@ influencesRouter.get('/', async (_req, res, next) => {
   }
 });
 
+influencesRouter.get('/:worldName', async (req, res, next) => {
+  try {
+    const world = worlds.find(
+      (world) => world.worldName === req.params.worldName
+    );
+    if (!world) {
+      res.status(404).send('Not found');
+      return;
+    }
+
+    const influences = await getInfluencesCollection()
+      .find({ worldName: world.worldName })
+      .sort({ createdAt: 1 })
+      .toArray();
+    res.status(200).json(influences);
+  } catch (error) {
+    next(error);
+  }
+});
+
 influencesRouter.get('/today', async (req, res, next) => {
   try {
     const { worldName } = req.query;

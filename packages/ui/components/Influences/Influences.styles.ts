@@ -56,13 +56,19 @@ const useStyles = createStyles((theme) => ({
     borderLeft: `1px solid ${theme.colors.dark[4]}`,
 
     '&:hover': {
-      backgroundColor: theme.colors.dark[7],
+      backgroundColor: theme.colors.dark[6],
       color: theme.white,
     },
   },
 
   selected: {
     backgroundColor: theme.colors.dark[5],
+    color: theme.white,
+
+    '&:hover': {
+      backgroundColor: theme.colors.dark[4],
+      color: theme.white,
+    },
   },
 
   chevron: {

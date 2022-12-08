@@ -106,7 +106,7 @@ export const useView = (): {
         }
   ) => string;
 } => {
-  const { map, nodeId, routeId } = useRouteParams();
+  const { map, nodeId, routeId, world } = useRouteParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
 
@@ -148,7 +148,7 @@ export const useView = (): {
         });
       }
     },
-    [map, nodeId, routeId]
+    [map, nodeId, routeId, world]
   );
 
   const toView = useCallback(

@@ -22,12 +22,12 @@ import useStyles from './Influences.styles';
 import { toTimeAgo } from '../../utils/dates';
 import { Link, useParams } from 'react-router-dom';
 import { isEmbed } from '../../utils/routes';
-import type { InfluenceDTO } from './useInfluenceMap';
+import type { InfluenceDTO } from './InfluenceDetails';
 import {
   COVENANT_COLOR,
   MARAUDER_COLOR,
   SYNDICATE_COLOR,
-} from './useInfluenceMap';
+} from './InfluenceDetails';
 
 const zonesWithWorlds = getZonesWithWorlds();
 
@@ -65,15 +65,17 @@ const Zone = ({ zone, influences, publicName }: ZoneProps) => {
     const influence = influences.find(
       (influence) => influence.worldName === world.worldName
     );
+    const isSelected = publicName === world.publicName;
     return (
       <UnstyledButton
         key={world.worldName}
         component={Link}
-        className={cx(
-          classes.world,
-          publicName === world.publicName && classes.selected
-        )}
-        to={`/influences/${world.publicName}?section=influences`}
+        className={cx(classes.world, isSelected && classes.selected)}
+        to={
+          isSelected
+            ? '/?section=influences'
+            : `/influences/${world.publicName}?section=influences`
+        }
       >
         <Text size="sm" weight={500}>
           {world.publicName}
