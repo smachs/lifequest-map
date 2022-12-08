@@ -12,9 +12,9 @@ export const SECTIONS: Section[] = [
 ];
 
 export const useRouteParams = () => {
-  const { map = mapDetails[0].title, nodeId, routeId } = useParams();
+  const { map = mapDetails[0].title, nodeId, routeId, world } = useParams();
   const existingMap = findMapDetails(map)?.title || AETERNUM_MAP.title;
-  return { map: existingMap, nodeId, routeId };
+  return { map: existingMap, nodeId, routeId, world };
 };
 
 export const useMap = () => {
@@ -106,7 +106,7 @@ export const useView = (): {
         }
   ) => string;
 } => {
-  const { map, nodeId, routeId } = useRouteParams();
+  const { map, nodeId, routeId, world } = useRouteParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
 
@@ -148,7 +148,7 @@ export const useView = (): {
         });
       }
     },
-    [map, nodeId, routeId]
+    [map, nodeId, routeId, world]
   );
 
   const toView = useCallback(

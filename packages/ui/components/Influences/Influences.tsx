@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Group,
   Box,
@@ -15,13 +15,19 @@ import {
   ActionIcon,
 } from '@mantine/core';
 import { IconChevronRight, IconInfoCircle } from '@tabler/icons';
-import { getZonesWithWorlds, regions, Zone } from 'static';
+import { getZonesWithWorlds, Zone } from 'static';
 import { useQuery } from 'react-query';
 import { fetchJSON } from '../../utils/api';
 import useStyles from './Influences.styles';
-import leaflet from 'leaflet';
-import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import { toTimeAgo } from '../../utils/dates';
+import { Link, useParams } from 'react-router-dom';
+import { isEmbed } from '../../utils/routes';
+import type { InfluenceDTO } from './InfluenceDetails';
+import {
+  COVENANT_COLOR,
+  MARAUDER_COLOR,
+  SYNDICATE_COLOR,
+} from './InfluenceDetails';
 
 const zonesWithWorlds = getZonesWithWorlds();
 
@@ -50,29 +56,26 @@ const Influence = ({ influence }: InfluenceProps) => {
 interface ZoneProps {
   zone: ReturnType<typeof getZonesWithWorlds>[0];
   influences: InfluenceDTO[];
-  selectedWorldName: string | null;
-  onWorldClick: (worldName: string) => void;
+  publicName: string | undefined;
 }
-const Zone = ({
-  zone,
-  influences,
-  selectedWorldName,
-  onWorldClick,
-}: ZoneProps) => {
+const Zone = ({ zone, influences, publicName }: ZoneProps) => {
   const { classes, theme, cx } = useStyles();
   const [opened, setOpened] = useState(false);
   const items = zone.worlds.map((world) => {
     const influence = influences.find(
       (influence) => influence.worldName === world.worldName
     );
+    const isSelected = publicName === world.publicName;
     return (
       <UnstyledButton
         key={world.worldName}
-        className={cx(
-          classes.world,
-          selectedWorldName === world.worldName && classes.selected
-        )}
-        onClick={() => onWorldClick(world.worldName)}
+        component={Link}
+        className={cx(classes.world, isSelected && classes.selected)}
+        to={
+          isSelected
+            ? '/?section=influences'
+            : `/influences/${world.publicName}?section=influences`
+        }
       >
         <Text size="sm" weight={500}>
           {world.publicName}
@@ -113,21 +116,6 @@ const Zone = ({
     </>
   );
 };
-
-type InfluenceDTO = {
-  worldName: string;
-  username: string;
-  influence: {
-    regionName: string;
-    factionName: string;
-  }[];
-  createdAt: string;
-};
-
-const SYNDICATE_COLOR = 'rgb(130, 95, 130)';
-const COVENANT_COLOR = 'rgb(152, 100, 43)';
-const MARAUDER_COLOR = 'rgb(95, 135, 76)';
-const NEUTRAL_COLOR = 'rgb(200 200 200)';
 
 const getFactionRanking = (influences: InfluenceDTO[]) => {
   const rankingByFaction = influences.reduce(
@@ -182,54 +170,7 @@ const Influences = () => {
     fetchJSON<InfluenceDTO[]>('/api/influences')
   );
   const { classes } = useStyles();
-  const [selectedWorldName, setSelectedWorldName] = useState<string | null>(
-    null
-  );
-
-  useEffect(() => {
-    if (!selectedWorldName) {
-      return;
-    }
-    const influence = influences.find(
-      (influence) => influence.worldName === selectedWorldName
-    );
-    if (!influence) {
-      return;
-    }
-
-    const polygons = regions.map((region) => {
-      const factionName = influence.influence.find(
-        (item) => item.regionName === region.name
-      )?.factionName;
-      if (!factionName) {
-        return null;
-      }
-      let color = '';
-      if (factionName === 'Syndicate') {
-        color = SYNDICATE_COLOR;
-      } else if (factionName === 'Covenant') {
-        color = COVENANT_COLOR;
-      } else if (factionName === 'Marauder') {
-        color = MARAUDER_COLOR;
-      } else {
-        color = NEUTRAL_COLOR;
-      }
-      return leaflet.polygon(region.coordinates as [number, number][], {
-        fillColor: color,
-        fill: true,
-        stroke: false,
-        weight: 1.2,
-        fillOpacity: 0.75,
-        interactive: false,
-        pmIgnore: true,
-      });
-    });
-
-    polygons.forEach((polygon) => polygon?.addTo(latestLeafletMap!));
-    return () => {
-      polygons.forEach((polygon) => polygon?.removeFrom(latestLeafletMap!));
-    };
-  }, [selectedWorldName, influences]);
+  const { world: publicName } = useParams();
 
   const { rankings, total } = getFactionRanking(influences);
   const segments = rankings.map((ranking) => ({
@@ -237,6 +178,10 @@ const Influences = () => {
     color: ranking.color,
     label: ranking.part > 10 ? `${ranking.part.toFixed(0)}%` : undefined,
   }));
+
+  if (isEmbed) {
+    return <></>;
+  }
 
   const descriptions = rankings.map((ranking) => (
     <Box
@@ -327,12 +272,7 @@ const Influences = () => {
           key={zone.id}
           zone={zone}
           influences={influences}
-          selectedWorldName={selectedWorldName}
-          onWorldClick={(worldName) =>
-            setSelectedWorldName((prev) =>
-              prev === worldName ? null : worldName
-            )
-          }
+          publicName={publicName}
         />
       ))}
     </ScrollArea>

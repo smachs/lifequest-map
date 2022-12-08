@@ -11,6 +11,7 @@ import { lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { isEmbed, useView } from '../../utils/routes';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
+import InfluenceDetails from '../Influences/InfluenceDetails';
 import MarkerDetails from '../MarkerDetails/MarkerDetails';
 import type { MarkerFull } from '../MarkerDetails/useMarker';
 import MarkerRouteDetails from '../MarkerRoutes/MarkerRouteDetails';
@@ -46,6 +47,7 @@ const NavActions = ({
         </Button>
         <MarkerDetails onEdit={onMarkerEdit} />
         <MarkerRouteDetails onEdit={onMarkerRouteUpsert} />
+        <InfluenceDetails />
       </Group>
     );
   }
@@ -171,6 +173,7 @@ const NavActions = ({
           </Suspense>
         </ErrorBoundary>
       </Drawer>
+      <InfluenceDetails />
     </>
   );
 };

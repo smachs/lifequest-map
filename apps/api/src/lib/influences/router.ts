@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import type { Filter } from 'mongodb';
+import { worlds } from 'static';
 import { getInfluencesCollection } from './collection.js';
 import type { InfluenceDTO } from './types.js';
 
@@ -7,8 +8,14 @@ const influencesRouter = Router();
 
 influencesRouter.get('/', async (_req, res, next) => {
   try {
+    const activeWorldNames = worlds.map((world) => world.worldName);
     const latestInfluences = await getInfluencesCollection()
       .aggregate([
+        {
+          $match: {
+            worldName: { $in: activeWorldNames },
+          },
+        },
         {
           $sort: {
             createdAt: -1,
@@ -27,6 +34,26 @@ influencesRouter.get('/', async (_req, res, next) => {
       .toArray();
 
     res.status(200).json(latestInfluences);
+  } catch (error) {
+    next(error);
+  }
+});
+
+influencesRouter.get('/:worldName', async (req, res, next) => {
+  try {
+    const world = worlds.find(
+      (world) => world.worldName === req.params.worldName
+    );
+    if (!world) {
+      res.status(404).send('Not found');
+      return;
+    }
+
+    const influences = await getInfluencesCollection()
+      .find({ worldName: world.worldName })
+      .sort({ createdAt: 1 })
+      .toArray();
+    res.status(200).json(influences);
   } catch (error) {
     next(error);
   }

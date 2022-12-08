@@ -94,7 +94,7 @@ export function MarkersProvider({
   >([]);
 
   const { filters } = useFilters();
-  const { map, nodeId, routeId } = useRouteParams();
+  const { map, nodeId, routeId, world } = useRouteParams();
   const { data: markerRoute } = useMarkerRoute(routeId);
 
   const hiddenMarkerIds = useUserStore(
@@ -168,7 +168,7 @@ export function MarkersProvider({
         return true;
       }
       if (isEmbed) {
-        return !nodeId && !routeId;
+        return !nodeId && !routeId && !world;
       }
       if (
         markerFilters.length > 0 &&
@@ -227,6 +227,7 @@ export function MarkersProvider({
     nodeId,
     markerRoutes,
     markerRoute,
+    world,
   ]);
 
   const toggleMarkerRoute = (markerRoute: MarkerRouteItem, force?: boolean) => {

@@ -12,12 +12,14 @@ type FadingBoxProps = {
   zIndex?: number;
   children: ReactNode;
   fadeFrom: 'top' | 'right' | 'left' | 'bottom';
+  className?: string;
 };
 
 const FadingBox = ({
   children,
   zIndex = 1,
   fadeFrom,
+  className,
   ...props
 }: FadingBoxProps) => {
   const active = useActive();
@@ -39,6 +41,7 @@ const FadingBox = ({
             }
           : {}
       }
+      className={className}
     >
       {children}
     </Box>

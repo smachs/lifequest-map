@@ -42,6 +42,11 @@ const router = createBrowserRouter([
         path: 'routes/:routeId',
         element: null,
       },
+      {
+        id: 'influenceDetails',
+        path: 'influences/:world',
+        element: null,
+      },
     ],
   },
 ]);
