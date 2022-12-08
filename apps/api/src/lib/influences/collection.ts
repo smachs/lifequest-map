@@ -8,6 +8,8 @@ export function getInfluencesCollection(): Collection<InfluenceDTO> {
 
 function ensureInfluencesIndexes(): Promise<string[]> {
   return getInfluencesCollection().createIndexes([
+    { key: { worldName: 1 } },
+    { key: { worldName: 1, createdAt: -1 } },
     { key: { worldName: 1, influence: 1, createdAt: -1 } },
   ]);
 }

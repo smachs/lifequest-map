@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import type { Filter } from 'mongodb';
+import { worlds } from 'static';
 import { getInfluencesCollection } from './collection.js';
 import type { InfluenceDTO } from './types.js';
 
@@ -7,8 +8,14 @@ const influencesRouter = Router();
 
 influencesRouter.get('/', async (_req, res, next) => {
   try {
+    const activeWorldNames = worlds.map((world) => world.worldName);
     const latestInfluences = await getInfluencesCollection()
       .aggregate([
+        {
+          $match: {
+            worldName: { $in: activeWorldNames },
+          },
+        },
         {
           $sort: {
             createdAt: -1,
