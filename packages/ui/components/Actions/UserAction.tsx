@@ -109,7 +109,7 @@ const UserAction = () => {
       url += `/nodes/${nodeId}`;
     } else if (routeId) {
       url += `/routes/${routeId}`;
-    } else {
+    } else if (map === AETERNUM_MAP.title) {
       url += `?bounds=${latestLeafletMap!.getBounds().toBBoxString()}`;
     }
     clipboard.copy(url);
