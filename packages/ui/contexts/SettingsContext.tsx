@@ -26,8 +26,6 @@ type SettingsContextValue = {
   setPlayerIconColor: (playerIconColor: string) => void;
   peerToPeer: boolean;
   setPeerToPeer: (peerToPeer: boolean) => void;
-  ocr: boolean;
-  setOCR: (ocr: boolean) => void;
 };
 const SettingsContext = createContext<SettingsContextValue>({
   markerSize: 30,
@@ -52,8 +50,6 @@ const SettingsContext = createContext<SettingsContextValue>({
   setPlayerIconColor: () => undefined,
   peerToPeer: true,
   setPeerToPeer: () => undefined,
-  ocr: false,
-  setOCR: () => undefined,
 });
 
 type SettingsProviderProps = {
@@ -100,7 +96,6 @@ export function SettingsProvider({
     '#FEFEFE'
   );
   const [peerToPeer, setPeerToPeer] = usePersistentState('peer-to-peer', true);
-  const [ocr, setOCR] = usePersistentState('ocr', false);
 
   return (
     <SettingsContext.Provider
@@ -127,8 +122,6 @@ export function SettingsProvider({
         setPlayerIconColor,
         peerToPeer,
         setPeerToPeer,
-        ocr,
-        setOCR,
       }}
     >
       {children}
