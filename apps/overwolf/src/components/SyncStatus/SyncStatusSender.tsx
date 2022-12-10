@@ -1,7 +1,7 @@
 import useOverlayActivated from './useOverlayActivated';
 import styles from './SyncStatus.module.css';
 import { usePosition } from '../../contexts/PositionContext';
-import { IconAlertCircle, IconCircleCheck, IconEyeCheck } from '@tabler/icons';
+import { IconAlertCircle, IconCircleCheck } from '@tabler/icons';
 import { Group, Tooltip, ActionIcon, Stack, Text } from '@mantine/core';
 import WorldName from 'ui/components/SyncStatus/WorldName';
 import { getWorld, getZone } from 'static';
@@ -9,8 +9,7 @@ import { useNewWorldGameInfo } from '../store';
 
 function SyncStatusSender() {
   const activated = useOverlayActivated();
-  const { position, location, region, username, worldName, isOCR } =
-    usePosition();
+  const { position, location, region, username, worldName } = usePosition();
   const newWorldGameInfo = useNewWorldGameInfo();
 
   if (!activated) {
@@ -77,23 +76,7 @@ function SyncStatusSender() {
 
   return (
     <Group spacing="xs">
-      {location && isOCR && (
-        <Tooltip
-          multiline
-          label={
-            <>
-              Could not detect position from Overwolf API, but fallback to OCR
-              works 🤘.
-              {details}
-            </>
-          }
-        >
-          <ActionIcon>
-            <IconEyeCheck size={18} />
-          </ActionIcon>
-        </Tooltip>
-      )}
-      {location && !isOCR && (
+      {location && (
         <Tooltip multiline label={<>Everything works fine 🤘.{details}</>}>
           <ActionIcon>
             <IconCircleCheck size={18} />
@@ -105,23 +88,7 @@ function SyncStatusSender() {
           multiline
           label={
             <>
-              Did you run Overwolf before New World? If so, please activate{' '}
-              <Text component="span" weight="bold">
-                Show FPS
-              </Text>{' '}
-              in-game to display coordinates and set{' '}
-              <Text component="span" weight="bold">
-                brigthness
-              </Text>{' '}
-              and{' '}
-              <Text component="span" weight="bold">
-                contrast
-              </Text>{' '}
-              to{' '}
-              <Text component="span" weight="bold">
-                5
-              </Text>
-              . This app is using screen capture as fallback.
+              Did you run Overwolf before New World?
               {details}
             </>
           }

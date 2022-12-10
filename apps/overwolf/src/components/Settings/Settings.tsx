@@ -40,8 +40,6 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
     setShowRegionBorders,
     peerToPeer,
     setPeerToPeer,
-    ocr,
-    setOCR,
     playerIconColor,
     setPlayerIconColor,
   } = useSettings();
@@ -156,12 +154,6 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
             checked={peerToPeer}
             description="If your browser or network doesn't support WebRTC, you can deactivate this to fallback to slower socket connections."
             onChange={(event) => setPeerToPeer(event.target.checked)}
-          />
-          <Checkbox
-            label="OCR / Screen capturing"
-            checked={ocr}
-            description="If the Overwolf API is in maintenance mode, you can fallback to OCR. This requires 'Show FPS' activated."
-            onChange={(event) => setOCR(event.target.checked)}
           />
           <Debug />
         </Stack>

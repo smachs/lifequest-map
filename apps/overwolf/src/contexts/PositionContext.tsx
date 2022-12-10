@@ -11,14 +11,8 @@ import {
   AETERNUM_MAP,
 } from 'static';
 import { writeError, writeLog } from 'ui/utils/logs';
-import { getJSONItem } from 'ui/utils/storage';
 import { useNewWorldGameInfo } from '../components/store';
 import { getGameInfo } from '../utils/games';
-import {
-  getLocation,
-  getScreenshotFromNewWorld,
-  toLocation,
-} from '../utils/ocr';
 
 export type Position = { location: [number, number]; rotation: number };
 type PositionContextProps = {
@@ -28,7 +22,6 @@ type PositionContextProps = {
   worldName: string | null;
   map: string | null;
   username: string | null;
-  isOCR: boolean;
 };
 
 const PositionContext = createContext<PositionContextProps>({
@@ -38,7 +31,6 @@ const PositionContext = createContext<PositionContextProps>({
   worldName: null,
   map: null,
   username: null,
-  isOCR: false,
 });
 
 type PositionProviderProps = {
@@ -67,8 +59,6 @@ export function PositionProvider({
   const [map, setMap] = useState<string>(AETERNUM_MAP.name);
   const [username, setUsername] = useState<string | null>(null);
   const newWorldGameInfo = useNewWorldGameInfo();
-
-  const [isOCR, setIsOCR] = useState(false);
 
   const location = useMemo(
     () =>
@@ -103,8 +93,6 @@ export function PositionProvider({
     let lastUsername = username;
     let lastWorldName = worldName;
     let lastMap = map;
-    let falsePositiveCount = 0;
-    let lastIsOCR = isOCR;
 
     async function updatePosition() {
       try {
@@ -136,54 +124,6 @@ export function PositionProvider({
                 location,
                 rotation,
               });
-            }
-            if (lastIsOCR) {
-              lastIsOCR = false;
-              setIsOCR(false);
-            }
-          } else if (getJSONItem('ocr', false)) {
-            // OCR is too fast, delay it
-            await new Promise((resolve) => setTimeout(resolve, 80));
-
-            // OCR fallback
-            const url = await getScreenshotFromNewWorld();
-            if (url) {
-              const locationString = await getLocation(url);
-              try {
-                const location = toLocation(locationString);
-                if (location) {
-                  const rotation = calcRotation(location, lastLocation);
-
-                  if (
-                    lastLocation?.[0] !== location[0] ||
-                    lastLocation?.[1] !== location[1]
-                  ) {
-                    const distance = lastLocation
-                      ? Math.sqrt(
-                          Math.pow(location[0] - lastLocation[0], 2) +
-                            Math.pow(location[1] - lastLocation[1], 2)
-                        )
-                      : 0;
-                    if (distance > 50 && falsePositiveCount < 5) {
-                      // Might be false positive
-                      falsePositiveCount++;
-                    } else {
-                      falsePositiveCount = 0;
-                      lastLocation = location;
-                      setPosition({
-                        location,
-                        rotation,
-                      });
-                    }
-                  }
-                  if (!lastIsOCR) {
-                    lastIsOCR = true;
-                    setIsOCR(true);
-                  }
-                }
-              } catch (error) {
-                //
-              }
             }
           }
           if (username && username !== lastUsername) {
@@ -227,7 +167,6 @@ export function PositionProvider({
         map,
         worldName,
         username,
-        isOCR,
       }}
     >
       {children}

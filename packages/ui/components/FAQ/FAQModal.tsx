@@ -53,33 +53,10 @@ const FAQModal = ({ opened, onClose }: FAQModalProps) => {
                   <List.Item>
                     Overwolf is running before you launch New World
                   </List.Item>
-                  <List.Item>
-                    You activated "Show FPS" in New World to support the screen
-                    capturing fallback
-                  </List.Item>
-                  <List.Item>
-                    Brightness and contrast at set to 5 in-game.
-                  </List.Item>
-                  <List.Item>
-                    There are no other settings changing the colors of the game
-                    like colorblind mode or HDR
-                  </List.Item>
-                  <List.Item>You started sharing in the app</List.Item>
                   <List.Item>You are signed in on app and website</List.Item>
                 </List>
               </Accordion.Panel>
             </Accordion.Item>
-
-            <Accordion.Item value="New World freezes on launch">
-              <Accordion.Control>New World freezes on launch</Accordion.Control>
-              <Accordion.Panel>
-                This is related to the screen capturing fallback, which is
-                incompatible with GeForce Experience. Please deactivate GeForce
-                Experience 😉. If this doesn't help, other apps with overlays or
-                screen capturing could be the issue.
-              </Accordion.Panel>
-            </Accordion.Item>
-
             <Accordion.Item value="How to display hidden nodes?">
               <Accordion.Control>
                 How to display hidden nodes?
@@ -160,20 +137,6 @@ const FAQModal = ({ opened, onClose }: FAQModalProps) => {
                 </List>
               </Accordion.Panel>
             </Accordion.Item>
-            <Accordion.Item value="The coordinates are not visible with Show FPS activated">
-              <Accordion.Control>
-                The coordinates are not visible with Show FPS activated
-              </Accordion.Control>
-              <Accordion.Panel>
-                If you activate "Show FPS", the player coordinates should be
-                displayed next to the FPS. If only the FPS is visible, please
-                switch to windowed mode on a small resolution. Then while on the
-                small resolution switch to fullscreen. (everything should look
-                super big and blurry now). Then switch to your monitor's native
-                resolution. (e.g. 1920x1080). All while keeping the Show FPS
-                settings in the Visuals section active.
-              </Accordion.Panel>
-            </Accordion.Item>
             <Accordion.Item value="Is the node timer allowed?">
               <Accordion.Control>Is the node timer allowed?</Accordion.Control>
               <Accordion.Panel>
@@ -181,6 +144,13 @@ const FAQModal = ({ opened, onClose }: FAQModalProps) => {
                 But it's allowed to trigger a timer by hand (you need to press
                 the action hotkey). You can not be sure that the node is farmed
                 in the meantime with this approach, but it's safe to use.
+              </Accordion.Panel>
+            </Accordion.Item>
+            <Accordion.Item value="Can not sign-in on Safari">
+              <Accordion.Control>Can not sign-in on Safari</Accordion.Control>
+              <Accordion.Panel>
+                You have to go to settings app on iOS and to Safari settings and
+                toggle off pop-up blocker.
               </Accordion.Panel>
             </Accordion.Item>
             <Accordion.Item value="I have a different issue!">
