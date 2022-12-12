@@ -85,7 +85,6 @@ a {
   background: none;
   color: var(--color-text);
   transition: all 0.1s ease-in;
-  font-family: var(--font-family-secondary);
 }
 
 input,

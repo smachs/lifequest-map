@@ -74,15 +74,7 @@ function Welcome(): JSX.Element {
         <li>🔀 Farming/Marker Routes</li>
         <li>✅ Check markers as done (like lore documents)</li>
         <li>🗺️ Minimap view</li>
-        <li>
-          🤷‍♂️{' '}
-          <a
-            href="https://discord.com/channels/320539672663031818/896014490808745994/911185526210576394"
-            target="_blank"
-          >
-            Conforms to AGS ToS
-          </a>
-        </li>
+        <li>🤷‍♂️ Conforms to AGS ToS</li>
       </ul>
       <UnstyledButton onClick={handleLogin}>
         <Image

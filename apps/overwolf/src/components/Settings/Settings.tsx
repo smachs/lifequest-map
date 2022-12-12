@@ -57,13 +57,13 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
 
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
         position: 'absolute',
         inset: 0,
         zIndex: 1,
-        background: 'var(--color-shade-one)',
+        background: theme.colors.dark[7],
         display: 'grid',
-      }}
+      })}
     >
       <Title order={3}>Settings</Title>
       <ScrollArea offsetScrollbars>

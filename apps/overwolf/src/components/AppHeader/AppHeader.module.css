@@ -4,7 +4,6 @@
   grid-auto-flow: column;
   grid-template-columns: auto 1fr;
   align-items: center;
-  background-color: var(--color-shade-three);
   user-select: none;
   padding-left: 0.5em;
 }
@@ -14,7 +13,6 @@
   padding: 0.2em 0.5em;
   font-size: 1em;
   color: var(--color-text);
-  font-family: var(--font-family-primary);
   display: flex;
   gap: 0.5em;
   align-items: center;

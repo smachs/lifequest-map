@@ -1,4 +1,3 @@
-import { MantineProvider } from '@mantine/core';
 import '../globals.css';
 import { StrictMode } from 'react';
 import { SettingsProvider } from 'ui/contexts/SettingsContext';
@@ -17,6 +16,8 @@ import Ads from '../components/Ads/Ads';
 import { useUserStore } from 'ui/utils/userStore';
 import AppHeader from '../components/AppHeader/AppHeader';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { ThemeProvider } from 'ui/contexts/ThemeProvider';
+import { MantineProvider } from '@mantine/core';
 
 const root = createRoot(document.querySelector('#root')!);
 
@@ -58,12 +59,16 @@ waitForOverwolf().then(() => {
           theme={{
             colorScheme: 'dark',
           }}
+          withGlobalStyles
+          withNormalizeCSS
         >
-          <SettingsProvider>
-            <PositionProvider>
-              <Sender />
-            </PositionProvider>
-          </SettingsProvider>
+          <ThemeProvider>
+            <SettingsProvider>
+              <PositionProvider>
+                <Sender />
+              </PositionProvider>
+            </SettingsProvider>
+          </ThemeProvider>
         </MantineProvider>
       </QueryClientProvider>
     </StrictMode>
