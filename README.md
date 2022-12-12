@@ -1,4 +1,9 @@
-<img style="float: right;" src="/media/Big.jpg">
+<p align="center">
+  <a href="https://aeternum-map.gg">
+    <img src="/media/Big.jpg"
+    width="320" height="246">
+  </a>
+</p>
 
 # Aeternum Map - Interactive map for New World
 
