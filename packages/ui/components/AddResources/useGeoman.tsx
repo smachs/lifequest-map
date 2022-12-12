@@ -1,4 +1,3 @@
-import 'leaflet';
 import leaflet from 'leaflet';
 import type { Map } from 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
@@ -62,6 +61,11 @@ function useGeoman({
   }, [details, filter, iconUrl]);
 
   useEffect(() => {
+    if (!leafletMap.pm) {
+      // @ts-ignore
+      leaflet.PM.reInitLayer(leafletMap);
+    }
+
     marker.addTo(leafletMap);
     // @ts-ignore
     leafletMap.pm.setGlobalOptions({ snappable: false });
