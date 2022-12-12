@@ -1,3 +1,5 @@
+<img style="float: right;" src="/media/Big.jpg">
+
 # Aeternum Map - Interactive map for New World
 
 Get all the locations, farming spots, resources, lore documents, chests, mobs and more!
