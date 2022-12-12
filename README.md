@@ -1,3 +1,10 @@
+<p align="center">
+  <a href="https://aeternum-map.gg">
+    <img src="/media/Big.jpg"
+    width="320" height="246">
+  </a>
+</p>
+
 # Aeternum Map - Interactive map for New World
 
 Get all the locations, farming spots, resources, lore documents, chests, mobs and more!
