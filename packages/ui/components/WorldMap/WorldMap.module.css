@@ -21,10 +21,6 @@
 }
 
 /* stylelint-disable */
-:global(.leaflet-container) {
-  font-family: var(--font-family-secondary);
-}
-
 :global(.leaflet-position) {
   color: rgb(209, 209, 209);
   text-shadow: 1px 1px 2px #000000;
