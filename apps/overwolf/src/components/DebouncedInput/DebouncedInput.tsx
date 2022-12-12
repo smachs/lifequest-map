@@ -1,3 +1,4 @@
+import { TextInput } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 
@@ -27,7 +28,7 @@ const DebouncedInput = ({
   }, [value]);
 
   return (
-    <input
+    <TextInput
       value={internalValue}
       placeholder={placeholder}
       onChange={(event) => setInternalValue(event.target.value)}

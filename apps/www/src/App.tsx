@@ -5,8 +5,6 @@ import { useEffect, useState } from 'react';
 import UpsertArea from 'ui/components/UpsertArea/UpsertArea';
 import type { MarkerRouteItem } from 'ui/components/MarkerRoutes/MarkerRoutes';
 import useEventListener from 'ui/utils/useEventListener';
-import '@geoman-io/leaflet-geoman-free';
-import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
 import NitroPay from 'ui/components/NitroPay/NitroPay';
 import { useMap } from 'ui/utils/routes';

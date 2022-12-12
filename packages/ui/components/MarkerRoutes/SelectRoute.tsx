@@ -1,9 +1,8 @@
 import type { FormEvent } from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import 'leaflet';
+import leaflet from 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
-import leaflet from 'leaflet';
 import MarkerTypes from './MarkerTypes';
 import { notify } from '../../utils/notifications';
 import { patchMarkerRoute, postMarkerRoute } from './api';
@@ -77,6 +76,11 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
   );
 
   useEffect(() => {
+    if (!latestLeafletMap!.pm) {
+      // @ts-ignore
+      leaflet.PM.reInitLayer(latestLeafletMap);
+    }
+
     // @ts-ignore
     latestLeafletMap!.pm.setGlobalOptions({ snappable: true });
     let existingPolyline: leaflet.Polyline | null = null;

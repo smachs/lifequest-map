@@ -12,6 +12,7 @@ import FAQModal from 'ui/components/FAQ/FAQModal';
 import classes from './AppHeader.module.css';
 import { IconHelp } from '@tabler/icons';
 import { useState } from 'react';
+import { Box } from '@mantine/core';
 
 async function openExternalLink(url: string) {
   overwolf.utils.openUrlInDefaultBrowser(url);
@@ -21,7 +22,14 @@ function AppHeader(): JSX.Element {
   const [showFAQ, setShowFAQ] = useState(false);
 
   return (
-    <header className={classes.header} onMouseDown={dragMoveWindow}>
+    <Box
+      component="header"
+      sx={(theme) => ({
+        background: theme.colors.dark[6],
+      })}
+      className={classes.header}
+      onMouseDown={dragMoveWindow}
+    >
       <img src="/icon.png" alt="" className={classes.logo} />
       <h1 className={classes.title}>Aeternum-Map.gg</h1>
 
@@ -67,7 +75,7 @@ function AppHeader(): JSX.Element {
           <CloseIcon />
         </button>
       </div>
-    </header>
+    </Box>
   );
 }
 
