@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async';
 import { getScreenshotUrl } from '../../utils/api';
 import { toTimeAgo } from '../../utils/dates';
 import AddComment from '../AddComment/AddComment';
@@ -6,6 +5,7 @@ import Comment from '../Comment/Comment';
 import type { MarkerFull } from './useMarker';
 import useMarker from './useMarker';
 import type { Glyph } from 'static';
+import { findRegions } from 'static';
 import { findMapDetails, glyphs, mapFilters } from 'static';
 import HideMarkerInput from './HideMarkerInput';
 import Credit from './Credit';
@@ -33,6 +33,7 @@ import { useUserStore } from '../../utils/userStore';
 import { isEmbed, useRouteParams } from '../../utils/routes';
 import { IconMapPin } from '@tabler/icons';
 import { useQueryClient } from '@tanstack/react-query';
+import Meta from '../Meta/Meta';
 
 type MarkerDetailsProps = {
   onEdit: (marker: MarkerFull) => void;
@@ -88,6 +89,11 @@ function MarkerDetails({ onEdit }: MarkerDetailsProps): JSX.Element {
       </Button>
     );
   }
+
+  const region = marker
+    ? findRegions([[marker.position[1], marker.position[0]]], marker.map)[0]
+    : null;
+
   return (
     <Drawer
       opened={!!nodeId}
@@ -117,9 +123,11 @@ function MarkerDetails({ onEdit }: MarkerDetailsProps): JSX.Element {
       {(!filterItem || loading) && <Skeleton height={50} />}
       {filterItem && !loading && (
         <Stack style={{ height: 'calc(100vh - 64px)' }} spacing="xs">
-          <Helmet prioritizeSeoTags>
-            <title>{marker.name || filterItem.title} - New World Map</title>
-          </Helmet>
+          <Meta
+            title={marker.name || filterItem.title}
+            description={`A ${filterItem.title} in ${region}.`}
+          />
+
           <Group>
             {marker.name && (
               <Badge size="sm" color="cyan">
