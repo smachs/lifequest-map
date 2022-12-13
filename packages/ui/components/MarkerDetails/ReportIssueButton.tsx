@@ -1,7 +1,7 @@
 import { Anchor, Button, Modal, Stack, Textarea } from '@mantine/core';
+import { useQueryClient } from '@tanstack/react-query';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
-import { useMarkers } from '../../contexts/MarkersContext';
 import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
 import { useUserStore } from '../../utils/userStore';
@@ -15,7 +15,7 @@ const ReportIssueButton = ({ markerId, onReport }: ReportIssueButtonProps) => {
   const account = useUserStore((state) => state.account);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState('');
-  const { refresh: refreshMarkers } = useMarkers();
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event?: FormEvent) {
@@ -33,7 +33,7 @@ const ReportIssueButton = ({ markerId, onReport }: ReportIssueButtonProps) => {
       setLoading(true);
       await notify(postComment(markerId, { message, isIssue: true }));
       setMessage('');
-      refreshMarkers();
+      queryClient.invalidateQueries(['markers']);
       await onReport();
     } catch (error) {
       writeError(error);

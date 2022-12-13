@@ -4,10 +4,16 @@ import { MarkersProvider } from 'ui/contexts/MarkersContext';
 import { FiltersProvider } from 'ui/contexts/FiltersContext';
 import { SettingsProvider } from 'ui/contexts/SettingsContext';
 import { ThemeProvider } from 'ui/contexts/ThemeProvider';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HelmetProvider } from 'react-helmet-async';
+import { broadcastQueryClient } from '@tanstack/query-broadcast-client-experimental';
 
 const queryClient = new QueryClient();
+broadcastQueryClient({
+  queryClient,
+  broadcastChannel: 'aeternum-map',
+});
+
 const helmetContext = {};
 
 type Props = {

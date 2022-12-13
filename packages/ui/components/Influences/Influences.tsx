@@ -16,7 +16,7 @@ import {
 } from '@mantine/core';
 import { IconChevronRight, IconInfoCircle } from '@tabler/icons';
 import { getZonesWithWorlds, Zone } from 'static';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { fetchJSON } from '../../utils/api';
 import useStyles from './Influences.styles';
 import { toTimeAgo } from '../../utils/dates';

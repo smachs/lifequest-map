@@ -8,7 +8,7 @@ import {
 } from '@mantine/core';
 import { IconScreenshot } from '@tabler/icons';
 import { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { fetchJSON } from 'ui/utils/api';
 import { toggleWindow, WINDOWS } from 'ui/utils/windows';
 import { usePosition } from '../../contexts/PositionContext';

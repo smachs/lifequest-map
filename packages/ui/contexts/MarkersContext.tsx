@@ -1,12 +1,11 @@
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { useMemo } from 'react';
-import { createContext, useContext, useEffect } from 'react';
+import { createContext, useContext } from 'react';
 import type { MarkerRouteItem } from '../components/MarkerRoutes/MarkerRoutes';
 import { latestLeafletMap } from '../components/WorldMap/useWorldMap';
 import { findMapDetails, mapIsAeternumMap } from 'static';
 import { fetchJSON } from '../utils/api';
-import { notify } from '../utils/notifications';
 import { isOverwolfApp } from '../utils/overwolf';
 import { usePersistentState } from '../utils/storage';
 import { useFilters } from './FiltersContext';
@@ -15,6 +14,7 @@ import { useMarkerSearchStore } from '../components/MarkerSearch/markerSearchSto
 import { isEmbed, useRouteParams } from '../utils/routes';
 import { useUserStore } from '../utils/userStore';
 import useMarkerRoute from '../components/MarkerRoutes/useMarkerRoute';
+import { useQuery } from '@tanstack/react-query';
 
 export type MarkerBasic = {
   type: string;
@@ -34,9 +34,6 @@ export type MarkerBasic = {
 
 type MarkersContextProps = {
   markers: MarkerBasic[];
-  setMarkers: (
-    value: MarkerBasic[] | ((value: MarkerBasic[]) => MarkerBasic[])
-  ) => void;
   setTemporaryHiddenMarkerIDs: (
     value: string[] | ((value: string[]) => string[])
   ) => void;
@@ -44,26 +41,22 @@ type MarkersContextProps = {
   setMarkerRoutes: (routes: MarkerRouteItem[]) => void;
   toggleMarkerRoute: (markerRoute: MarkerRouteItem, force?: boolean) => void;
   visibleMarkers: MarkerBasic[];
-  refresh: () => void;
   mode: Mode;
   setMode: React.Dispatch<React.SetStateAction<Mode>>;
 };
 const MarkersContext = createContext<MarkersContextProps>({
   markers: [],
-  setMarkers: () => undefined,
   setTemporaryHiddenMarkerIDs: () => undefined,
   markerRoutes: [],
   setMarkerRoutes: () => undefined,
   toggleMarkerRoute: () => undefined,
   visibleMarkers: [],
-  refresh: () => undefined,
   mode: null,
   setMode: () => undefined,
 });
 
 type MarkersProviderProps = {
   children: ReactNode;
-  readonly?: boolean;
 };
 
 type Mode = 'route' | 'marker' | null;
@@ -72,17 +65,23 @@ type Mode = 'route' | 'marker' | null;
 localStorage.removeItem('markers');
 localStorage.removeItem('all-marker-routes');
 localStorage.removeItem('cached-marker-routes');
+localStorage.removeItem('cached-markers');
 
 export function MarkersProvider({
   children,
-  readonly,
 }: MarkersProviderProps): JSX.Element {
-  const [markers, setMarkers] = usePersistentState<MarkerBasic[]>(
-    'cached-markers',
-    [],
-    true,
-    true
+  const { data: markers = [] } = useQuery(
+    ['markers'],
+    () =>
+      Promise.all([
+        fetchJSON<MarkerBasic[]>('/api/markers'),
+        fetchJSON<MarkerBasic[]>('/api/auth/markers'),
+      ]).then(([newMarkers, privateMarkers]) =>
+        newMarkers.concat(privateMarkers)
+      ),
+    { enabled: !isOverwolfApp, refetchOnWindowFocus: false }
   );
+
   const [allMarkerRoutes, setMarkerRoutes] = usePersistentState<
     MarkerRouteItem[]
   >('markers-routes', []);
@@ -102,30 +101,6 @@ export function MarkersProvider({
   );
   const searchValues = useMarkerSearchStore((state) => state.searchValues);
   const markerFilters = useMarkerSearchStore((state) => state.markerFilters);
-
-  const refresh = () => {
-    if (!readonly) {
-      if (isOverwolfApp) {
-        return;
-      } else {
-        notify(
-          Promise.all([
-            fetchJSON<MarkerBasic[]>('/api/markers'),
-            fetchJSON<MarkerBasic[]>('/api/auth/markers'),
-          ]).then(([newMarkers, privateMarkers]) => {
-            const allMarkers = newMarkers.concat(privateMarkers);
-            if (JSON.stringify(allMarkers) !== JSON.stringify(markers)) {
-              setMarkers(allMarkers);
-            }
-          })
-        );
-      }
-    }
-  };
-
-  useEffect(() => {
-    refresh();
-  }, []);
 
   const visibleMarkers = useMemo(() => {
     const nameSearchValues = searchValues.filter((value) =>
@@ -251,10 +226,8 @@ export function MarkersProvider({
     <MarkersContext.Provider
       value={{
         markers,
-        setMarkers,
         setTemporaryHiddenMarkerIDs,
         visibleMarkers,
-        refresh,
         markerRoutes,
         setMarkerRoutes,
         toggleMarkerRoute,

@@ -21,7 +21,7 @@ import {
 } from '@mantine/core';
 import { allFilters } from '../../contexts/FiltersContext';
 import { IconDeviceFloppy, IconTrashX } from '@tabler/icons';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 const updatePresets = (presets: Preset[]) =>
   fetchJSON<AccountDTO>('/api/auth/account', {
