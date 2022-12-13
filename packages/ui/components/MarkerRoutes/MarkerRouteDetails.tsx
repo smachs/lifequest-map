@@ -31,7 +31,7 @@ import ForkRoute from './ForkRoute';
 import { useUserStore } from '../../utils/userStore';
 import shallow from 'zustand/shallow';
 import { isEmbed, useRouteParams } from '../../utils/routes';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { IconRoute2 } from '@tabler/icons';
 
 type MarkerRouteDetailsProps = {
@@ -282,7 +282,7 @@ const MarkerRouteDetails = ({ onEdit }: MarkerRouteDetailsProps) => {
             markerRoute={markerRoute}
             onFork={async (markerRoute) => {
               toggleMarkerRoute(markerRoute, true);
-              queryClient.invalidateQueries('routes');
+              queryClient.invalidateQueries(['routes']);
               if (!markerRoute || !markerRoute.map) {
                 navigate(`/routes/${markerRoute._id}/${location.search}`);
               } else {
@@ -311,7 +311,7 @@ const MarkerRouteDetails = ({ onEdit }: MarkerRouteDetailsProps) => {
             routeId={markerRoute._id}
             onDelete={async () => {
               toggleMarkerRoute(markerRoute, false);
-              queryClient.invalidateQueries('routes');
+              queryClient.invalidateQueries(['routes']);
               handleClose();
             }}
           />

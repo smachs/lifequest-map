@@ -15,7 +15,7 @@ import { createRoot } from 'react-dom/client';
 import Ads from '../components/Ads/Ads';
 import { useUserStore } from 'ui/utils/userStore';
 import AppHeader from '../components/AppHeader/AppHeader';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'ui/contexts/ThemeProvider';
 import { MantineProvider } from '@mantine/core';
 

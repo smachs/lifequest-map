@@ -1,5 +1,4 @@
 import { Helmet } from 'react-helmet-async';
-import { useMarkers } from '../../contexts/MarkersContext';
 import { getScreenshotUrl } from '../../utils/api';
 import { toTimeAgo } from '../../utils/dates';
 import AddComment from '../AddComment/AddComment';
@@ -33,6 +32,7 @@ import Markdown from '../Markdown/Markdown';
 import { useUserStore } from '../../utils/userStore';
 import { isEmbed, useRouteParams } from '../../utils/routes';
 import { IconMapPin } from '@tabler/icons';
+import { useQueryClient } from '@tanstack/react-query';
 
 type MarkerDetailsProps = {
   onEdit: (marker: MarkerFull) => void;
@@ -42,7 +42,7 @@ function MarkerDetails({ onEdit }: MarkerDetailsProps): JSX.Element {
   const { nodeId } = useRouteParams();
 
   const { marker, comments, refresh, loading } = useMarker(nodeId);
-  const { setMarkers } = useMarkers();
+  const queryClient = useQueryClient();
   const account = useUserStore((state) => state.account);
   const navigate = useNavigate();
 
@@ -189,18 +189,7 @@ function MarkerDetails({ onEdit }: MarkerDetailsProps): JSX.Element {
                   )}
                   onRemove={() => {
                     refresh();
-                    setMarkers((markers) => {
-                      const markersClone = [...markers];
-                      const index = markersClone.findIndex(
-                        (marker) => marker._id === comment.markerId
-                      );
-                      if (index === -1) {
-                        return markers;
-                      }
-                      markersClone[index].comments =
-                        markersClone[index].comments! - 1;
-                      return markersClone;
-                    });
+                    queryClient.invalidateQueries(['markers']);
                   }}
                 />
               ))}
@@ -225,11 +214,7 @@ function MarkerDetails({ onEdit }: MarkerDetailsProps): JSX.Element {
                 <DeleteNode
                   markerId={marker._id}
                   onDelete={() => {
-                    setMarkers((markers) =>
-                      markers.filter(
-                        (existingMarker) => existingMarker._id !== marker._id
-                      )
-                    );
+                    queryClient.invalidateQueries(['markers']);
                     refresh();
                     handleClose();
                   }}

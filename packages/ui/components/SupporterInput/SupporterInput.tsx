@@ -7,7 +7,7 @@ import {
   TextInput,
 } from '@mantine/core';
 import { useState } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { fetchJSON } from '../../utils/api';
 import { useUserStore } from '../../utils/userStore';
 import shallow from 'zustand/shallow';

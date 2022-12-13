@@ -1,7 +1,7 @@
 import { Anchor, Textarea } from '@mantine/core';
+import { useQueryClient } from '@tanstack/react-query';
 import type { FormEvent, KeyboardEvent } from 'react';
 import { useState } from 'react';
-import { useMarkers } from '../../contexts/MarkersContext';
 import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
 import { useUserStore } from '../../utils/userStore';
@@ -15,7 +15,8 @@ type AddCommentProps = {
 function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
   const account = useUserStore((state) => state.account);
   const [message, setMessage] = useState('');
-  const { refresh: refreshMarkers } = useMarkers();
+  const queryClient = useQueryClient();
+
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event?: FormEvent) {
@@ -34,7 +35,7 @@ function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
       await notify(postComment(markerId, { message }));
       onAdd();
       setMessage('');
-      refreshMarkers();
+      queryClient.invalidateQueries(['markers']);
     } catch (error) {
       writeError(error);
     } finally {

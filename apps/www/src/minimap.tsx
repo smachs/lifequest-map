@@ -13,9 +13,14 @@ import { initPlausible } from 'ui/utils/stats';
 import { createRoot } from 'react-dom/client';
 import { MantineProvider } from '@mantine/core';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { broadcastQueryClient } from '@tanstack/query-broadcast-client-experimental';
 
 const queryClient = new QueryClient();
+broadcastQueryClient({
+  queryClient,
+  broadcastChannel: 'aeternum-map',
+});
 const root = createRoot(document.querySelector('#root')!);
 
 function Minimap(): JSX.Element {
@@ -78,7 +83,7 @@ const router = createMemoryRouter([
         <QueryClientProvider client={queryClient}>
           <SettingsProvider>
             <FiltersProvider>
-              <MarkersProvider readonly>
+              <MarkersProvider>
                 <Minimap />
               </MarkersProvider>
             </FiltersProvider>

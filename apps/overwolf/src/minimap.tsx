@@ -22,7 +22,7 @@ import {
   ZOOM_IN_MINIMAP,
   ZOOM_OUT_MINIMAP,
 } from './utils/hotkeys';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
 const root = createRoot(document.querySelector('#root')!);
@@ -197,7 +197,7 @@ const router = createMemoryRouter([
       <QueryClientProvider client={queryClient}>
         <SettingsProvider>
           <FiltersProvider>
-            <MarkersProvider readonly>
+            <MarkersProvider>
               <PositionProvider>
                 <Minimap />
               </PositionProvider>

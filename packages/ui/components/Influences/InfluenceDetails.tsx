@@ -2,7 +2,7 @@ import leaflet from 'leaflet';
 import { Button, Dialog, Slider, Text } from '@mantine/core';
 import { IconFlag } from '@tabler/icons';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { regions, worlds } from 'static';
 import { fetchJSON } from '../../utils/api';

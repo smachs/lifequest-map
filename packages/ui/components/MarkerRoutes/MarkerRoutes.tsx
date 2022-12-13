@@ -23,7 +23,7 @@ import {
   TextInput,
 } from '@mantine/core';
 import { IconFilter } from '@tabler/icons';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getMarkerRoutes } from './api';
 import { useMap } from '../../utils/routes';
 
@@ -120,7 +120,7 @@ type MarkerRoutesProps = {
 };
 function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
   const { data: allMarkerRoutes = [], isLoading } = useQuery(
-    'routes',
+    ['routes'],
     getMarkerRoutes
   );
   const { markerRoutes, setMarkerRoutes, toggleMarkerRoute } = useMarkers();

@@ -20,6 +20,7 @@ import ImageDropzone from './ImageDropzone';
 import type { FileWithPath } from '@mantine/dropzone';
 import { getScreenshotUrl } from '../../utils/api';
 import { Button, Stack, Text } from '@mantine/core';
+import { useQueryClient } from '@tanstack/react-query';
 
 export type Details = {
   description?: string;
@@ -39,7 +40,7 @@ type AddResourcesProps = {
   onClose: () => void;
 };
 function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
-  const { setMarkers, setTemporaryHiddenMarkerIDs } = useMarkers();
+  const { setTemporaryHiddenMarkerIDs } = useMarkers();
   const map = useMap();
 
   const [filter, setFilter] = useState<FilterItem | null>(
@@ -54,6 +55,7 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
   const [details, setDetails] = useState<Details>({});
   const { player } = usePlayerStore();
   const following = useSettingsStore((state) => state.following);
+  const queryClient = useQueryClient();
 
   const [location, setLocation] = useState<[number, number, number]>(() => {
     if (marker) {
@@ -152,30 +154,15 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
       }
 
       if (marker) {
-        const updatedMarker = await notify(
-          patchMarker(marker._id!, newMarker),
-          {
-            success: 'Node edited 👌',
-          }
-        );
-        setMarkers((markers) => {
-          const markersClone = [...markers];
-          const index = markersClone.findIndex(
-            (marker) => marker._id === updatedMarker._id
-          );
-          if (index === -1) {
-            return markers;
-          }
-          markersClone[index] = updatedMarker;
-          return markersClone;
+        await notify(patchMarker(marker._id!, newMarker), {
+          success: 'Node edited 👌',
         });
       } else {
-        const createdMarker = await notify(postMarker(newMarker), {
+        await notify(postMarker(newMarker), {
           success: 'Node added 👌',
         });
-        setMarkers((markers) => [createdMarker, ...markers]);
       }
-
+      queryClient.invalidateQueries(['markers']);
       onClose();
     } catch (error) {
       writeError(error);

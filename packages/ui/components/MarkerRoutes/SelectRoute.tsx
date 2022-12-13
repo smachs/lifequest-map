@@ -12,7 +12,7 @@ import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import { findRegions } from 'static';
 import { writeError } from '../../utils/logs';
 import { useMap } from 'ui/utils/routes';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Checkbox,
@@ -208,7 +208,7 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
       });
 
       toggleMarkerRoute(updatedMarkerRoute, true);
-      queryClient.invalidateQueries('routes');
+      queryClient.invalidateQueries(['routes']);
       onClose();
     } catch (error) {
       writeError(error);
