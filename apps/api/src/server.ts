@@ -67,6 +67,18 @@ app.use(compression());
 // Middleware that parses json and looks at requests where the Content-Type header matches the type option.
 app.use(express.json());
 
+// Tell express that it's behind a reverse-proxy
+app.set('trust proxy', true);
+
+// Redirects www. traffic
+app.use((req, res, next) => {
+  if (req.headers.host?.slice(0, 4) === 'www.') {
+    const newHost = req.headers.host.slice(4);
+    return res.redirect(308, req.protocol + '://' + newHost + req.originalUrl);
+  }
+  next();
+});
+
 async function runServer() {
   if (NO_SOCKET !== 'true') {
     initSocket(server);
