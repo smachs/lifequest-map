@@ -8,13 +8,13 @@ import { findMapDetails, mapIsAeternumMap } from 'static';
 import { fetchJSON } from '../utils/api';
 import { isOverwolfApp } from '../utils/overwolf';
 import { usePersistentState } from '../utils/storage';
-import { useFilters } from './FiltersContext';
 import type { MarkerSize } from 'static';
 import { useMarkerSearchStore } from '../components/MarkerSearch/markerSearchStore';
 import { isEmbed, useRouteParams } from '../utils/routes';
 import { useUserStore } from '../utils/userStore';
 import useMarkerRoute from '../components/MarkerRoutes/useMarkerRoute';
 import { useQuery } from '@tanstack/react-query';
+import { useFiltersStore } from '../utils/filtersStore';
 
 export type MarkerBasic = {
   type: string;
@@ -92,7 +92,7 @@ export function MarkersProvider({
     string[]
   >([]);
 
-  const { filters } = useFilters();
+  const { filters } = useFiltersStore();
   const { map, nodeId, routeId, world } = useRouteParams();
   const { data: markerRoute } = useMarkerRoute(routeId);
 
