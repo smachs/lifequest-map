@@ -148,26 +148,36 @@ async function runServer() {
     app.use('/api/influences', influencesRouter);
 
     // Static screenshots folder
-    app.use('/screenshots', express.static(SCREENSHOTS_PATH!));
+    app.use(
+      '/screenshots',
+      express.static(SCREENSHOTS_PATH!, {
+        immutable: true,
+        maxAge: '1w',
+      })
+    );
 
     app.get('/ads.txt', (_request, response) => {
       response.redirect(301, 'https://api.nitropay.com/v1/ads-1042.txt');
     });
 
     // Serve webversion (only on production)
-    app.use(express.static(path.join(__dirname, '../../www/dist')));
+    app.use(
+      express.static(path.join(__dirname, '../../www/dist'), {
+        immutable: true,
+        maxAge: '1w',
+      })
+    );
 
     // Static assets folder
     app.use(
       '/assets',
       express.static(path.join(__dirname, '../public'), {
         immutable: true,
-        maxAge: '1d',
-        fallthrough: true,
+        maxAge: '1w',
       })
     );
     app.use('/assets', (_req, res) => {
-      res.setHeader('Cache-Control', 'public, max-age=86400, immutable');
+      res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
       res.setHeader('Content-Type', 'image/gif');
       res.send(
         'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
