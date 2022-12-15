@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useFilters } from '../../contexts/FiltersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { escapeRegExp } from '../../utils/regExp';
 import { usePersistentState } from '../../utils/storage';
@@ -27,6 +26,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getMarkerRoutes } from './api';
 import { useMap } from '../../utils/routes';
 import { useUpsertStore } from '../UpsertArea/upsertStore';
+import { useFiltersStore } from '../../utils/filtersStore';
 
 export type MarkerRouteItem = {
   _id: string;
@@ -133,7 +133,8 @@ function MarkerRoutes(): JSX.Element {
     'all'
   );
   const [search, setSearch] = usePersistentState('searchRoutes', '');
-  const { filters } = useFilters();
+  const { filters } = useFiltersStore();
+
   const [limit, setLimit] = useState(10);
   const map = useMap();
 

@@ -15,7 +15,6 @@ import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FilterItem } from 'static';
 import { findMapDetails, mapFilters } from 'static';
-import { useFilters } from '../../contexts/FiltersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { toTimeAgo } from '../../utils/dates';
 import Markdown from '../Markdown/Markdown';
@@ -50,7 +49,6 @@ const MarkerRouteDetails = () => {
     shallow
   );
   const { markerRoutes, toggleMarkerRoute } = useMarkers();
-  const { setFilters } = useFilters();
   const queryClient = useQueryClient();
 
   const editable =
@@ -125,11 +123,6 @@ const MarkerRouteDetails = () => {
 
   function handleEdit(markerRoute: MarkerRouteItem) {
     toggleMarkerRoute(markerRoute, false);
-    const types = Object.keys(markerRoute.markersByType);
-    setFilters((filters) => [
-      ...filters,
-      ...types.filter((type) => !filters.includes(type)),
-    ]);
     upsertStore.setMarkerRoute(markerRoute);
   }
 

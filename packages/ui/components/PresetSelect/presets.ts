@@ -1,4 +1,4 @@
-import { allFilters } from '../../contexts/FiltersContext';
+import { allFilters } from '../../utils/filtersStore';
 
 export type Preset = {
   name: string;

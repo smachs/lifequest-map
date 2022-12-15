@@ -1,6 +1,5 @@
 import { mapFiltersCategories } from 'static';
 import MarkerSection from './MarkerSection';
-import { useFilters } from '../../contexts/FiltersContext';
 import { usePersistentState } from '../../utils/storage';
 import PresetSelect from '../PresetSelect/PresetSelect';
 import MarkerSearch from '../MarkerSearch/MarkerSearch';
@@ -14,13 +13,13 @@ import {
 } from '@mantine/core';
 import { IconFilter, IconX } from '@tabler/icons';
 import { useUpsertStore } from '../UpsertArea/upsertStore';
+import { useFiltersStore } from '../../utils/filtersStore';
 
 function MarkersView(): JSX.Element {
-  const { filters, setFilters } = useFilters();
+  const { filters, setFilters } = useFiltersStore();
   const [search, setSearch] = usePersistentState('searchMarkerTypes', '');
   const account = useUserStore((state) => state.account);
   const upsertStore = useUpsertStore();
-
   function handleToggle(filterTypes: string[], checked: boolean) {
     const newFilters = [...filters];
     if (checked) {

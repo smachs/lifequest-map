@@ -8,7 +8,6 @@ import styles from './Minimap.module.css';
 import { dragMoveWindow, WINDOWS } from 'ui/utils/windows';
 
 import { usePersistentState } from 'ui/utils/storage';
-import { FiltersProvider } from 'ui/contexts/FiltersContext';
 import { SettingsProvider } from 'ui/contexts/SettingsContext';
 import { classNames } from 'ui/utils/styles';
 import ResizeBorder from 'ui/components/ResizeBorder/ResizeBorder';
@@ -196,13 +195,11 @@ const router = createMemoryRouter([
     element: (
       <QueryClientProvider client={queryClient}>
         <SettingsProvider>
-          <FiltersProvider>
-            <MarkersProvider>
-              <PositionProvider>
-                <Minimap />
-              </PositionProvider>
-            </MarkersProvider>
-          </FiltersProvider>
+          <MarkersProvider>
+            <PositionProvider>
+              <Minimap />
+            </PositionProvider>
+          </MarkersProvider>
         </SettingsProvider>
       </QueryClientProvider>
     ),

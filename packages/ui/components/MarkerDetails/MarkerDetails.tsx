@@ -2,7 +2,6 @@ import { getScreenshotUrl } from '../../utils/api';
 import { toTimeAgo } from '../../utils/dates';
 import AddComment from '../AddComment/AddComment';
 import Comment from '../Comment/Comment';
-import type { MarkerFull } from './useMarker';
 import useMarker from './useMarker';
 import type { Glyph } from 'static';
 import { findRegions } from 'static';

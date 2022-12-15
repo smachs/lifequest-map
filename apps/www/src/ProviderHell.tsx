@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { MarkersProvider } from 'ui/contexts/MarkersContext';
-import { FiltersProvider } from 'ui/contexts/FiltersContext';
 import { SettingsProvider } from 'ui/contexts/SettingsContext';
 import { ThemeProvider } from 'ui/contexts/ThemeProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -24,9 +23,7 @@ const ProviderHell = ({ children }: Props) => {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <SettingsProvider>
-            <FiltersProvider>
-              <MarkersProvider>{children}</MarkersProvider>
-            </FiltersProvider>
+            <MarkersProvider>{children}</MarkersProvider>
           </SettingsProvider>
         </ThemeProvider>
       </QueryClientProvider>
