@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { findMapDetails, mapIsAeternumMap } from 'static';
 import { usePlayerStore } from '../../utils/playerStore';
 import { useSettingsStore } from '../../utils/settingsStore';
+import { useUpsertStore } from '../UpsertArea/upsertStore';
 
 const divElement = leaflet.DomUtil.create('div', 'leaflet-player-position');
 const CoordinatesControl = leaflet.Control.extend({
@@ -36,12 +37,10 @@ function usePlayerPosition({
   isMinimap,
   leafletMap,
   rotate,
-  isEditing,
 }: {
   isMinimap?: boolean;
   leafletMap: leaflet.Map | null;
   rotate?: boolean;
-  isEditing?: boolean;
 }): void {
   const [marker, setMarker] = useState<PositionMarker | null>(null);
 
@@ -52,6 +51,7 @@ function usePlayerPosition({
     useSettings();
   const map = useMap();
   const navigate = useNavigate();
+  const upsertStore = useUpsertStore();
 
   let isFollowing: boolean | null = null;
   let playerPosition: Position | null = null;
@@ -68,7 +68,7 @@ function usePlayerPosition({
   }
   isFollowing = following;
 
-  if (isEditing) {
+  if (upsertStore.marker || upsertStore.markerRoute) {
     isFollowing = false;
   }
 

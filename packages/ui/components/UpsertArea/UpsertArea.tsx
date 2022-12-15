@@ -1,24 +1,13 @@
 import { Dialog, Skeleton } from '@mantine/core';
 import { lazy, Suspense } from 'react';
-import type { MarkerDTO } from '../AddResources/api';
-import type { MarkerRouteItem } from '../MarkerRoutes/MarkerRoutes';
 const AddResources = lazy(() => import('../AddResources/AddResources'));
 const SelectRoute = lazy(() => import('../MarkerRoutes/SelectRoute'));
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
+import { useUpsertStore } from './upsertStore';
 
-type UpsertAreaProps = {
-  markerRoute?: MarkerRouteItem | true;
-  marker?: MarkerDTO | true;
-  onRouteClose: () => void;
-  onMarkerClose: () => void;
-};
+function UpsertArea() {
+  const { marker, markerRoute, setMarker, setMarkerRoute } = useUpsertStore();
 
-function UpsertArea({
-  markerRoute,
-  marker,
-  onRouteClose,
-  onMarkerClose,
-}: UpsertAreaProps) {
   return (
     <Dialog
       opened={Boolean(markerRoute || marker)}
@@ -26,10 +15,10 @@ function UpsertArea({
       withCloseButton
       onClose={() => {
         if (markerRoute) {
-          onRouteClose();
+          setMarkerRoute(undefined);
         }
         if (marker) {
-          onMarkerClose();
+          setMarker(undefined);
         }
       }}
     >
@@ -38,7 +27,7 @@ function UpsertArea({
           <Suspense fallback={<Skeleton height={40} />}>
             <SelectRoute
               markerRoute={markerRoute === true ? undefined : markerRoute}
-              onClose={onRouteClose}
+              onClose={() => setMarkerRoute(undefined)}
             />
           </Suspense>
         </ErrorBoundary>
@@ -48,7 +37,7 @@ function UpsertArea({
           <Suspense fallback={<Skeleton height={40} />}>
             <AddResources
               marker={marker === true ? undefined : marker}
-              onClose={onMarkerClose}
+              onClose={() => setMarker(undefined)}
             />
           </Suspense>
         </ErrorBoundary>

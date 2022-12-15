@@ -26,6 +26,7 @@ import { IconFilter } from '@tabler/icons';
 import { useQuery } from '@tanstack/react-query';
 import { getMarkerRoutes } from './api';
 import { useMap } from '../../utils/routes';
+import { useUpsertStore } from '../UpsertArea/upsertStore';
 
 export type MarkerRouteItem = {
   _id: string;
@@ -115,16 +116,14 @@ function handleSort(sortBy: SortBy, filters: string[]) {
   };
 }
 
-type MarkerRoutesProps = {
-  onEdit: (target: MarkerRouteItem | true) => void;
-};
-function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
+function MarkerRoutes(): JSX.Element {
   const { data: allMarkerRoutes = [], isLoading } = useQuery(
     ['routes'],
     getMarkerRoutes
   );
   const { markerRoutes, setMarkerRoutes, toggleMarkerRoute } = useMarkers();
   const account = useUserStore((state) => state.account);
+  const upsertStore = useUpsertStore();
   const [sortBy, setSortBy] = usePersistentState<SortBy>(
     'markerRoutesSort',
     'match'
@@ -189,7 +188,7 @@ function MarkerRoutes({ onEdit }: MarkerRoutesProps): JSX.Element {
         <Button
           disabled={!account}
           onClick={() => {
-            onEdit(true);
+            upsertStore.setMarkerRoute(true);
           }}
         >
           {account ? 'Add route' : 'Sign in to add routes'}

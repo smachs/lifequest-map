@@ -13,14 +13,13 @@ import {
   TextInput,
 } from '@mantine/core';
 import { IconFilter, IconX } from '@tabler/icons';
+import { useUpsertStore } from '../UpsertArea/upsertStore';
 
-type MarkersViewProps = {
-  onAdd: () => void;
-};
-function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
+function MarkersView(): JSX.Element {
   const { filters, setFilters } = useFilters();
   const [search, setSearch] = usePersistentState('searchMarkerTypes', '');
   const account = useUserStore((state) => state.account);
+  const upsertStore = useUpsertStore();
 
   function handleToggle(filterTypes: string[], checked: boolean) {
     const newFilters = [...filters];
@@ -39,7 +38,7 @@ function MarkersView({ onAdd }: MarkersViewProps): JSX.Element {
   }
   return (
     <Stack>
-      <Button disabled={!account} onClick={onAdd}>
+      <Button disabled={!account} onClick={() => upsertStore.setMarker(true)}>
         {account ? 'Add node' : 'Login to add nodes'}
       </Button>
       <MarkerSearch />

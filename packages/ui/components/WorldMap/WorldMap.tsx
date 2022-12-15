@@ -13,7 +13,6 @@ type WorldMapProps = {
   className?: string;
   style?: CSSProperties;
   rotate?: boolean;
-  isEditing?: boolean;
 };
 
 function WorldMap({
@@ -23,7 +22,6 @@ function WorldMap({
   initialZoom,
   style,
   rotate,
-  isEditing,
 }: WorldMapProps): JSX.Element {
   const { leafletMap, elementRef } = useWorldMap({
     hideControls,
@@ -34,7 +32,7 @@ function WorldMap({
   useLayerGroups({
     leafletMap,
   });
-  usePlayerPosition({ isMinimap, leafletMap, rotate, isEditing });
+  usePlayerPosition({ isMinimap, leafletMap, rotate });
 
   return (
     <div

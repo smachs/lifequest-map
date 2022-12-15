@@ -34,14 +34,11 @@ import { isEmbed, useRouteParams } from '../../utils/routes';
 import { IconMapPin } from '@tabler/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import Meta from '../Meta/Meta';
+import { useUpsertStore } from '../UpsertArea/upsertStore';
 
-type MarkerDetailsProps = {
-  onEdit: (marker: MarkerFull) => void;
-};
-
-function MarkerDetails({ onEdit }: MarkerDetailsProps): JSX.Element {
+function MarkerDetails(): JSX.Element {
   const { nodeId } = useRouteParams();
-
+  const upsertStore = useUpsertStore();
   const { marker, comments, refresh, loading } = useMarker(nodeId);
   const queryClient = useQueryClient();
   const account = useUserStore((state) => state.account);
@@ -213,7 +210,7 @@ function MarkerDetails({ onEdit }: MarkerDetailsProps): JSX.Element {
                   color="teal"
                   leftIcon="✍"
                   onClick={() => {
-                    onEdit(marker);
+                    upsertStore.setMarker(marker);
                     handleClose();
                   }}
                 >

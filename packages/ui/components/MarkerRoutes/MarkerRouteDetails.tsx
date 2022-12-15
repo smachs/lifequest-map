@@ -35,14 +35,13 @@ import { useQueryClient } from '@tanstack/react-query';
 import { IconRoute2 } from '@tabler/icons';
 import Meta from '../Meta/Meta';
 import { formatList } from '../../utils/lists';
+import { useUpsertStore } from '../UpsertArea/upsertStore';
 
-type MarkerRouteDetailsProps = {
-  onEdit: (markerRoute: MarkerRouteItem) => void;
-};
-const MarkerRouteDetails = ({ onEdit }: MarkerRouteDetailsProps) => {
+const MarkerRouteDetails = () => {
   const { routeId } = useRouteParams();
   const { data: markerRoute, refetch, isLoading } = useMarkerRoute(routeId);
   const navigate = useNavigate();
+  const upsertStore = useUpsertStore();
   const { account, refreshAccount } = useUserStore(
     (state) => ({
       account: state.account,
@@ -131,7 +130,7 @@ const MarkerRouteDetails = ({ onEdit }: MarkerRouteDetailsProps) => {
       ...filters,
       ...types.filter((type) => !filters.includes(type)),
     ]);
-    onEdit(markerRoute);
+    upsertStore.setMarkerRoute(markerRoute);
   }
 
   const isFavorite = Boolean(

@@ -1,15 +1,11 @@
 import { ToastContainer } from 'react-toastify';
 import WorldMap from 'ui/components/WorldMap/WorldMap';
 import 'react-toastify/dist/ReactToastify.css';
-import { useEffect, useState } from 'react';
 import UpsertArea from 'ui/components/UpsertArea/UpsertArea';
-import type { MarkerRouteItem } from 'ui/components/MarkerRoutes/MarkerRoutes';
 import useEventListener from 'ui/utils/useEventListener';
 import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
 import NitroPay from 'ui/components/NitroPay/NitroPay';
-import { useMap } from 'ui/utils/routes';
 import Head from './Head';
-import type { MarkerFull } from 'ui/components/MarkerDetails/useMarker';
 import { Box } from '@mantine/core';
 import UserAction from 'ui/components/Actions/UserAction';
 import NavActions from 'ui/components/Actions/NavActions';
@@ -19,19 +15,6 @@ import FadingBox from 'ui/components/FadingBox/FadingBox';
 import ErrorBoundary from 'ui/components/ErrorBoundary/ErrorBoundary';
 
 function App(): JSX.Element {
-  const [targetMarker, setTargetMarker] = useState<
-    MarkerFull | true | undefined
-  >(undefined);
-  const [targetMarkerRoute, setTargetMarkerRoute] = useState<
-    MarkerRouteItem | true | undefined
-  >(undefined);
-  const map = useMap();
-
-  useEffect(() => {
-    setTargetMarker(undefined);
-    setTargetMarkerRoute(undefined);
-  }, [map]);
-
   useEventListener(
     'hotkey-zoom_in_map',
     () => {
@@ -58,11 +41,7 @@ function App(): JSX.Element {
     <ErrorBoundary>
       <Box>
         <FadingBox left={7} top={7} fadeFrom="top">
-          <NavActions
-            onMarkerEdit={setTargetMarker}
-            onMarkerCreate={() => setTargetMarker(true)}
-            onMarkerRouteUpsert={setTargetMarkerRoute}
-          />
+          <NavActions />
         </FadingBox>
         <FadingBox right={7} top={7} zIndex={2} fadeFrom="top">
           <UserAction />
@@ -75,17 +54,12 @@ function App(): JSX.Element {
         </FadingBox>
         <Box sx={{ width: '100vw', height: '100vh' }}>
           <ErrorBoundary>
-            <WorldMap isEditing={Boolean(targetMarker || targetMarkerRoute)} />
+            <WorldMap />
           </ErrorBoundary>
         </Box>
-        <Head map={map} />
+        <Head />
         <ToastContainer theme="dark" pauseOnFocusLoss={false} />
-        <UpsertArea
-          marker={targetMarker}
-          markerRoute={targetMarkerRoute}
-          onMarkerClose={() => setTargetMarker(undefined)}
-          onRouteClose={() => setTargetMarkerRoute(undefined)}
-        />
+        <UpsertArea />
         <NitroPay />
       </Box>
     </ErrorBoundary>

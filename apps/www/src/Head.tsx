@@ -1,11 +1,19 @@
+import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { mapIsAeternumMap } from 'static';
+import { useUpsertStore } from 'ui/components/UpsertArea/upsertStore';
+import { useMap } from 'ui/utils/routes';
 
-type Props = {
-  map: string;
-};
-const Head = ({ map }: Props) => {
+const Head = () => {
+  const map = useMap();
   const isAeternumMap = mapIsAeternumMap(map);
+  const upsertStore = useUpsertStore();
+
+  useEffect(() => {
+    upsertStore.setMarker(undefined);
+    upsertStore.setMarkerRoute(undefined);
+  }, [map]);
+
   return (
     <Helmet prioritizeSeoTags>
       <title>{map} - New World Map</title>
