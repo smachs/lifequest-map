@@ -19,9 +19,9 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import { allFilters } from '../../contexts/FiltersContext';
 import { IconDeviceFloppy, IconTrashX } from '@tabler/icons';
 import { useMutation } from '@tanstack/react-query';
+import { allFilters } from '../../utils/filtersStore';
 
 const updatePresets = (presets: Preset[]) =>
   fetchJSON<AccountDTO>('/api/auth/account', {

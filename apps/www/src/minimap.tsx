@@ -4,7 +4,6 @@ import { MarkersProvider } from 'ui/contexts/MarkersContext';
 import WorldMap from 'ui/components/WorldMap/WorldMap';
 import styles from './Minimap.module.css';
 import { usePersistentState } from 'ui/utils/storage';
-import { FiltersProvider } from 'ui/contexts/FiltersContext';
 import { SettingsProvider } from 'ui/contexts/SettingsContext';
 import { classNames } from 'ui/utils/styles';
 import useEventListener from 'ui/utils/useEventListener';
@@ -82,11 +81,9 @@ const router = createMemoryRouter([
       >
         <QueryClientProvider client={queryClient}>
           <SettingsProvider>
-            <FiltersProvider>
-              <MarkersProvider>
-                <Minimap />
-              </MarkersProvider>
-            </FiltersProvider>
+            <MarkersProvider>
+              <Minimap />
+            </MarkersProvider>
           </SettingsProvider>
         </QueryClientProvider>
       </MantineProvider>

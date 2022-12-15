@@ -15,7 +15,6 @@ import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FilterItem } from 'static';
 import { findMapDetails, mapFilters } from 'static';
-import { useFilters } from '../../contexts/FiltersContext';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { toTimeAgo } from '../../utils/dates';
 import Markdown from '../Markdown/Markdown';
@@ -35,14 +34,13 @@ import { useQueryClient } from '@tanstack/react-query';
 import { IconRoute2 } from '@tabler/icons';
 import Meta from '../Meta/Meta';
 import { formatList } from '../../utils/lists';
+import { useUpsertStore } from '../UpsertArea/upsertStore';
 
-type MarkerRouteDetailsProps = {
-  onEdit: (markerRoute: MarkerRouteItem) => void;
-};
-const MarkerRouteDetails = ({ onEdit }: MarkerRouteDetailsProps) => {
+const MarkerRouteDetails = () => {
   const { routeId } = useRouteParams();
   const { data: markerRoute, refetch, isLoading } = useMarkerRoute(routeId);
   const navigate = useNavigate();
+  const upsertStore = useUpsertStore();
   const { account, refreshAccount } = useUserStore(
     (state) => ({
       account: state.account,
@@ -51,7 +49,6 @@ const MarkerRouteDetails = ({ onEdit }: MarkerRouteDetailsProps) => {
     shallow
   );
   const { markerRoutes, toggleMarkerRoute } = useMarkers();
-  const { setFilters } = useFilters();
   const queryClient = useQueryClient();
 
   const editable =
@@ -126,12 +123,7 @@ const MarkerRouteDetails = ({ onEdit }: MarkerRouteDetailsProps) => {
 
   function handleEdit(markerRoute: MarkerRouteItem) {
     toggleMarkerRoute(markerRoute, false);
-    const types = Object.keys(markerRoute.markersByType);
-    setFilters((filters) => [
-      ...filters,
-      ...types.filter((type) => !filters.includes(type)),
-    ]);
-    onEdit(markerRoute);
+    upsertStore.setMarkerRoute(markerRoute);
   }
 
   const isFavorite = Boolean(

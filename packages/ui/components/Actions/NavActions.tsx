@@ -13,23 +13,12 @@ import { isEmbed, useView } from '../../utils/routes';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import InfluenceDetails from '../Influences/InfluenceDetails';
 import MarkerDetails from '../MarkerDetails/MarkerDetails';
-import type { MarkerFull } from '../MarkerDetails/useMarker';
 import MarkerRouteDetails from '../MarkerRoutes/MarkerRouteDetails';
-import type { MarkerRouteItem } from '../MarkerRoutes/MarkerRoutes';
 const MarkersView = lazy(() => import('../MapFilter/MarkersView'));
 const MarkerRoutes = lazy(() => import('../MarkerRoutes/MarkerRoutes'));
 const Influences = lazy(() => import('../Influences/Influences'));
 
-type NavActionsProps = {
-  onMarkerCreate: () => void;
-  onMarkerRouteUpsert: (target: MarkerRouteItem | true) => void;
-  onMarkerEdit: (marker: MarkerFull) => void;
-};
-const NavActions = ({
-  onMarkerCreate,
-  onMarkerEdit,
-  onMarkerRouteUpsert,
-}: NavActionsProps) => {
+const NavActions = () => {
   const { view, toView, setView } = useView();
 
   if (isEmbed) {
@@ -45,8 +34,8 @@ const NavActions = ({
         >
           Full Map
         </Button>
-        <MarkerDetails onEdit={onMarkerEdit} />
-        <MarkerRouteDetails onEdit={onMarkerRouteUpsert} />
+        <MarkerDetails />
+        <MarkerRouteDetails />
         <InfluenceDetails />
       </Group>
     );
@@ -139,11 +128,11 @@ const NavActions = ({
       >
         <ErrorBoundary>
           <Suspense fallback={<Skeleton height={40} />}>
-            <MarkersView onAdd={onMarkerCreate} />
+            <MarkersView />
           </Suspense>
         </ErrorBoundary>
       </Drawer>
-      <MarkerDetails onEdit={onMarkerEdit} />
+      <MarkerDetails />
       <Drawer
         opened={view.section === 'routes'}
         onClose={() => setView({ section: null })}
@@ -154,11 +143,11 @@ const NavActions = ({
       >
         <ErrorBoundary>
           <Suspense fallback={<Skeleton height={40} />}>
-            <MarkerRoutes onEdit={onMarkerRouteUpsert} />
+            <MarkerRoutes />
           </Suspense>
         </ErrorBoundary>
       </Drawer>
-      <MarkerRouteDetails onEdit={onMarkerRouteUpsert} />
+      <MarkerRouteDetails />
       <Drawer
         opened={view.section === 'influences'}
         onClose={() => setView({ section: null })}

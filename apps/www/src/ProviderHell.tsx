@@ -1,7 +1,5 @@
 import type { ReactNode } from 'react';
-import { ModalProvider } from 'ui/contexts/ModalContext';
 import { MarkersProvider } from 'ui/contexts/MarkersContext';
-import { FiltersProvider } from 'ui/contexts/FiltersContext';
 import { SettingsProvider } from 'ui/contexts/SettingsContext';
 import { ThemeProvider } from 'ui/contexts/ThemeProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -25,11 +23,7 @@ const ProviderHell = ({ children }: Props) => {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <SettingsProvider>
-            <FiltersProvider>
-              <MarkersProvider>
-                <ModalProvider>{children}</ModalProvider>
-              </MarkersProvider>
-            </FiltersProvider>
+            <MarkersProvider>{children}</MarkersProvider>
           </SettingsProvider>
         </ThemeProvider>
       </QueryClientProvider>

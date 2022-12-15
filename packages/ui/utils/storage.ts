@@ -1,3 +1,4 @@
+import type { Mutate, StoreApi } from 'zustand';
 import { useEffect, useState } from 'react';
 import { writeError } from './logs';
 import useDebounce from './useDebounce';
@@ -106,3 +107,23 @@ export function usePersistentState<T>(
 
   return [state, setValue];
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type StoreWithPersist<State = any> = Mutate<
+  StoreApi<State>,
+  [['zustand/persist', State]]
+>;
+
+export const withStorageDOMEvents = (store: StoreWithPersist) => {
+  const storageEventCallback = (e: StorageEvent) => {
+    if (e.key === store.persist.getOptions().name && e.newValue) {
+      store.persist.rehydrate();
+    }
+  };
+
+  window.addEventListener('storage', storageEventCallback);
+
+  return () => {
+    window.removeEventListener('storage', storageEventCallback);
+  };
+};

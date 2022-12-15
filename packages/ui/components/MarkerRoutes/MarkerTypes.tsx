@@ -1,10 +1,10 @@
 import styles from './MarkerTypes.module.css';
 import type { FilterItem } from 'static';
 import { mapFilters } from 'static';
-import { useFilters } from '../../contexts/FiltersContext';
 import { classNames } from '../../utils/styles';
 import { useMemo } from 'react';
 import { Avatar, Badge, Text, Tooltip } from '@mantine/core';
+import { useFiltersStore } from '../../utils/filtersStore';
 
 type MarkerTypesProps = {
   markersByType: {
@@ -13,7 +13,7 @@ type MarkerTypesProps = {
 };
 
 function MarkerTypes({ markersByType }: MarkerTypesProps): JSX.Element {
-  const { filters } = useFilters();
+  const { filters } = useFiltersStore();
 
   const markerMapFilters: FilterItem[] = useMemo(() => {
     const result: FilterItem[] = [];
