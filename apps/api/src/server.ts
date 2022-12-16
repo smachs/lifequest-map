@@ -162,6 +162,19 @@ async function runServer() {
     });
 
     // Serve webversion (only on production)
+    app.all('/', (_req, res) => {
+      res.sendFile(path.join(__dirname, '../../www/dist/index.html'));
+    });
+    app.all('/index.html', (_req, res) => {
+      res.sendFile(path.join(__dirname, '../../www/dist/index.html'));
+    });
+    app.all('/minimap.html', (_req, res) => {
+      res.sendFile(path.join(__dirname, '../../www/dist/minimap.html'));
+    });
+    app.all('/privacy.html', (_req, res) => {
+      res.sendFile(path.join(__dirname, '../../www/dist/privacy.html'));
+    });
+
     app.use(
       express.static(path.join(__dirname, '../../www/dist'), {
         immutable: true,
