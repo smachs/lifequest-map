@@ -40,7 +40,7 @@ function SelectPosition({
           placeholder="e.g. 9015.32"
           min={0}
           max={14336}
-          step={0.01}
+          step={0.001}
           value={location[0]}
           onChange={(event) =>
             onSelectLocation([
@@ -58,7 +58,7 @@ function SelectPosition({
           placeholder="e.g. 5015.12"
           min={0}
           max={14336}
-          step={0.01}
+          step={0.001}
           value={location[1]}
           onChange={(event) =>
             onSelectLocation([
