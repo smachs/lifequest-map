@@ -14,6 +14,7 @@ import {
 import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FilterItem } from 'static';
+import { getRouteMeta } from 'static';
 import { findMapDetails, mapFilters } from 'static';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { toTimeAgo } from '../../utils/dates';
@@ -33,7 +34,6 @@ import { isEmbed, useRouteParams } from '../../utils/routes';
 import { useQueryClient } from '@tanstack/react-query';
 import { IconRoute2 } from '@tabler/icons';
 import Meta from '../Meta/Meta';
-import { formatList } from '../../utils/lists';
 import { useUpsertStore } from '../UpsertArea/upsertStore';
 import Comment from '../Comment/Comment';
 import AddComment from '../AddComment/AddComment';
@@ -202,14 +202,7 @@ const MarkerRouteDetails = () => {
       {!markerRoute && <Skeleton height={50} />}
       {markerRoute && (
         <Stack style={{ height: 'calc(100vh - 64px)' }} spacing="xs">
-          <Meta
-            title={markerRoute.name}
-            description={`A farming route in ${formatList(
-              markerRoute.regions
-            )} with ${formatList(
-              markerMapFilters.map((filter) => filter.title)
-            )}.`}
-          />
+          <Meta {...getRouteMeta(markerRoute)} />
           <Group>
             <Badge size="sm" color="cyan">
               {markerRoute.regions.join(', ')}

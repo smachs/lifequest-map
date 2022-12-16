@@ -15,8 +15,14 @@ import { connectToMongoDb } from './lib/db.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { initCommentsCollection } from './lib/comments/collection.js';
-import { initMarkersCollection } from './lib/markers/collection.js';
-import { initMarkerRoutesCollection } from './lib/markerRoutes/collection.js';
+import {
+  getMarkersCollection,
+  initMarkersCollection,
+} from './lib/markers/collection.js';
+import {
+  getMarkerRoutesCollection,
+  initMarkerRoutesCollection,
+} from './lib/markerRoutes/collection.js';
 import { initUsersCollection } from './lib/users/collection.js';
 import authRouter from './lib/auth/router.js';
 import commentsRouter from './lib/comments/router.js';
@@ -44,6 +50,9 @@ import supportersRouter from './lib/supporters/router.js';
 import { initSupportersCollection } from './lib/supporters/collection.js';
 import { initInfluencesCollection } from './lib/influences/collection.js';
 import influencesRouter from './lib/influences/router.js';
+import fs from 'fs/promises';
+import { ObjectId } from 'mongodb';
+import { getNodeMeta, getRouteMeta } from 'static';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -214,6 +223,86 @@ async function runServer() {
       res.setHeader('xml-version', '1.0');
       res.setHeader('encoding', 'UTF-8');
       res.send(content);
+    });
+
+    const productionHTML = fs.readFile(
+      path.join(__dirname, '../../www/dist/index.html')
+    );
+    app.get('/nodes/:id', async (req, res) => {
+      const id = req.params.id;
+      const node = await getMarkersCollection().findOne({
+        _id: new ObjectId(id),
+      });
+      if (!node) {
+        res
+          .status(404)
+          .sendFile(path.join(__dirname, '../../www/dist/index.html'));
+        return;
+      }
+
+      const { title, description } = getNodeMeta({
+        name: node.name,
+        type: node.type,
+        position: node.position.map(Number) as [number, number, number],
+        map: node.map,
+      });
+      const imageTag =
+        node.screenshotFilename &&
+        `https://aeternum-map.gg/screenshots/${node.screenshotFilename}`;
+      const html = await (await productionHTML).toString().replace(
+        '<!-- META -->',
+        `<title>${title}</title>
+<meta name="description" content="${description}"/>
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aeternum-map.gg/nodes/${id}">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${description}">
+${imageTag ? `<meta property="og:image" content="${imageTag}">` : ''}
+
+<meta property="twitter:card" content="${
+          imageTag ? 'summary_large_image' : 'summary'
+        }">
+<meta property="twitter:url" content="https://aeternum-map.gg/nodes/${id}">
+<meta property="twitter:title" content="${title}">
+<meta property="twitter:description" content="${description}">
+${imageTag ? `<meta property="twitter:image" content="${imageTag}">` : ''}
+`
+      );
+      res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+      res.send(html);
+    });
+    app.get('/routes/:id', async (req, res) => {
+      const id = req.params.id;
+      const route = await getMarkerRoutesCollection().findOne({
+        _id: new ObjectId(id),
+      });
+      if (!route) {
+        res
+          .status(404)
+          .sendFile(path.join(__dirname, '../../www/dist/index.html'));
+        return;
+      }
+
+      const { title, description } = getRouteMeta(route);
+      const html = await (await productionHTML).toString().replace(
+        '<!-- META -->',
+        `<title>${title}</title>
+<meta name="description" content="${description}"/>
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aeternum-map.gg/routes/${id}">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${description}">
+
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://aeternum-map.gg/routes/${id}">
+<meta property="twitter:title" content="${title}">
+<meta property="twitter:description" content="${description}">
+`
+      );
+      res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+      res.send(html);
     });
 
     // All other requests are answered with a 404
