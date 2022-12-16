@@ -77,6 +77,12 @@ function ensureMarkerRoutesSchema(): Promise<Document> {
           updatedAt: {
             bsonType: 'date',
           },
+          comments: {
+            bsonType: 'int',
+          },
+          issues: {
+            bsonType: 'int',
+          },
         },
         additionalProperties: false,
         required: [

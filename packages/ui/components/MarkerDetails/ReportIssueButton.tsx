@@ -1,17 +1,23 @@
 import { Anchor, Button, Modal, Stack, Textarea } from '@mantine/core';
+import { IconAlertTriangle } from '@tabler/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
 import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
 import { useUserStore } from '../../utils/userStore';
-import { postComment } from '../AddComment/api';
+import { postMarkersComment, postRoutesComment } from '../AddComment/api';
 
 type ReportIssueButtonProps = {
-  markerId: string;
-  onReport: () => Promise<void>;
+  markerId?: string;
+  markerRouteId?: string;
+  onReport: () => void;
 };
-const ReportIssueButton = ({ markerId, onReport }: ReportIssueButtonProps) => {
+const ReportIssueButton = ({
+  markerId,
+  markerRouteId,
+  onReport,
+}: ReportIssueButtonProps) => {
   const account = useUserStore((state) => state.account);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState('');
@@ -31,10 +37,18 @@ const ReportIssueButton = ({ markerId, onReport }: ReportIssueButtonProps) => {
 
     try {
       setLoading(true);
-      await notify(postComment(markerId, { message, isIssue: true }));
+      if (markerId) {
+        await notify(postMarkersComment(markerId, { message, isIssue: true }));
+        queryClient.invalidateQueries(['markers']);
+      } else if (markerRouteId) {
+        await notify(
+          postRoutesComment(markerRouteId, { message, isIssue: true })
+        );
+        queryClient.invalidateQueries(['routes']);
+      }
+
       setMessage('');
-      queryClient.invalidateQueries(['markers']);
-      await onReport();
+      onReport();
     } catch (error) {
       writeError(error);
     } finally {
@@ -88,7 +102,7 @@ const ReportIssueButton = ({ markerId, onReport }: ReportIssueButtonProps) => {
       </Modal>
       <Button
         color="yellow"
-        leftIcon={'⚠️'}
+        leftIcon={<IconAlertTriangle />}
         onClick={() => setShowModal(true)}
         disabled={!account}
       >

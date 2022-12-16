@@ -2,7 +2,8 @@ import { Router } from 'express';
 import type { Filter } from 'mongodb';
 import { ObjectId } from 'mongodb';
 import { ensureAuthenticated } from '../auth/middlewares.js';
-import { getMarkerURL, postToDiscord } from '../discord.js';
+import { getMarkerURL, getMarkerRoutesURL, postToDiscord } from '../discord.js';
+import { getMarkerRoutesCollection } from '../markerRoutes/collection.js';
 import { getMarkersCollection } from '../markers/collection.js';
 import { refreshMarkers } from '../markers/router.js';
 import { getCommentsCollection } from './collection.js';
@@ -38,53 +39,101 @@ commentsRouter.delete('/:commentId', ensureAuthenticated, async (req, res) => {
     return;
   }
 
-  const comments = await getCommentsCollection()
-    .find({
-      markerId: new ObjectId(comment.markerId),
-    })
-    .toArray();
+  if (comment.markerId) {
+    const comments = await getCommentsCollection()
+      .find({
+        markerId: comment.markerId,
+      })
+      .toArray();
 
-  await getMarkersCollection().updateOne(
-    { _id: new ObjectId(comment.markerId) },
-    {
-      $set: {
-        comments: comments.filter((comment) => !comment.isIssue).length,
-        issues: comments.filter((comment) => comment.isIssue).length,
-      },
+    await getMarkersCollection().updateOne(
+      { _id: comment.markerId },
+      {
+        $set: {
+          comments: comments.filter((comment) => !comment.isIssue).length,
+          issues: comments.filter((comment) => comment.isIssue).length,
+        },
+      }
+    );
+    const marker = await getMarkersCollection().findOne({
+      _id: comment.markerId,
+    });
+    if (!marker) {
+      res.status(404).send("Marker doesn't exists");
+      return;
     }
-  );
+    await refreshMarkers();
+    const position = marker.position.join(', ');
 
-  const marker = await getMarkersCollection().findOne({
-    _id: comment.markerId,
-  });
-  if (!marker) {
-    res.status(404).send("Marker doesn't exists");
-    return;
+    if (comment.isIssue) {
+      postToDiscord(
+        `⚠️💀 ${account.name} deleted an issue for ${
+          marker.type
+        } at [${position}]:\n${comment.message}\n${getMarkerURL(
+          marker._id.toString(),
+          marker.map
+        )}`,
+        !marker.isPrivate
+      );
+    } else {
+      postToDiscord(
+        `✍💀 ${account.name} deleted a comment for ${
+          marker.type
+        } at [${position}]:\n${comment.message}\n${getMarkerURL(
+          marker._id.toString(),
+          marker.map
+        )}`,
+        !marker.isPrivate
+      );
+    }
+  } else if (comment.markerRouteId) {
+    const comments = await getCommentsCollection()
+      .find({
+        markerRouteId: comment.markerRouteId,
+      })
+      .toArray();
+
+    await getMarkerRoutesCollection().updateOne(
+      { _id: comment.markerRouteId },
+      {
+        $set: {
+          comments: comments.filter((comment) => !comment.isIssue).length,
+          issues: comments.filter((comment) => comment.isIssue).length,
+        },
+      }
+    );
+
+    const markerRoute = await getMarkerRoutesCollection().findOne({
+      _id: comment.markerRouteId,
+    });
+    if (!markerRoute) {
+      res.status(404).send("Route doesn't exists");
+      return;
+    }
+    if (comment.isIssue) {
+      postToDiscord(
+        `⚠️💀 ${account.name} deleted an issue for route ${
+          markerRoute.name
+        }:\n${comment.message}\n${getMarkerRoutesURL(
+          markerRoute._id.toString(),
+          markerRoute.map
+        )}`,
+        markerRoute.isPublic
+      );
+    } else {
+      postToDiscord(
+        `✍💀 ${account.name} deleted a comment for route ${
+          markerRoute.name
+        }:\n${comment.message}\n${getMarkerRoutesURL(
+          markerRoute._id.toString(),
+          markerRoute.map
+        )}`,
+        markerRoute.isPublic
+      );
+    }
   }
 
-  await refreshMarkers();
   res.status(200).json({});
-  const position = marker.position.join(', ');
-
-  if (comment.isIssue) {
-    postToDiscord(
-      `⚠️💀 ${account.name} deleted an issue for ${
-        marker.type
-      } at [${position}]:\n${comment.message}\n${getMarkerURL(
-        marker._id.toString(),
-        marker.map
-      )}`
-    );
-  } else {
-    postToDiscord(
-      `✍💀 ${account.name} deleted a comment for ${
-        marker.type
-      } at [${position}]:\n${comment.message}\n${getMarkerURL(
-        marker._id.toString(),
-        marker.map
-      )}`
-    );
-  }
 });
 
 export default commentsRouter;

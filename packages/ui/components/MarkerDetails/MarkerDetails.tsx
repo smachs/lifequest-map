@@ -38,11 +38,13 @@ import { useUpsertStore } from '../UpsertArea/upsertStore';
 function MarkerDetails(): JSX.Element {
   const { nodeId } = useRouteParams();
   const upsertStore = useUpsertStore();
-  const { marker, comments, refresh, loading } = useMarker(nodeId);
+  const { data, refetch, isLoading } = useMarker(nodeId);
   const queryClient = useQueryClient();
   const account = useUserStore((state) => state.account);
   const navigate = useNavigate();
 
+  const marker = data?.marker;
+  const comments = data?.comments;
   const handleClose = () => {
     if (!marker || !marker.map) {
       navigate(`/${location.search}`);
@@ -103,7 +105,7 @@ function MarkerDetails(): JSX.Element {
         },
       })}
       title={
-        filterItem && !loading ? (
+        filterItem && !isLoading ? (
           <Group>
             <Image width={32} height={32} src={filterItem.iconUrl} alt="" />{' '}
             {marker.chestType
@@ -116,8 +118,8 @@ function MarkerDetails(): JSX.Element {
       }
       onClose={handleClose}
     >
-      {(!filterItem || loading) && <Skeleton height={50} />}
-      {filterItem && !loading && (
+      {(!filterItem || isLoading) && <Skeleton height={50} />}
+      {filterItem && !isLoading && (
         <Stack style={{ height: 'calc(100vh - 64px)' }} spacing="xs">
           <Meta
             title={marker.name || filterItem.title}
@@ -192,16 +194,16 @@ function MarkerDetails(): JSX.Element {
                         account.steamId === comment.userId)
                   )}
                   onRemove={() => {
-                    refresh();
+                    refetch();
                     queryClient.invalidateQueries(['markers']);
                   }}
                 />
               ))}
             </Stack>
           </ScrollArea>
-          <AddComment markerId={marker._id} onAdd={refresh} />
+          <AddComment markerId={marker._id} onAdd={refetch} />
           <HideMarkerInput markerId={marker._id} />
-          <ReportIssueButton markerId={marker._id} onReport={refresh} />
+          <ReportIssueButton markerId={marker._id} onReport={refetch} />
           {account &&
             (account.isModerator || account.steamId === marker.userId) && (
               <>
@@ -219,7 +221,7 @@ function MarkerDetails(): JSX.Element {
                   markerId={marker._id}
                   onDelete={() => {
                     queryClient.invalidateQueries(['markers']);
-                    refresh();
+                    refetch();
                     handleClose();
                   }}
                 />

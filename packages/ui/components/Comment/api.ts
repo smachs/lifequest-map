@@ -8,3 +8,13 @@ export function deleteComment(id: string) {
     },
   });
 }
+
+export type Comment = {
+  _id: string;
+  markerId: string;
+  createdAt: Date;
+  userId: string;
+  username: string;
+  message: string;
+  isIssue?: boolean;
+};

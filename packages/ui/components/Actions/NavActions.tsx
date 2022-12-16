@@ -34,9 +34,11 @@ const NavActions = () => {
         >
           Full Map
         </Button>
-        <MarkerDetails />
-        <MarkerRouteDetails />
-        <InfluenceDetails />
+        <ErrorBoundary>
+          <MarkerDetails />
+          <MarkerRouteDetails />
+          <InfluenceDetails />
+        </ErrorBoundary>
       </Group>
     );
   }
@@ -132,7 +134,9 @@ const NavActions = () => {
           </Suspense>
         </ErrorBoundary>
       </Drawer>
-      <MarkerDetails />
+      <ErrorBoundary>
+        <MarkerDetails />
+      </ErrorBoundary>
       <Drawer
         opened={view.section === 'routes'}
         onClose={() => setView({ section: null })}
@@ -147,7 +151,9 @@ const NavActions = () => {
           </Suspense>
         </ErrorBoundary>
       </Drawer>
-      <MarkerRouteDetails />
+      <ErrorBoundary>
+        <MarkerRouteDetails />
+      </ErrorBoundary>
       <Drawer
         opened={view.section === 'influences'}
         onClose={() => setView({ section: null })}
@@ -162,7 +168,9 @@ const NavActions = () => {
           </Suspense>
         </ErrorBoundary>
       </Drawer>
-      <InfluenceDetails />
+      <ErrorBoundary>
+        <InfluenceDetails />
+      </ErrorBoundary>
     </>
   );
 };

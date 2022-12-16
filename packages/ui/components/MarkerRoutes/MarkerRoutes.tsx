@@ -43,6 +43,8 @@ export type MarkerRouteItem = {
   };
   favorites?: number;
   forks?: number;
+  comments?: number;
+  issues?: number;
   createdAt: string;
   updatedAt: string;
 };

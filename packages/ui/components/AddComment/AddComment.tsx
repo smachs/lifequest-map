@@ -5,14 +5,19 @@ import { useState } from 'react';
 import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
 import { useUserStore } from '../../utils/userStore';
-import { postComment } from './api';
+import { postMarkersComment, postRoutesComment } from './api';
 
 type AddCommentProps = {
-  markerId: string;
+  markerId?: string;
+  markerRouteId?: string;
   onAdd: () => void;
 };
 
-function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
+function AddComment({
+  markerId,
+  markerRouteId,
+  onAdd,
+}: AddCommentProps): JSX.Element {
   const account = useUserStore((state) => state.account);
   const [message, setMessage] = useState('');
   const queryClient = useQueryClient();
@@ -32,10 +37,15 @@ function AddComment({ markerId, onAdd }: AddCommentProps): JSX.Element {
 
     try {
       setLoading(true);
-      await notify(postComment(markerId, { message }));
+      if (markerId) {
+        await notify(postMarkersComment(markerId, { message }));
+        queryClient.invalidateQueries(['markers']);
+      } else if (markerRouteId) {
+        await notify(postRoutesComment(markerRouteId, { message }));
+        queryClient.invalidateQueries(['routes']);
+      }
       onAdd();
       setMessage('');
-      queryClient.invalidateQueries(['markers']);
     } catch (error) {
       writeError(error);
     } finally {
