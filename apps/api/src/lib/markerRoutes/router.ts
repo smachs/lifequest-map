@@ -6,6 +6,8 @@ import { getMarkerRoutesCollection } from './collection.js';
 import { getMarkerRoutesURL, postToDiscord } from '../discord.js';
 import { ensureAuthenticated } from '../auth/middlewares.js';
 import { findRegions, mapIsAeternumMap, findMapDetails } from 'static';
+import { getCommentsCollection } from '../comments/collection.js';
+import type { CommentDTO } from '../comments/types.js';
 
 const markerRoutesRouter = Router();
 
@@ -138,15 +140,20 @@ markerRoutesRouter.get('/:id', async (req, res, next) => {
       res.status(400).send('Invalid payload');
       return;
     }
-
+    const markerRouteId = new ObjectId(id);
     const markerRoute = await getMarkerRoutesCollection().findOne({
-      _id: new ObjectId(id),
+      _id: markerRouteId,
     });
     if (!markerRoute) {
       res.status(404).json({ message: 'No route found' });
       return;
     }
-    res.status(200).json(markerRoute);
+    const comments = await getCommentsCollection()
+      .find({ markerRouteId })
+      .sort({ createdAt: -1 })
+      .toArray();
+
+    res.status(200).json({ markerRoute, comments });
   } catch (error) {
     next(error);
   }
@@ -165,9 +172,9 @@ markerRoutesRouter.delete(
         res.status(400).send('Invalid payload');
         return;
       }
-
+      const markerRouteId = new ObjectId(id);
       const query: Filter<MarkerRouteDTO> = {
-        _id: new ObjectId(id),
+        _id: markerRouteId,
       };
       if (!account.isModerator) {
         query.userId = account.steamId;
@@ -199,6 +206,9 @@ markerRoutesRouter.delete(
           { $inc: { forks: -1 } }
         );
       }
+      await getCommentsCollection().deleteMany({
+        markerRouteId,
+      });
 
       res.status(200).json({});
       postToDiscord(
@@ -297,6 +307,81 @@ markerRoutesRouter.patch(
         }\n${getMarkerRoutesURL(result.value._id.toString(), markerRoute.map)}`,
         markerRoute.isPublic
       );
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+markerRoutesRouter.post(
+  '/:id/comments',
+  ensureAuthenticated,
+  async (req, res, next) => {
+    try {
+      const account = req.account!;
+      const { id } = req.params;
+      const { message, isIssue } = req.body;
+
+      if (typeof message !== 'string' || !ObjectId.isValid(id)) {
+        res.status(400).send('Invalid payload');
+        return;
+      }
+      const markerRouteId = new ObjectId(id);
+      const comment: CommentDTO = {
+        markerRouteId,
+        userId: account.steamId,
+        username: account.name,
+        message,
+        createdAt: new Date(),
+        isIssue: Boolean(isIssue),
+      };
+
+      const markerRoute = await getMarkerRoutesCollection().findOne({
+        _id: comment.markerRouteId,
+      });
+      if (!markerRoute) {
+        res.status(404).send("Route doesn't exists");
+        return;
+      }
+      const inserted = await getCommentsCollection().insertOne(comment);
+      if (!inserted.acknowledged) {
+        res.status(500).send('Error inserting comment');
+        return;
+      }
+
+      const comments = await getCommentsCollection()
+        .find({
+          markerRouteId,
+        })
+        .toArray();
+
+      await getMarkerRoutesCollection().updateOne(
+        { _id: markerRouteId },
+        {
+          $set: {
+            comments: comments.filter((comment) => !comment.isIssue).length,
+            issues: comments.filter((comment) => comment.isIssue).length,
+          },
+        }
+      );
+
+      res.status(200).json(comment);
+
+      if (comment.isIssue) {
+        await postToDiscord(
+          `⚠️ ${account.name} added an issue for route ${markerRoute.name}:\n${
+            comment.message
+          }\n${getMarkerRoutesURL(id, markerRoute.map)}`,
+          markerRoute.isPublic
+        );
+      } else {
+        await postToDiscord(
+          `✍ ${account.name} added a comment for route ${markerRoute.name}:\n${
+            comment.message
+          }\n${getMarkerRoutesURL(id, markerRoute.map)}`,
+          markerRoute.isPublic
+        );
+      }
     } catch (error) {
       next(error);
     }

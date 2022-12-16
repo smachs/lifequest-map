@@ -7,7 +7,10 @@ export function getCommentsCollection(): Collection<CommentDTO> {
 }
 
 function ensureCommentsIndexes(): Promise<string[]> {
-  return getCommentsCollection().createIndexes([{ key: { markerId: 1 } }]);
+  return getCommentsCollection().createIndexes([
+    { key: { markerId: 1 } },
+    { key: { markerRouteId: 1 } },
+  ]);
 }
 
 function ensureCommentsSchema(): Promise<Document> {
@@ -22,6 +25,9 @@ function ensureCommentsSchema(): Promise<Document> {
             bsonType: 'objectId',
           },
           markerId: {
+            bsonType: 'objectId',
+          },
+          markerRouteId: {
             bsonType: 'objectId',
           },
           userId: {
@@ -41,7 +47,7 @@ function ensureCommentsSchema(): Promise<Document> {
           },
         },
         additionalProperties: false,
-        required: ['markerId', 'username', 'message', 'createdAt'],
+        required: ['username', 'message', 'createdAt'],
       },
     },
   });

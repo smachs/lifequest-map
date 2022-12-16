@@ -94,7 +94,7 @@ export function MarkersProvider({
 
   const { filters } = useFiltersStore();
   const { map, nodeId, routeId, world } = useRouteParams();
-  const { data: markerRoute } = useMarkerRoute(routeId);
+  const { data: markerRouteData } = useMarkerRoute(routeId);
 
   const hiddenMarkerIds = useUserStore(
     (state) => state.user?.hiddenMarkerIds || []
@@ -123,7 +123,7 @@ export function MarkersProvider({
         return true;
       }
       if (
-        markerRoute?.positions.some(
+        markerRouteData?.markerRoute.positions?.some(
           (position) =>
             position[0] === marker.position[1] &&
             position[1] === marker.position[0]
@@ -201,7 +201,7 @@ export function MarkersProvider({
     searchValues,
     nodeId,
     markerRoutes,
-    markerRoute,
+    markerRouteData,
     world,
   ]);
 

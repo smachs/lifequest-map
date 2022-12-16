@@ -6,7 +6,7 @@ import { toTimeAgo } from '../../utils/dates';
 import { Badge, Group, Stack, Switch, Text, Title } from '@mantine/core';
 import { Link } from 'react-router-dom';
 import { findMapDetails } from 'static';
-import { IconArrowFork } from '@tabler/icons';
+import { IconAlertTriangle, IconArrowFork, IconMessage } from '@tabler/icons';
 
 type MarkerRouteProps = {
   markerRoute: MarkerRouteItem;
@@ -54,11 +54,25 @@ function MarkerRoute({
           {markerRoute.favorites || 0}
         </Badge>
         <Badge
-          leftSection={<IconArrowFork size={12} />}
+          leftSection={<IconArrowFork size={18} display="block" />}
           size="sm"
           color="indigo"
         >
           {markerRoute.forks || 0}
+        </Badge>
+        <Badge
+          leftSection={<IconMessage size={18} display="block" />}
+          size="sm"
+          color="blue"
+        >
+          {markerRoute.comments || 0}
+        </Badge>
+        <Badge
+          leftSection={<IconAlertTriangle size={18} display="block" />}
+          size="sm"
+          color="yellow"
+        >
+          {markerRoute.issues || 0}
         </Badge>
       </Group>
       <Link to={url} style={{ textDecoration: 'none' }}>

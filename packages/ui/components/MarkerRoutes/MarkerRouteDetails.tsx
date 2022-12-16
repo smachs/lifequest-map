@@ -35,10 +35,13 @@ import { IconRoute2 } from '@tabler/icons';
 import Meta from '../Meta/Meta';
 import { formatList } from '../../utils/lists';
 import { useUpsertStore } from '../UpsertArea/upsertStore';
+import Comment from '../Comment/Comment';
+import AddComment from '../AddComment/AddComment';
+import ReportIssueButton from '../MarkerDetails/ReportIssueButton';
 
 const MarkerRouteDetails = () => {
   const { routeId } = useRouteParams();
-  const { data: markerRoute, refetch, isLoading } = useMarkerRoute(routeId);
+  const { data, refetch, isLoading } = useMarkerRoute(routeId);
   const navigate = useNavigate();
   const upsertStore = useUpsertStore();
   const { account, refreshAccount } = useUserStore(
@@ -51,6 +54,7 @@ const MarkerRouteDetails = () => {
   const { markerRoutes, toggleMarkerRoute } = useMarkers();
   const queryClient = useQueryClient();
 
+  const markerRoute = data?.markerRoute;
   const editable =
     account &&
     markerRoute &&
@@ -259,7 +263,29 @@ const MarkerRouteDetails = () => {
                 </List.Item>
               ))}
             </List>
+            <Stack spacing="xs">
+              {data?.comments.map((comment) => (
+                <Comment
+                  key={comment._id}
+                  id={comment._id}
+                  username={comment.username}
+                  message={comment.message}
+                  createdAt={comment.createdAt}
+                  isIssue={comment.isIssue}
+                  removable={Boolean(
+                    account &&
+                      (account.isModerator ||
+                        account.steamId === comment.userId)
+                  )}
+                  onRemove={() => {
+                    refetch();
+                    queryClient.invalidateQueries(['routes']);
+                  }}
+                />
+              ))}
+            </Stack>
           </ScrollArea>
+          <AddComment markerRouteId={markerRoute._id} onAdd={refetch} />
 
           <Button
             title="Toggle route"
@@ -296,6 +322,10 @@ const MarkerRouteDetails = () => {
                 }
               }
             }}
+          />
+          <ReportIssueButton
+            markerRouteId={markerRoute._id}
+            onReport={refetch}
           />
           {editable && (
             <Button

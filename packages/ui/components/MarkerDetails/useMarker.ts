@@ -1,16 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { fetchJSON } from '../../utils/api';
-import { notify } from '../../utils/notifications';
-
-export type Comment = {
-  _id: string;
-  markerId: string;
-  createdAt: Date;
-  userId: string;
-  username: string;
-  message: string;
-  isIssue?: boolean;
-};
+import type { Comment } from '../Comment/api';
 
 export type MarkerFull = {
   type: string;
@@ -32,47 +22,20 @@ export type MarkerFull = {
   _id: string;
 };
 
-function useMarker(markerId?: string) {
-  const [result, setResult] = useState<{
-    marker: MarkerFull;
-    comments: Comment[];
-  } | null>(null);
-  const [loading, setLoading] = useState(false);
+const getMarker = (id?: string) =>
+  fetchJSON<{ marker: MarkerFull; comments: Comment[] }>(
+    `/api/markers/${id}`
+  ).then(({ marker, comments }) => ({
+    marker,
+    comments: comments.map((comment: Comment) => ({
+      ...comment,
+      createdAt: new Date(comment.createdAt),
+    })),
+  }));
 
-  const refresh = useCallback(async () => {
-    if (!markerId) {
-      setResult(null);
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    return await notify(
-      fetchJSON<{ marker: MarkerFull; comments: Comment[] }>(
-        `/api/markers/${markerId}`
-      )
-        .then(({ marker, comments }) =>
-          setResult({
-            marker,
-            comments: comments.map((comment: Comment) => ({
-              ...comment,
-              createdAt: new Date(comment.createdAt),
-            })),
-          })
-        )
-        .catch(() => setResult(null))
-        .finally(() => setLoading(false))
-    );
-  }, [markerId]);
-
-  useEffect(() => {
-    refresh();
-  }, [refresh]);
-
-  return {
-    ...result,
-    loading,
-    refresh,
-  };
-}
+const useMarker = (markerId?: string) =>
+  useQuery(['markers', markerId], () => getMarker(markerId), {
+    enabled: !!markerId,
+  });
 
 export default useMarker;
