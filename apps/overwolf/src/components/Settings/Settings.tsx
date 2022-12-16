@@ -1,4 +1,3 @@
-import { useSettings } from 'ui/contexts/SettingsContext';
 import {
   SETUP_MINIMAP,
   SHOW_HIDE_DIRECTION,
@@ -28,6 +27,7 @@ import {
   Title,
 } from '@mantine/core';
 import { IconLogout } from '@tabler/icons';
+import { useSettingsStore } from 'ui/utils/settingsStore';
 
 type SettingsProps = {
   showMinimap: boolean;
@@ -35,14 +35,7 @@ type SettingsProps = {
 };
 
 function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
-  const {
-    showRegionBorders,
-    setShowRegionBorders,
-    peerToPeer,
-    setPeerToPeer,
-    playerIconColor,
-    setPlayerIconColor,
-  } = useSettings();
+  const settingsStore = useSettingsStore();
   const showHideAppBinding = useHotkeyBinding(SHOW_HIDE_APP);
   const setupMinimapBinding = useHotkeyBinding(SETUP_MINIMAP);
   const showHideMinimapBinding = useHotkeyBinding(SHOW_HIDE_MINIMAP);
@@ -82,14 +75,16 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
           />
           <Checkbox
             label="Region borders"
-            checked={showRegionBorders}
+            checked={settingsStore.showRegionBorders}
             description="You'll see thin lines on the map which indicates the regions."
-            onChange={(event) => setShowRegionBorders(event.target.checked)}
+            onChange={(event) =>
+              settingsStore.setShowRegionBorders(event.target.checked)
+            }
           />
           <ColorInput
             label="Player icon color"
-            value={playerIconColor}
-            onChange={setPlayerIconColor}
+            value={settingsStore.playerIconColor}
+            onChange={settingsStore.setPlayerIconColor}
           />
           <Title order={4}>Website Hotkeys</Title>
           <Group grow>
@@ -151,9 +146,11 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
           <Title order={4}>Connection</Title>
           <Checkbox
             label="Peer to peer"
-            checked={peerToPeer}
+            checked={settingsStore.peerToPeer}
             description="If your browser or network doesn't support WebRTC, you can deactivate this to fallback to slower socket connections."
-            onChange={(event) => setPeerToPeer(event.target.checked)}
+            onChange={(event) =>
+              settingsStore.setPeerToPeer(event.target.checked)
+            }
           />
           <Debug />
         </Stack>

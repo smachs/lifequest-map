@@ -7,7 +7,7 @@ import PositionMarker from 'ui/components/WorldMap//PositionMarker';
 import { useMap } from 'ui/utils/routes';
 import { useNavigate } from 'react-router-dom';
 import { findMapDetails, mapIsAeternumMap } from 'static';
-import { useSettings } from 'ui/contexts/SettingsContext';
+import { useSettingsStore } from 'ui/utils/settingsStore';
 
 const divElement = leaflet.DomUtil.create('div', 'leaflet-player-position');
 
@@ -23,7 +23,7 @@ function usePlayerPosition({
   const [marker, setMarker] = useState<PositionMarker | null>(null);
   const map = useMap();
   const navigate = useNavigate();
-  const { playerIconColor } = useSettings();
+  const playerIconColor = useSettingsStore((state) => state.playerIconColor);
 
   let playerPosition: Position | null = null;
   let playerMap: string | null = null;

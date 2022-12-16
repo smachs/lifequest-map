@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { latestLeafletMap } from './useWorldMap';
-import { useSettings } from '../../contexts/SettingsContext';
 import PositionMarker from './PositionMarker';
 import { createPlayerIcon } from './playerIcon';
 import ColorHash from 'color-hash';
 import { useMap } from 'ui/utils/routes';
 import { findMapDetails } from 'static';
 import type { Group } from 'realtime/types';
+import { useSettingsStore } from '../../utils/settingsStore';
+import shallow from 'zustand/shallow';
 
 const colorHash = new ColorHash();
 
@@ -15,7 +16,13 @@ function useGroupPositions(group: Group): void {
     [username: string]: PositionMarker;
   }>({});
 
-  const { showPlayerNames, playerIconColor } = useSettings();
+  const { showPlayerNames, playerIconColor } = useSettingsStore(
+    (state) => ({
+      showPlayerNames: state.showPlayerNames,
+      playerIconColor: state.playerIconColor,
+    }),
+    shallow
+  );
   const map = useMap();
 
   useEffect(() => {

@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { MarkersProvider } from 'ui/contexts/MarkersContext';
-import { SettingsProvider } from 'ui/contexts/SettingsContext';
 import { ThemeProvider } from 'ui/contexts/ThemeProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HelmetProvider } from 'react-helmet-async';
@@ -22,9 +21,7 @@ const ProviderHell = ({ children }: Props) => {
     <HelmetProvider context={helmetContext}>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
-          <SettingsProvider>
-            <MarkersProvider>{children}</MarkersProvider>
-          </SettingsProvider>
+          <MarkersProvider>{children}</MarkersProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </HelmetProvider>

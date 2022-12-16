@@ -9,7 +9,6 @@ import {
 import { getTooltipContent } from './tooltips';
 import { useMarkers } from '../../contexts/MarkersContext';
 import CanvasMarker from './CanvasMarker';
-import { useSettings } from '../../contexts/SettingsContext';
 import { writeError } from '../../utils/logs';
 import { isEmbed, useRouteParams } from 'ui/utils/routes';
 import useEventListener from '../../utils/useEventListener';
@@ -17,6 +16,8 @@ import { calcDistance } from '../../utils/positions';
 import { getAction } from './actions';
 import { useNavigate } from 'react-router-dom';
 import { usePlayerStore } from '../../utils/playerStore';
+import { useSettingsStore } from '../../utils/settingsStore';
+import shallow from 'zustand/shallow';
 
 export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
   leaflet.Icon.extend({
@@ -35,7 +36,13 @@ function useLayerGroups({
   leafletMap: leaflet.Map | null;
 }): void {
   const { visibleMarkers, markerRoutes } = useMarkers();
-  const { markerSize, markerShowBackground } = useSettings();
+  const { markerSize, markerShowBackground } = useSettingsStore(
+    (state) => ({
+      markerSize: state.markerSize,
+      markerShowBackground: state.markerShowBackground,
+    }),
+    shallow
+  );
   const isFirstRender = useRef(true);
   const allLayersRef = useRef<{
     [id: string]: {

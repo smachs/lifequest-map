@@ -10,7 +10,6 @@ import {
   Title,
 } from '@mantine/core';
 import { useEffect } from 'react';
-import { useSettings } from '../../contexts/SettingsContext';
 import { useSettingsStore } from '../../utils/settingsStore';
 
 type SettingsDialogProps = {
@@ -18,29 +17,6 @@ type SettingsDialogProps = {
   onClose: () => void;
 };
 const SettingsDialog = ({ opened, onClose }: SettingsDialogProps) => {
-  const {
-    markerSize,
-    setMarkerSize,
-    markerShowBackground,
-    setMarkerShowBackground,
-    showRegionBorders,
-    setShowRegionBorders,
-    maxTraceLines,
-    setMaxTraceLines,
-    showTraceLines,
-    setShowTraceLines,
-    showPlayerNames,
-    setShowPlayerNames,
-    alwaysShowDirection,
-    setAlwaysShowDirection,
-    adaptiveZoom,
-    setAdaptiveZoom,
-    traceLineColor,
-    setTraceLineColor,
-    playerIconColor,
-    setPlayerIconColor,
-  } = useSettings();
-
   const settingsStore = useSettingsStore();
 
   useEffect(() => {
@@ -65,62 +41,82 @@ const SettingsDialog = ({ opened, onClose }: SettingsDialogProps) => {
             Node size
           </Text>
           <Slider
-            value={markerSize}
-            onChange={setMarkerSize}
+            value={settingsStore.markerSize}
+            onChange={settingsStore.setMarkerSize}
             min={10}
             max={80}
           />
           <Checkbox
             label="Node background"
             description="The nodes have a background for better distinction to the background."
-            checked={markerShowBackground}
-            onChange={(event) => setMarkerShowBackground(event.target.checked)}
+            checked={settingsStore.markerShowBackground}
+            onChange={(event) =>
+              settingsStore.setMarkerShowBackground(event.target.checked)
+            }
           />
           <Checkbox
             label="Region borders"
-            checked={showRegionBorders}
+            checked={settingsStore.showRegionBorders}
             description="You'll see thin lines on the map which indicates the regions."
-            onChange={(event) => setShowRegionBorders(event.target.checked)}
+            onChange={(event) =>
+              settingsStore.setShowRegionBorders(event.target.checked)
+            }
           />
           <Checkbox
             label="Trace lines"
-            checked={showTraceLines}
+            checked={settingsStore.showTraceLines}
             description="Small dots will display the path you were walking. You will know where you have been to."
-            onChange={(event) => setShowTraceLines(event.target.checked)}
+            onChange={(event) =>
+              settingsStore.setShowTraceLines(event.target.checked)
+            }
           />
           <NumberInput
             label="Trace line length"
-            value={maxTraceLines}
-            onChange={setMaxTraceLines}
+            description="Maximum number of dots visible on the map"
+            value={settingsStore.maxTraceLines}
+            onChange={settingsStore.setMaxTraceLines}
+            min={0}
+          />
+          <NumberInput
+            label="Trace line rate"
+            description="Creates a dot every X milliseconds"
+            value={settingsStore.traceLineRate}
+            onChange={settingsStore.setTraceLineRate}
             min={0}
           />
           <ColorInput
             label="Trace line color"
-            value={traceLineColor}
-            onChange={setTraceLineColor}
+            value={settingsStore.traceLineColor}
+            onChange={settingsStore.setTraceLineColor}
           />
           <ColorInput
             label="Player icon color"
-            value={playerIconColor}
-            onChange={setPlayerIconColor}
+            value={settingsStore.playerIconColor}
+            onChange={settingsStore.setPlayerIconColor}
           />
           <Checkbox
             label="Show Player Names"
-            checked={showPlayerNames}
+            checked={settingsStore.showPlayerNames}
             description="Display the names of other players in your group next to their player icons."
-            onChange={(event) => setShowPlayerNames(event.target.checked)}
+            onChange={(event) =>
+              settingsStore.setShowPlayerNames(event.target.checked)
+            }
           />
           <Checkbox
             label="Always show direction"
-            checked={alwaysShowDirection}
+            checked={settingsStore.alwaysShowDirection}
             description="In addition to the app hotkey, you can always display the direction line."
-            onChange={(event) => setAlwaysShowDirection(event.target.checked)}
+            onChange={(event) =>
+              settingsStore.setAlwaysShowDirection(event.target.checked)
+            }
           />
           <Checkbox
             label="Adaptive Zoom"
-            checked={adaptiveZoom}
+            checked={settingsStore.adaptiveZoom}
             description="The zoom level will change if you enter/leave a settlement."
-            onChange={(event) => setAdaptiveZoom(event.target.checked)}
+            onChange={(event) =>
+              settingsStore.setAdaptiveZoom(event.target.checked)
+            }
           />
           <Checkbox
             label="Auto fade UI"

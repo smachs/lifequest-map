@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { Player } from 'realtime/types';
-import { useSettings } from '../../contexts/SettingsContext';
+import { useSettingsStore } from '../../utils/settingsStore';
 import { usePersistentState } from '../../utils/storage';
 import { latestLeafletMap } from './useWorldMap';
 
@@ -8,7 +8,7 @@ function useAdaptiveZoom(player: Player | null) {
   const [zoomIn, setZoomIn] = usePersistentState('adaptive-zoom-in', 6);
   const [zoomOut, setZoomOut] = usePersistentState('adaptive-zoom-out', 4);
   const isFirstRender = useRef(true);
-  const { adaptiveZoom } = useSettings();
+  const adaptiveZoom = useSettingsStore((state) => state.adaptiveZoom);
 
   useEffect(() => {
     if (!player || !latestLeafletMap) {
