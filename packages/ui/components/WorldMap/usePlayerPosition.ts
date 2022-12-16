@@ -1,5 +1,5 @@
 import leaflet from 'leaflet';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSettings } from '../../contexts/SettingsContext';
 import { isOverwolfApp } from '../../utils/overwolf';
 import type { Position } from '../../utils/useReadLivePosition';
@@ -76,15 +76,20 @@ function usePlayerPosition({
     () => !!playerMap && findMapDetails(playerMap) === findMapDetails(map),
     [playerMap, map]
   );
-
+  const prevPlayMap = useRef(playerMap);
   useEffect(() => {
-    if (playerMap) {
+    if (
+      playerMap &&
+      prevPlayMap.current &&
+      findMapDetails(playerMap) !== findMapDetails(map)
+    ) {
       navigate(
         mapIsAeternumMap(playerMap)
           ? '/'
           : `/${findMapDetails(playerMap)?.title ?? playerMap}`
       );
     }
+    prevPlayMap.current = playerMap;
   }, [playerMap]);
 
   useEffect(() => {
