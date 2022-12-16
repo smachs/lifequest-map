@@ -1,6 +1,6 @@
 import create from 'zustand';
 import { persist, subscribeWithSelector } from 'zustand/middleware';
-import { getJSONItem } from './storage';
+import { getJSONItem, withStorageDOMEvents } from './storage';
 
 type Store = {
   liveShareServerUrl: string;
@@ -13,6 +13,30 @@ type Store = {
   toggleShowOtherPlayers: () => void;
   autoFade: boolean;
   toggleAutoFade: () => void;
+  traceLineRate: number;
+  setTraceLineRate: (traceLineRate: number) => void;
+  markerSize: number;
+  setMarkerSize: (markerSize: number) => void;
+  markerShowBackground: boolean;
+  setMarkerShowBackground: (markerShowBackground: boolean) => void;
+  showRegionBorders: boolean;
+  setShowRegionBorders: (showRegionBorders: boolean) => void;
+  maxTraceLines: number;
+  setMaxTraceLines: (maxTraceLines: number) => void;
+  showTraceLines: boolean;
+  setShowTraceLines: (showTraceLines: boolean) => void;
+  showPlayerNames: boolean;
+  setShowPlayerNames: (showPlayerNames: boolean) => void;
+  alwaysShowDirection: boolean;
+  setAlwaysShowDirection: (alwaysShowDirection: boolean) => void;
+  adaptiveZoom: boolean;
+  setAdaptiveZoom: (adaptiveZoom: boolean) => void;
+  traceLineColor: string;
+  setTraceLineColor: (traceLineColor: string) => void;
+  playerIconColor: string;
+  setPlayerIconColor: (playerIconColor: string) => void;
+  peerToPeer: boolean;
+  setPeerToPeer: (peerToPeer: boolean) => void;
 };
 
 export const useSettingsStore = create(
@@ -32,6 +56,32 @@ export const useSettingsStore = create(
           set((state) => ({ showOtherPlayers: !state.showOtherPlayers })),
         autoFade: true,
         toggleAutoFade: () => set((state) => ({ autoFade: !state.autoFade })),
+        traceLineRate: 250,
+        setTraceLineRate: (traceLineRate) => set({ traceLineRate }),
+        markerSize: getJSONItem('markerSize', 27),
+        setMarkerSize: (markerSize) => set({ markerSize }),
+        markerShowBackground: getJSONItem('markerShowBackground', false),
+        setMarkerShowBackground: (markerShowBackground) =>
+          set({ markerShowBackground }),
+        showRegionBorders: getJSONItem('showRegionBorders', true),
+        setShowRegionBorders: (showRegionBorders) => set({ showRegionBorders }),
+        maxTraceLines: getJSONItem('max-trace-lines', 250),
+        setMaxTraceLines: (maxTraceLines) => set({ maxTraceLines }),
+        showTraceLines: getJSONItem('show-trace-lines', true),
+        setShowTraceLines: (showTraceLines) => set({ showTraceLines }),
+        showPlayerNames: getJSONItem('show-player-names', false),
+        setShowPlayerNames: (showPlayerNames) => set({ showPlayerNames }),
+        alwaysShowDirection: getJSONItem('always-show-direction', false),
+        setAlwaysShowDirection: (alwaysShowDirection) =>
+          set({ alwaysShowDirection }),
+        adaptiveZoom: getJSONItem('adaptive-zoom', true),
+        setAdaptiveZoom: (adaptiveZoom) => set({ adaptiveZoom }),
+        traceLineColor: getJSONItem('trace-line-color', '#F78166'),
+        setTraceLineColor: (traceLineColor) => set({ traceLineColor }),
+        playerIconColor: getJSONItem('player-icon-color', '#FEFEFE'),
+        setPlayerIconColor: (playerIconColor) => set({ playerIconColor }),
+        peerToPeer: getJSONItem('peer-to-peer', true),
+        setPeerToPeer: (peerToPeer) => set({ peerToPeer }),
       }),
       {
         name: 'settings-store',
@@ -39,3 +89,5 @@ export const useSettingsStore = create(
     )
   )
 );
+
+withStorageDOMEvents(useSettingsStore);

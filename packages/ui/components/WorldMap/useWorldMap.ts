@@ -4,7 +4,6 @@ import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'tilelayer-canvas';
 import { coordinates as playerCoordinates } from './usePlayerPosition';
-import { useSettings } from '../../contexts/SettingsContext';
 import useRegionBorders from './useRegionBorders';
 import { mapIsAeternumMap, findMapDetails, AETERNUM_MAP } from 'static';
 import { isEmbed, useView } from 'ui/utils/routes';
@@ -58,7 +57,6 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
 } {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const [leafletMap, setLeafletMap] = useState<leaflet.Map | null>(null);
-  const { showRegionBorders } = useSettings();
   const { view, setView } = useView();
   const navigate = useNavigate();
 
@@ -68,7 +66,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
     }
   }, [leafletMap, initialZoom]);
 
-  useRegionBorders(showRegionBorders, leafletMap, mapIsAeternumMap(view.map));
+  useRegionBorders(leafletMap, mapIsAeternumMap(view.map));
 
   useEffect(() => {
     if (leafletMap) {

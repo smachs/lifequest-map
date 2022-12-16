@@ -1,6 +1,5 @@
 import leaflet from 'leaflet';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useSettings } from '../../contexts/SettingsContext';
 import { isOverwolfApp } from '../../utils/overwolf';
 import type { Position } from '../../utils/useReadLivePosition';
 import type CanvasMarker from './CanvasMarker';
@@ -15,6 +14,7 @@ import { findMapDetails, mapIsAeternumMap } from 'static';
 import { usePlayerStore } from '../../utils/playerStore';
 import { useSettingsStore } from '../../utils/settingsStore';
 import { useUpsertStore } from '../UpsertArea/upsertStore';
+import shallow from 'zustand/shallow';
 
 const divElement = leaflet.DomUtil.create('div', 'leaflet-player-position');
 const CoordinatesControl = leaflet.Control.extend({
@@ -48,7 +48,15 @@ function usePlayerPosition({
   const traceDots = useMemo<leaflet.Circle[]>(() => [], []);
 
   const { showTraceLines, maxTraceLines, traceLineColor, playerIconColor } =
-    useSettings();
+    useSettingsStore(
+      (state) => ({
+        showTraceLines: state.showTraceLines,
+        maxTraceLines: state.maxTraceLines,
+        traceLineColor: state.traceLineColor,
+        playerIconColor: state.playerIconColor,
+      }),
+      shallow
+    );
   const map = useMap();
   const navigate = useNavigate();
   const upsertStore = useUpsertStore();
@@ -57,7 +65,13 @@ function usePlayerPosition({
   let playerPosition: Position | null = null;
   let playerMap: string | null = null;
   const { player } = usePlayerStore();
-  const following = useSettingsStore((state) => state.following);
+  const { following, traceLineRate } = useSettingsStore(
+    (state) => ({
+      following: state.following,
+      traceLineRate: state.traceLineRate,
+    }),
+    shallow
+  );
   useDirectionLine(player?.username ? player.position : null);
   if (!isMinimap) {
     useAdaptiveZoom(player?.username ? player : null);
@@ -216,6 +230,7 @@ function usePlayerPosition({
     };
   }, [marker, leafletMap, playerPosition, isFollowing, rotate, isOnSameWorld]);
 
+  const lastTraceDot = useRef<NodeJS.Timeout | null>(null);
   useEffect(() => {
     if (
       !leafletMap ||
@@ -225,14 +240,24 @@ function usePlayerPosition({
     ) {
       return;
     }
-    const traceDot = createTraceDot(playerPosition.location, traceLineColor);
-    traceDots.push(traceDot);
-    traceDot.addTo(traceDotsGroup);
+    const location = playerPosition.location;
+    if (!lastTraceDot.current) {
+      const traceDot = createTraceDot(location, traceLineColor);
+      traceDots.push(traceDot);
+      traceDot.addTo(traceDotsGroup);
 
-    if (traceDots.length > maxTraceLines) {
-      traceDots[traceDots.length - 1 - maxTraceLines]?.remove();
+      if (traceDots.length > maxTraceLines) {
+        traceDots[traceDots.length - 1 - maxTraceLines]?.remove();
+      }
+
+      lastTraceDot.current = setTimeout(() => {
+        if (lastTraceDot.current) {
+          clearTimeout(lastTraceDot.current);
+        }
+        lastTraceDot.current = null;
+      }, traceLineRate);
     }
-  }, [playerPosition]);
+  }, [playerPosition, traceLineRate]);
 
   useEffect(() => {
     if (!leafletMap) {

@@ -7,9 +7,9 @@ import { toast } from 'react-toastify';
 import useShareHotkeys from './useShareHotkeys';
 import type { DataConnection } from 'peerjs';
 import Peer from 'peerjs';
-import { useSettings } from 'ui/contexts/SettingsContext';
 import { useUserStore } from 'ui/utils/userStore';
 import type { Group } from 'realtime/types';
+import { useSettingsStore } from 'ui/utils/settingsStore';
 
 const peerConnections: { [key: string]: DataConnection } = {};
 
@@ -22,7 +22,7 @@ const sendToPeers = (data: unknown) => {
 };
 
 function useShareLivePosition() {
-  const { peerToPeer } = useSettings();
+  const peerToPeer = useSettingsStore((state) => state.peerToPeer);
   const [socket, setSocket] = useState<Socket<
     DefaultEventsMap,
     DefaultEventsMap

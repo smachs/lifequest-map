@@ -1,6 +1,5 @@
 import '../globals.css';
 import { StrictMode } from 'react';
-import { SettingsProvider } from 'ui/contexts/SettingsContext';
 import { PositionProvider } from '../contexts/PositionContext';
 import { waitForOverwolf } from 'ui/utils/overwolf';
 import styles from './Sender.module.css';
@@ -63,11 +62,9 @@ waitForOverwolf().then(() => {
           withNormalizeCSS
         >
           <ThemeProvider>
-            <SettingsProvider>
-              <PositionProvider>
-                <Sender />
-              </PositionProvider>
-            </SettingsProvider>
+            <PositionProvider>
+              <Sender />
+            </PositionProvider>
           </ThemeProvider>
         </MantineProvider>
       </QueryClientProvider>

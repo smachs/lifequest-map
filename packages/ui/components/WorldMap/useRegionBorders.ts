@@ -1,6 +1,7 @@
 import leaflet from 'leaflet';
 import { useEffect } from 'react';
 import { regions } from 'static';
+import { useSettingsStore } from '../../utils/settingsStore';
 
 const COLOR = 'rgb(200 200 200)';
 
@@ -16,11 +17,11 @@ function getRegions() {
   );
 }
 
-function useRegionBorders(
-  showRegionBorders: boolean,
-  leafletMap: leaflet.Map | null,
-  show: boolean
-) {
+function useRegionBorders(leafletMap: leaflet.Map | null, show: boolean) {
+  const showRegionBorders = useSettingsStore(
+    (state) => state.showRegionBorders
+  );
+
   useEffect(() => {
     if (!showRegionBorders || !leafletMap || !show) {
       return;
