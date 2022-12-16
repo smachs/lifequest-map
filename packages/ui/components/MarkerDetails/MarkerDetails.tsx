@@ -4,7 +4,7 @@ import AddComment from '../AddComment/AddComment';
 import Comment from '../Comment/Comment';
 import useMarker from './useMarker';
 import type { Glyph } from 'static';
-import { findRegions } from 'static';
+import { getNodeMeta } from 'static';
 import { findMapDetails, glyphs, mapFilters } from 'static';
 import HideMarkerInput from './HideMarkerInput';
 import Credit from './Credit';
@@ -88,10 +88,6 @@ function MarkerDetails(): JSX.Element {
     );
   }
 
-  const region = marker
-    ? findRegions([[marker.position[1], marker.position[0]]], marker.map)[0]
-    : null;
-
   return (
     <Drawer
       opened={!!nodeId}
@@ -121,10 +117,7 @@ function MarkerDetails(): JSX.Element {
       {(!filterItem || isLoading) && <Skeleton height={50} />}
       {filterItem && !isLoading && (
         <Stack style={{ height: 'calc(100vh - 64px)' }} spacing="xs">
-          <Meta
-            title={marker.name || filterItem.title}
-            description={`A ${filterItem.title} in ${region}.`}
-          />
+          <Meta {...getNodeMeta(marker)} />
 
           <Group>
             {marker.name && (
