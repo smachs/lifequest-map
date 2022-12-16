@@ -16,7 +16,7 @@ import SyncStatusSender from '../components/SyncStatus/SyncStatusSender';
 import useMinimap from '../components/useMinimap';
 import { useUserStore } from 'ui/utils/userStore';
 import shallow from 'zustand/shallow';
-import { ActionIcon, Group, Tooltip } from '@mantine/core';
+import { ActionIcon, Group, Stack, Tooltip } from '@mantine/core';
 import DebouncedInput from '../components/DebouncedInput/DebouncedInput';
 import { IconMenu2, IconX } from '@tabler/icons';
 import InfluenceIcon from '../components/InfluenceIcon/InfluenceIcon';
@@ -160,17 +160,19 @@ function Streaming(): JSX.Element {
         <div className={styles.status}>
           <aside>
             <h5>Senders</h5>
-            <ul className={styles.list}>
-              {players.length > 0 ? (
-                players.map((player) => (
-                  <li key={player.steamName}>
-                    {player.username ? player.username : player.steamName}
-                  </li>
-                ))
-              ) : (
-                <li>No connections</li>
-              )}
-            </ul>
+            <Stack sx={{ height: 70 }}>
+              <ul className={styles.list}>
+                {players.length > 0 ? (
+                  players.map((player) => (
+                    <li key={player.steamName}>
+                      {player.username ? player.username : player.steamName}
+                    </li>
+                  ))
+                ) : (
+                  <li>No connections</li>
+                )}
+              </ul>
+            </Stack>
           </aside>
           <div
             className={classNames(
@@ -186,20 +188,22 @@ function Streaming(): JSX.Element {
 
           <aside>
             <h5>Receivers</h5>
-            <ul className={styles.list}>
-              {status?.connections.length ? (
-                status.connections.map((connection) => (
-                  <li key={connection}>
-                    Browser{' '}
-                    {peerConnections[connection]?.open
-                      ? '(Direct)'
-                      : '(Socket)'}
-                  </li>
-                ))
-              ) : (
-                <li>No connections</li>
-              )}
-            </ul>
+            <Stack sx={{ height: 70 }}>
+              <ul className={styles.list}>
+                {status?.connections.length ? (
+                  status.connections.map((connection) => (
+                    <li key={connection}>
+                      Browser{' '}
+                      {peerConnections[connection]?.open
+                        ? '(Direct)'
+                        : '(Socket)'}
+                    </li>
+                  ))
+                ) : (
+                  <li>No connections</li>
+                )}
+              </ul>
+            </Stack>
           </aside>
         </div>
       </div>
