@@ -34,6 +34,8 @@ import { IconMapPin } from '@tabler/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import Meta from '../Meta/Meta';
 import { useUpsertStore } from '../UpsertArea/upsertStore';
+import { useEffect, useRef } from 'react';
+import { latestLeafletMap } from '../WorldMap/useWorldMap';
 
 function MarkerDetails(): JSX.Element {
   const { nodeId } = useRouteParams();
@@ -45,6 +47,15 @@ function MarkerDetails(): JSX.Element {
 
   const marker = data?.marker;
   const comments = data?.comments;
+
+  const shouldPanTo = useRef(Boolean(nodeId));
+  useEffect(() => {
+    if (marker && shouldPanTo.current && latestLeafletMap) {
+      latestLeafletMap.panTo([marker.position[1], marker.position[0]]);
+      shouldPanTo.current = false;
+    }
+  }, [marker?._id]);
+
   const handleClose = () => {
     if (!marker || !marker.map) {
       navigate(`/${location.search}`);

@@ -8,7 +8,7 @@ import PositionMarker from './PositionMarker';
 import { updateRotation } from './rotation';
 import useAdaptiveZoom from './useAdaptiveZoom';
 import useDirectionLine from './useDirectionLine';
-import { useMap } from 'ui/utils/routes';
+import { useMap, useRouteParams } from 'ui/utils/routes';
 import { useNavigate } from 'react-router-dom';
 import { findMapDetails, mapIsAeternumMap } from 'static';
 import { usePlayerStore } from '../../utils/playerStore';
@@ -43,7 +43,7 @@ function usePlayerPosition({
   rotate?: boolean;
 }): void {
   const [marker, setMarker] = useState<PositionMarker | null>(null);
-
+  const { nodeId, routeId } = useRouteParams();
   const traceDotsGroup = useMemo(() => new leaflet.LayerGroup(), []);
   const traceDots = useMemo<leaflet.Circle[]>(() => [], []);
 
@@ -80,21 +80,22 @@ function usePlayerPosition({
     playerPosition = player.position;
     playerMap = player.map;
   }
-  isFollowing = following;
 
-  if (upsertStore.marker || upsertStore.markerRoute) {
+  if (upsertStore.marker || upsertStore.markerRoute || nodeId || routeId) {
     isFollowing = false;
+  } else {
+    isFollowing = following;
   }
 
   const isOnSameWorld = useMemo(
     () => !!playerMap && findMapDetails(playerMap) === findMapDetails(map),
     [playerMap, map]
   );
-  const prevPlayMap = useRef(playerMap);
+  const prevPlayerMap = useRef(playerMap);
   useEffect(() => {
     if (
       playerMap &&
-      prevPlayMap.current &&
+      prevPlayerMap.current &&
       findMapDetails(playerMap) !== findMapDetails(map)
     ) {
       navigate(
@@ -103,7 +104,7 @@ function usePlayerPosition({
           : `/${findMapDetails(playerMap)?.title ?? playerMap}`
       );
     }
-    prevPlayMap.current = playerMap;
+    prevPlayerMap.current = playerMap;
   }, [playerMap]);
 
   useEffect(() => {
