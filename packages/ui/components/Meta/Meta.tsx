@@ -12,6 +12,8 @@ const Meta = (props: MetaProps) => {
   const url = location.origin + location.pathname;
   return (
     <Helmet prioritizeSeoTags>
+      <link rel="canonical" href={url} />
+
       <title>{title}</title>
       <meta name="description" content={description} />
 
