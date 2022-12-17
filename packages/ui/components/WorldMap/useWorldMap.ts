@@ -1,50 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
-import type { TileLayer } from 'leaflet';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import 'tilelayer-canvas';
 import { coordinates as playerCoordinates } from './usePlayerPosition';
 import useRegionBorders from './useRegionBorders';
 import { mapIsAeternumMap, findMapDetails, AETERNUM_MAP } from 'static';
 import { isEmbed, useView } from 'ui/utils/routes';
 import { useNavigate } from 'react-router-dom';
 import { initOtherPlayers } from './otherPlayers';
-
-const { VITE_API_ENDPOINT = '' } = import.meta.env;
-
-function toThreeDigits(number: number): string {
-  if (number < 10) {
-    return `00${number}`;
-  }
-  if (number < 100) {
-    return `0${number}`;
-  }
-  return `${number}`;
-}
+import createCanvasLayer from './CanvasLayer';
 
 const worldCRS = leaflet.extend({}, leaflet.CRS.Simple, {
   transformation: new leaflet.Transformation(1 / 16, 0, -1 / 16, 0),
 });
-
-const WorldTiles = (map: string): new () => TileLayer =>
-  // @ts-ignore
-  leaflet.TileLayer.Canvas.extend({
-    getTileUrl(coords: { x: number; y: number; z: number }) {
-      const zoom = 8 - coords.z - 1;
-      const multiplicators = [1, 2, 4, 8, 16, 32, 64];
-      const x = coords.x * multiplicators[zoom - 1];
-      const y = (-coords.y - 1) * multiplicators[zoom - 1];
-      if (x < 0 || y < 0 || y >= 64 || x >= 64) {
-        return 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
-      }
-      return `${VITE_API_ENDPOINT}/assets/${map}/map_l${zoom}_y${toThreeDigits(
-        y
-      )}_x${toThreeDigits(x)}.webp`;
-    },
-    getTileSize() {
-      return { x: 1024, y: 1024 };
-    },
-  });
 
 type UseWorldMapProps = {
   hideControls?: boolean;
@@ -96,8 +63,8 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
     if (!mapElement || !mapDetail) {
       return;
     }
-    const latLngBounds = leaflet.latLngBounds(mapDetail.maxBounds);
     const updateView = (leafletMap: leaflet.Map) => {
+      const latLngBounds = leaflet.latLngBounds(mapDetail.maxBounds);
       try {
         const match = location.search.match(
           /bounds=(-?\d+\.?\d+),(-?\d+\.?\d+),(-?\d+\.?\d+),(-?\d+\.?\d+)/
@@ -107,30 +74,32 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
             [+match[2], +match[1]],
             [+match[4], +match[3]],
           ];
-          console.log(initialBounds);
-          leafletMap.fitBounds(initialBounds, { animate: false });
+          leafletMap.fitBounds(initialBounds, {
+            animate: false,
+            noMoveStart: true,
+          });
           return;
         }
       } catch (error) {
         //
       }
-
       if (view.x) {
         leafletMap.setView([view.y, view.x], initialZoom || view.zoom, {
           animate: false,
           noMoveStart: true,
         });
       } else {
-        leafletMap.fitBounds(latLngBounds, { animate: false });
+        leafletMap.fitBounds(latLngBounds, {
+          animate: false,
+          noMoveStart: true,
+        });
       }
     };
 
     if (latestLeafletMap) {
-      const worldTiles = new (WorldTiles(mapDetail.folder))();
+      const CanvasLayer = createCanvasLayer(mapDetail);
+      const worldTiles = new CanvasLayer();
       worldTiles.addTo(latestLeafletMap);
-      latestLeafletMap.setMaxZoom(mapDetail.maxZoom);
-      latestLeafletMap.setMinZoom(mapDetail.minZoom);
-      latestLeafletMap.setMaxBounds(latLngBounds);
       updateView(latestLeafletMap);
 
       return () => {
@@ -141,12 +110,9 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
     latestLeafletMap = leaflet.map(mapElement, {
       preferCanvas: true,
       crs: worldCRS,
-      maxZoom: mapDetail.maxZoom,
-      minZoom: mapDetail.minZoom,
       attributionControl: false,
       zoomControl: false,
       zoom: initialZoom || 4,
-      maxBounds: latLngBounds,
       zoomSnap: 0.5,
       zoomDelta: 0.5,
       wheelPxPerZoomLevel: 120,
@@ -187,7 +153,9 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
 
       coordinates.addTo(latestLeafletMap);
     }
-    const worldTiles = new (WorldTiles(mapDetail.folder))();
+    const CanvasLayer = createCanvasLayer(mapDetail);
+    const worldTiles = new CanvasLayer();
+
     worldTiles.addTo(latestLeafletMap);
     initOtherPlayers(latestLeafletMap);
     return () => {

@@ -32,7 +32,6 @@
     "realtime": "*",
     "socket.io-client": "4.5.4",
     "static": "*",
-    "tilelayer-canvas": "1.1.3",
     "zustand": "4.1.4"
   }
 }
