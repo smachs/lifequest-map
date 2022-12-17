@@ -293,6 +293,14 @@ const UserAction = () => {
               </Anchor>
               <Anchor
                 size="xs"
+                href="https://www.nwmap.info/"
+                title="New World Faction Territory Map"
+                target="_blank"
+              >
+                nwmap
+              </Anchor>
+              <Anchor
+                size="xs"
                 href="https://www.arkesia.gg/"
                 title="Interactive map for Lost Ark"
                 target="_blank"
