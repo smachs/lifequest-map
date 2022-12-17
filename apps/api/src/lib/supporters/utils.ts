@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 type Result = {
   data: {
     attributes: {
+      email: string;
       patron_status: 'declined_patron' | 'former_patron' | 'active_patron';
     };
     id: string;
@@ -24,7 +25,7 @@ export const getPatrons = async (next?: string) => {
   const url =
     next ??
     encodeURI(
-      'https://www.patreon.com/api/oauth2/v2/campaigns/1482769/members?fields[member]=patron_status'
+      'https://www.patreon.com/api/oauth2/v2/campaigns/1482769/members?fields[member]=patron_status,email'
     );
   const response = await fetch(url, {
     headers: {
@@ -38,6 +39,7 @@ export const getPatrons = async (next?: string) => {
   const { data, links } = result as Result;
   const patrons = data.map((item) => ({
     id: item.id,
+    email: item.attributes.email,
     status: item.attributes.patron_status,
   }));
 
@@ -62,7 +64,18 @@ export const isPatron = async (id: string) => {
     cache.timestamp = Date.now();
   }
   const patrons = await cache.promise;
-  return patrons.some(
+  return patrons.find(
     (patron) => patron.id === id && patron.status === 'active_patron'
+  );
+};
+
+export const findPatron = async (email: string) => {
+  if (cache.timestamp < Date.now() - 1000 * 60 || !cache.promise) {
+    cache.promise = getPatrons();
+    cache.timestamp = Date.now();
+  }
+  const patrons = await cache.promise;
+  return patrons.find(
+    (patron) => patron.email === email && patron.status === 'active_patron'
   );
 };
