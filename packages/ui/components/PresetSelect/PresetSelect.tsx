@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { fetchJSON } from '../../utils/api';
-import { getJSONItem } from '../../utils/storage';
 import type { Preset } from './presets';
 import { staticPresets } from './presets';
 import { toast } from 'react-toastify';
@@ -21,7 +20,7 @@ import {
 } from '@mantine/core';
 import { IconDeviceFloppy, IconTrashX } from '@tabler/icons';
 import { useMutation } from '@tanstack/react-query';
-import { allFilters } from '../../utils/filtersStore';
+import { allFilters, useFiltersStore } from '../../utils/filtersStore';
 
 const updatePresets = (presets: Preset[]) =>
   fetchJSON<AccountDTO>('/api/auth/account', {
@@ -42,6 +41,7 @@ function PresetSelect({ onChange }: PresetSelectProps): JSX.Element {
   );
   const [openedAdd, setOpenedAdd] = useState(false);
   const [openedDelete, setOpenedDelete] = useState(false);
+  const { filters } = useFiltersStore();
 
   const [presetName, setPresetName] = useState('');
   const updateMutation = useMutation(updatePresets, {
@@ -66,7 +66,7 @@ function PresetSelect({ onChange }: PresetSelectProps): JSX.Element {
     }
     const newPreset: Preset = {
       name: presetName,
-      types: getJSONItem('selected-filters', []),
+      types: filters,
     };
     presets.push(newPreset);
     updateMutation.mutate(presets);
