@@ -1,7 +1,7 @@
 import { mapFilters } from 'static';
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
-import { getJSONItem, withStorageDOMEvents } from './storage';
+import { withStorageDOMEvents } from './storage';
 
 export const allFilters = mapFilters
   .map((filter) => {
@@ -26,7 +26,7 @@ type Store = {
 export const useFiltersStore = create(
   persist<Store>(
     (set) => ({
-      filters: getJSONItem('selected-filters', []), // Deprecated
+      filters: [],
       setFilters: (filters) => set({ filters }),
     }),
     {
