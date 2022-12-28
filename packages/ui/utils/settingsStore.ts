@@ -11,6 +11,10 @@ type Store = {
   toggleFollowing: () => void;
   showOtherPlayers: boolean;
   toggleShowOtherPlayers: () => void;
+  otherPlayersWorldName: string | null;
+  setOtherPlayersWorldName: (otherPlayersWorldName: string | null) => void;
+  otherPlayersSize: number;
+  setOtherPlayersSize: (otherPlayersSize: number) => void;
   autoFade: boolean;
   toggleAutoFade: () => void;
   traceLineRate: number;
@@ -54,6 +58,11 @@ export const useSettingsStore = create(
         showOtherPlayers: false,
         toggleShowOtherPlayers: () =>
           set((state) => ({ showOtherPlayers: !state.showOtherPlayers })),
+        otherPlayersWorldName: null,
+        setOtherPlayersWorldName: (otherPlayersWorldName) =>
+          set({ otherPlayersWorldName }),
+        otherPlayersSize: 5,
+        setOtherPlayersSize: (otherPlayersSize) => set({ otherPlayersSize }),
         autoFade: true,
         toggleAutoFade: () => set((state) => ({ autoFade: !state.autoFade })),
         traceLineRate: 250,

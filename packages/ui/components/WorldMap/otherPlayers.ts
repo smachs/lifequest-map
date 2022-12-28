@@ -13,16 +13,24 @@ type LiveCharacter = {
   map: string;
 };
 
+const UPDATE_INTERVAL = 1500;
+let cache: Promise<LiveCharacter[]> | null = null;
+let lastUpdate = 0;
 const fetchPlayers = async () => {
-  const [live1, live2] = await Promise.all<LiveCharacter[]>([
-    fetch('https://live1.aeternum-map.gg/api/live').then((response) =>
-      response.json()
-    ),
-    fetch('https://live2.aeternum-map.gg/api/live').then((response) =>
-      response.json()
-    ),
-  ]);
-  return [...live1, ...live2].filter(({ map }) => map === AETERNUM_MAP.name);
+  if (!cache || Date.now() - lastUpdate > UPDATE_INTERVAL) {
+    cache = Promise.all<LiveCharacter[]>([
+      fetch('https://live1.aeternum-map.gg/api/live').then((response) =>
+        response.json()
+      ),
+      fetch('https://live2.aeternum-map.gg/api/live').then((response) =>
+        response.json()
+      ),
+    ]).then(([live1, live2]) =>
+      [...live1, ...live2].filter(({ map }) => map === AETERNUM_MAP.name)
+    );
+    lastUpdate = Date.now();
+  }
+  return cache;
 };
 
 export const initOtherPlayers = (leafletMap: leaflet.Map) => {
@@ -30,23 +38,42 @@ export const initOtherPlayers = (leafletMap: leaflet.Map) => {
   layerGroup.addTo(leafletMap);
   let timeoutId: NodeJS.Timeout | null = null;
   useSettingsStore.subscribe(
-    (state) => state.showOtherPlayers,
-    async (showOtherPlayers) => {
+    (state) => [
+      state.showOtherPlayers,
+      state.otherPlayersWorldName,
+      state.otherPlayersSize,
+    ],
+    async ([showOtherPlayers, otherPlayersWorldName, otherPlayersSize]) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      layerGroup.clearLayers();
+
       if (showOtherPlayers) {
         const updateOtherPlayers = async (leafletMap: leaflet.Map) => {
           const players = await fetchPlayers();
-          if (!useSettingsStore.getState().showOtherPlayers) {
+          const state = useSettingsStore.getState();
+          if (
+            !state.showOtherPlayers ||
+            state.otherPlayersWorldName !== otherPlayersWorldName ||
+            state.otherPlayersSize !== otherPlayersSize
+          ) {
             return;
           }
           layerGroup.addTo(leafletMap);
           layerGroup.clearLayers();
-          players.forEach(({ position }) => {
+          const visiblePlayers = otherPlayersWorldName
+            ? players.filter(
+                (player) => player.worldName === otherPlayersWorldName
+              )
+            : players;
+          visiblePlayers.forEach(({ position }) => {
             if (position.location[0] && position.location[1]) {
               const circle = leaflet.circle(
                 [position.location[0], position.location[1]],
                 {
                   fillOpacity: 0.8,
-                  radius: 5,
+                  radius: state.otherPlayersSize,
                   stroke: true,
                   color: 'white',
                   fillColor: 'white',
@@ -58,14 +85,9 @@ export const initOtherPlayers = (leafletMap: leaflet.Map) => {
           });
           timeoutId = setTimeout(async () => {
             await updateOtherPlayers(leafletMap);
-          }, 1500);
+          }, UPDATE_INTERVAL);
         };
         await updateOtherPlayers(leafletMap);
-      } else {
-        if (timeoutId) {
-          clearTimeout(timeoutId);
-        }
-        layerGroup.clearLayers();
       }
     },
     { fireImmediately: true }
