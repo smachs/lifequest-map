@@ -10,7 +10,6 @@ import {
   Stack,
   Text,
   TextInput,
-  Tooltip,
 } from '@mantine/core';
 import {
   IconCompass,
@@ -33,6 +32,7 @@ import { useSettingsStore } from '../../utils/settingsStore';
 import { usePersistentState } from '../../utils/storage';
 import { trackOutboundLinkClick } from '../../utils/stats';
 import { isEmbed } from '../../utils/routes';
+import OtherPlayersServerSelect from '../OtherPlayersServerSelect/OtherPlayersServerSelect';
 
 const MapActions = () => {
   const { account, refreshAccount } = useUserStore(
@@ -50,12 +50,16 @@ const MapActions = () => {
     toggleFollowing,
     showOtherPlayers,
     toggleShowOtherPlayers,
+    otherPlayersSize,
+    setOtherPlayersSize,
   } = useSettingsStore(
     (state) => ({
       following: state.following,
       toggleFollowing: state.toggleFollowing,
       showOtherPlayers: state.showOtherPlayers,
       toggleShowOtherPlayers: state.toggleShowOtherPlayers,
+      otherPlayersSize: state.otherPlayersSize,
+      setOtherPlayersSize: state.setOtherPlayersSize,
     }),
     shallow
   );
@@ -297,21 +301,57 @@ const MapActions = () => {
           </Stack>
         </HoverCard.Dropdown>
       </HoverCard>
-      <Tooltip
-        label="Displays locations of other app users from all servers."
-        position="left"
-      >
-        <ActionIcon
-          color="blue"
-          variant={showOtherPlayers ? 'filled' : 'default'}
-          size="md"
-          radius="sm"
-          onClick={toggleShowOtherPlayers}
-          aria-label="Other players"
-        >
-          <IconUsers size={20} />
-        </ActionIcon>
-      </Tooltip>
+      <HoverCard width={320} shadow="md" position="left">
+        <HoverCard.Target>
+          <ActionIcon
+            color="blue"
+            variant={showOtherPlayers ? 'filled' : 'default'}
+            size="md"
+            radius="sm"
+            onClick={toggleShowOtherPlayers}
+            aria-label="Other players"
+          >
+            <IconUsers size={20} />
+          </ActionIcon>
+        </HoverCard.Target>
+        <HoverCard.Dropdown>
+          <Text size="sm" weight={500}>
+            Other users
+          </Text>
+          <Text>
+            See the player movement of other players to get an understanding of
+            crowded areas. Only{' '}
+            <Anchor
+              href="https://www.overwolf.com/app/Leon_Machens-Aeternum_Map"
+              target="_blank"
+              onClick={() =>
+                trackOutboundLinkClick(
+                  'https://www.overwolf.com/app/Leon_Machens-Aeternum_Map'
+                )
+              }
+              inline
+            >
+              Aeternum Map
+            </Anchor>{' '}
+            users are visible.
+          </Text>
+          <Stack spacing="xs">
+            <Text weight={500} size="sm">
+              Marker Size
+              <Slider
+                value={otherPlayersSize}
+                min={1}
+                max={20}
+                onChange={(value) => setOtherPlayersSize(value)}
+              />
+            </Text>
+            <OtherPlayersServerSelect />
+            <Button compact onClick={toggleShowOtherPlayers} fullWidth>
+              {showOtherPlayers ? 'Hide other players' : 'Show other players'}
+            </Button>
+          </Stack>
+        </HoverCard.Dropdown>
+      </HoverCard>
       {zoomControls}
     </Stack>
   );
