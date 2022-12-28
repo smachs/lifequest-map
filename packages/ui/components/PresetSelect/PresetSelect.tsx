@@ -9,8 +9,8 @@ import shallow from 'zustand/shallow';
 import {
   ActionIcon,
   Button,
-  CheckIcon,
   Flex,
+  Kbd,
   Loader,
   Popover,
   ScrollArea,
@@ -21,6 +21,7 @@ import {
 import { IconDeviceFloppy, IconTrashX } from '@tabler/icons';
 import { useMutation } from '@tanstack/react-query';
 import { allFilters, useFiltersStore } from '../../utils/filtersStore';
+import AcceptAction from '../AcceptAction/AcceptAction';
 
 const updatePresets = (presets: Preset[]) =>
   fetchJSON<AccountDTO>('/api/auth/account', {
@@ -56,14 +57,14 @@ function PresetSelect({ onChange }: PresetSelectProps): JSX.Element {
     if (!account || !presetName) {
       return;
     }
-    const presets = [...(account.presets || [])];
-    if (
-      presets.some((preset) => preset.name === presetName) ||
-      staticPresets.some((preset) => preset.name === presetName)
-    ) {
-      toast.error(`Preset ${presetName} already exists 🛑`);
+    const presets = [...(account.presets || [])].filter(
+      (preset) => preset.name !== presetName
+    );
+    if (staticPresets.some((preset) => preset.name === presetName)) {
+      toast.error(`Preset ${presetName} can't be changed 🛑`);
       return;
     }
+
     const newPreset: Preset = {
       name: presetName,
       types: filters,
@@ -112,7 +113,7 @@ function PresetSelect({ onChange }: PresetSelectProps): JSX.Element {
 
       <Flex gap="xs" direction="row" wrap="nowrap" align="center">
         <Popover
-          width={200}
+          width={270}
           position="bottom"
           withArrow
           shadow="md"
@@ -130,38 +131,45 @@ function PresetSelect({ onChange }: PresetSelectProps): JSX.Element {
             </ActionIcon>
           </Popover.Target>
           <Popover.Dropdown>
-            <Text size="sm">
-              You can save your selected filters as a preset
-            </Text>
+            <Text size="sm">Save your selected filters as a preset</Text>
             {!account && (
               <Text size="sm" color="orange">
                 Please sign-in to use this feature
               </Text>
             )}
             <TextInput
+              autoFocus
               disabled={!account}
               label="Preset name"
               placeholder="Enter a short name"
               error={(updateMutation.error as Error)?.message}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  handleCreate();
+                }
+              }}
               rightSection={
                 updateMutation.isLoading ? (
                   <Loader size="xs" />
                 ) : (
-                  <ActionIcon
-                    size="xs"
-                    onClick={handleCreate}
+                  <AcceptAction
+                    onAccept={handleCreate}
                     disabled={!presetName}
-                    variant="transparent"
-                    color="green"
-                    aria-label="Save preset"
-                  >
-                    <CheckIcon width="100%" height="100%" />
-                  </ActionIcon>
+                    ariaLabel="Save preset"
+                  />
                 )
               }
               value={presetName}
               onChange={(event) => setPresetName(event.target.value)}
             />
+            <Text size="xs" color="dimmed" mt="xs">
+              Pro tip: Add emojis with <Kbd>Win</Kbd> + <Kbd>.</Kbd>
+            </Text>
+            {presets.some((preset) => preset.name === presetName) && (
+              <Text color="orange" size="xs" mt="xs">
+                This preset already exists and will be replaced.
+              </Text>
+            )}
           </Popover.Dropdown>
         </Popover>
         <Popover
