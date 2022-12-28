@@ -1,16 +1,10 @@
-import {
-  ActionIcon,
-  Anchor,
-  CheckIcon,
-  Loader,
-  MantineProvider,
-  TextInput,
-} from '@mantine/core';
+import { Anchor, Loader, MantineProvider, TextInput } from '@mantine/core';
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { fetchJSON } from '../../utils/api';
 import { useUserStore } from '../../utils/userStore';
 import shallow from 'zustand/shallow';
+import AcceptAction from '../AcceptAction/AcceptAction';
 
 const submitSupporterSecret = (supporterSecret: string) =>
   fetchJSON('/api/auth/account', {
@@ -67,15 +61,11 @@ const SupporterInput = () => {
           mutation.isLoading ? (
             <Loader size="xs" />
           ) : (
-            <ActionIcon
-              size="xs"
-              onClick={() => mutation.mutate(secret)}
+            <AcceptAction
+              onAccept={() => mutation.mutate(secret)}
               disabled={!secret}
-              variant="transparent"
-              aria-label="Save supporter secret"
-            >
-              <CheckIcon width="100%" height="100%" />
-            </ActionIcon>
+              ariaLabel="Save supporter secret"
+            />
           )
         }
         value={secret}
