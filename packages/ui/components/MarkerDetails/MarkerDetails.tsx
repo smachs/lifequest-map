@@ -1,19 +1,7 @@
-import { getScreenshotUrl } from '../../utils/api';
-import { toTimeAgo } from '../../utils/dates';
-import AddComment from '../AddComment/AddComment';
-import Comment from '../Comment/Comment';
-import useMarker from './useMarker';
-import type { Glyph } from 'static';
-import { getNodeMeta } from 'static';
-import { findMapDetails, glyphs, mapFilters } from 'static';
-import HideMarkerInput from './HideMarkerInput';
-import Credit from './Credit';
-import Coordinates from './Coordinates';
-import Loot from './Loot/Loot';
 import {
+  Avatar,
   Badge,
   Button,
-  Avatar,
   Drawer,
   Group,
   Image,
@@ -22,20 +10,36 @@ import {
   Stack,
   Text,
 } from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
-import ImagePreview from './ImagePreview';
-import { lootableMapFilters } from 'static';
-import ReportIssueButton from './ReportIssueButton';
-import DeleteNode from './DeleteNode';
-import Markdown from '../Markdown/Markdown';
-import { useUserStore } from '../../utils/userStore';
-import { isEmbed, useRouteParams } from '../../utils/routes';
 import { IconMapPin } from '@tabler/icons';
 import { useQueryClient } from '@tanstack/react-query';
+import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import type { Glyph } from 'static';
+import {
+  findMapDetails,
+  getNodeMeta,
+  glyphs,
+  lootableMapFilters,
+  mapFilters,
+} from 'static';
+import { getScreenshotUrl } from '../../utils/api';
+import { toTimeAgo } from '../../utils/dates';
+import { isEmbed, useRouteParams } from '../../utils/routes';
+import { useUserStore } from '../../utils/userStore';
+import AddComment from '../AddComment/AddComment';
+import Comment from '../Comment/Comment';
+import Markdown from '../Markdown/Markdown';
 import Meta from '../Meta/Meta';
 import { useUpsertStore } from '../UpsertArea/upsertStore';
-import { useEffect, useRef } from 'react';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
+import Coordinates from './Coordinates';
+import Credit from './Credit';
+import DeleteNode from './DeleteNode';
+import HideMarkerInput from './HideMarkerInput';
+import ImagePreview from './ImagePreview';
+import Loot from './Loot/Loot';
+import ReportIssueButton from './ReportIssueButton';
+import useMarker from './useMarker';
 
 function MarkerDetails(): JSX.Element {
   const { nodeId } = useRouteParams();

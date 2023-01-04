@@ -1,18 +1,18 @@
+import { MantineProvider } from '@mantine/core';
+import { broadcastQueryClient } from '@tanstack/query-broadcast-client-experimental';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StrictMode, useState } from 'react';
-import './globals.css';
-import { MarkersProvider } from 'ui/contexts/MarkersContext';
+import { createRoot } from 'react-dom/client';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
 import WorldMap from 'ui/components/WorldMap/WorldMap';
-import styles from './Minimap.module.css';
+import { MarkersProvider } from 'ui/contexts/MarkersContext';
+import { initPlausible } from 'ui/utils/stats';
 import { usePersistentState } from 'ui/utils/storage';
 import { classNames } from 'ui/utils/styles';
 import useEventListener from 'ui/utils/useEventListener';
-import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
-import { initPlausible } from 'ui/utils/stats';
-import { createRoot } from 'react-dom/client';
-import { MantineProvider } from '@mantine/core';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { broadcastQueryClient } from '@tanstack/query-broadcast-client-experimental';
+import './globals.css';
+import styles from './Minimap.module.css';
 
 const queryClient = new QueryClient();
 broadcastQueryClient({

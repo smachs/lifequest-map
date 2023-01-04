@@ -1,4 +1,3 @@
-import leaflet from 'leaflet';
 import {
   Badge,
   Button,
@@ -11,33 +10,33 @@ import {
   Stack,
   Text,
 } from '@mantine/core';
+import { IconRoute2 } from '@tabler/icons';
+import { useQueryClient } from '@tanstack/react-query';
+import leaflet from 'leaflet';
 import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FilterItem } from 'static';
-import { getRouteMeta } from 'static';
-import { findMapDetails, mapFilters } from 'static';
+import { findMapDetails, getRouteMeta, mapFilters } from 'static';
+import shallow from 'zustand/shallow';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { toTimeAgo } from '../../utils/dates';
+import { writeError } from '../../utils/logs';
+import { notify } from '../../utils/notifications';
+import { isEmbed, useRouteParams } from '../../utils/routes';
+import { useUserStore } from '../../utils/userStore';
+import AddComment from '../AddComment/AddComment';
+import Comment from '../Comment/Comment';
 import Markdown from '../Markdown/Markdown';
 import Credit from '../MarkerDetails/Credit';
-import { latestLeafletMap } from '../WorldMap/useWorldMap';
-import type { MarkerRouteItem } from './MarkerRoutes';
-import useMarkerRoute from './useMarkerRoute';
-import DeleteRoute from './DeleteRoute';
-import { notify } from '../../utils/notifications';
-import { patchFavoriteMarkerRoute } from './api';
-import { writeError } from '../../utils/logs';
-import ForkRoute from './ForkRoute';
-import { useUserStore } from '../../utils/userStore';
-import shallow from 'zustand/shallow';
-import { isEmbed, useRouteParams } from '../../utils/routes';
-import { useQueryClient } from '@tanstack/react-query';
-import { IconRoute2 } from '@tabler/icons';
+import ReportIssueButton from '../MarkerDetails/ReportIssueButton';
 import Meta from '../Meta/Meta';
 import { useUpsertStore } from '../UpsertArea/upsertStore';
-import Comment from '../Comment/Comment';
-import AddComment from '../AddComment/AddComment';
-import ReportIssueButton from '../MarkerDetails/ReportIssueButton';
+import { latestLeafletMap } from '../WorldMap/useWorldMap';
+import { patchFavoriteMarkerRoute } from './api';
+import DeleteRoute from './DeleteRoute';
+import ForkRoute from './ForkRoute';
+import type { MarkerRouteItem } from './MarkerRoutes';
+import useMarkerRoute from './useMarkerRoute';
 
 const MarkerRouteDetails = () => {
   const { routeId } = useRouteParams();

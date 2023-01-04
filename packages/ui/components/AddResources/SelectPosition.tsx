@@ -1,10 +1,10 @@
-import useGeoman from './useGeoman';
-import styles from './SelectPosition.module.css';
-import type { FilterItem } from 'static';
-import type { Details } from './AddResources';
-import { latestLeafletMap } from '../WorldMap/useWorldMap';
-import PlayerPositionButton from './PlayerPositionButton';
 import { Text } from '@mantine/core';
+import type { FilterItem } from 'static';
+import { latestLeafletMap } from '../WorldMap/useWorldMap';
+import type { Details } from './AddResources';
+import PlayerPositionButton from './PlayerPositionButton';
+import styles from './SelectPosition.module.css';
+import useGeoman from './useGeoman';
 
 type SelectPositionType = {
   details: Details | null;

@@ -1,5 +1,5 @@
-import { io } from 'socket.io-client';
 import Peer from 'peerjs';
+import { io } from 'socket.io-client';
 import type { Group, Player } from './types.js';
 
 export const init = ({

@@ -1,23 +1,23 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
 import leaflet from 'leaflet';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   findMapDetails,
   mapFilters,
   mapFiltersCategories,
   mapIsAeternumMap,
 } from 'static';
-import { getTooltipContent } from './tooltips';
-import { useMarkers } from '../../contexts/MarkersContext';
-import CanvasMarker from './CanvasMarker';
-import { writeError } from '../../utils/logs';
 import { isEmbed, useRouteParams } from 'ui/utils/routes';
-import useEventListener from '../../utils/useEventListener';
-import { calcDistance } from '../../utils/positions';
-import { getAction } from './actions';
-import { useNavigate } from 'react-router-dom';
-import { usePlayerStore } from '../../utils/playerStore';
-import { useSettingsStore } from '../../utils/settingsStore';
 import shallow from 'zustand/shallow';
+import { useMarkers } from '../../contexts/MarkersContext';
+import { writeError } from '../../utils/logs';
+import { usePlayerStore } from '../../utils/playerStore';
+import { calcDistance } from '../../utils/positions';
+import { useSettingsStore } from '../../utils/settingsStore';
+import useEventListener from '../../utils/useEventListener';
+import { getAction } from './actions';
+import CanvasMarker from './CanvasMarker';
+import { getTooltipContent } from './tooltips';
 
 export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
   leaflet.Icon.extend({

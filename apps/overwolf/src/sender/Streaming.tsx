@@ -1,25 +1,25 @@
-import { patchLiveShareToken } from 'ui/components/ShareLiveStatus/api';
-import { copyTextToClipboard } from 'ui/utils/clipboard';
-import useShareLivePosition from './useShareLivePosition';
-import { writeError } from 'ui/utils/logs';
+import { ActionIcon, Group, Stack, Tooltip } from '@mantine/core';
+import { IconMenu2, IconX } from '@tabler/icons';
+import { useEffect, useState } from 'react';
+import BroadcastIcon from 'ui/components/icons/BroadcastIcon';
 import CopyIcon from 'ui/components/icons/CopyIcon';
 import RefreshIcon from 'ui/components/icons/RefreshIcon';
-import BroadcastIcon from 'ui/components/icons/BroadcastIcon';
-import { classNames } from 'ui/utils/styles';
-import { v4 as uuid } from 'uuid';
-import { useEffect, useState } from 'react';
-import styles from './Streaming.module.css';
-import Settings from '../components/Settings/Settings';
 import ServerRadioButton from 'ui/components/LiveServer/ServerRadioButton';
+import { patchLiveShareToken } from 'ui/components/ShareLiveStatus/api';
 import useServers from 'ui/components/ShareLiveStatus/useServers';
+import { copyTextToClipboard } from 'ui/utils/clipboard';
+import { writeError } from 'ui/utils/logs';
+import { classNames } from 'ui/utils/styles';
+import { useUserStore } from 'ui/utils/userStore';
+import { v4 as uuid } from 'uuid';
+import shallow from 'zustand/shallow';
+import DebouncedInput from '../components/DebouncedInput/DebouncedInput';
+import InfluenceIcon from '../components/InfluenceIcon/InfluenceIcon';
+import Settings from '../components/Settings/Settings';
 import SyncStatusSender from '../components/SyncStatus/SyncStatusSender';
 import useMinimap from '../components/useMinimap';
-import { useUserStore } from 'ui/utils/userStore';
-import shallow from 'zustand/shallow';
-import { ActionIcon, Group, Stack, Tooltip } from '@mantine/core';
-import DebouncedInput from '../components/DebouncedInput/DebouncedInput';
-import { IconMenu2, IconX } from '@tabler/icons';
-import InfluenceIcon from '../components/InfluenceIcon/InfluenceIcon';
+import styles from './Streaming.module.css';
+import useShareLivePosition from './useShareLivePosition';
 
 function Streaming(): JSX.Element {
   const { account, refreshAccount } = useUserStore(

@@ -1,17 +1,17 @@
 import { Router } from 'express';
-import passport from 'passport';
 import type { UpdateFilter } from 'mongodb';
 import { ObjectId } from 'mongodb';
+import passport from 'passport';
 import { v4 as uuid, validate as validateUUID } from 'uuid';
 import { postToDiscord } from '../discord.js';
-import { getAccountCollection } from './collection.js';
-import { ensureAuthenticated } from './middlewares.js';
-import type { AccountDTO } from './types.js';
 import { getMarkerRoutesCollection } from '../markerRoutes/collection.js';
 import type { MarkerRouteDTO } from '../markerRoutes/types.js';
 import { getMarkersCollection } from '../markers/collection.js';
 import { getSupportersCollection } from '../supporters/collection.js';
 import { isPatron } from '../supporters/utils.js';
+import { getAccountCollection } from './collection.js';
+import { ensureAuthenticated } from './middlewares.js';
+import type { AccountDTO } from './types.js';
 
 declare module 'express-session' {
   interface SessionData {

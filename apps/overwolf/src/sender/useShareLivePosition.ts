@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import type { DefaultEventsMap } from 'socket.io/dist/typed-events';
-import type { Socket } from 'socket.io-client';
-import { io } from 'socket.io-client';
-import { usePosition } from '../contexts/PositionContext';
-import { toast } from 'react-toastify';
-import useShareHotkeys from './useShareHotkeys';
 import type { DataConnection } from 'peerjs';
 import Peer from 'peerjs';
-import { useUserStore } from 'ui/utils/userStore';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import type { Group } from 'realtime/types';
+import type { Socket } from 'socket.io-client';
+import { io } from 'socket.io-client';
+import type { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { useSettingsStore } from 'ui/utils/settingsStore';
+import { useUserStore } from 'ui/utils/userStore';
+import { usePosition } from '../contexts/PositionContext';
+import useShareHotkeys from './useShareHotkeys';
 
 const peerConnections: { [key: string]: DataConnection } = {};
 

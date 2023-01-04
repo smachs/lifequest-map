@@ -1,14 +1,14 @@
-import { notify } from '../../utils/notifications';
-import { patchUser } from '../MarkerDetails/api';
-import type CanvasMarker from './CanvasMarker';
-import styles from './WorldMap.module.css';
-import { toast } from 'react-toastify';
 import leaflet from 'leaflet';
-import { latestLeafletMap } from './useWorldMap';
+import { toast } from 'react-toastify';
 import type { MarkerSize } from 'static';
 import { getWorld, getZone } from 'static';
+import { notify } from '../../utils/notifications';
 import { usePlayerStore } from '../../utils/playerStore';
 import { useUserStore } from '../../utils/userStore';
+import { patchUser } from '../MarkerDetails/api';
+import type CanvasMarker from './CanvasMarker';
+import { latestLeafletMap } from './useWorldMap';
+import styles from './WorldMap.module.css';
 
 const format = (value: number) => `0${Math.floor(value)}`.slice(-2);
 const formatTimer = (seconds: number) => {

@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import type { SelectItem } from '@mantine/core';
 import { MultiSelect } from '@mantine/core';
+import { useState } from 'react';
 import { fetchJSON } from '../../utils/api';
 import { useMarkerSearchStore } from './markerSearchStore';
 

@@ -1,10 +1,10 @@
-import styles from './MarkerTypes.module.css';
+import { Avatar, Badge, Text, Tooltip } from '@mantine/core';
+import { useMemo } from 'react';
 import type { FilterItem } from 'static';
 import { mapFilters } from 'static';
-import { classNames } from '../../utils/styles';
-import { useMemo } from 'react';
-import { Avatar, Badge, Text, Tooltip } from '@mantine/core';
 import { useFiltersStore } from '../../utils/filtersStore';
+import { classNames } from '../../utils/styles';
+import styles from './MarkerTypes.module.css';
 
 type MarkerTypesProps = {
   markersByType: {

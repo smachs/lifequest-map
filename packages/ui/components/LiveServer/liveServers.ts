@@ -1,5 +1,5 @@
-import { writeError } from '../../utils/logs';
 import { servers } from 'realtime';
+import { writeError } from '../../utils/logs';
 
 export type LiveServer = {
   name: string;

@@ -20,19 +20,19 @@ import {
   IconServer,
   IconUsers,
 } from '@tabler/icons';
-import shallow from 'zustand/shallow';
-import { useUserStore } from '../../utils/userStore';
-import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import { servers } from 'realtime';
-import { usePlayerStore } from '../../utils/playerStore';
 import { getWorld, getZone } from 'static';
-import WorldName from '../SyncStatus/WorldName';
-import ServerTime from '../SyncStatus/ServerTime';
-import { useSettingsStore } from '../../utils/settingsStore';
-import { usePersistentState } from '../../utils/storage';
-import { trackOutboundLinkClick } from '../../utils/stats';
+import shallow from 'zustand/shallow';
+import { usePlayerStore } from '../../utils/playerStore';
 import { isEmbed } from '../../utils/routes';
+import { useSettingsStore } from '../../utils/settingsStore';
+import { trackOutboundLinkClick } from '../../utils/stats';
+import { usePersistentState } from '../../utils/storage';
+import { useUserStore } from '../../utils/userStore';
 import OtherPlayersServerSelect from '../OtherPlayersServerSelect/OtherPlayersServerSelect';
+import ServerTime from '../SyncStatus/ServerTime';
+import WorldName from '../SyncStatus/WorldName';
+import { latestLeafletMap } from '../WorldMap/useWorldMap';
 
 const MapActions = () => {
   const { account, refreshAccount } = useUserStore(

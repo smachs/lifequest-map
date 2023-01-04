@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import path from 'path';
 import fs from 'fs/promises';
-import { getMarkersCollection } from './markers/collection.js';
 import { ObjectId } from 'mongodb';
+import path from 'path';
 import { getNodeMeta, getRouteMeta } from 'static';
-import { getMarkerRoutesCollection } from './markerRoutes/collection.js';
 import { fileURLToPath } from 'url';
+import { getMarkerRoutesCollection } from './markerRoutes/collection.js';
+import { getMarkersCollection } from './markers/collection.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

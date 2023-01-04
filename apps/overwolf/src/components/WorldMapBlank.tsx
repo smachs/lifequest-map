@@ -1,7 +1,7 @@
-import styles from 'ui/components/WorldMap/WorldMap.module.css';
 import useWorldMap from 'ui/components/WorldMap/useWorldMap';
-import usePlayerPosition from './usePlayerPosition';
+import styles from 'ui/components/WorldMap/WorldMap.module.css';
 import { classNames } from 'ui/utils/styles';
+import usePlayerPosition from './usePlayerPosition';
 
 type WorldMapProps = {
   initialZoom?: number;

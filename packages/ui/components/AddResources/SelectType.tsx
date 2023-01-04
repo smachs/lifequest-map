@@ -1,8 +1,8 @@
+import { Avatar, FocusTrap, Group, Select, Text } from '@mantine/core';
+import { forwardRef } from 'react';
 import type { FilterItem } from 'static';
 import { mapFilters } from 'static';
 import { usePersistentState } from '../../utils/storage';
-import { Avatar, FocusTrap, Group, Select, Text } from '@mantine/core';
-import { forwardRef } from 'react';
 
 interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {
   image: string;

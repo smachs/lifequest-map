@@ -1,5 +1,5 @@
-import { initPlausible } from 'ui/utils/stats';
 import { createRoot } from 'react-dom/client';
+import { initPlausible } from 'ui/utils/stats';
 
 const root = createRoot(document.querySelector('#root')!);
 root.render(

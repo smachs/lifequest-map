@@ -1,6 +1,6 @@
 import locations from './locations.json' assert { type: 'json' };
+import { AETERNUM_MAP, findMapDetails, mapIsAeternumMap } from './maps.js';
 import regions from './regions.json' assert { type: 'json' };
-import { mapIsAeternumMap, findMapDetails, AETERNUM_MAP } from './maps.js';
 
 export { regions, locations };
 export type Area = {

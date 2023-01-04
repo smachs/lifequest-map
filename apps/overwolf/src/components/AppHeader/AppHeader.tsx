@@ -1,18 +1,18 @@
+import { Box } from '@mantine/core';
+import { IconHelp } from '@tabler/icons';
+import { useState } from 'react';
+import FAQModal from 'ui/components/FAQ/FAQModal';
+import CloseIcon from 'ui/components/icons/CloseIcon';
+import DiscordIcon from 'ui/components/icons/DiscordIcon';
+import GitHubIcon from 'ui/components/icons/GitHubIcon';
+import MinimizeIcon from 'ui/components/icons/MinimizeIcon';
 import { classNames } from 'ui/utils/styles';
 import {
   closeMainWindow,
   dragMoveWindow,
   minimizeCurrentWindow,
 } from 'ui/utils/windows';
-import CloseIcon from 'ui/components/icons/CloseIcon';
-import DiscordIcon from 'ui/components/icons/DiscordIcon';
-import GitHubIcon from 'ui/components/icons/GitHubIcon';
-import MinimizeIcon from 'ui/components/icons/MinimizeIcon';
-import FAQModal from 'ui/components/FAQ/FAQModal';
 import classes from './AppHeader.module.css';
-import { IconHelp } from '@tabler/icons';
-import { useState } from 'react';
-import { Box } from '@mantine/core';
 
 async function openExternalLink(url: string) {
   overwolf.utils.openUrlInDefaultBrowser(url);

@@ -1,26 +1,26 @@
 import { StrictMode, useEffect, useState } from 'react';
-import './globals.css';
-import { waitForOverwolf } from 'ui/utils/overwolf';
 import { MarkersProvider } from 'ui/contexts/MarkersContext';
-import { PositionProvider } from './contexts/PositionContext';
-import WorldMapBlank from './components/WorldMapBlank';
-import styles from './Minimap.module.css';
+import { waitForOverwolf } from 'ui/utils/overwolf';
 import { dragMoveWindow, WINDOWS } from 'ui/utils/windows';
+import WorldMapBlank from './components/WorldMapBlank';
+import { PositionProvider } from './contexts/PositionContext';
+import './globals.css';
+import styles from './Minimap.module.css';
 
-import { usePersistentState } from 'ui/utils/storage';
-import { classNames } from 'ui/utils/styles';
-import ResizeBorder from 'ui/components/ResizeBorder/ResizeBorder';
-import useEventListener from 'ui/utils/useEventListener';
-import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
-import { initPlausible } from 'ui/utils/stats';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRoot } from 'react-dom/client';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import ResizeBorder from 'ui/components/ResizeBorder/ResizeBorder';
+import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
+import { initPlausible } from 'ui/utils/stats';
+import { usePersistentState } from 'ui/utils/storage';
+import { classNames } from 'ui/utils/styles';
+import useEventListener from 'ui/utils/useEventListener';
 import {
   SETUP_MINIMAP,
   ZOOM_IN_MINIMAP,
   ZOOM_OUT_MINIMAP,
 } from './utils/hotkeys';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
 const root = createRoot(document.querySelector('#root')!);

@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AETERNUM_MAP, findMapDetails, mapIsAeternumMap } from 'static';
+import { isEmbed, useView } from 'ui/utils/routes';
+import createCanvasLayer from './CanvasLayer';
+import { initOtherPlayers } from './otherPlayers';
 import { coordinates as playerCoordinates } from './usePlayerPosition';
 import useRegionBorders from './useRegionBorders';
-import { mapIsAeternumMap, findMapDetails, AETERNUM_MAP } from 'static';
-import { isEmbed, useView } from 'ui/utils/routes';
-import { useNavigate } from 'react-router-dom';
-import { initOtherPlayers } from './otherPlayers';
-import createCanvasLayer from './CanvasLayer';
 
 const worldCRS = leaflet.extend({}, leaflet.CRS.Simple, {
   transformation: new leaflet.Transformation(1 / 16, 0, -1 / 16, 0),

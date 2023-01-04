@@ -1,8 +1,3 @@
-import './globals.css';
-import { waitForOverwolf } from 'ui/utils/overwolf';
-import { createRoot } from 'react-dom/client';
-import { StrictMode, useRef, useState } from 'react';
-import { closeCurrentWindow } from 'ui/utils/windows';
 import {
   ActionIcon,
   Box,
@@ -11,16 +6,21 @@ import {
   Notification,
   Tooltip,
 } from '@mantine/core';
-import { getImageData, loadImage, toBlob } from './utils/media';
+import { IconScreenshot, IconUpload, IconX } from '@tabler/icons';
+import { StrictMode, useRef, useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import { waitForOverwolf } from 'ui/utils/overwolf';
+import { closeCurrentWindow } from 'ui/utils/windows';
+import './globals.css';
 import type { Influence } from './utils/influence';
-import { factions } from './utils/influence';
 import {
-  uploadInfluence,
+  factions,
   getInfluence,
   regions,
   takeInfluenceScreenshot,
+  uploadInfluence,
 } from './utils/influence';
-import { IconScreenshot, IconUpload, IconX } from '@tabler/icons';
+import { getImageData, loadImage, toBlob } from './utils/media';
 import useCenterWindow from './utils/useCenterWindow';
 
 const root = createRoot(document.querySelector('#root')!);

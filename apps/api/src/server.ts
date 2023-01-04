@@ -1,50 +1,50 @@
-import {
-  PORT,
-  MONGODB_URI,
-  SCREENSHOTS_PATH,
-  STEAM_API_KEY,
-  SESSION_SECRET,
-  VITE_API_ENDPOINT,
-  NO_API,
-  NO_SOCKET,
-} from './lib/env.js';
-import express from 'express';
-import http from 'http';
+import compression from 'compression';
 import cors from 'cors';
-import { connectToMongoDb } from './lib/db.js';
+import express from 'express';
+import session from 'express-session';
+import http from 'http';
+import passport from 'passport';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { initCommentsCollection } from './lib/comments/collection.js';
-import { initMarkersCollection } from './lib/markers/collection.js';
-import { initMarkerRoutesCollection } from './lib/markerRoutes/collection.js';
-import { initUsersCollection } from './lib/users/collection.js';
 import authRouter from './lib/auth/router.js';
+import { initCommentsCollection } from './lib/comments/collection.js';
 import commentsRouter from './lib/comments/router.js';
+import { connectToMongoDb } from './lib/db.js';
+import {
+  MONGODB_URI,
+  NO_API,
+  NO_SOCKET,
+  PORT,
+  SCREENSHOTS_PATH,
+  SESSION_SECRET,
+  STEAM_API_KEY,
+  VITE_API_ENDPOINT,
+} from './lib/env.js';
+import { initMarkerRoutesCollection } from './lib/markerRoutes/collection.js';
+import markerRoutesRouter from './lib/markerRoutes/router.js';
+import { initMarkersCollection } from './lib/markers/collection.js';
 import markersRouter, {
   lastMarkers,
   refreshMarkers,
 } from './lib/markers/router.js';
-import markerRoutesRouter from './lib/markerRoutes/router.js';
-import usersRouter from './lib/users/router.js';
-import screenshotsRouter from './lib/screenshots/router.js';
-import compression from 'compression';
 import { initScreenshotsCollection } from './lib/screenshots/collection.js';
-import session from 'express-session';
-import passport from 'passport';
+import screenshotsRouter from './lib/screenshots/router.js';
+import { initUsersCollection } from './lib/users/collection.js';
+import usersRouter from './lib/users/router.js';
 // @ts-ignore
 import SteamStrategy from 'passport-steam';
-import { readAccount } from './lib/auth/middlewares.js';
-import { initSocket } from './lib/live/socket.js';
 import { initAccountsCollection } from './lib/auth/collection.js';
-import liveRouter from './lib/live/router.js';
-import searchRouter from './lib/search/router.js';
-import { initItemsCollection } from './lib/items/collection.js';
-import itemsRouter from './lib/items/router.js';
-import supportersRouter from './lib/supporters/router.js';
-import { initSupportersCollection } from './lib/supporters/collection.js';
+import { readAccount } from './lib/auth/middlewares.js';
+import htmlRouter from './lib/html.js';
 import { initInfluencesCollection } from './lib/influences/collection.js';
 import influencesRouter from './lib/influences/router.js';
-import htmlRouter from './lib/html.js';
+import { initItemsCollection } from './lib/items/collection.js';
+import itemsRouter from './lib/items/router.js';
+import liveRouter from './lib/live/router.js';
+import { initSocket } from './lib/live/socket.js';
+import searchRouter from './lib/search/router.js';
+import { initSupportersCollection } from './lib/supporters/collection.js';
+import supportersRouter from './lib/supporters/router.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

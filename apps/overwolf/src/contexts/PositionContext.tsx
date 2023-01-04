@@ -1,14 +1,11 @@
 import type { ReactNode } from 'react';
-import { useState } from 'react';
-import { useMemo } from 'react';
-import { useEffect } from 'react';
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import {
-  findRegion,
-  findLocation,
-  mapIsAeternumMap,
-  findMapDetails,
   AETERNUM_MAP,
+  findLocation,
+  findMapDetails,
+  findRegion,
+  mapIsAeternumMap,
 } from 'static';
 import { writeError, writeLog } from 'ui/utils/logs';
 import { useNewWorldGameInfo } from '../components/store';

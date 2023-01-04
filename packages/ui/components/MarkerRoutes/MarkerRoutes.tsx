@@ -1,16 +1,3 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useMarkers } from '../../contexts/MarkersContext';
-import { escapeRegExp } from '../../utils/regExp';
-import { usePersistentState } from '../../utils/storage';
-import {
-  findMapDetails,
-  mapFilters,
-  mapIsAeternumMap,
-  regionNames,
-} from 'static';
-import MarkerRoute from './MarkerRoute';
-import type { AccountDTO } from '../../utils/userStore';
-import { useUserStore } from '../../utils/userStore';
 import {
   Button,
   Group,
@@ -23,10 +10,23 @@ import {
 } from '@mantine/core';
 import { IconFilter } from '@tabler/icons';
 import { useQuery } from '@tanstack/react-query';
-import { getMarkerRoutes } from './api';
-import { useMap } from '../../utils/routes';
-import { useUpsertStore } from '../UpsertArea/upsertStore';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  findMapDetails,
+  mapFilters,
+  mapIsAeternumMap,
+  regionNames,
+} from 'static';
+import { useMarkers } from '../../contexts/MarkersContext';
 import { useFiltersStore } from '../../utils/filtersStore';
+import { escapeRegExp } from '../../utils/regExp';
+import { useMap } from '../../utils/routes';
+import { usePersistentState } from '../../utils/storage';
+import type { AccountDTO } from '../../utils/userStore';
+import { useUserStore } from '../../utils/userStore';
+import { useUpsertStore } from '../UpsertArea/upsertStore';
+import { getMarkerRoutes } from './api';
+import MarkerRoute from './MarkerRoute';
 
 export type MarkerRouteItem = {
   _id: string;

@@ -1,14 +1,14 @@
 import { Router } from 'express';
-import sharp from 'sharp';
 import fs from 'fs/promises';
 import multer from 'multer';
-import { SCREENSHOTS_PATH } from '../env.js';
-import { getScreenshotsCollection } from './collection.js';
+import { Blob } from 'node-fetch';
+import sharp from 'sharp';
+import { validateInfluence, worlds } from 'static';
 import { ensureAuthenticated } from '../auth/middlewares.js';
 import { uploadToDiscord } from '../discord.js';
-import { validateInfluence, worlds } from 'static';
-import { Blob } from 'node-fetch';
+import { SCREENSHOTS_PATH } from '../env.js';
 import { getInfluencesCollection } from '../influences/collection.js';
+import { getScreenshotsCollection } from './collection.js';
 
 const screenshotsUpload = multer({ dest: SCREENSHOTS_PATH });
 

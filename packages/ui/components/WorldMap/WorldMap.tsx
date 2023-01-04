@@ -1,10 +1,10 @@
-import styles from './WorldMap.module.css';
-import useWorldMap from './useWorldMap';
+import type { CSSProperties } from 'react';
+import { classNames } from '../../utils/styles';
+import useReadLivePosition from '../../utils/useReadLivePosition';
 import useLayerGroups from './useLayerGroups';
 import usePlayerPosition from './usePlayerPosition';
-import { classNames } from '../../utils/styles';
-import type { CSSProperties } from 'react';
-import useReadLivePosition from '../../utils/useReadLivePosition';
+import useWorldMap from './useWorldMap';
+import styles from './WorldMap.module.css';
 
 type WorldMapProps = {
   isMinimap?: boolean;
