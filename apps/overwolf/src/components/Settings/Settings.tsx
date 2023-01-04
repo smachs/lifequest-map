@@ -28,6 +28,7 @@ import {
   ZOOM_OUT_MINIMAP,
 } from '../../utils/hotkeys';
 import Debug from '../Debug/Debug';
+import MinimapSetup from './MinimapSetup';
 
 type SettingsProps = {
   showMinimap: boolean;
@@ -66,13 +67,14 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
           <Button color="red" onClick={logoutAccount} leftIcon={<IconLogout />}>
             Sign out
           </Button>
-          <Title order={4}>Minimap</Title>
+          <Title order={4}>Blank Minimap</Title>
           <Checkbox
             label="Show blank Minimap"
             description="Because of the ToS, it's not allowed to display nodes on the Overwolf minimap. But you can setup something similar with Skeleton (see FAQ/Discord)."
             checked={showMinimap}
             onChange={(event) => onShowMinimap(event.target.checked)}
           />
+          <MinimapSetup />
           <Checkbox
             label="Region borders"
             checked={settingsStore.showRegionBorders}

@@ -268,8 +268,8 @@ const MapActions = () => {
               Zoom
               <Slider
                 value={minimapZoom}
-                min={0}
-                max={6}
+                min={0.5}
+                max={8}
                 step={0.5}
                 onChange={(value) => setMinimapZoom(value)}
               />
