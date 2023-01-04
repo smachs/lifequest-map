@@ -81,6 +81,9 @@ function useLayerGroups({
   }, [playerLocation]);
 
   useEventListener('hotkey-marker_action', onMarkerAction, [onMarkerAction]);
+  useEventListener('hotkey-marker_action_secondary', onMarkerAction, [
+    onMarkerAction,
+  ]);
 
   useEffect(() => {
     if (!leafletMap) {

@@ -20,7 +20,7 @@ function App(): JSX.Element {
     () => {
       if (latestLeafletMap) {
         const zoom = latestLeafletMap.getZoom();
-        latestLeafletMap.setZoom(Math.min(zoom + 1, 6));
+        latestLeafletMap.setZoom(Math.min(zoom + 1, 8));
       }
     },
     []
@@ -31,7 +31,7 @@ function App(): JSX.Element {
     () => {
       if (latestLeafletMap) {
         const zoom = latestLeafletMap.getZoom();
-        latestLeafletMap.setZoom(Math.max(zoom - 1, 0));
+        latestLeafletMap.setZoom(Math.max(zoom - 1, -2));
       }
     },
     []

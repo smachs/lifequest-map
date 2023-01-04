@@ -17,6 +17,7 @@ import { useSettingsStore } from 'ui/utils/settingsStore';
 import { useUserStore } from 'ui/utils/userStore';
 import {
   MARKER_ACTION,
+  MARKER_ACTION_SECONDARY,
   SETUP_MINIMAP,
   SHOW_HIDE_APP,
   SHOW_HIDE_DIRECTION,
@@ -46,6 +47,9 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
   const zoomInMapBinding = useHotkeyBinding(ZOOM_IN_MAP);
   const zoomOutMapBinding = useHotkeyBinding(ZOOM_OUT_MAP);
   const markerActionBinding = useHotkeyBinding(MARKER_ACTION);
+  const markerActionSecondaryBinding = useHotkeyBinding(
+    MARKER_ACTION_SECONDARY
+  );
 
   const logoutAccount = useUserStore((state) => state.logoutAccount);
 
@@ -103,9 +107,15 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
           </Group>
 
           <Group grow>
-            <Input.Label>Interact with near marker</Input.Label>
+            <Input.Label>Interact with near marker 1</Input.Label>
             <Anchor href="overwolf://settings/games-overlay?hotkey=marker_action&gameId=21816">
               <Kbd>{markerActionBinding}</Kbd>
+            </Anchor>
+          </Group>
+          <Group grow>
+            <Input.Label>Interact with near marker 2</Input.Label>
+            <Anchor href="overwolf://settings/games-overlay?hotkey=marker_action_secondary&gameId=21816">
+              <Kbd>{markerActionSecondaryBinding}</Kbd>
             </Anchor>
           </Group>
           <Group grow>
@@ -122,15 +132,15 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
             </Anchor>
           </Group>
           <Group grow>
-            <Input.Label>Setup Minimap</Input.Label>
-            <Anchor href="overwolf://settings/games-overlay?hotkey=setup_minimap&gameId=21816">
-              <Kbd>{setupMinimapBinding}</Kbd>
-            </Anchor>
-          </Group>
-          <Group grow>
             <Input.Label>Show/Hide Minimap</Input.Label>
             <Anchor href="overwolf://settings/games-overlay?hotkey=show_hide_minimap&gameId=21816">
               <Kbd>{showHideMinimapBinding}</Kbd>
+            </Anchor>
+          </Group>
+          <Group grow>
+            <Input.Label>Setup Minimap</Input.Label>
+            <Anchor href="overwolf://settings/games-overlay?hotkey=setup_minimap&gameId=21816">
+              <Kbd>{setupMinimapBinding}</Kbd>
             </Anchor>
           </Group>
           <Group grow>

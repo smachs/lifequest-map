@@ -120,37 +120,42 @@
       "show_hide_app": {
         "title": "Show/Hide App",
         "action-type": "custom",
-        "default": "F4"
+        "default": "Ctrl+F1"
       },
       "show_hide_minimap": {
         "title": "Show/Hide Minimap",
         "action-type": "custom",
-        "default": "F5"
+        "default": "Ctrl+F2"
       },
       "setup_minimap": {
         "title": "Setup Minimap",
         "action-type": "custom",
-        "default": "Ctrl+F5"
+        "default": "Ctrl+F3"
       },
       "zoom_in_minimap": {
         "title": "Zoom In Minimap",
         "action-type": "custom",
-        "default": "F6"
+        "default": "Ctrl+F4"
       },
       "zoom_out_minimap": {
         "title": "Zoom Out Minimap",
         "action-type": "custom",
-        "default": "F7"
+        "default": "Ctrl+F5"
       },
       "zoom_in_map": {
         "title": "Zoom In Map (Website)",
         "action-type": "custom",
-        "default": "F8"
+        "default": "F9"
       },
       "zoom_out_map": {
         "title": "Zoom Out Map (Website)",
         "action-type": "custom",
-        "default": "F9"
+        "default": "F10"
+      },
+      "show_hide_direction": {
+        "title": "Show/Hide Direction (Website)",
+        "action-type": "custom",
+        "default": "F11"
       },
       "marker_action": {
         "title": "Interact with near marker (Website)",
@@ -158,10 +163,11 @@
         "default": "E",
         "passthrough": true
       },
-      "show_hide_direction": {
-        "title": "Show/Hide Direction (Website)",
+      "marker_action_secondary": {
+        "title": "Secondary Interact with near marker (Website)",
         "action-type": "custom",
-        "default": "F11"
+        "default": "T",
+        "passthrough": true
       }
     },
     "protocol_override_domains": {
