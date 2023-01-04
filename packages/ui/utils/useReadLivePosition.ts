@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import useGroupPositions from '../components/WorldMap/useGroupPositions';
 import { init } from 'realtime';
-import { usePlayerStore } from './playerStore';
-import { useSettingsStore } from './settingsStore';
-import shallow from 'zustand/shallow';
-import { useUserStore } from './userStore';
 import type { Group, Player } from 'realtime/types';
+import shallow from 'zustand/shallow';
+import useGroupPositions from '../components/WorldMap/useGroupPositions';
+import { usePlayerStore } from './playerStore';
 import { isEmbed } from './routes';
+import { useSettingsStore } from './settingsStore';
+import { useUserStore } from './userStore';
 
 export type Position = { location: [number, number]; rotation: number };
 let latestPlayer: Player | null = null;

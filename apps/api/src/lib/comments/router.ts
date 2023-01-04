@@ -2,7 +2,7 @@ import { Router } from 'express';
 import type { Filter } from 'mongodb';
 import { ObjectId } from 'mongodb';
 import { ensureAuthenticated } from '../auth/middlewares.js';
-import { getMarkerURL, getMarkerRoutesURL, postToDiscord } from '../discord.js';
+import { getMarkerRoutesURL, getMarkerURL, postToDiscord } from '../discord.js';
 import { getMarkerRoutesCollection } from '../markerRoutes/collection.js';
 import { getMarkersCollection } from '../markers/collection.js';
 import { refreshMarkers } from '../markers/router.js';

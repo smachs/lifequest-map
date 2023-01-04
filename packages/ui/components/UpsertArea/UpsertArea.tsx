@@ -1,9 +1,9 @@
 import { Dialog, Skeleton } from '@mantine/core';
 import { lazy, Suspense } from 'react';
-const AddResources = lazy(() => import('../AddResources/AddResources'));
-const SelectRoute = lazy(() => import('../MarkerRoutes/SelectRoute'));
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import { useUpsertStore } from './upsertStore';
+const AddResources = lazy(() => import('../AddResources/AddResources'));
+const SelectRoute = lazy(() => import('../MarkerRoutes/SelectRoute'));
 
 function UpsertArea() {
   const { marker, markerRoute, setMarker, setMarkerRoute } = useUpsertStore();

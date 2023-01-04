@@ -1,9 +1,3 @@
-import { mapFiltersCategories } from 'static';
-import MarkerSection from './MarkerSection';
-import { usePersistentState } from '../../utils/storage';
-import PresetSelect from '../PresetSelect/PresetSelect';
-import MarkerSearch from '../MarkerSearch/MarkerSearch';
-import { useUserStore } from '../../utils/userStore';
 import {
   ActionIcon,
   Button,
@@ -12,8 +6,14 @@ import {
   TextInput,
 } from '@mantine/core';
 import { IconFilter, IconX } from '@tabler/icons';
-import { useUpsertStore } from '../UpsertArea/upsertStore';
+import { mapFiltersCategories } from 'static';
 import { useFiltersStore } from '../../utils/filtersStore';
+import { usePersistentState } from '../../utils/storage';
+import { useUserStore } from '../../utils/userStore';
+import MarkerSearch from '../MarkerSearch/MarkerSearch';
+import PresetSelect from '../PresetSelect/PresetSelect';
+import { useUpsertStore } from '../UpsertArea/upsertStore';
+import MarkerSection from './MarkerSection';
 
 function MarkersView(): JSX.Element {
   const { filters, setFilters } = useFiltersStore();

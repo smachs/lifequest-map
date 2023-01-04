@@ -1,11 +1,3 @@
-import { useState } from 'react';
-import { fetchJSON } from '../../utils/api';
-import type { Preset } from './presets';
-import { staticPresets } from './presets';
-import { toast } from 'react-toastify';
-import type { AccountDTO } from '../../utils/userStore';
-import { useUserStore } from '../../utils/userStore';
-import shallow from 'zustand/shallow';
 import {
   ActionIcon,
   Button,
@@ -20,8 +12,16 @@ import {
 } from '@mantine/core';
 import { IconDeviceFloppy, IconTrashX } from '@tabler/icons';
 import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import shallow from 'zustand/shallow';
+import { fetchJSON } from '../../utils/api';
 import { allFilters, useFiltersStore } from '../../utils/filtersStore';
+import type { AccountDTO } from '../../utils/userStore';
+import { useUserStore } from '../../utils/userStore';
 import AcceptAction from '../AcceptAction/AcceptAction';
+import type { Preset } from './presets';
+import { staticPresets } from './presets';
 
 const updatePresets = (presets: Preset[]) =>
   fetchJSON<AccountDTO>('/api/auth/account', {

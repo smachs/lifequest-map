@@ -1,11 +1,11 @@
-import useOverlayActivated from './useOverlayActivated';
-import styles from './SyncStatus.module.css';
-import { usePosition } from '../../contexts/PositionContext';
+import { ActionIcon, Group, Stack, Text, Tooltip } from '@mantine/core';
 import { IconAlertCircle, IconCircleCheck } from '@tabler/icons';
-import { Group, Tooltip, ActionIcon, Stack, Text } from '@mantine/core';
-import WorldName from 'ui/components/SyncStatus/WorldName';
 import { getWorld, getZone } from 'static';
+import WorldName from 'ui/components/SyncStatus/WorldName';
+import { usePosition } from '../../contexts/PositionContext';
 import { useNewWorldGameInfo } from '../store';
+import styles from './SyncStatus.module.css';
+import useOverlayActivated from './useOverlayActivated';
 
 function SyncStatusSender() {
   const activated = useOverlayActivated();

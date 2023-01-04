@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 
-import { glyphs } from 'static';
 import { Avatar, Group, Select, Text } from '@mantine/core';
+import { glyphs } from 'static';
 import type { Details } from './AddResources';
 
 interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {

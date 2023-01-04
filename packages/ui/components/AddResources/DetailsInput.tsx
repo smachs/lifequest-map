@@ -1,9 +1,9 @@
+import { NumberInput, Text, Textarea, TextInput } from '@mantine/core';
 import type { FilterItem } from 'static';
 import type { Details } from './AddResources';
-import TierInput from './TierInput';
-import SizeInput from './SizeInput';
 import SelectGlyphType from './SelectGlyphType';
-import { NumberInput, Text, Textarea, TextInput } from '@mantine/core';
+import SizeInput from './SizeInput';
+import TierInput from './TierInput';
 
 type DetailsInputProps = {
   filter: FilterItem | null;

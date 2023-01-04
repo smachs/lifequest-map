@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { NEW_WORLD_CLASS_ID } from './games';
 
 export const SHOW_HIDE_APP = 'show_hide_app';

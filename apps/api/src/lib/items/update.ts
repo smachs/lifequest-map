@@ -1,5 +1,5 @@
-import { getMarkersCollection } from '../markers/collection.js';
 import fetch from 'node-fetch';
+import { getMarkersCollection } from '../markers/collection.js';
 import { getItemsCollection } from './collection.js';
 
 type CreatureLootResult = {

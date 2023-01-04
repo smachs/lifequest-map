@@ -1,10 +1,10 @@
-import { fetchJSON } from 'ui/utils/api';
+import { Image, UnstyledButton } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import styles from './Welcome.module.css';
+import { fetchJSON } from 'ui/utils/api';
 import type { AccountDTO } from 'ui/utils/userStore';
 import { useUserStore } from 'ui/utils/userStore';
-import { Image, UnstyledButton } from '@mantine/core';
+import styles from './Welcome.module.css';
 
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 

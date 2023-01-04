@@ -1,8 +1,8 @@
-import type { Mutate, StoreApi } from 'zustand';
 import { useEffect, useState } from 'react';
+import type { Mutate, StoreApi } from 'zustand';
 import { writeError } from './logs';
-import useDebounce from './useDebounce';
 import { isEmbed } from './routes';
+import useDebounce from './useDebounce';
 
 export function getJSONItem<T>(key: string, defaultValue: T): T {
   try {

@@ -1,11 +1,11 @@
 import create from 'zustand';
+import { persist } from 'zustand/middleware';
+import { patchUser } from '../components/MarkerDetails/api';
 import type { Preset } from '../components/PresetSelect/presets';
 import { fetchJSON } from './api';
 import { writeError, writeWarn } from './logs';
 import { notify } from './notifications';
-import { persist } from 'zustand/middleware';
 import { usePlayerStore } from './playerStore';
-import { patchUser } from '../components/MarkerDetails/api';
 import { getJSONItem } from './storage';
 
 export type User = {

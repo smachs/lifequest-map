@@ -1,18 +1,18 @@
-import { ToastContainer } from 'react-toastify';
-import WorldMap from 'ui/components/WorldMap/WorldMap';
-import 'react-toastify/dist/ReactToastify.css';
-import UpsertArea from 'ui/components/UpsertArea/UpsertArea';
-import useEventListener from 'ui/utils/useEventListener';
-import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
-import NitroPay from 'ui/components/NitroPay/NitroPay';
-import Head from './Head';
 import { Box } from '@mantine/core';
-import UserAction from 'ui/components/Actions/UserAction';
-import NavActions from 'ui/components/Actions/NavActions';
-import MapActions from 'ui/components/Actions/MapActions';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import MapAction from 'ui/components/Actions/MapAction';
-import FadingBox from 'ui/components/FadingBox/FadingBox';
+import MapActions from 'ui/components/Actions/MapActions';
+import NavActions from 'ui/components/Actions/NavActions';
+import UserAction from 'ui/components/Actions/UserAction';
 import ErrorBoundary from 'ui/components/ErrorBoundary/ErrorBoundary';
+import FadingBox from 'ui/components/FadingBox/FadingBox';
+import NitroPay from 'ui/components/NitroPay/NitroPay';
+import UpsertArea from 'ui/components/UpsertArea/UpsertArea';
+import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
+import WorldMap from 'ui/components/WorldMap/WorldMap';
+import useEventListener from 'ui/utils/useEventListener';
+import Head from './Head';
 
 function App(): JSX.Element {
   useEventListener(

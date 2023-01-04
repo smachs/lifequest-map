@@ -1,19 +1,4 @@
 import {
-  SETUP_MINIMAP,
-  SHOW_HIDE_DIRECTION,
-  SHOW_HIDE_APP,
-  SHOW_HIDE_MINIMAP,
-  useHotkeyBinding,
-  ZOOM_IN_MINIMAP,
-  ZOOM_OUT_MINIMAP,
-  ZOOM_IN_MAP,
-  ZOOM_OUT_MAP,
-  MARKER_ACTION,
-} from '../../utils/hotkeys';
-import Debug from '../Debug/Debug';
-import { useUserStore } from 'ui/utils/userStore';
-import SupporterInput from 'ui/components/SupporterInput/SupporterInput';
-import {
   Anchor,
   Box,
   Button,
@@ -27,7 +12,22 @@ import {
   Title,
 } from '@mantine/core';
 import { IconLogout } from '@tabler/icons';
+import SupporterInput from 'ui/components/SupporterInput/SupporterInput';
 import { useSettingsStore } from 'ui/utils/settingsStore';
+import { useUserStore } from 'ui/utils/userStore';
+import {
+  MARKER_ACTION,
+  SETUP_MINIMAP,
+  SHOW_HIDE_APP,
+  SHOW_HIDE_DIRECTION,
+  SHOW_HIDE_MINIMAP,
+  useHotkeyBinding,
+  ZOOM_IN_MAP,
+  ZOOM_IN_MINIMAP,
+  ZOOM_OUT_MAP,
+  ZOOM_OUT_MINIMAP,
+} from '../../utils/hotkeys';
+import Debug from '../Debug/Debug';
 
 type SettingsProps = {
   showMinimap: boolean;

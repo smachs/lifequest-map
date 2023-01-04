@@ -1,11 +1,11 @@
+import { FormData } from 'formdata-node';
 import type { Response } from 'node-fetch';
 import fetch from 'node-fetch';
 import { findMapDetails, mapIsAeternumMap } from 'static';
 import {
-  DISCORD_PUBLIC_WEBHOOK_URL,
   DISCORD_PRIVATE_WEBHOOK_URL,
+  DISCORD_PUBLIC_WEBHOOK_URL,
 } from './env.js';
-import { FormData } from 'formdata-node';
 
 const MAX_DISCORD_MESSAGE_LENGTH = 2000;
 export const postToDiscord = (

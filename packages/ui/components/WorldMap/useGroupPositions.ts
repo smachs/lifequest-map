@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { latestLeafletMap } from './useWorldMap';
-import PositionMarker from './PositionMarker';
-import { createPlayerIcon } from './playerIcon';
 import ColorHash from 'color-hash';
-import { useMap } from 'ui/utils/routes';
-import { findMapDetails } from 'static';
+import { useEffect, useState } from 'react';
 import type { Group } from 'realtime/types';
-import { useSettingsStore } from '../../utils/settingsStore';
+import { findMapDetails } from 'static';
+import { useMap } from 'ui/utils/routes';
 import shallow from 'zustand/shallow';
+import { useSettingsStore } from '../../utils/settingsStore';
+import { createPlayerIcon } from './playerIcon';
+import PositionMarker from './PositionMarker';
+import { latestLeafletMap } from './useWorldMap';
 
 const colorHash = new ColorHash();
 

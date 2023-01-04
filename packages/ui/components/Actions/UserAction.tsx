@@ -11,6 +11,7 @@ import {
   Tooltip,
   UnstyledButton,
 } from '@mantine/core';
+import { useClipboard } from '@mantine/hooks';
 import {
   IconHelp,
   IconLogout,
@@ -18,23 +19,22 @@ import {
   IconShare,
   IconUser,
 } from '@tabler/icons';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { AETERNUM_MAP } from 'static';
+import shallow from 'zustand/shallow';
+import { fetchJSON } from '../../utils/api';
+import { isEmbed, useRouteParams } from '../../utils/routes';
 import { trackOutboundLinkClick } from '../../utils/stats';
 import type { AccountDTO } from '../../utils/userStore';
 import { useUserStore } from '../../utils/userStore';
+import FAQModal from '../FAQ/FAQModal';
 import DiscordIcon from '../icons/DiscordIcon';
 import GitHubIcon from '../icons/GitHubIcon';
-import shallow from 'zustand/shallow';
-import { useEffect, useState } from 'react';
-import { fetchJSON } from '../../utils/api';
 import ResetDiscoveredNodes from '../Settings/ResetDiscoveredNodes';
-import SupporterInput from '../SupporterInput/SupporterInput';
-import FAQModal from '../FAQ/FAQModal';
 import SettingsDialog from '../Settings/SettingsDialog';
-import { isEmbed, useRouteParams } from '../../utils/routes';
-import { useClipboard } from '@mantine/hooks';
-import { toast } from 'react-toastify';
+import SupporterInput from '../SupporterInput/SupporterInput';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
-import { AETERNUM_MAP } from 'static';
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 const UserAction = () => {

@@ -1,7 +1,7 @@
-import styles from './ResizeBorder.module.css';
-import { dragResize, getCurrentWindow } from '../../utils/windows';
 import type { MouseEvent } from 'react';
 import { useEffect, useState } from 'react';
+import { dragResize, getCurrentWindow } from '../../utils/windows';
+import styles from './ResizeBorder.module.css';
 
 function onDragResize(
   edge: overwolf.windows.enums.WindowDragEdge,

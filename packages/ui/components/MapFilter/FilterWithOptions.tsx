@@ -1,7 +1,7 @@
-import Checkbox from './Checkbox';
 import type { FilterItem } from 'static';
-import styles from './FilterWithOptions.module.css';
 import { classNames } from '../../utils/styles';
+import Checkbox from './Checkbox';
+import styles from './FilterWithOptions.module.css';
 
 type FilterWithOptionsProps = {
   options: string[];

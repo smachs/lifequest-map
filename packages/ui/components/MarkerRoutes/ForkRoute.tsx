@@ -1,11 +1,11 @@
-import { postMarkerRoute } from './api';
+import { Button, Modal, Stack, TextInput } from '@mantine/core';
+import { IconArrowFork } from '@tabler/icons';
 import { useState } from 'react';
 import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
-import { Button, Modal, Stack, TextInput } from '@mantine/core';
-import type { MarkerRouteItem } from './MarkerRoutes';
-import { IconArrowFork } from '@tabler/icons';
 import { useUserStore } from '../../utils/userStore';
+import { postMarkerRoute } from './api';
+import type { MarkerRouteItem } from './MarkerRoutes';
 
 type ForkRouteProps = {
   markerRoute: MarkerRouteItem;

@@ -1,13 +1,13 @@
-import type { Filter } from 'mongodb';
 import { Router } from 'express';
-import type { MarkerRouteDTO } from './types.js';
+import type { Filter } from 'mongodb';
 import { Double, ObjectId } from 'mongodb';
-import { getMarkerRoutesCollection } from './collection.js';
-import { getMarkerRoutesURL, postToDiscord } from '../discord.js';
+import { findMapDetails, findRegions, mapIsAeternumMap } from 'static';
 import { ensureAuthenticated } from '../auth/middlewares.js';
-import { findRegions, mapIsAeternumMap, findMapDetails } from 'static';
 import { getCommentsCollection } from '../comments/collection.js';
 import type { CommentDTO } from '../comments/types.js';
+import { getMarkerRoutesURL, postToDiscord } from '../discord.js';
+import { getMarkerRoutesCollection } from './collection.js';
+import type { MarkerRouteDTO } from './types.js';
 
 const markerRoutesRouter = Router();
 

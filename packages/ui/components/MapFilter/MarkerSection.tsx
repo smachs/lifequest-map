@@ -1,9 +1,9 @@
+import { useMemo } from 'react';
+import type { MapFiltersCategory } from 'static';
+import { escapeRegExp } from '../../utils/regExp';
 import Checkbox from './Checkbox';
 import FilterSelection from './FilterSelection';
-import type { MapFiltersCategory } from 'static';
 import styles from './MarkerSection.module.css';
-import { useMemo } from 'react';
-import { escapeRegExp } from '../../utils/regExp';
 
 type MarkerSectionProps = {
   mapFilterCategory: MapFiltersCategory;

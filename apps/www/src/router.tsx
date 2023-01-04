@@ -1,5 +1,5 @@
-import App from './App';
 import { createBrowserRouter } from 'react-router-dom';
+import App from './App';
 import ProviderHell from './ProviderHell';
 
 const router = createBrowserRouter([

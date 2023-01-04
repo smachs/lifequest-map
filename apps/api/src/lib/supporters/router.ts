@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { getSupportersCollection } from './collection.js';
-import { v4 as uuid } from 'uuid';
 import type { OptionalId } from 'mongodb';
+import { v4 as uuid } from 'uuid';
+import { getSupportersCollection } from './collection.js';
 import type { SupporterDTO } from './types.js';
 import { findPatron } from './utils.js';
 

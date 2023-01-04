@@ -1,9 +1,9 @@
 import { Anchor, Loader, MantineProvider, TextInput } from '@mantine/core';
-import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
+import shallow from 'zustand/shallow';
 import { fetchJSON } from '../../utils/api';
 import { useUserStore } from '../../utils/userStore';
-import shallow from 'zustand/shallow';
 import AcceptAction from '../AcceptAction/AcceptAction';
 
 const submitSupporterSecret = (supporterSecret: string) =>

@@ -1,8 +1,8 @@
-import { mapDetails } from 'static';
-import styles from './MarkersView.module.css';
-import { Link } from 'react-router-dom';
-import { useMap } from 'ui/utils/routes';
 import { Button, Menu } from '@mantine/core';
+import { Link } from 'react-router-dom';
+import { mapDetails } from 'static';
+import { useMap } from 'ui/utils/routes';
+import styles from './MarkersView.module.css';
 import useToMap from './useToMap';
 
 const SelectMap = () => {

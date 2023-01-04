@@ -1,12 +1,12 @@
-import type { MarkerRouteItem } from './MarkerRoutes';
-import MarkerTypes from './MarkerTypes';
-import styles from './MarkerRoute.module.css';
-import { classNames } from '../../utils/styles';
-import { toTimeAgo } from '../../utils/dates';
 import { Badge, Group, Stack, Switch, Text, Title } from '@mantine/core';
+import { IconAlertTriangle, IconArrowFork, IconMessage } from '@tabler/icons';
 import { Link } from 'react-router-dom';
 import { findMapDetails } from 'static';
-import { IconAlertTriangle, IconArrowFork, IconMessage } from '@tabler/icons';
+import { toTimeAgo } from '../../utils/dates';
+import { classNames } from '../../utils/styles';
+import styles from './MarkerRoute.module.css';
+import type { MarkerRouteItem } from './MarkerRoutes';
+import MarkerTypes from './MarkerTypes';
 
 type MarkerRouteProps = {
   markerRoute: MarkerRouteItem;

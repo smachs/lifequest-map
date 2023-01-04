@@ -1,12 +1,12 @@
-import leaflet from 'leaflet';
-import type { Map } from 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
+import type { Map } from 'leaflet';
+import leaflet from 'leaflet';
 import { useEffect, useMemo, useState } from 'react';
-import { LeafIcon } from '../WorldMap/useLayerGroups';
 import type { FilterItem } from 'static';
-import type { Details } from './AddResources';
 import { getTooltipContent } from '../WorldMap/tooltips';
+import { LeafIcon } from '../WorldMap/useLayerGroups';
+import type { Details } from './AddResources';
 
 type UseGeomanProps = {
   details: Details | null;

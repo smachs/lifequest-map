@@ -1,4 +1,3 @@
-import useLoot from './useLoot';
 import {
   Anchor,
   Badge,
@@ -9,6 +8,7 @@ import {
   Text,
 } from '@mantine/core';
 import { useEffect } from 'react';
+import useLoot from './useLoot';
 
 const rarityColors: {
   [rarity: string]: string;

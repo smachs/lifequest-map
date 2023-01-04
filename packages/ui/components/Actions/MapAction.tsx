@@ -6,12 +6,12 @@ import {
   Text,
   UnstyledButton,
 } from '@mantine/core';
-import { isEmbed, useMap } from '../../utils/routes';
-import useToMap from '../MapFilter/useToMap';
-import type { Map } from 'static';
-import { AETERNUM_MAP, findMapDetails, mapDetails } from 'static';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import type { Map } from 'static';
+import { AETERNUM_MAP, findMapDetails, mapDetails } from 'static';
+import { isEmbed, useMap } from '../../utils/routes';
+import useToMap from '../MapFilter/useToMap';
 
 const useStyles = createStyles((theme, _params, getRef) => {
   const image = getRef('image');

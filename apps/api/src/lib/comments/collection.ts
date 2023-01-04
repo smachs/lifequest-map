@@ -1,6 +1,6 @@
 import type { Collection, Document } from 'mongodb';
-import type { CommentDTO } from './types.js';
 import { getCollection, getDb } from '../db.js';
+import type { CommentDTO } from './types.js';
 
 export function getCommentsCollection(): Collection<CommentDTO> {
   return getCollection<CommentDTO>('comments');

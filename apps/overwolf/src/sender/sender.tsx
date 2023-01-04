@@ -1,22 +1,22 @@
-import '../globals.css';
 import { StrictMode } from 'react';
-import { PositionProvider } from '../contexts/PositionContext';
-import { waitForOverwolf } from 'ui/utils/overwolf';
-import styles from './Sender.module.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { waitForOverwolf } from 'ui/utils/overwolf';
+import { PositionProvider } from '../contexts/PositionContext';
+import '../globals.css';
+import styles from './Sender.module.css';
 
-import Welcome from './Welcome';
-import Streaming from './Streaming';
-import ErrorBoundary from 'ui/components/ErrorBoundary/ErrorBoundary';
-import { initPlausible } from 'ui/utils/stats';
-import { createRoot } from 'react-dom/client';
-import Ads from '../components/Ads/Ads';
-import { useUserStore } from 'ui/utils/userStore';
-import AppHeader from '../components/AppHeader/AppHeader';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ThemeProvider } from 'ui/contexts/ThemeProvider';
 import { MantineProvider } from '@mantine/core';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { createRoot } from 'react-dom/client';
+import ErrorBoundary from 'ui/components/ErrorBoundary/ErrorBoundary';
+import { ThemeProvider } from 'ui/contexts/ThemeProvider';
+import { initPlausible } from 'ui/utils/stats';
+import { useUserStore } from 'ui/utils/userStore';
+import Ads from '../components/Ads/Ads';
+import AppHeader from '../components/AppHeader/AppHeader';
+import Streaming from './Streaming';
+import Welcome from './Welcome';
 
 const root = createRoot(document.querySelector('#root')!);
 

@@ -1,20 +1,20 @@
 import leaflet from 'leaflet';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { findMapDetails, mapIsAeternumMap } from 'static';
+import { useMap, useRouteParams } from 'ui/utils/routes';
+import shallow from 'zustand/shallow';
 import { isOverwolfApp } from '../../utils/overwolf';
+import { usePlayerStore } from '../../utils/playerStore';
+import { useSettingsStore } from '../../utils/settingsStore';
 import type { Position } from '../../utils/useReadLivePosition';
+import { useUpsertStore } from '../UpsertArea/upsertStore';
 import type CanvasMarker from './CanvasMarker';
 import { createPlayerIcon } from './playerIcon';
 import PositionMarker from './PositionMarker';
 import { updateRotation } from './rotation';
 import useAdaptiveZoom from './useAdaptiveZoom';
 import useDirectionLine from './useDirectionLine';
-import { useMap, useRouteParams } from 'ui/utils/routes';
-import { useNavigate } from 'react-router-dom';
-import { findMapDetails, mapIsAeternumMap } from 'static';
-import { usePlayerStore } from '../../utils/playerStore';
-import { useSettingsStore } from '../../utils/settingsStore';
-import { useUpsertStore } from '../UpsertArea/upsertStore';
-import shallow from 'zustand/shallow';
 
 const divElement = leaflet.DomUtil.create('div', 'leaflet-player-position');
 const CoordinatesControl = leaflet.Control.extend({

@@ -1,9 +1,9 @@
+import { broadcastQueryClient } from '@tanstack/query-broadcast-client-experimental';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
+import { HelmetProvider } from 'react-helmet-async';
 import { MarkersProvider } from 'ui/contexts/MarkersContext';
 import { ThemeProvider } from 'ui/contexts/ThemeProvider';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { HelmetProvider } from 'react-helmet-async';
-import { broadcastQueryClient } from '@tanstack/query-broadcast-client-experimental';
 
 const queryClient = new QueryClient();
 broadcastQueryClient({

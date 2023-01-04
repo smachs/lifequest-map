@@ -1,5 +1,5 @@
-import Checkbox from './Checkbox';
 import type { FilterItem } from 'static';
+import Checkbox from './Checkbox';
 import FilterWithOptions from './FilterWithOptions';
 
 type FilterSectionProps = {

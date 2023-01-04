@@ -1,18 +1,5 @@
-import type { FormEvent } from 'react';
-import { useCallback, useEffect, useState } from 'react';
-import leaflet from 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
-import MarkerTypes from './MarkerTypes';
-import { notify } from '../../utils/notifications';
-import { patchMarkerRoute, postMarkerRoute } from './api';
-import { useMarkers } from '../../contexts/MarkersContext';
-import type { MarkerRouteItem } from './MarkerRoutes';
-import { latestLeafletMap } from '../WorldMap/useWorldMap';
-import { findRegions } from 'static';
-import { writeError } from '../../utils/logs';
-import { useMap } from 'ui/utils/routes';
-import { useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Checkbox,
@@ -21,6 +8,19 @@ import {
   Textarea,
   TextInput,
 } from '@mantine/core';
+import { useQueryClient } from '@tanstack/react-query';
+import leaflet from 'leaflet';
+import type { FormEvent } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { findRegions } from 'static';
+import { useMap } from 'ui/utils/routes';
+import { useMarkers } from '../../contexts/MarkersContext';
+import { writeError } from '../../utils/logs';
+import { notify } from '../../utils/notifications';
+import { latestLeafletMap } from '../WorldMap/useWorldMap';
+import { patchMarkerRoute, postMarkerRoute } from './api';
+import type { MarkerRouteItem } from './MarkerRoutes';
+import MarkerTypes from './MarkerTypes';
 
 type SelectRouteProps = {
   markerRoute?: MarkerRouteItem;

@@ -1,9 +1,9 @@
-import { deleteMarkerRoute } from './api';
+import { Button, Modal } from '@mantine/core';
 import { useState } from 'react';
 import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
-import { Button, Modal } from '@mantine/core';
 import { useUserStore } from '../../utils/userStore';
+import { deleteMarkerRoute } from './api';
 
 type DeleteRouteProps = {
   routeId: string;

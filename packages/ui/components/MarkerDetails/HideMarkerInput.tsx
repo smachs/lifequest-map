@@ -1,10 +1,10 @@
 import { Button } from '@mantine/core';
-import { notify } from '../../utils/notifications';
-import { patchUser } from './api';
-import { IconEyeOff, IconEye } from '@tabler/icons';
+import { IconEye, IconEyeOff } from '@tabler/icons';
 import { useState } from 'react';
-import { useUserStore } from '../../utils/userStore';
 import shallow from 'zustand/shallow';
+import { notify } from '../../utils/notifications';
+import { useUserStore } from '../../utils/userStore';
+import { patchUser } from './api';
 
 type HideMarkerInputProps = {
   markerId: string;

@@ -1,17 +1,17 @@
-import type { Filter, WithId } from 'mongodb';
+import etag from 'etag';
 import { Router } from 'express';
-import { getMarkersCollection } from './collection.js';
-import { Double, ObjectId } from 'mongodb';
 import fs from 'fs/promises';
-import { getMarkerURL, postToDiscord } from '../discord.js';
+import type { Filter, WithId } from 'mongodb';
+import { Double, ObjectId } from 'mongodb';
+import type { MarkerDTO } from 'static';
+import { findMapDetails, mapFilters, mapIsAeternumMap } from 'static';
+import { ensureAuthenticated } from '../auth/middlewares.js';
 import { getCommentsCollection } from '../comments/collection.js';
 import type { CommentDTO } from '../comments/types.js';
+import { getMarkerURL, postToDiscord } from '../discord.js';
 import { SCREENSHOTS_PATH } from '../env.js';
 import { getScreenshotsCollection } from '../screenshots/collection.js';
-import { ensureAuthenticated } from '../auth/middlewares.js';
-import etag from 'etag';
-import type { MarkerDTO } from 'static';
-import { mapIsAeternumMap, findMapDetails, mapFilters } from 'static';
+import { getMarkersCollection } from './collection.js';
 
 const markersRouter = Router();
 

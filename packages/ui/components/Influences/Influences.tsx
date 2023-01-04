@@ -1,26 +1,25 @@
-import { useState } from 'react';
 import {
-  Group,
+  ActionIcon,
+  Avatar,
   Box,
   Collapse,
-  Text,
-  UnstyledButton,
-  ScrollArea,
-  Avatar,
-  Paper,
-  SimpleGrid,
-  Progress,
+  Group,
   Image,
+  Paper,
+  Progress,
+  ScrollArea,
+  SimpleGrid,
+  Text,
   Tooltip,
-  ActionIcon,
+  UnstyledButton,
 } from '@mantine/core';
 import { IconChevronRight, IconInfoCircle } from '@tabler/icons';
-import { getZonesWithWorlds, Zone } from 'static';
 import { useQuery } from '@tanstack/react-query';
-import { fetchJSON } from '../../utils/api';
-import useStyles from './Influences.styles';
-import { toTimeAgo } from '../../utils/dates';
+import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { getZonesWithWorlds, Zone } from 'static';
+import { fetchJSON } from '../../utils/api';
+import { toTimeAgo } from '../../utils/dates';
 import { isEmbed } from '../../utils/routes';
 import type { InfluenceDTO } from './InfluenceDetails';
 import {
@@ -28,6 +27,7 @@ import {
   MARAUDER_COLOR,
   SYNDICATE_COLOR,
 } from './InfluenceDetails';
+import useStyles from './Influences.styles';
 
 const zonesWithWorlds = getZonesWithWorlds();
 

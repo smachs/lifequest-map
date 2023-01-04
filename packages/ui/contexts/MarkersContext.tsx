@@ -1,20 +1,18 @@
-import type { ReactNode } from 'react';
-import { useState } from 'react';
-import { useMemo } from 'react';
-import { createContext, useContext } from 'react';
-import type { MarkerRouteItem } from '../components/MarkerRoutes/MarkerRoutes';
-import { latestLeafletMap } from '../components/WorldMap/useWorldMap';
-import { findMapDetails, mapIsAeternumMap } from 'static';
-import { fetchJSON } from '../utils/api';
-import { isOverwolfApp } from '../utils/overwolf';
-import { usePersistentState } from '../utils/storage';
-import type { MarkerSize } from 'static';
-import { useMarkerSearchStore } from '../components/MarkerSearch/markerSearchStore';
-import { isEmbed, useRouteParams } from '../utils/routes';
-import { useUserStore } from '../utils/userStore';
-import useMarkerRoute from '../components/MarkerRoutes/useMarkerRoute';
 import { useQuery } from '@tanstack/react-query';
+import type { ReactNode } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
+import type { MarkerSize } from 'static';
+import { findMapDetails, mapIsAeternumMap } from 'static';
+import type { MarkerRouteItem } from '../components/MarkerRoutes/MarkerRoutes';
+import useMarkerRoute from '../components/MarkerRoutes/useMarkerRoute';
+import { useMarkerSearchStore } from '../components/MarkerSearch/markerSearchStore';
+import { latestLeafletMap } from '../components/WorldMap/useWorldMap';
+import { fetchJSON } from '../utils/api';
 import { useFiltersStore } from '../utils/filtersStore';
+import { isOverwolfApp } from '../utils/overwolf';
+import { isEmbed, useRouteParams } from '../utils/routes';
+import { usePersistentState } from '../utils/storage';
+import { useUserStore } from '../utils/userStore';
 
 export type MarkerBasic = {
   type: string;

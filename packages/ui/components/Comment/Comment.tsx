@@ -1,11 +1,11 @@
-import { toTimeAgo } from '../../utils/dates';
-import { writeError } from '../../utils/logs';
-import Markdown from '../Markdown/Markdown';
-import { deleteComment } from './api';
-import { notify } from '../../utils/notifications';
 import { ActionIcon, Button, Card, Group, Modal, Text } from '@mantine/core';
 import { IconTrash } from '@tabler/icons';
 import { useState } from 'react';
+import { toTimeAgo } from '../../utils/dates';
+import { writeError } from '../../utils/logs';
+import { notify } from '../../utils/notifications';
+import Markdown from '../Markdown/Markdown';
+import { deleteComment } from './api';
 
 type CommentProps = {
   id: string;
