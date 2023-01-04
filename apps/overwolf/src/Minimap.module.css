@@ -40,17 +40,6 @@
   overflow: auto;
 }
 
-.toolbar label {
-  display: grid;
-  gap: 0.2em;
-  grid-template-columns: 50% 50%;
-  align-items: center;
-}
-
-.toolbar input {
-  width: 100%;
-}
-
 .bottomRightBorder {
   cursor: se-resize;
   color: white;

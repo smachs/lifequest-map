@@ -7,15 +7,17 @@ import { PositionProvider } from './contexts/PositionContext';
 import './globals.css';
 import styles from './Minimap.module.css';
 
+import { MantineProvider, Paper } from '@mantine/core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRoot } from 'react-dom/client';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import ResizeBorder from 'ui/components/ResizeBorder/ResizeBorder';
 import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
 import { initPlausible } from 'ui/utils/stats';
-import { usePersistentState } from 'ui/utils/storage';
 import { classNames } from 'ui/utils/styles';
 import useEventListener from 'ui/utils/useEventListener';
+import MinimapSetup from './components/Settings/MinimapSetup';
+import { useMinimapSettingsStore } from './components/Settings/store';
 import {
   SETUP_MINIMAP,
   ZOOM_IN_MINIMAP,
@@ -27,19 +29,9 @@ const root = createRoot(document.querySelector('#root')!);
 
 function Minimap(): JSX.Element {
   const [showSetup, setShowSetup] = useState(false);
-  const [minimapOpacity, setMinimapOpacity] = usePersistentState(
-    'minimapOpacity',
-    80
-  );
-  const [minimapBorderRadius, setMinimapBorderRadius] = usePersistentState(
-    'minimapBorderRadius',
-    50
-  );
-  const [minimapZoom, setMinimapZoom] = usePersistentState('minimapZoom', 5);
-  const [rotateMinimap, setRotateMinimap] = usePersistentState(
-    'rotateMinimap',
-    false
-  );
+
+  const state = useMinimapSettingsStore();
+
   const [isHovering, setIsHovering] = useState(false);
 
   useEventListener(
@@ -102,16 +94,16 @@ function Minimap(): JSX.Element {
       if (event.name === SETUP_MINIMAP) {
         setShowSetup(!showSetup);
       } else if (event.name === ZOOM_IN_MINIMAP) {
-        setMinimapZoom((minimapZoom) => Math.min(minimapZoom + 0.5, 6));
+        state.setMinimapZoom(Math.min(state.minimapZoom + 0.5, 8));
       } else if (event.name === ZOOM_OUT_MINIMAP) {
-        setMinimapZoom((minimapZoom) => Math.max(minimapZoom - 0.5, 0));
+        state.setMinimapZoom(Math.max(state.minimapZoom - 0.5, 0));
       }
     }
     overwolf.settings.hotkeys.onPressed.addListener(handleHotkeyPressed);
     return () => {
       overwolf.settings.hotkeys.onPressed.removeListener(handleHotkeyPressed);
     };
-  }, [showSetup, minimapZoom]);
+  }, [showSetup, state.minimapZoom]);
 
   return (
     <>
@@ -122,66 +114,22 @@ function Minimap(): JSX.Element {
           !showSetup && isHovering && styles.hideOnHover
         )}
         style={{
-          opacity: minimapOpacity / 100,
-          borderRadius: `${minimapBorderRadius}%`,
+          opacity: state.minimapOpacity / 100,
+          borderRadius: `${state.minimapBorderRadius}%`,
         }}
       >
         <WorldMapBlank
-          initialZoom={minimapZoom}
+          initialZoom={state.minimapZoom}
           className={styles.minimap}
-          rotate={rotateMinimap}
+          rotate={state.rotateMinimap}
         />
       </div>
       {showSetup && (
         <div className={styles.setup} onMouseDown={dragMoveWindow}>
-          <div className={styles.toolbar} onMouseDown={dragMoveWindow}>
-            <label>
-              Zoom
-              <input
-                type="range"
-                value={minimapZoom}
-                min={0}
-                max={6}
-                step={0.5}
-                onMouseDown={(event) => event.stopPropagation()}
-                onChange={(event) => setMinimapZoom(+event.target.value)}
-              />
-            </label>
-            <label>
-              Border
-              <input
-                type="range"
-                value={minimapBorderRadius}
-                min={0}
-                max={50}
-                onMouseDown={(event) => event.stopPropagation()}
-                onChange={(event) =>
-                  setMinimapBorderRadius(+event.target.value)
-                }
-              />
-            </label>
-            <label>
-              Opacity
-              <input
-                type="range"
-                value={minimapOpacity}
-                min={20}
-                max={100}
-                onMouseDown={(event) => event.stopPropagation()}
-                onChange={(event) => setMinimapOpacity(+event.target.value)}
-              />
-            </label>
-            <label>
-              Rotate minimap
-              <input
-                type="checkbox"
-                checked={rotateMinimap}
-                onMouseDown={(event) => event.stopPropagation()}
-                onChange={(event) => setRotateMinimap(event.target.checked)}
-              />
-            </label>
+          <Paper className={styles.toolbar} onMouseDown={dragMoveWindow}>
+            <MinimapSetup />
             <ResizeBorder square />
-          </div>
+          </Paper>
         </div>
       )}
     </>
@@ -213,7 +161,13 @@ const router = createMemoryRouter([
 waitForOverwolf().then(() => {
   root.render(
     <StrictMode>
-      <RouterProvider router={router} />
+      <MantineProvider
+        theme={{
+          colorScheme: 'dark',
+        }}
+      >
+        <RouterProvider router={router} />
+      </MantineProvider>
     </StrictMode>
   );
 });
