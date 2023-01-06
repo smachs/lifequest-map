@@ -64,6 +64,7 @@ localStorage.removeItem('markers');
 localStorage.removeItem('all-marker-routes');
 localStorage.removeItem('cached-marker-routes');
 localStorage.removeItem('cached-markers');
+localStorage.removeItem('selected-filters');
 
 export function MarkersProvider({
   children,

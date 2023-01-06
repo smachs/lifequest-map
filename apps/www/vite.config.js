@@ -22,7 +22,6 @@ export default defineConfig({
   root: resolve(__dirname, 'src'),
   publicDir: resolve(__dirname, 'src/public'),
   build: {
-    target: 'esnext',
     outDir: resolve(__dirname, 'dist'),
     rollupOptions: {
       input: {
