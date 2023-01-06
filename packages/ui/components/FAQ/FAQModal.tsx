@@ -153,6 +153,15 @@ const FAQModal = ({ opened, onClose }: FAQModalProps) => {
                 toggle off pop-up blocker.
               </Accordion.Panel>
             </Accordion.Item>
+            <Accordion.Item value="Skeleton causes some lags in New World">
+              <Accordion.Control>
+                Skeleton causes some lags in New World
+              </Accordion.Control>
+              <Accordion.Panel>
+                Please make sure to deactivate "Cap FPS in Background" in New
+                World settings.
+              </Accordion.Panel>
+            </Accordion.Item>
             <Accordion.Item value="I have a different issue!">
               <Accordion.Control>I have a different issue!</Accordion.Control>
               <Accordion.Panel>
