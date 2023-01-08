@@ -21,6 +21,7 @@ import {
   SETUP_MINIMAP,
   SHOW_HIDE_APP,
   SHOW_HIDE_DIRECTION,
+  SHOW_HIDE_INFLUENCE_OVERLAY,
   SHOW_HIDE_MINIMAP,
   useHotkeyBinding,
   ZOOM_IN_MAP,
@@ -49,6 +50,9 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
   const markerActionBinding = useHotkeyBinding(MARKER_ACTION);
   const markerActionSecondaryBinding = useHotkeyBinding(
     MARKER_ACTION_SECONDARY
+  );
+  const showHideInfluenceOverlayBinding = useHotkeyBinding(
+    SHOW_HIDE_INFLUENCE_OVERLAY
   );
 
   const logoutAccount = useUserStore((state) => state.logoutAccount);
@@ -153,6 +157,12 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
             <Input.Label>Zoom out Minimap</Input.Label>
             <Anchor href="overwolf://settings/games-overlay?hotkey=zoom_out_minimap&gameId=21816">
               <Kbd>{zoomOutMinimapBinding}</Kbd>
+            </Anchor>
+          </Group>
+          <Group grow>
+            <Input.Label>Show/Hide Influence Overlay</Input.Label>
+            <Anchor href="overwolf://settings/games-overlay?hotkey=influence_overlay&gameId=21816">
+              <Kbd>{showHideInfluenceOverlayBinding}</Kbd>
             </Anchor>
           </Group>
           <Title order={4}>Connection</Title>

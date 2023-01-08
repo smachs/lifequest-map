@@ -24,7 +24,7 @@ const InfluenceIcon = () => {
   );
   const [sawTooltip, setSawTooltip] = useState(false);
   return (
-    <HoverCard width={380} shadow="md" withinPortal>
+    <HoverCard width={380} shadow="md" withinPortal openDelay={200}>
       <HoverCard.Dropdown
         sx={{
           left: '8px !important',
@@ -38,7 +38,7 @@ const InfluenceIcon = () => {
           The overlay is visible in-game and usable with a simple click. Please
           move the influence map to fit the overlay.
           <br />
-          We like to use this data to display the influence per server on{' '}
+          The data is used to display the influence per server on{' '}
           <Anchor href="https://aeternum-map.gg" target="_blank">
             aeternum-map.gg
           </Anchor>
