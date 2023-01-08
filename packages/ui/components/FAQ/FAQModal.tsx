@@ -162,6 +162,15 @@ const FAQModal = ({ opened, onClose }: FAQModalProps) => {
                 World settings.
               </Accordion.Panel>
             </Accordion.Item>
+            <Accordion.Item value="I want to update my username">
+              <Accordion.Control>
+                I want to update my username
+              </Accordion.Control>
+              <Accordion.Panel>
+                Your username is your Steam Profile Name. If you updated your on
+                Steam, you need to sign-out and sign-in on aeternum-map.gg.
+              </Accordion.Panel>
+            </Accordion.Item>
             <Accordion.Item value="I have a different issue!">
               <Accordion.Control>I have a different issue!</Accordion.Control>
               <Accordion.Panel>

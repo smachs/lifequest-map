@@ -12,6 +12,7 @@ import { isPatron } from '../supporters/utils.js';
 import { getAccountCollection } from './collection.js';
 import { ensureAuthenticated } from './middlewares.js';
 import type { AccountDTO } from './types.js';
+import { updateUsername } from './utils.js';
 
 declare module 'express-session' {
   interface SessionData {
@@ -136,7 +137,8 @@ authRouter.get(
         return;
       }
       res.send(`logged in successfully, you can close this window now`);
-      postToDiscord(`🤘 ${req.user.displayName} is using Aeternum Map`, false);
+      updateUsername(req.user.steamId, req.user.displayName);
+      postToDiscord(`🔒 ${req.user.displayName} authenticated`, false);
     } catch (error) {
       console.error(
         `Login failed for ${req.user.displayName} (${req.user.steamId}) with ${req.session.sessionId}`,
