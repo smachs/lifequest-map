@@ -9,7 +9,7 @@ import {
   WINDOWS,
 } from 'ui/utils/windows';
 import { isNewWorldRunning, NEW_WORLD_CLASS_ID } from './utils/games';
-import { SHOW_HIDE_APP } from './utils/hotkeys';
+import { SHOW_HIDE_APP, SHOW_HIDE_INFLUENCE_OVERLAY } from './utils/hotkeys';
 
 writeLog('Starting background process');
 
@@ -31,6 +31,9 @@ async function handleHotkeyPressed(
 ) {
   if (event.name === SHOW_HIDE_APP) {
     toggleWindow(WINDOWS.DESKTOP);
+  }
+  if (event.name === SHOW_HIDE_INFLUENCE_OVERLAY) {
+    toggleWindow(WINDOWS.INFLUENCE);
   }
 }
 overwolf.settings.hotkeys.onPressed.addListener(handleHotkeyPressed);

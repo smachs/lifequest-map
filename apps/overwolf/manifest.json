@@ -168,6 +168,11 @@
         "action-type": "custom",
         "default": "T",
         "passthrough": true
+      },
+      "show_hide_influence_overlay": {
+        "title": "Show/Hide Influence Overlay",
+        "action-type": "custom",
+        "default": "Ctrl+F6"
       }
     },
     "protocol_override_domains": {
