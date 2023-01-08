@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { init } from 'realtime';
 import type { Group, Player } from 'realtime/types';
+import type { Socket } from 'socket.io-client';
 import shallow from 'zustand/shallow';
 import useGroupPositions from '../components/WorldMap/useGroupPositions';
 import { usePlayerStore } from './playerStore';
@@ -16,6 +17,7 @@ function useReadLivePosition() {
   const { setPlayer } = usePlayerStore();
   const [group, setGroup] = useState<Group>({});
   const account = useUserStore((state) => state.account);
+  const [socket, setSocket] = useState<Socket | null>(null);
   const { liveShareServerUrl, liveShareToken } = useSettingsStore(
     (state) => ({
       liveShareServerUrl: state.liveShareServerUrl,
@@ -81,7 +83,7 @@ function useReadLivePosition() {
       window.dispatchEvent(event);
     };
 
-    const { destroy } = init({
+    const { destroy, socket } = init({
       serverUrl,
       token,
       onGroup: updateStatus,
@@ -89,12 +91,15 @@ function useReadLivePosition() {
       onHotkey: handleHotkey,
       onConnect: () => console.log('Sharing live status 👌'),
     });
-
+    setSocket(socket);
     return () => {
       destroy();
       setGroup({});
+      setSocket(null);
     };
   }, [token, serverUrl, account?.steamId]);
+
+  return socket;
 }
 
 export default useReadLivePosition;

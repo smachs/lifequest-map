@@ -6,3 +6,4 @@ dist-ssr
 .eslintcache
 /data
 .next
+packages/realtime/*.d.ts
