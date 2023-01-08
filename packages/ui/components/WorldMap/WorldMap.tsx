@@ -27,10 +27,11 @@ function WorldMap({
     hideControls,
     initialZoom,
   });
-  useReadLivePosition();
+  const socket = useReadLivePosition();
 
   useLayerGroups({
     leafletMap,
+    socket,
   });
   usePlayerPosition({ isMinimap, leafletMap, rotate });
 

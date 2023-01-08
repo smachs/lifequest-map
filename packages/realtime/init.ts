@@ -101,6 +101,7 @@ export const init = ({
   });
 
   return {
+    socket,
     destroy: () => {
       socket.off('connect');
       socket.off('update');

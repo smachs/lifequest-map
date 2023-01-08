@@ -1,6 +1,7 @@
 import leaflet from 'leaflet';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import type { Socket } from 'socket.io-client';
 import {
   findMapDetails,
   mapFilters,
@@ -15,7 +16,7 @@ import { usePlayerStore } from '../../utils/playerStore';
 import { calcDistance } from '../../utils/positions';
 import { useSettingsStore } from '../../utils/settingsStore';
 import useEventListener from '../../utils/useEventListener';
-import { getAction } from './actions';
+import { getAction, startTimer } from './actions';
 import CanvasMarker from './CanvasMarker';
 import { getTooltipContent } from './tooltips';
 
@@ -32,8 +33,10 @@ const markersLayerGroup = leaflet.layerGroup();
 
 function useLayerGroups({
   leafletMap,
+  socket,
 }: {
   leafletMap: leaflet.Map | null;
+  socket: Socket | null;
 }): void {
   const { visibleMarkers, markerRoutes } = useMarkers();
   const { markerSize, markerShowBackground } = useSettingsStore(
@@ -52,10 +55,17 @@ function useLayerGroups({
     };
   }>({});
   const { map, nodeId } = useRouteParams();
-  const playerLocation = usePlayerStore(
-    (state) => state.player?.position?.location
+  const { location: playerLocation, worldName } = usePlayerStore(
+    (state) => ({
+      location: state.player?.position?.location,
+      worldName: state.player?.worldName,
+    }),
+    shallow
   );
   const navigate = useNavigate();
+  const markersRespawnAt = useRef<{
+    [markerId: string]: number;
+  }>({});
 
   const [highlightedMapMarker, setHighlightedMapMarker] =
     useState<CanvasMarker | null>(null);
@@ -76,7 +86,10 @@ function useLayerGroups({
     });
     if (marker) {
       const action = getAction(marker.options.image.type);
-      action(marker);
+      const respawnTimer = action(marker);
+      if (typeof respawnTimer === 'number') {
+        startTimer(marker, respawnTimer, socket);
+      }
     }
   }, [playerLocation]);
 
@@ -93,6 +106,33 @@ function useLayerGroups({
     // @ts-ignore
     leafletMap.markersLayerGroup = markersLayerGroup;
   }, [leafletMap]);
+
+  useEffect(() => {
+    if (socket && worldName) {
+      socket.emit(
+        'markersRespawnTimers',
+        worldName,
+        (
+          markersRespawnTimers: {
+            markerId: string;
+            respawnTimer: number;
+          }[]
+        ) => {
+          const allLayers = allLayersRef.current;
+          markersRespawnAt.current = {};
+          const now = Date.now();
+          for (const markerRespawnTimer of markersRespawnTimers) {
+            markersRespawnAt.current[markerRespawnTimer.markerId] =
+              markerRespawnTimer.respawnTimer + now;
+            const marker = allLayers[markerRespawnTimer.markerId]?.layer;
+            if (marker) {
+              startTimer(marker, markerRespawnTimer.respawnTimer);
+            }
+          }
+        }
+      );
+    }
+  }, [socket, worldName]);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -253,10 +293,19 @@ function useLayerGroups({
           ) {
             const action = getAction(mapMarker.options.image.type);
             if (action) {
-              action(mapMarker);
+              const respawnTimer = action(mapMarker);
+              if (typeof respawnTimer === 'number') {
+                startTimer(mapMarker, respawnTimer, socket);
+              }
             }
           }
         });
+        if (markersRespawnAt.current[marker._id]) {
+          startTimer(
+            mapMarker,
+            markersRespawnAt.current[marker._id] - Date.now()
+          );
+        }
         allLayers[marker._id] = {
           layer: mapMarker,
           hasComments: Boolean(marker.comments),
@@ -320,11 +369,21 @@ function useLayerGroups({
     }
 
     leafletMap.on('moveend', placeMarkersInBounds);
+
+    const handleMarkerRespawnAt = (markerId: string, respawnTimer: number) => {
+      markersRespawnAt.current[markerId] = respawnTimer + Date.now();
+      const marker = allLayers[markerId]?.layer;
+      if (marker) {
+        startTimer(marker, respawnTimer);
+      }
+    };
+    socket?.on('markerRespawnAt', handleMarkerRespawnAt);
     return () => {
       leafletMap.off('moveend', placeMarkersInBounds);
       clearTimeout(trailingTimeoutId);
+      socket?.off('markerRespawnAt', handleMarkerRespawnAt);
     };
-  }, [leafletMap, visibleMarkers]);
+  }, [leafletMap, visibleMarkers, socket]);
 
   useEffect(() => {
     if (!leafletMap) {

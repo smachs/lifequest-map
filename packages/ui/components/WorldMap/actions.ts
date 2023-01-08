@@ -1,5 +1,6 @@
 import leaflet from 'leaflet';
 import { toast } from 'react-toastify';
+import type { Socket } from 'socket.io-client';
 import type { MarkerSize } from 'static';
 import { getWorld, getZone } from 'static';
 import { notify } from '../../utils/notifications';
@@ -19,121 +20,97 @@ const formatTimer = (seconds: number) => {
   }
   return [minutes, seconds % 60].map(format).join(':');
 };
-const respawnAction =
-  (typeRespawnTimer?: number) => async (marker: CanvasMarker) => {
-    const respawnTimer = marker.customRespawnTimer || typeRespawnTimer;
-    if (!respawnTimer) {
+
+export const startTimer = (
+  marker: CanvasMarker,
+  respawnTimer: number,
+  socket?: Socket | null
+) => {
+  if (respawnTimer < 1) {
+    return;
+  }
+  if (marker.actionHandle) {
+    clearTimeout(marker.actionHandle);
+    delete marker.actionHandle;
+    if (marker.popup) {
+      marker.popup.remove();
+    }
+  }
+
+  marker.popup = leaflet
+    .popup({
+      autoPan: false,
+      autoClose: false,
+      closeButton: false,
+      closeOnClick: false,
+      keepInView: false,
+      className: styles.respawn,
+    })
+    .setLatLng(marker.getLatLng());
+  latestLeafletMap!.addLayer(marker.popup);
+
+  const respawnAt = respawnTimer + Date.now();
+  const updateTimer = () => {
+    if (!marker || !marker.popup) {
       return;
     }
-    if (marker.actionHandle) {
-      clearTimeout(marker.actionHandle);
+    const timeLeft = Math.round((respawnAt - Date.now()) / 1000);
+    marker.popup.setContent(`${formatTimer(timeLeft)}`);
+    if (timeLeft > 0) {
+      marker.actionHandle = setTimeout(updateTimer, 1000);
+    } else {
+      marker.popup.remove();
       delete marker.actionHandle;
-      if (marker.popup) {
-        marker.popup.remove();
-      }
     }
-    const respawnAt = Date.now() + 1000 * respawnTimer;
-
-    marker.popup = leaflet
-      .popup({
-        autoPan: false,
-        autoClose: false,
-        closeButton: false,
-        closeOnClick: false,
-        keepInView: false,
-        className: styles.respawn,
-      })
-      .setLatLng(marker.getLatLng());
-    latestLeafletMap!.addLayer(marker.popup);
-
-    const updateTimer = () => {
-      if (!marker || !marker.popup) {
-        return;
-      }
-      const timeLeft = Math.round((respawnAt - Date.now()) / 1000);
-      marker.popup.setContent(`${formatTimer(timeLeft)}`);
-      if (timeLeft > 0) {
-        marker.actionHandle = setTimeout(updateTimer, 1000);
-      } else {
-        marker.popup.remove();
-        delete marker.actionHandle;
-      }
-    };
-    updateTimer();
   };
+  updateTimer();
 
-const respawnWorldAction =
-  (respawnHour: number) => async (marker: CanvasMarker) => {
-    let timeZone: string | undefined = undefined;
-    const worldName = usePlayerStore.getState().player?.worldName;
-    if (worldName) {
-      const world = getWorld(worldName);
-      const zone = world && getZone(world.zone);
-      if (zone) {
-        timeZone = zone.timeZone;
-      }
+  const worldName = usePlayerStore.getState().player?.worldName;
+  if (socket && worldName) {
+    socket.emit(
+      'markerRespawnAt',
+      marker.options.image.markerId,
+      respawnTimer,
+      worldName
+    );
+  }
+};
+
+const respawnAction = (typeRespawnTimer?: number) => (marker: CanvasMarker) => {
+  let respawnTimer = marker.customRespawnTimer || typeRespawnTimer;
+  if (!respawnTimer) {
+    return 0;
+  }
+  respawnTimer *= 1000;
+  return respawnTimer;
+};
+
+const respawnWorldAction = (respawnHour: number) => () => {
+  let timeZone: string | undefined = undefined;
+  const worldName = usePlayerStore.getState().player?.worldName;
+  if (worldName) {
+    const world = getWorld(worldName);
+    const zone = world && getZone(world.zone);
+    if (zone) {
+      timeZone = zone.timeZone;
     }
-    const timeString = new Date().toLocaleTimeString('en-US', {
-      timeZone: timeZone,
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
-    });
-    const [hours, minutes, seconds] = timeString.split(':').map(Number);
-    const hoursLeft = (respawnHour + 24 - 1 - hours) % 24;
-    const minutesLeft = 60 - minutes;
-    const secondsLeft = 60 - seconds;
+  }
+  const timeString = new Date().toLocaleTimeString('en-US', {
+    timeZone: timeZone,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  });
+  const [hours, minutes, seconds] = timeString.split(':').map(Number);
+  const hoursLeft = (respawnHour + 24 - 1 - hours) % 24;
+  const minutesLeft = 60 - minutes;
+  const secondsLeft = 60 - seconds;
 
-    const respawnAt =
-      Date.now() +
-      1000 * secondsLeft +
-      60000 * minutesLeft +
-      3600000 * hoursLeft;
-
-    if (marker.actionHandle) {
-      clearTimeout(marker.actionHandle);
-      delete marker.actionHandle;
-      if (marker.popup) {
-        marker.popup.remove();
-      }
-    }
-
-    if (marker.actionHandle) {
-      clearTimeout(marker.actionHandle);
-      delete marker.actionHandle;
-      if (marker.popup) {
-        marker.popup.remove();
-      }
-    }
-
-    marker.popup = leaflet
-      .popup({
-        autoPan: false,
-        autoClose: false,
-        closeButton: false,
-        closeOnClick: false,
-        keepInView: false,
-        className: styles.respawn,
-      })
-      .setLatLng(marker.getLatLng());
-    latestLeafletMap!.addLayer(marker.popup);
-
-    const updateTimer = () => {
-      if (!marker || !marker.popup) {
-        return;
-      }
-      const timeLeft = Math.round((respawnAt - Date.now()) / 1000);
-      marker.popup.setContent(`${formatTimer(timeLeft)}`);
-      if (timeLeft > 0) {
-        marker.actionHandle = setTimeout(updateTimer, 1000);
-      } else {
-        marker.popup.remove();
-        delete marker.actionHandle;
-      }
-    };
-    updateTimer();
-  };
+  const respawnTimer =
+    1000 * secondsLeft + 60000 * minutesLeft + 3600000 * hoursLeft;
+  return respawnTimer;
+};
 
 const sizes: {
   [key in MarkerSize]: number;
@@ -150,7 +127,7 @@ const respawnSizeAction =
   (timers: [number, number, number, number, number]) =>
   (marker: CanvasMarker) => {
     if (!marker.options.image.markerSize) {
-      return;
+      return 0;
     }
     const size = sizes[marker.options.image.markerSize];
     const timer = timers[size];
@@ -160,7 +137,9 @@ const respawnSizeAction =
 const hideMarker = async (marker: CanvasMarker) => {
   const { user, refreshUser } = useUserStore.getState();
   if (!user) {
-    toast.warn('User not detected');
+    toast.warn(
+      'User not detected. Make sure to run Overwolf before New World.'
+    );
     return;
   }
   const markerId = marker.options.image.markerId;
@@ -180,7 +159,7 @@ const hideMarker = async (marker: CanvasMarker) => {
 };
 
 const actions: {
-  [type: string]: (marker: CanvasMarker) => void;
+  [type: string]: (marker: CanvasMarker) => Promise<void> | number;
 } = {
   lore_note: hideMarker,
   glyph: hideMarker,

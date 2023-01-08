@@ -18,6 +18,17 @@ export const activeGroups: {
   };
 } = {};
 
+export const markersRespawnAt: {
+  [worldName: string]: {
+    [groupToken: string]: {
+      [markerId: string]: {
+        timeoutId: NodeJS.Timeout;
+        respawnAt: number;
+      };
+    };
+  };
+} = {};
+
 const peerConnections: {
   [steamId: string]: string[];
 } = {};
@@ -155,6 +166,46 @@ export function initSocket(server: http.Server) {
 
     client.on('hotkey', (hotkey) => {
       client.to(token).emit('hotkey', steamId, hotkey);
+    });
+
+    client.on(
+      'markerRespawnAt',
+      (markerId: string, respawnTimer: number, worldName: string) => {
+        if (!markersRespawnAt[worldName]) {
+          markersRespawnAt[worldName] = {};
+        }
+        if (!markersRespawnAt[worldName][token]) {
+          markersRespawnAt[worldName][token] = {};
+        }
+
+        const previousRespawnAt = markersRespawnAt[worldName][token][markerId];
+        if (previousRespawnAt) {
+          clearTimeout(previousRespawnAt.timeoutId);
+        }
+        const now = Date.now();
+        markersRespawnAt[worldName][token][markerId] = {
+          respawnAt: now + respawnTimer,
+          timeoutId: setTimeout(() => {
+            delete markersRespawnAt[worldName][token][markerId];
+          }, respawnTimer),
+        };
+        client.to(token).emit('markerRespawnAt', markerId, respawnTimer);
+      }
+    );
+
+    client.on('markersRespawnTimers', (worldName: string, callback) => {
+      if (!markersRespawnAt[worldName]?.[token]) {
+        callback({});
+        return;
+      }
+      const now = Date.now();
+      const markersRespawnTimers = Object.entries(
+        markersRespawnAt[worldName][token]
+      ).map(([markerId, data]) => ({
+        markerId,
+        respawnTimer: data.respawnAt - now,
+      }));
+      callback(markersRespawnTimers);
     });
 
     client.on('disconnect', () => {
