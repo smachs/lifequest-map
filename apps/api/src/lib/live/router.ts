@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import osUtils from 'node-os-utils';
 import type { Player } from './socket.js';
-import { activeGroups, getSocketServer } from './socket.js';
+import { activeGroups, getSocketServer, markersRespawnAt } from './socket.js';
 
 const liveRouter = Router();
 const cpu = osUtils.cpu;
@@ -58,6 +58,29 @@ liveRouter.get('/', async (request, response) => {
   }
 
   response.json(players);
+});
+
+liveRouter.get('/respawns', (_request, response) => {
+  const now = Date.now();
+  const markersRespawnTimers = markersRespawnAt.map((data) => ({
+    markerId: data.markerId,
+    respawnTimer: data.respawnAt - now,
+    worldName: data.worldName,
+    markerType: data.markerType,
+  }));
+  response.json(markersRespawnTimers);
+});
+
+liveRouter.get('/respawns/:worldName', (request, response) => {
+  const now = Date.now();
+  const markersRespawnTimers = markersRespawnAt
+    .filter((data) => data.worldName === request.params.worldName)
+    .map((data) => ({
+      markerId: data.markerId,
+      respawnTimer: data.respawnAt - now,
+      markerType: data.markerType,
+    }));
+  response.json(markersRespawnTimers);
 });
 
 liveRouter.get('/:token', (request, response) => {

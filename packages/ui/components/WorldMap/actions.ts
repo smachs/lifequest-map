@@ -65,13 +65,15 @@ export const startTimer = (
   };
   updateTimer();
 
-  const worldName = usePlayerStore.getState().player?.worldName;
-  if (socket && worldName) {
+  const { worldName, steamId } = usePlayerStore.getState().player || {};
+  if (socket && worldName && steamId) {
     socket.emit(
       'markerRespawnAt',
       marker.options.image.markerId,
       respawnTimer,
-      worldName
+      worldName,
+      steamId,
+      marker.options.image.type
     );
   }
 };
@@ -258,3 +260,80 @@ const actions: {
 export const getAction = (type: string) => {
   return actions[type];
 };
+
+export const sharedRespawnTimers = [
+  'gold',
+  'iron',
+  'lodestone',
+  'oil',
+  'orichalcum',
+  'platinum',
+  'saltpeter',
+  'silver',
+  'starmetal',
+  'ironwood',
+  'wyrdwood',
+  'azoth_spring',
+  'fungus',
+  'hemp',
+  'herb',
+  'silkweed',
+  'wirefiber',
+  'barley',
+  'berry',
+  'blueberry',
+  'broccoli',
+  'cabbage',
+  'carrot',
+  'corn',
+  'cranberry',
+  'honey',
+  'milk',
+  'nuts',
+  'potato',
+  'pumpkin',
+  'squash',
+  'strawberry',
+  'turkey_nest',
+  'essences_shockbulb',
+  'essences_shockspire',
+  'essences_lightning_beetle',
+  'essences_blightroot',
+  'essences_blightcrag',
+  'essences_blightmoth',
+  'essences_earthspine',
+  'essences_earthcrag',
+  'essences_earthshell_turtle',
+  'essences_dragonglory',
+  'essences_scorchstone',
+  'essences_salamander_snail',
+  'essences_lifebloom',
+  'essences_lifejewel',
+  'essences_lifemoth',
+  'essences_soulsprout',
+  'essences_soulspire',
+  'essences_soulwyrm',
+  'essences_rivercress',
+  'essences_springstone',
+  'essences_floating_spinefish',
+  'pigment_black_primsabloom',
+  'pigment_blue_primsabloom',
+  'pigment_brown_primsabloom',
+  'pigment_cyan_primsabloom',
+  'pigment_green_primsabloom',
+  'pigment_magenta_primsabloom',
+  'pigment_orange_primsabloom',
+  'pigment_red_primsabloom',
+  'pigment_turquoise_primsabloom',
+  'pigment_violet_primsabloom',
+  'pigment_white_primsabloom',
+  'pigment_yellow_primsabloom',
+  'fish_hotspot1',
+  'fish_hotspot2',
+  'fish_hotspot3',
+  'boss',
+  'bossElite',
+  'winterWarrior',
+  'rafflebones_25',
+  'rafflebones_66',
+];

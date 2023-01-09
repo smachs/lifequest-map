@@ -19,15 +19,14 @@ export const activeGroups: {
 } = {};
 
 export const markersRespawnAt: {
-  [worldName: string]: {
-    [groupToken: string]: {
-      [markerId: string]: {
-        timeoutId: NodeJS.Timeout;
-        respawnAt: number;
-      };
-    };
-  };
-} = {};
+  worldName: string;
+  token: string;
+  markerId: string;
+  timeoutId: NodeJS.Timeout;
+  respawnAt: number;
+  steamId: string;
+  markerType: string;
+}[] = [];
 
 const peerConnections: {
   [steamId: string]: string[];
@@ -170,41 +169,65 @@ export function initSocket(server: http.Server) {
 
     client.on(
       'markerRespawnAt',
-      (markerId: string, respawnTimer: number, worldName: string) => {
-        if (!markersRespawnAt[worldName]) {
-          markersRespawnAt[worldName] = {};
-        }
-        if (!markersRespawnAt[worldName][token]) {
-          markersRespawnAt[worldName][token] = {};
-        }
-
-        const previousRespawnAt = markersRespawnAt[worldName][token][markerId];
+      (
+        markerId: string,
+        respawnTimer: number,
+        worldName: string,
+        steamId: string,
+        markerType: string
+      ) => {
+        const previousRespawnAt = markersRespawnAt.find(
+          (markerRespawnAt) =>
+            markerRespawnAt.markerId === markerId &&
+            markerRespawnAt.steamId === steamId &&
+            markerRespawnAt.worldName === worldName &&
+            markerRespawnAt.token === token
+        );
         if (previousRespawnAt) {
           clearTimeout(previousRespawnAt.timeoutId);
         }
         const now = Date.now();
-        markersRespawnAt[worldName][token][markerId] = {
+        markersRespawnAt.push({
           respawnAt: now + respawnTimer,
           timeoutId: setTimeout(() => {
-            delete markersRespawnAt[worldName][token][markerId];
+            const previousRespawnAtIndex = markersRespawnAt.findIndex(
+              (markerRespawnAt) =>
+                markerRespawnAt.markerId === markerId &&
+                markerRespawnAt.steamId === steamId &&
+                markerRespawnAt.worldName === worldName &&
+                markerRespawnAt.token === token
+            );
+            if (previousRespawnAtIndex !== -1) {
+              markersRespawnAt.splice(previousRespawnAtIndex, 1);
+            }
           }, respawnTimer),
-        };
-        client.to(token).emit('markerRespawnAt', markerId, respawnTimer);
+          markerId,
+          worldName,
+          steamId,
+          token,
+          markerType,
+        });
+
+        client
+          .to(token)
+          .emit('markerRespawnAt', markerId, respawnTimer, steamId, markerType);
       }
     );
 
     client.on('markersRespawnTimers', (worldName: string, callback) => {
-      if (!markersRespawnAt[worldName]?.[token]) {
-        callback({});
-        return;
-      }
       const now = Date.now();
-      const markersRespawnTimers = Object.entries(
-        markersRespawnAt[worldName][token]
-      ).map(([markerId, data]) => ({
-        markerId,
-        respawnTimer: data.respawnAt - now,
-      }));
+      const markersRespawnTimers = markersRespawnAt
+        .filter(
+          (markerRespawnAt) =>
+            markerRespawnAt.worldName === worldName &&
+            markerRespawnAt.token === token
+        )
+        .map((data) => ({
+          markerId: data.markerId,
+          respawnTimer: data.respawnAt - now,
+          steamId: data.steamId,
+          markerType: data.markerType,
+        }));
       callback(markersRespawnTimers);
     });
 

@@ -11,6 +11,8 @@ type Store = {
   toggleFollowing: () => void;
   showOtherPlayers: boolean;
   toggleShowOtherPlayers: () => void;
+  showOtherRespawnTimers: boolean;
+  toggleShowOtherRespawnTimers: () => void;
   otherPlayersWorldName: string | null;
   setOtherPlayersWorldName: (otherPlayersWorldName: string | null) => void;
   otherPlayersSize: number;
@@ -58,6 +60,11 @@ export const useSettingsStore = create(
         showOtherPlayers: false,
         toggleShowOtherPlayers: () =>
           set((state) => ({ showOtherPlayers: !state.showOtherPlayers })),
+        showOtherRespawnTimers: false,
+        toggleShowOtherRespawnTimers: () =>
+          set((state) => ({
+            showOtherRespawnTimers: !state.showOtherRespawnTimers,
+          })),
         otherPlayersWorldName: null,
         setOtherPlayersWorldName: (otherPlayersWorldName) =>
           set({ otherPlayersWorldName }),
