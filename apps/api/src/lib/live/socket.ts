@@ -18,15 +18,21 @@ export const activeGroups: {
   };
 } = {};
 
-export const markersRespawnAt: {
+export let markersRespawnAt: {
   worldName: string;
   token: string;
   markerId: string;
-  timeoutId: NodeJS.Timeout;
   respawnAt: number;
   steamId: string;
   markerType: string;
 }[] = [];
+
+setInterval(() => {
+  const now = Date.now();
+  markersRespawnAt = markersRespawnAt.filter(
+    (markerRespawnAt) => markerRespawnAt.respawnAt - now > 0
+  );
+}, 30000);
 
 const peerConnections: {
   [steamId: string]: string[];
@@ -176,38 +182,15 @@ export function initSocket(server: http.Server) {
         steamId: string,
         markerType: string
       ) => {
-        const previousRespawnAt = markersRespawnAt.find(
-          (markerRespawnAt) =>
-            markerRespawnAt.markerId === markerId &&
-            markerRespawnAt.steamId === steamId &&
-            markerRespawnAt.worldName === worldName &&
-            markerRespawnAt.token === token
-        );
-        if (previousRespawnAt) {
-          clearTimeout(previousRespawnAt.timeoutId);
-        }
         const now = Date.now();
         markersRespawnAt.push({
           respawnAt: now + respawnTimer,
-          timeoutId: setTimeout(() => {
-            const previousRespawnAtIndex = markersRespawnAt.findIndex(
-              (markerRespawnAt) =>
-                markerRespawnAt.markerId === markerId &&
-                markerRespawnAt.steamId === steamId &&
-                markerRespawnAt.worldName === worldName &&
-                markerRespawnAt.token === token
-            );
-            if (previousRespawnAtIndex !== -1) {
-              markersRespawnAt.splice(previousRespawnAtIndex, 1);
-            }
-          }, respawnTimer),
           markerId,
           worldName,
           steamId,
           token,
           markerType,
         });
-
         client
           .to(token)
           .emit('markerRespawnAt', markerId, respawnTimer, steamId, markerType);

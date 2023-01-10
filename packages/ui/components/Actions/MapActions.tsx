@@ -327,8 +327,8 @@ const MapActions = () => {
             Other users
           </Text>
           <Text>
-            See the player movement of other players to get an understanding of
-            crowded areas. Only{' '}
+            See the player movement and respawn timers of other players to get
+            an understanding of crowded areas. Only{' '}
             <Anchor
               href="https://www.overwolf.com/app/Leon_Machens-Aeternum_Map"
               target="_blank"
@@ -341,7 +341,7 @@ const MapActions = () => {
             >
               Aeternum Map
             </Anchor>{' '}
-            users are visible.
+            users (anonymous) are visible.
           </Text>
           <Stack spacing="xs">
             <Text weight={500} size="sm">
