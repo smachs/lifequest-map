@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import leaflet from 'leaflet';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -16,8 +17,9 @@ import { usePlayerStore } from '../../utils/playerStore';
 import { calcDistance } from '../../utils/positions';
 import { useSettingsStore } from '../../utils/settingsStore';
 import useEventListener from '../../utils/useEventListener';
-import { getAction, startTimer } from './actions';
+import { getAction, sharedRespawnTimers, startTimer } from './actions';
 import CanvasMarker from './CanvasMarker';
+import { fetchRespawnTimers } from './respawnTimers';
 import { getTooltipContent } from './tooltips';
 
 export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
@@ -39,10 +41,17 @@ function useLayerGroups({
   socket: Socket | null;
 }): void {
   const { visibleMarkers, markerRoutes } = useMarkers();
-  const { markerSize, markerShowBackground } = useSettingsStore(
+  const {
+    markerSize,
+    markerShowBackground,
+    showOtherRespawnTimers,
+    otherPlayersWorldName,
+  } = useSettingsStore(
     (state) => ({
       markerSize: state.markerSize,
       markerShowBackground: state.markerShowBackground,
+      showOtherRespawnTimers: state.showOtherRespawnTimers,
+      otherPlayersWorldName: state.otherPlayersWorldName,
     }),
     shallow
   );
@@ -55,10 +64,15 @@ function useLayerGroups({
     };
   }>({});
   const { map, nodeId } = useRouteParams();
-  const { location: playerLocation, worldName } = usePlayerStore(
+  const {
+    location: playerLocation,
+    worldName,
+    steamId,
+  } = usePlayerStore(
     (state) => ({
       location: state.player?.position?.location,
       worldName: state.player?.worldName,
+      steamId: state.player?.steamId,
     }),
     shallow
   );
@@ -116,14 +130,24 @@ function useLayerGroups({
           markersRespawnTimers: {
             markerId: string;
             respawnTimer: number;
+            steamId: string;
+            markerType: string;
           }[]
         ) => {
           const allLayers = allLayersRef.current;
           markersRespawnAt.current = {};
           const now = Date.now();
           for (const markerRespawnTimer of markersRespawnTimers) {
+            const isMine = markerRespawnTimer.steamId === steamId;
+            if (
+              !isMine &&
+              !sharedRespawnTimers.includes(markerRespawnTimer.markerType)
+            ) {
+              continue;
+            }
             markersRespawnAt.current[markerRespawnTimer.markerId] =
               markerRespawnTimer.respawnTimer + now;
+
             const marker = allLayers[markerRespawnTimer.markerId]?.layer;
             if (marker) {
               startTimer(marker, markerRespawnTimer.respawnTimer);
@@ -132,7 +156,48 @@ function useLayerGroups({
         }
       );
     }
-  }, [socket, worldName]);
+  }, [socket, worldName, showOtherRespawnTimers && otherPlayersWorldName]);
+
+  const { data: respawnTimers } = useQuery(
+    ['respawnTimers', otherPlayersWorldName],
+    () => fetchRespawnTimers(otherPlayersWorldName!),
+    {
+      enabled: Boolean(showOtherRespawnTimers && otherPlayersWorldName),
+      refetchInterval: 30000,
+    }
+  );
+
+  useEffect(() => {
+    if (!showOtherRespawnTimers || !otherPlayersWorldName || !respawnTimers) {
+      return;
+    }
+    const now = Date.now();
+    for (const markerRespawnTimer of respawnTimers) {
+      const allLayers = allLayersRef.current;
+      const marker = allLayers[markerRespawnTimer.markerId]?.layer;
+      if (marker && sharedRespawnTimers.includes(marker.options.image.type)) {
+        markersRespawnAt.current[markerRespawnTimer.markerId] =
+          markerRespawnTimer.respawnTimer + now;
+        startTimer(marker, markerRespawnTimer.respawnTimer);
+      }
+    }
+
+    return () => {
+      for (const markerRespawnTimer of respawnTimers) {
+        const allLayers = allLayersRef.current;
+        const marker = allLayers[markerRespawnTimer.markerId]?.layer;
+        if (marker && sharedRespawnTimers.includes(marker.options.image.type)) {
+          delete markersRespawnAt.current[markerRespawnTimer.markerId];
+          if (marker.actionHandle) {
+            clearTimeout(marker.actionHandle);
+          }
+          if (marker.popup) {
+            marker.popup.remove();
+          }
+        }
+      }
+    };
+  }, [showOtherRespawnTimers, otherPlayersWorldName, respawnTimers]);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -370,8 +435,19 @@ function useLayerGroups({
 
     leafletMap.on('moveend', placeMarkersInBounds);
 
-    const handleMarkerRespawnAt = (markerId: string, respawnTimer: number) => {
+    const handleMarkerRespawnAt = (
+      markerId: string,
+      respawnTimer: number,
+      markerSteamId: string,
+      markerType: string
+    ) => {
       markersRespawnAt.current[markerId] = respawnTimer + Date.now();
+
+      const isMine = markerSteamId === steamId;
+      if (!isMine && !sharedRespawnTimers.includes(markerType)) {
+        return;
+      }
+
       const marker = allLayers[markerId]?.layer;
       if (marker) {
         startTimer(marker, respawnTimer);

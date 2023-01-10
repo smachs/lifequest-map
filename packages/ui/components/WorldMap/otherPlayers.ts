@@ -13,12 +13,15 @@ type LiveCharacter = {
   map: string;
 };
 
-const UPDATE_INTERVAL = 1500;
-let cache: Promise<LiveCharacter[]> | null = null;
-let lastUpdate = 0;
+const PLAYERS_UPDATE_INTERVAL = 1500;
+let playersCache: Promise<LiveCharacter[]> | null = null;
+let lastPlayersUpdate = 0;
 const fetchPlayers = async () => {
-  if (!cache || Date.now() - lastUpdate > UPDATE_INTERVAL) {
-    cache = Promise.all<LiveCharacter[]>([
+  if (
+    !playersCache ||
+    Date.now() - lastPlayersUpdate > PLAYERS_UPDATE_INTERVAL
+  ) {
+    playersCache = Promise.all<LiveCharacter[]>([
       fetch('https://live1.aeternum-map.gg/api/live').then((response) =>
         response.json()
       ),
@@ -28,9 +31,9 @@ const fetchPlayers = async () => {
     ]).then(([live1, live2]) =>
       [...live1, ...live2].filter(({ map }) => map === AETERNUM_MAP.name)
     );
-    lastUpdate = Date.now();
+    lastPlayersUpdate = Date.now();
   }
-  return cache;
+  return playersCache;
 };
 
 export const initOtherPlayers = (leafletMap: leaflet.Map) => {
@@ -85,7 +88,7 @@ export const initOtherPlayers = (leafletMap: leaflet.Map) => {
           });
           timeoutId = setTimeout(async () => {
             await updateOtherPlayers(leafletMap);
-          }, UPDATE_INTERVAL);
+          }, PLAYERS_UPDATE_INTERVAL);
         };
         await updateOtherPlayers(leafletMap);
       }

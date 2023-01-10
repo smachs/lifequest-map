@@ -52,6 +52,9 @@ const MapActions = () => {
     toggleShowOtherPlayers,
     otherPlayersSize,
     setOtherPlayersSize,
+    showOtherRespawnTimers,
+    toggleShowOtherRespawnTimers,
+    otherPlayersWorldName,
   } = useSettingsStore(
     (state) => ({
       following: state.following,
@@ -60,6 +63,9 @@ const MapActions = () => {
       toggleShowOtherPlayers: state.toggleShowOtherPlayers,
       otherPlayersSize: state.otherPlayersSize,
       setOtherPlayersSize: state.setOtherPlayersSize,
+      showOtherRespawnTimers: state.showOtherRespawnTimers,
+      toggleShowOtherRespawnTimers: state.toggleShowOtherRespawnTimers,
+      otherPlayersWorldName: state.otherPlayersWorldName,
     }),
     shallow
   );
@@ -348,6 +354,16 @@ const MapActions = () => {
             <OtherPlayersServerSelect />
             <Button compact onClick={toggleShowOtherPlayers} fullWidth>
               {showOtherPlayers ? 'Hide other players' : 'Show other players'}
+            </Button>
+            <Button
+              compact
+              onClick={toggleShowOtherRespawnTimers}
+              fullWidth
+              disabled={!otherPlayersWorldName}
+            >
+              {showOtherRespawnTimers
+                ? 'Hide other respawn timers'
+                : 'Show other respawn timers'}
             </Button>
           </Stack>
         </HoverCard.Dropdown>

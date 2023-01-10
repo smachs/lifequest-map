@@ -15,7 +15,7 @@ const OtherPlayersServerSelect = () => {
   return (
     <Select
       label="Select a server"
-      description="Only users from this server will be visible. If you don't select a server, all users are visible."
+      description="Only users from this server will be visible. If you don't select a server, all users are visible. The respawn timers are only visible if you select a server."
       placeholder="Pick one"
       value={otherPlayersWorldName}
       onChange={setOtherPlayersWorldName}

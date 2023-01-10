@@ -167,7 +167,7 @@ const FAQModal = ({ opened, onClose }: FAQModalProps) => {
                 I want to update my username
               </Accordion.Control>
               <Accordion.Panel>
-                Your username is your Steam Profile Name. If you updated your on
+                Your username is your Steam Profile Name. If you updated it on
                 Steam, you need to sign-out and sign-in on aeternum-map.gg.
               </Accordion.Panel>
             </Accordion.Item>
