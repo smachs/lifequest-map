@@ -311,7 +311,9 @@ const MapActions = () => {
         <HoverCard.Target>
           <ActionIcon
             color="blue"
-            variant={showOtherPlayers ? 'filled' : 'default'}
+            variant={
+              showOtherPlayers || showOtherRespawnTimers ? 'filled' : 'default'
+            }
             size="md"
             radius="sm"
             onClick={toggleShowOtherPlayers}
