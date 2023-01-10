@@ -156,31 +156,48 @@ function useLayerGroups({
         }
       );
     }
-  }, [socket, worldName]);
+  }, [socket, worldName, showOtherRespawnTimers && otherPlayersWorldName]);
 
-  useQuery(
+  const { data: respawnTimers } = useQuery(
     ['respawnTimers', otherPlayersWorldName],
     () => fetchRespawnTimers(otherPlayersWorldName!),
     {
       enabled: Boolean(showOtherRespawnTimers && otherPlayersWorldName),
       refetchInterval: 30000,
-      onSuccess: (respawnTimers) => {
-        const now = Date.now();
-        for (const markerRespawnTimer of respawnTimers) {
-          const allLayers = allLayersRef.current;
-          const marker = allLayers[markerRespawnTimer.markerId]?.layer;
-          if (
-            marker &&
-            sharedRespawnTimers.includes(marker.options.image.type)
-          ) {
-            markersRespawnAt.current[markerRespawnTimer.markerId] =
-              markerRespawnTimer.respawnTimer + now;
-            startTimer(marker, markerRespawnTimer.respawnTimer);
-          }
-        }
-      },
     }
   );
+
+  useEffect(() => {
+    if (!showOtherRespawnTimers || !otherPlayersWorldName || !respawnTimers) {
+      return;
+    }
+    const now = Date.now();
+    for (const markerRespawnTimer of respawnTimers) {
+      const allLayers = allLayersRef.current;
+      const marker = allLayers[markerRespawnTimer.markerId]?.layer;
+      if (marker && sharedRespawnTimers.includes(marker.options.image.type)) {
+        markersRespawnAt.current[markerRespawnTimer.markerId] =
+          markerRespawnTimer.respawnTimer + now;
+        startTimer(marker, markerRespawnTimer.respawnTimer);
+      }
+    }
+
+    return () => {
+      for (const markerRespawnTimer of respawnTimers) {
+        const allLayers = allLayersRef.current;
+        const marker = allLayers[markerRespawnTimer.markerId]?.layer;
+        if (marker && sharedRespawnTimers.includes(marker.options.image.type)) {
+          delete markersRespawnAt.current[markerRespawnTimer.markerId];
+          if (marker.actionHandle) {
+            clearTimeout(marker.actionHandle);
+          }
+          if (marker.popup) {
+            marker.popup.remove();
+          }
+        }
+      }
+    };
+  }, [showOtherRespawnTimers, otherPlayersWorldName, respawnTimers]);
 
   useEffect(() => {
     if (isFirstRender.current) {
