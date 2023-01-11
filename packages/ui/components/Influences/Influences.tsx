@@ -17,7 +17,7 @@ import { IconChevronRight, IconInfoCircle } from '@tabler/icons';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getZonesWithWorlds, Zone } from 'static';
+import { getZonesWithWorlds } from 'static';
 import { fetchJSON } from '../../utils/api';
 import { toTimeAgo } from '../../utils/dates';
 import { isEmbed } from '../../utils/routes';
@@ -58,7 +58,7 @@ interface ZoneProps {
   influences: InfluenceDTO[];
   publicName: string | undefined;
 }
-const Zone = ({ zone, influences, publicName }: ZoneProps) => {
+const WorldZone = ({ zone, influences, publicName }: ZoneProps) => {
   const { classes, theme, cx } = useStyles();
   const [opened, setOpened] = useState(false);
   const items = zone.worlds.map((world) => {
@@ -268,7 +268,7 @@ const Influences = () => {
         </SimpleGrid>
       </Paper>
       {zonesWithWorlds.map((zone) => (
-        <Zone
+        <WorldZone
           key={zone.id}
           zone={zone}
           influences={influences}
