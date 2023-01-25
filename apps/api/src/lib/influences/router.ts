@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import type { Filter } from 'mongodb';
-import { ObjectId } from 'mongodb';
 import sharp from 'sharp';
 import { worlds } from 'static';
 import { getInfluencesCollection } from './collection.js';
@@ -86,15 +85,21 @@ influencesRouter.get('/today', async (req, res, next) => {
   }
 });
 
-influencesRouter.get('/images/:influenceId', async (req, res, next) => {
+influencesRouter.get('/:worldName/image', async (req, res, next) => {
   try {
-    if (!ObjectId.isValid(req.params.influenceId)) {
-      res.status(400).send('Invalid ID');
+    const world = worlds.find(
+      (world) => world.worldName === req.params.worldName
+    );
+    if (!world) {
+      res.status(404).send('Not found');
       return;
     }
-    const influence = await getInfluencesCollection().findOne({
-      _id: new ObjectId(req.params.influenceId),
-    });
+
+    const influence = await getInfluencesCollection().findOne(
+      { worldName: world.worldName },
+      { sort: { createdAt: -1 } }
+    );
+
     if (!influence) {
       res.status(404).send('Not found');
       return;
