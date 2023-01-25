@@ -16,6 +16,11 @@ export const getZonesWithWorlds = () => {
   }));
 };
 
+export const SYNDICATE_COLOR = 'rgb(130, 95, 130)';
+export const COVENANT_COLOR = 'rgb(152, 100, 43)';
+export const MARAUDER_COLOR = 'rgb(95, 135, 76)';
+export const NEUTRAL_COLOR = 'rgb(200, 200, 200)';
+
 export const validateInfluence = (
   influence: {
     regionName: string;

@@ -17,16 +17,16 @@ import { IconChevronRight, IconInfoCircle } from '@tabler/icons';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getZonesWithWorlds } from 'static';
+import {
+  COVENANT_COLOR,
+  getZonesWithWorlds,
+  MARAUDER_COLOR,
+  SYNDICATE_COLOR,
+} from 'static';
 import { fetchJSON } from '../../utils/api';
 import { toTimeAgo } from '../../utils/dates';
 import { isEmbed } from '../../utils/routes';
 import type { InfluenceDTO } from './InfluenceDetails';
-import {
-  COVENANT_COLOR,
-  MARAUDER_COLOR,
-  SYNDICATE_COLOR,
-} from './InfluenceDetails';
 import useStyles from './Influences.styles';
 
 const zonesWithWorlds = getZonesWithWorlds();

@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import type { Filter } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { worlds } from 'static';
 import { getInfluencesCollection } from './collection.js';
 import type { InfluenceDTO } from './types.js';
+import { generateInfluenceSVG } from './utils.js';
 
 const influencesRouter = Router();
 
@@ -78,6 +80,33 @@ influencesRouter.get('/today', async (req, res, next) => {
       filter
     );
     res.status(200).json(todaysInfluences);
+  } catch (error) {
+    next(error);
+  }
+});
+
+influencesRouter.get('/images/:influenceId', async (req, res, next) => {
+  try {
+    if (!ObjectId.isValid(req.params.influenceId)) {
+      res.status(400).send('Invalid ID');
+      return;
+    }
+    const influence = await getInfluencesCollection().findOne({
+      _id: new ObjectId(req.params.influenceId),
+    });
+    if (!influence) {
+      res.status(404).send('Not found');
+      return;
+    }
+    const embed = req.query.embed === 'true';
+    const svg = await generateInfluenceSVG(
+      influence.worldName,
+      influence.influence,
+      embed
+    );
+    res.setHeader('Content-Type', 'image/svg+xml');
+    res.header('Vary', 'Accept-Encoding');
+    res.send(svg);
   } catch (error) {
     next(error);
   }
