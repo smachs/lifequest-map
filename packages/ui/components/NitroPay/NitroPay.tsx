@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
-import { isNWGuide } from '../../utils/routes';
 import { useUserStore } from '../../utils/userStore';
 
 const NitroPay = () => {
   const account = useUserStore((state) => state.account);
   useEffect(() => {
-    if (isNWGuide || account?.isSupporter) {
+    if (account?.isSupporter) {
       return;
     }
     // @ts-ignore
@@ -17,7 +16,7 @@ const NitroPay = () => {
     });
   }, []);
 
-  if (account?.isSupporter || isNWGuide) {
+  if (account?.isSupporter) {
     return <></>;
   }
   return <div id="nitro" />;
