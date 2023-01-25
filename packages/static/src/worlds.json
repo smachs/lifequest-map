@@ -30,11 +30,6 @@
     "zone": "fra"
   },
   {
-    "publicName": "Avalon",
-    "worldName": "live-2-fsw01-10",
-    "zone": "iad"
-  },
-  {
     "publicName": "Barri",
     "worldName": "live-1-14-1",
     "zone": "fra"
@@ -130,11 +125,6 @@
     "zone": "syd"
   },
   {
-    "publicName": "Tartarus",
-    "worldName": "live-1-22-2",
-    "zone": "fra"
-  },
-  {
     "publicName": "Titan",
     "worldName": "live-3-fsw01-01",
     "zone": "pdx"
@@ -143,15 +133,5 @@
     "publicName": "Valhalla",
     "worldName": "live-2-02-1",
     "zone": "iad"
-  },
-  {
-    "publicName": "Yggdrasil",
-    "worldName": "live-3-06-5",
-    "zone": "pdx"
-  },
-  {
-    "publicName": "Yonas",
-    "worldName": "live-3-fsw01-02",
-    "zone": "pdx"
   }
 ]
