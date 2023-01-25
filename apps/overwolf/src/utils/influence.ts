@@ -4,57 +4,70 @@ import { getCurrentWindow } from 'ui/utils/windows';
 import { getGameInfo } from './games';
 import { imageToCanvas, takeScreenshot } from './media';
 
-type RGB = {
-  r: number;
-  g: number;
-  b: number;
-};
+type HSL = [number, number, number];
 
 type Faction = {
   name: string;
-} & RGB;
+  hsl: HSL;
+};
 
-const THRESHOLD = 32;
 export const factions: Faction[] = [
   {
     name: 'Syndicate',
-    r: 130,
-    g: 95,
-    b: 130,
+    hsl: [300, 18, 42],
   },
   {
     name: 'Covenant',
-    r: 152,
-    g: 100,
-    b: 43,
+    hsl: [35, 45, 49],
   },
   {
     name: 'Marauder',
-    r: 95,
-    g: 135,
-    b: 76,
+    hsl: [103, 32, 35],
   },
   {
     name: 'Neutral',
-    r: 168,
-    g: 161,
-    b: 155,
+    hsl: [54, 12, 67],
   },
 ];
 
-const isInRange = (color: RGB, reference: RGB) => {
+const rgbToHSL = (r: number, g: number, b: number) => {
+  (r /= 255), (g /= 255), (b /= 255);
+  const max = Math.max(r, g, b),
+    min = Math.min(r, g, b);
+  let h = 0;
+  let s = 0;
+  const l = (max + min) / 2;
+
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r:
+        h = (g - b) / d + (g < b ? 6 : 0);
+        break;
+      case g:
+        h = (b - r) / d + 2;
+        break;
+      case b:
+        h = (r - g) / d + 4;
+        break;
+    }
+    h /= 6;
+  }
+
+  return [Math.floor(h * 360), Math.floor(s * 100), Math.floor(l * 100)] as HSL;
+};
+
+const isInRange = (color: HSL, reference: HSL) => {
   return (
-    reference.r - THRESHOLD < color.r &&
-    reference.r + THRESHOLD > color.r &&
-    reference.g - THRESHOLD < color.g &&
-    reference.g + THRESHOLD > color.g &&
-    reference.b - THRESHOLD < color.b &&
-    reference.b + THRESHOLD > color.b
+    Math.abs(color[0] - reference[0]) < 40 &&
+    Math.abs(color[1] - reference[1]) < 10 &&
+    Math.abs(color[2] - reference[2]) < 20
   );
 };
 
-const getFaction = (color: RGB) => {
-  return factions.find((faction) => isInRange(color, faction));
+const getFaction = (color: HSL) => {
+  return factions.find((faction) => isInRange(color, faction.hsl));
 };
 
 export const regions = [
@@ -309,15 +322,12 @@ export const getInfluence = (imageData: ImageData): Influence => {
     const r = imageData.data[i];
     const g = imageData.data[i + 1];
     const b = imageData.data[i + 2];
-    const color = {
-      r,
-      g,
-      b,
-    };
+
     const row = Math.floor(i / (imageData.width * 4));
     const col = (i / 4) % imageData.width;
     const region = getRegion(row, col);
-    const faction = getFaction(color);
+    const hsl = rgbToHSL(r, g, b);
+    const faction = getFaction(hsl);
 
     if (!region && faction) {
       const validationRect = getValidationRect(row, col);
@@ -332,8 +342,8 @@ export const getInfluence = (imageData: ImageData): Influence => {
         validationResults[index][faction.name]++;
 
         imageData.data[i] = 255;
-        imageData.data[i + 1] = 0;
-        imageData.data[i + 2] = 0;
+        imageData.data[i + 1] = 255;
+        imageData.data[i + 2] = 255;
         imageData.data[i + 3] = 255;
       }
     } else if (!region || !faction) {
@@ -343,9 +353,9 @@ export const getInfluence = (imageData: ImageData): Influence => {
       imageData.data[i + 3] = 0;
     } else {
       influenceByRegion[region.name][faction.name]++;
-      imageData.data[i] = faction.r;
-      imageData.data[i + 1] = faction.g;
-      imageData.data[i + 2] = faction.b;
+      imageData.data[i] = 255;
+      imageData.data[i + 1] = 255;
+      imageData.data[i + 2] = 255;
       imageData.data[i + 3] = 255;
     }
   }
@@ -379,7 +389,7 @@ export const getInfluence = (imageData: ImageData): Influence => {
       (validationRect.right - validationRect.left);
 
     if (Object.values(factionPoints).some((points) => points / pixels > 0.15)) {
-      throw new Error('Overlay position is invalid');
+      throw new Error(`Overlay position is invalid (code-${index})`);
     }
   });
 

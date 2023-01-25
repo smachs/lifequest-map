@@ -8,6 +8,7 @@ import { ensureAuthenticated } from '../auth/middlewares.js';
 import { uploadToDiscord } from '../discord.js';
 import { SCREENSHOTS_PATH } from '../env.js';
 import { getInfluencesCollection } from '../influences/collection.js';
+import { generateInfluenceSVG } from '../influences/utils.js';
 import { getScreenshotsCollection } from './collection.js';
 
 const screenshotsUpload = multer({ dest: SCREENSHOTS_PATH });
@@ -69,8 +70,7 @@ screenshotsRouter.post(
       }[];
       validateInfluence(influence);
 
-      const buffer = await sharp(req.file.path).webp().toBuffer();
-      const blob = new Blob([buffer]);
+      // We don't need the original screenshot anymore
       await fs.rm(req.file.path);
       const now = new Date();
 
@@ -135,11 +135,34 @@ screenshotsRouter.post(
       const changedInfluenceMessage = changedInfluence
         .map((item) => `${item.regionName}: ${item.before} -> ${item.after}`)
         .join('\n');
+
+      const ranking: {
+        [factionName: string]: number;
+      } = {
+        Syndicate: 0,
+        Covenant: 0,
+        Marauder: 0,
+      };
+      influence.forEach(({ factionName }) => {
+        if (typeof ranking[factionName] !== 'undefined') {
+          ranking[factionName]++;
+        }
+      });
+      const total = ranking.Syndicate + ranking.Covenant + ranking.Marauder;
+      const syndicatePart = ((ranking.Syndicate / total) * 100).toFixed(0);
+      const covenantPart = ((ranking.Covenant / total) * 100).toFixed(0);
+      const marauderPart = ((ranking.Marauder / total) * 100).toFixed(0);
+
+      const svg = await generateInfluenceSVG(world.worldName, influence, true);
+      const buffer = await sharp(Buffer.from(svg)).webp().toBuffer();
+
+      const blob = new Blob([buffer]);
+
       const response = await uploadToDiscord(
         blob,
         `**Server**: ${world.publicName}\n**User**: ${
           account.name
-        }\n**Date**: ${now.toLocaleDateString()}\n**Changes**:\n${changedInfluenceMessage}`,
+        }\n**Date**: ${now.toLocaleDateString()}\n**Changes**:\n${changedInfluenceMessage}\n**Influence**:\n<:covenant:1067756697873035284> ${covenantPart}% | <:marauder:1067756763618746438> ${marauderPart}% | <:syndicate:1067756766672203788> ${syndicatePart}%`,
         webhookUrl
       );
       const result = await response.json();

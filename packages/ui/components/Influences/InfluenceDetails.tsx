@@ -4,7 +4,14 @@ import { useQuery } from '@tanstack/react-query';
 import leaflet from 'leaflet';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { regions, worlds } from 'static';
+import {
+  COVENANT_COLOR,
+  MARAUDER_COLOR,
+  NEUTRAL_COLOR,
+  regions,
+  SYNDICATE_COLOR,
+  worlds,
+} from 'static';
 import { fetchJSON } from '../../utils/api';
 import { isEmbed } from '../../utils/routes';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
@@ -18,11 +25,6 @@ export type InfluenceDTO = {
   }[];
   createdAt: string;
 };
-
-export const SYNDICATE_COLOR = 'rgb(130, 95, 130)';
-export const COVENANT_COLOR = 'rgb(152, 100, 43)';
-export const MARAUDER_COLOR = 'rgb(95, 135, 76)';
-export const NEUTRAL_COLOR = 'rgb(200 200 200)';
 
 const InfluenceDetails = () => {
   const { world: publicName } = useParams();

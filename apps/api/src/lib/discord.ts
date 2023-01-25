@@ -54,7 +54,7 @@ export const uploadToDiscord = (
 ) => {
   const formData = new FormData();
 
-  formData.append('files[0]', blob, 'screenshot.webp');
+  formData.append('files[0]', blob, 'influences.webp');
   formData.append(
     'payload_json',
     JSON.stringify({
