@@ -190,6 +190,93 @@ const getRegion = (row: number, col: number) => {
   );
 };
 
+export const validationRects = [
+  {
+    top: 618,
+    left: 380,
+    right: 409,
+    bottom: 633,
+  },
+  {
+    top: 517,
+    left: 377,
+    right: 408,
+    bottom: 537,
+  },
+  {
+    top: 393,
+    left: 518,
+    right: 552,
+    bottom: 419,
+  },
+  {
+    top: 277,
+    left: 626,
+    right: 640,
+    bottom: 294,
+  },
+  {
+    top: 61,
+    left: 489,
+    right: 522,
+    bottom: 83,
+  },
+  {
+    top: 0,
+    left: 317,
+    right: 363,
+    bottom: 14,
+  },
+  {
+    top: 13,
+    left: 47,
+    right: 68,
+    bottom: 29,
+  },
+  {
+    top: 130,
+    left: 0,
+    right: 15,
+    bottom: 160,
+  },
+  {
+    top: 214,
+    left: 122,
+    right: 153,
+    bottom: 240,
+  },
+  {
+    top: 356,
+    left: 5,
+    right: 21,
+    bottom: 376,
+  },
+  {
+    top: 390,
+    left: 108,
+    right: 123,
+    bottom: 405,
+  },
+  {
+    top: 507,
+    left: 130,
+    right: 150,
+    bottom: 527,
+  },
+  {
+    top: 617,
+    left: 100,
+    right: 123,
+    bottom: 636,
+  },
+];
+
+const getValidationRect = (row: number, col: number) => {
+  return validationRects.findIndex(
+    (rect) =>
+      rect.top < row && rect.bottom > row && rect.left < col && rect.right > col
+  );
+};
 export type Influence = {
   regionName: string;
   factionName: string;
@@ -212,6 +299,11 @@ export const getInfluence = (imageData: ImageData): Influence => {
     }),
     {}
   );
+  const validationResults: {
+    [index: string]: {
+      [factionName: string]: number;
+    };
+  } = {};
 
   for (let i = 0; i < imageData.data.length; i += 4) {
     const r = imageData.data[i];
@@ -227,7 +319,24 @@ export const getInfluence = (imageData: ImageData): Influence => {
     const region = getRegion(row, col);
     const faction = getFaction(color);
 
-    if (!region || !faction) {
+    if (!region && faction) {
+      const validationRect = getValidationRect(row, col);
+      if (validationRect !== -1) {
+        const index = validationRect.toString();
+        if (!validationResults[index]) {
+          validationResults[index] = {};
+        }
+        if (!validationResults[index][faction.name]) {
+          validationResults[index][faction.name] = 0;
+        }
+        validationResults[index][faction.name]++;
+
+        imageData.data[i] = 255;
+        imageData.data[i + 1] = 0;
+        imageData.data[i + 2] = 0;
+        imageData.data[i + 3] = 255;
+      }
+    } else if (!region || !faction) {
       imageData.data[i] = 0;
       imageData.data[i + 1] = 0;
       imageData.data[i + 2] = 0;
@@ -263,6 +372,17 @@ export const getInfluence = (imageData: ImageData): Influence => {
       };
     });
 
+  Object.entries(validationResults).forEach(([index, factionPoints]) => {
+    const validationRect = validationRects[+index];
+    const pixels =
+      (validationRect.bottom - validationRect.top) *
+      (validationRect.right - validationRect.left);
+
+    if (Object.values(factionPoints).some((points) => points / pixels > 0.15)) {
+      throw new Error('Overlay position is invalid');
+    }
+  });
+
   validateInfluence(influence);
 
   return influence;
@@ -286,7 +406,9 @@ export const takeInfluenceScreenshot = async () => {
 export const uploadInfluence = async (blob: Blob, influence: Influence) => {
   const gameInfo = await getGameInfo();
   if (!gameInfo?.game_info?.world_name) {
-    throw new Error('Can not read world name');
+    throw new Error(
+      'Can not read world name. Make sure to run Overwolf before running New World.'
+    );
   }
   const worldName = gameInfo.game_info.world_name;
   const formData = new FormData();
