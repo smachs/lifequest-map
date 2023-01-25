@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import type { Filter } from 'mongodb';
 import { ObjectId } from 'mongodb';
+import sharp from 'sharp';
 import { worlds } from 'static';
 import { getInfluencesCollection } from './collection.js';
 import type { InfluenceDTO } from './types.js';
@@ -98,15 +99,11 @@ influencesRouter.get('/images/:influenceId', async (req, res, next) => {
       res.status(404).send('Not found');
       return;
     }
-    const embed = req.query.embed === 'true';
     const svg = await generateInfluenceSVG(
       influence.worldName,
-      influence.influence,
-      embed
+      influence.influence
     );
-    res.setHeader('Content-Type', 'image/svg+xml');
-    res.header('Vary', 'Accept-Encoding');
-    res.send(svg);
+    await sharp(Buffer.from(svg)).webp().pipe(res);
   } catch (error) {
     next(error);
   }

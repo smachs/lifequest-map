@@ -153,7 +153,7 @@ screenshotsRouter.post(
       const covenantPart = ((ranking.Covenant / total) * 100).toFixed(0);
       const marauderPart = ((ranking.Marauder / total) * 100).toFixed(0);
 
-      const svg = await generateInfluenceSVG(world.worldName, influence, true);
+      const svg = await generateInfluenceSVG(world.worldName, influence);
       const buffer = await sharp(Buffer.from(svg)).webp().toBuffer();
 
       const blob = new Blob([buffer]);
