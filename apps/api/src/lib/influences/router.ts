@@ -108,6 +108,7 @@ influencesRouter.get('/:worldName/image', async (req, res, next) => {
       influence.worldName,
       influence.influence
     );
+    res.header('Content-Type', 'image/webp');
     await sharp(Buffer.from(svg)).webp().pipe(res);
   } catch (error) {
     next(error);
