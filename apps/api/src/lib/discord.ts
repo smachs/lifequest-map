@@ -48,17 +48,18 @@ export const getMarkerRoutesURL = (id: string, map?: string) => {
 };
 
 export const uploadToDiscord = (
-  blob: Blob,
+  blobs: Blob[],
   message: string,
   webhookUrl: string
 ) => {
   const formData = new FormData();
-
-  formData.append('files[0]', blob, 'influences.webp');
+  blobs.forEach((blob, index) => {
+    formData.append(`files[${index}]`, blob, `influences${index + 1}.webp`);
+  });
   formData.append(
     'payload_json',
     JSON.stringify({
-      username: 'aeternum-map.gg',
+      username: 'nwmap.info',
       avatar_url: 'https://aeternum-map.gg/icon.png',
       content: message,
     })

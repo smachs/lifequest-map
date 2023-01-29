@@ -3,7 +3,8 @@ import fs from 'fs/promises';
 import multer from 'multer';
 import { Blob } from 'node-fetch';
 import sharp from 'sharp';
-import { validateInfluence, worlds } from 'static';
+import type { Faction } from 'static';
+import { ICONS, validateInfluence, worlds } from 'static';
 import { ensureAuthenticated } from '../auth/middlewares.js';
 import { uploadToDiscord } from '../discord.js';
 import { SCREENSHOTS_PATH } from '../env.js';
@@ -70,7 +71,8 @@ screenshotsRouter.post(
       }[];
       validateInfluence(influence);
 
-      // We don't need the original screenshot anymore
+      const screenshotBuffer = await sharp(req.file.path).webp().toBuffer();
+      const screenshotBlob = new Blob([screenshotBuffer]);
       await fs.rm(req.file.path);
       const now = new Date();
 
@@ -86,7 +88,7 @@ screenshotsRouter.post(
       );
 
       const changedInfluence = influence.reduce<
-        { regionName: string; before: string; after: string }[]
+        { regionName: string; before: Faction; after: Faction }[]
       >((pre, item) => {
         const previousItem = lastInfluence
           ? lastInfluence.influence.find(
@@ -100,8 +102,8 @@ screenshotsRouter.post(
             ...pre,
             {
               regionName: item.regionName,
-              before: previousItem.factionName,
-              after: item.factionName,
+              before: previousItem.factionName as Faction,
+              after: item.factionName as Faction,
             },
           ];
         }
@@ -133,7 +135,10 @@ screenshotsRouter.post(
       }
 
       const changedInfluenceMessage = changedInfluence
-        .map((item) => `${item.regionName}: ${item.before} -> ${item.after}`)
+        .map(
+          (item) =>
+            `${item.regionName}: ${ICONS[item.before]} -> ${ICONS[item.after]}`
+        )
         .join('\n');
 
       const ranking: {
@@ -156,13 +161,26 @@ screenshotsRouter.post(
       const svg = await generateInfluenceSVG(world.worldName, influence);
       const buffer = await sharp(Buffer.from(svg)).webp().toBuffer();
 
-      const blob = new Blob([buffer]);
+      const svgBlob = new Blob([buffer]);
 
       const response = await uploadToDiscord(
-        blob,
-        `**Server**: ${world.publicName}\n**User**: ${
-          account.name
-        }\n**Date**: ${now.toLocaleDateString()}\n**Changes**:\n${changedInfluenceMessage}\n**Influence**:\n<:covenant:1067756697873035284> ${covenantPart}% | <:marauder:1067756763618746438> ${marauderPart}% | <:syndicate:1067756766672203788> ${syndicatePart}%`,
+        [screenshotBlob, svgBlob],
+        `
+**Source**:
+[aeternum-map.gg](<https://aeternum-map.gg/influences/${world.publicName}>)
+**Server**:
+${world.publicName}
+**User**:
+${account.name}
+**Date**:
+${now.toLocaleDateString()}
+**Changes**:
+${changedInfluenceMessage}
+**Influence**:
+${ICONS.Covenant} ${covenantPart}% | ${ICONS.Marauder} ${marauderPart}% | ${
+          ICONS.Syndicate
+        } ${syndicatePart}%
+`,
         webhookUrl
       );
       const result = await response.json();
