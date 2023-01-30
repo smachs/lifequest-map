@@ -484,6 +484,21 @@ function useLayerGroups({
       const line = leaflet.polyline(markerRoute.positions, { pmIgnore: true });
       startHereCircle.addTo(layerGroup);
       line.addTo(layerGroup);
+      if (markerRoute.texts) {
+        for (let j = 0; j < markerRoute.texts.length; j++) {
+          const { text, position } = markerRoute.texts[j];
+
+          const textLabel = leaflet.marker(position as [number, number], {
+            icon: leaflet.divIcon({
+              className: 'leaflet-polygon-text',
+              html: text,
+            }),
+            interactive: false,
+          });
+
+          textLabel.addTo(layerGroup);
+        }
+      }
     }
     layerGroup.addTo(leafletMap);
 

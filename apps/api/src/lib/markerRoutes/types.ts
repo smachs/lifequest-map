@@ -8,6 +8,10 @@ export type MarkerRouteDTO = {
   username: string;
   isPublic: boolean;
   positions: [Double, Double][];
+  texts?: {
+    position: [Double, Double];
+    text: string;
+  }[];
   regions: string[];
   markersByType: {
     [type: string]: number;

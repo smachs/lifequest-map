@@ -81,15 +81,31 @@ const MarkerRouteDetails = () => {
 
     const startHereCircle = leaflet.circle(markerRoute.positions[0], {
       pmIgnore: true,
-      color: 'rgba(51, 136, 255, 0.6)',
+      color: 'rgba(51, 136, 255, 0.7)',
     });
     const line = leaflet.polyline(markerRoute.positions, {
       pmIgnore: true,
-      color: 'rgba(51, 136, 255, 0.6)',
+      color: 'rgba(51, 136, 255, 0.7)',
     });
     startHereCircle.addTo(layerGroup);
     line.addTo(layerGroup);
     layerGroup.addTo(latestLeafletMap);
+
+    if (markerRoute.texts) {
+      for (let j = 0; j < markerRoute.texts.length; j++) {
+        const { text, position } = markerRoute.texts[j];
+
+        const textLabel = leaflet.marker(position as [number, number], {
+          icon: leaflet.divIcon({
+            className: 'leaflet-polygon-text',
+            html: text,
+          }),
+          interactive: false,
+        });
+
+        textLabel.addTo(layerGroup);
+      }
+    }
 
     return () => {
       layerGroup.off();

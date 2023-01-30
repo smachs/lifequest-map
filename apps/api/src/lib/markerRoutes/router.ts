@@ -19,6 +19,7 @@ markerRoutesRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       description,
       isPublic,
       positions,
+      texts,
       markersByType,
       map,
       origin,
@@ -53,6 +54,16 @@ markerRoutesRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       createdAt: now,
       updatedAt: now,
     };
+
+    if (Array.isArray(texts)) {
+      markerRoute.texts = texts.map((text) => ({
+        position: text.position.map((part: number) => new Double(part)) as [
+          Double,
+          Double
+        ],
+        text: text.text,
+      }));
+    }
 
     if (typeof description === 'string') {
       markerRoute.description = description;
@@ -229,8 +240,15 @@ markerRoutesRouter.patch(
       const account = req.account!;
 
       const { id } = req.params;
-      const { name, description, isPublic, positions, markersByType, map } =
-        req.body;
+      const {
+        name,
+        description,
+        isPublic,
+        positions,
+        markersByType,
+        map,
+        texts,
+      } = req.body;
 
       if (!ObjectId.isValid(id)) {
         res.status(400).send('Invalid payload');
@@ -286,6 +304,15 @@ markerRoutesRouter.patch(
           res.status(400).send('Invalid payload');
           return;
         }
+      }
+      if (Array.isArray(texts)) {
+        markerRoute.texts = texts.map((text) => ({
+          position: text.position.map((part: number) => new Double(part)) as [
+            Double,
+            Double
+          ],
+          text: text.text,
+        }));
       }
 
       if (typeof markersByType !== 'undefined') {

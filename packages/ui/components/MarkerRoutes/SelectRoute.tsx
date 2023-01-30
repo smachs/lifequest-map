@@ -27,12 +27,16 @@ type SelectRouteProps = {
   onClose: () => void;
 };
 function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
-  const [positions, setPositions] = useState<[number, number][]>(
+  const [positions, setPositions] = useState<MarkerRouteItem['positions']>(
     markerRoute?.positions || []
   );
   const [markersByType, setMarkersByType] = useState<{
     [type: string]: number;
   }>({});
+  const [texts, setTexts] = useState<MarkerRouteItem['texts']>(
+    markerRoute?.texts || []
+  );
+
   const [name, setName] = useState(markerRoute?.name || '');
   const [description, setDescription] = useState(
     markerRoute?.description || ''
@@ -81,54 +85,66 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
       leaflet.PM.reInitLayer(latestLeafletMap);
     }
 
+    const refreshTexts = () => {
+      const allLayers = latestLeafletMap!.pm.getGeomanLayers();
+      const texts = allLayers
+        .filter(
+          // @ts-ignore
+          (layer) => layer.pm._shape === 'Text'
+        )
+        .map((layer) => {
+          const textLayer = layer as leaflet.Marker;
+          const latLng = textLayer.getLatLng();
+          return {
+            position: [latLng.lat, latLng.lng],
+            text: textLayer.options.text || '',
+          };
+        });
+      setTexts(texts);
+      // workaround for https://github.com/geoman-io/leaflet-geoman/issues/1300
+      latestLeafletMap!.dragging.enable();
+    };
+
     // @ts-ignore
     latestLeafletMap!.pm.setGlobalOptions({ snappable: true });
+    latestLeafletMap!.pm.addControls({
+      position: 'topleft',
+      drawCircle: false,
+      drawCircleMarker: false,
+      drawMarker: false,
+      drawRectangle: false,
+      drawPolygon: false,
+      drawText: true,
+      rotateMode: false,
+      cutPolygon: false,
+      drawPolyline: true,
+      removalMode: true,
+      editMode: true,
+      dragMode: true,
+    });
+
     let existingPolyline: leaflet.Polyline | null = null;
-
-    const toggleControls = (editMode: boolean) => {
-      latestLeafletMap!.pm.addControls({
-        position: 'topleft',
-        drawCircle: false,
-        drawCircleMarker: false,
-        drawMarker: false,
-        drawRectangle: false,
-        drawPolygon: false,
-        drawText: false,
-        rotateMode: false,
-        dragMode: false,
-        cutPolygon: false,
-        removalMode: false,
-        drawPolyline: true,
-        editMode: false,
-      });
-      if (editMode) {
-        // @ts-ignore
-        if (!latestLeafletMap!.pm.Toolbar.buttons['EditRoute']) {
-          latestLeafletMap!.pm.Toolbar.createCustomControl({
-            name: 'EditRoute',
-            block: 'custom',
-            title: 'Edit Route',
-            className: 'leaflet-pm-icon-edit',
-            toggle: false,
-          });
-        }
-      }
-    };
-    toggleControls(false);
-
     latestLeafletMap!.on('pm:create', (event) => {
-      existingPolyline = event.layer as leaflet.Polyline;
-      refreshMarkers(event.layer);
+      if (event.shape === 'Text') {
+        event.layer.on('pm:textblur', refreshTexts);
+        event.layer.on('pm:dragend', refreshTexts);
+        event.layer.on('pm:remove', refreshTexts);
+      }
+      if (event.shape === 'Line') {
+        existingPolyline = event.layer as leaflet.Polyline;
+        refreshMarkers(event.layer);
 
-      toggleControls(true);
-
-      event.layer.on('pm:edit', (event) => {
-        refreshMarkers(event.layer as leaflet.Polyline);
-      });
+        event.layer.on('pm:edit', (event) => {
+          refreshMarkers(event.layer as leaflet.Polyline);
+        });
+      }
     });
 
     // listen to vertexes being added to currently drawn layer (called workingLayer)
-    latestLeafletMap!.on('pm:drawstart', ({ workingLayer }) => {
+    latestLeafletMap!.on('pm:drawstart', ({ shape, workingLayer }) => {
+      if (shape !== 'Line') {
+        return;
+      }
       if (!existingPolyline) {
         existingPolyline = workingLayer as leaflet.Polyline;
       } else {
@@ -149,12 +165,6 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
       });
     });
 
-    latestLeafletMap!.on('pm:buttonclick', ({ btnName }) => {
-      if (btnName === 'EditRoute' && existingPolyline) {
-        existingPolyline.pm.toggleEdit();
-      }
-    });
-
     if (markerRoute) {
       existingPolyline = leaflet.polyline(markerRoute.positions, {
         pmIgnore: false,
@@ -164,13 +174,22 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
       existingPolyline.on('pm:edit', (event) => {
         refreshMarkers(event.layer);
       });
-      toggleControls(true);
       setTimeout(() => {
         if (existingPolyline) {
           refreshMarkers(existingPolyline);
         }
       }, 100);
       existingPolyline.pm.enable();
+
+      markerRoute.texts?.forEach(({ text, position }) => {
+        leaflet
+          .marker(position as [number, number], {
+            textMarker: true,
+            text,
+            pmIgnore: false,
+          })
+          .addTo(latestLeafletMap!);
+      });
     } else {
       latestLeafletMap!.pm.enableDraw('Line');
     }
@@ -178,26 +197,31 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
     return () => {
       latestLeafletMap!.pm.removeControls();
       latestLeafletMap!.pm.disableGlobalEditMode();
+      latestLeafletMap!.pm.disableDraw();
       latestLeafletMap!.off('pm:create');
       latestLeafletMap!.off('pm:drawstart');
-
       if (existingPolyline) {
         existingPolyline.off();
         existingPolyline.remove();
       }
+      latestLeafletMap!.pm.getGeomanLayers().forEach((layer) => {
+        layer.off();
+        layer.remove();
+      });
     };
   }, []);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     try {
-      const partialMarkerRoute = {
+      const partialMarkerRoute: Partial<MarkerRouteItem> = {
         name,
         description,
         isPublic,
         positions,
         map,
         markersByType,
+        texts,
       };
 
       const action = markerRoute

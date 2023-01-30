@@ -14,15 +14,7 @@ export function getMarkerRoutes() {
   return fetchJSON<MarkerRouteItem[]>(`/api/marker-routes`);
 }
 
-type MarkerRouteDTO = {
-  name: string;
-  isPublic: boolean;
-  positions: [number, number][];
-  markersByType: {
-    [type: string]: number;
-  };
-};
-export function postMarkerRoute(markerRoute: MarkerRouteDTO) {
+export function postMarkerRoute(markerRoute: Partial<MarkerRouteItem>) {
   return fetchJSON<MarkerRouteItem>('/api/marker-routes', {
     method: 'POST',
     headers: {
@@ -34,7 +26,7 @@ export function postMarkerRoute(markerRoute: MarkerRouteDTO) {
 
 export function patchMarkerRoute(
   markerRouteId: string,
-  patch: Partial<MarkerRouteDTO>
+  patch: Partial<MarkerRouteItem>
 ) {
   return fetchJSON<MarkerRouteItem>(`/api/marker-routes/${markerRouteId}`, {
     method: 'PATCH',
