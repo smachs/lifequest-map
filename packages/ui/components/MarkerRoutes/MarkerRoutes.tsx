@@ -37,6 +37,10 @@ export type MarkerRouteItem = {
   isPublic: boolean;
   map?: string;
   positions: [number, number][];
+  texts?: {
+    position: number[];
+    text: string;
+  }[];
   regions: string[];
   markersByType: {
     [type: string]: number;

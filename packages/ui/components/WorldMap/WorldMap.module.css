@@ -64,6 +64,13 @@
   cursor: pointer;
 }
 
+:global(.pm-textarea) {
+  padding: 0 !important;
+  color: white !important;
+  background: none !important;
+  text-shadow: 1px 1px 2px #000000;
+}
+
 :global(.action-finish),
 :global(.action-finishMode) {
   background: green !important;
