@@ -190,13 +190,6 @@ async function runServer() {
         maxAge: '1w',
       })
     );
-    app.use('/assets', (_req, res) => {
-      res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
-      res.setHeader('Content-Type', 'image/gif');
-      res.send(
-        'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
-      );
-    });
 
     app.get('/robots.txt', (_req, res) => {
       const robotText = `
