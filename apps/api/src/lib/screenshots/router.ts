@@ -166,20 +166,17 @@ screenshotsRouter.post(
       const response = await uploadToDiscord(
         [screenshotBlob, svgBlob],
         `
-**Source**:
-[aeternum-map.gg](<https://aeternum-map.gg/influences/${world.publicName}>)
-**Server**:
-${world.publicName}
-**User**:
-${account.name}
-**Date**:
-${now.toLocaleDateString()}
+**Source**: [aeternum-map.gg](<https://aeternum-map.gg/influences/${encodeURIComponent(
+          world.publicName
+        )}>)
+**Server**: ${world.publicName}
+**User**: ${account.name}
+**Date**: ${now.toLocaleDateString()}
 **Changes**:
 ${changedInfluenceMessage}
-**Influence**:
-${ICONS.Covenant} ${covenantPart}% | ${ICONS.Marauder} ${marauderPart}% | ${
-          ICONS.Syndicate
-        } ${syndicatePart}%
+**Influence**: ${ICONS.Covenant} ${covenantPart}% | ${
+          ICONS.Marauder
+        } ${marauderPart}% | ${ICONS.Syndicate} ${syndicatePart}%
 `,
         webhookUrl
       );
