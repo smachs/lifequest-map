@@ -32,7 +32,7 @@ const createCanvasLayer = (mapDetail: Map): new () => TileLayer =>
       const x = coords.x * multiplicators[zoom - 1];
       const y = (-coords.y - 1) * multiplicators[zoom - 1];
       if (x < 0 || y < 0 || y >= 64 || x >= 64) {
-        return 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+        return 'data:,';
       }
       return `${VITE_API_ENDPOINT}/assets/${
         mapDetail.folder
