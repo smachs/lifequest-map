@@ -252,7 +252,6 @@ const actions: {
   fish_hotspot3: respawnAction(5400),
   boss: respawnAction(5400),
   bossElite: respawnAction(21600),
-  winterWarrior: respawnAction(21600),
   rafflebones_25: respawnAction(5400),
   rafflebones_66: respawnAction(21600),
 };

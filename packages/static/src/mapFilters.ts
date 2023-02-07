@@ -967,38 +967,6 @@ export const mapFilters: FilterItem[] = [
     iconUrl: '/pois/showOfStrength.webp',
     hasName: true,
   },
-  {
-    category: 'events',
-    type: 'gleamite',
-    title: 'Gleamite',
-    iconUrl: '/pois/gleamite.webp',
-  },
-  {
-    category: 'events',
-    type: 'lostPresent',
-    title: 'Lost present',
-    iconUrl: '/pois/lostPresent.webp',
-  },
-  {
-    category: 'events',
-    type: 'floatingPresent',
-    title: 'Floating present',
-    iconUrl: '/pois/floatingPresent.webp',
-  },
-  {
-    category: 'events',
-    type: 'winterVillage',
-    title: 'Winter Village',
-    iconUrl: '/pois/winterVillage.webp',
-  },
-  {
-    category: 'events',
-    type: 'winterWarrior',
-    title: 'Winter Warrior',
-    iconUrl: '/pois/winterWarrior.webp',
-    hasLevel: true,
-    hasHP: true,
-  },
 ];
 
 export type MapFiltersCategory = {
