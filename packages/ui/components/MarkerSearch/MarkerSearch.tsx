@@ -41,26 +41,28 @@ function MarkerSearch() {
       from: string[];
       name: string[];
       loot: string[];
-    }>('/api/search').then((result) => {
-      setData((current) => [
-        ...current,
-        ...result.from.map((item) => ({
-          value: `from: ${item}`,
-          label: `from: ${item}`,
-          group: 'From user',
-        })),
-        ...result.name.map((item) => ({
-          value: `name: ${item}`,
-          label: `name: ${item}`,
-          group: 'Marker name',
-        })),
-        ...result.loot.map((item) => ({
-          value: `loot: ${item}`,
-          label: `loot: ${item}`,
-          group: 'Loot contains',
-        })),
-      ]);
-    });
+    }>('/api/search')
+      .then((result) => {
+        setData((current) => [
+          ...current,
+          ...result.from.map((item) => ({
+            value: `from: ${item}`,
+            label: `from: ${item}`,
+            group: 'From user',
+          })),
+          ...result.name.map((item) => ({
+            value: `name: ${item}`,
+            label: `name: ${item}`,
+            group: 'Marker name',
+          })),
+          ...result.loot.map((item) => ({
+            value: `loot: ${item}`,
+            label: `loot: ${item}`,
+            group: 'Loot contains',
+          })),
+        ]);
+      })
+      .catch(console.error);
   };
 
   return (

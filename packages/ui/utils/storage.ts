@@ -116,8 +116,12 @@ type StoreWithPersist<State = any> = Mutate<
 
 export const withStorageDOMEvents = (store: StoreWithPersist) => {
   const storageEventCallback = (e: StorageEvent) => {
-    if (e.key === store.persist.getOptions().name && e.newValue) {
-      store.persist.rehydrate();
+    try {
+      if (e.key && e.key === store.persist.getOptions().name && e.newValue) {
+        store.persist.rehydrate();
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
