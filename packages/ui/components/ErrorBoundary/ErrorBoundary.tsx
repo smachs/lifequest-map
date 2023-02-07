@@ -28,13 +28,16 @@ class ErrorBoundary extends Component<MyProps, MyState> {
     if (this.state.error) {
       return (
         <Stack>
-          <Text weight={500}>Something went wrong.</Text>
+          <Text weight={500}>
+            Something went wrong.
+            <br />
+            {this.state.error.message}
+          </Text>
           <CopyButton
             value={JSON.stringify({
               name: this.state.error.name,
               message: this.state.error.message,
               stack: this.state.error.stack,
-              cause: this.state.error.cause,
             })}
           >
             {({ copied, copy }) => (
