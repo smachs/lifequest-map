@@ -15,8 +15,9 @@ Get all the locations, farming spots, resources, lore documents, chests, mobs an
 ## Contribution
 
 This app is Open Source. Contributors are highly welcome!
+Join the [Discord](https://discord.com/invite/NTZu8Px).
 
-Join us on our [Discord](https://discord.com/invite/NTZu8Px).
+Please add issues and feature requests on the Discord channel #suggestions.
 
 ### Install dependencies
 

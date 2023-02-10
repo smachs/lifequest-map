@@ -301,6 +301,14 @@ const UserAction = () => {
               </Anchor>
               <Anchor
                 size="xs"
+                href="https://www.hogwarts.gg/"
+                title="Hogwarts Legacy fansite"
+                target="_blank"
+              >
+                Hogwarts.gg
+              </Anchor>
+              <Anchor
+                size="xs"
                 href="https://www.arkesia.gg/"
                 title="Interactive map for Lost Ark"
                 target="_blank"
