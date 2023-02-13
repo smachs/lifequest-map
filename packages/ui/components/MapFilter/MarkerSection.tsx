@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import type { MapFiltersCategory } from 'static';
-import { escapeRegExp } from '../../utils/regExp';
 import Checkbox from './Checkbox';
 import FilterSelection from './FilterSelection';
 import styles from './MarkerSection.module.css';
@@ -8,25 +7,25 @@ import styles from './MarkerSection.module.css';
 type MarkerSectionProps = {
   mapFilterCategory: MapFiltersCategory;
   filters: string[];
-  search: string;
+  searchRegExp: RegExp | null;
   onToggle: (filterTypes: string[], checked: boolean) => void;
 };
 
 function MarkerSection({
   mapFilterCategory,
   filters,
-  search,
+  searchRegExp,
   onToggle,
 }: MarkerSectionProps): JSX.Element {
   const categories = useMemo(() => {
-    const regExp = new RegExp(escapeRegExp(search), 'i');
-    if (!search || mapFilterCategory.title.match(regExp)) {
+    if (!searchRegExp || mapFilterCategory.title.match(searchRegExp)) {
       return mapFilterCategory.filters;
     }
     return mapFilterCategory.filters.filter((mapFilter) =>
-      Boolean(mapFilter.title.match(regExp))
+      Boolean(mapFilter.title.match(searchRegExp))
     );
-  }, [search]);
+  }, [searchRegExp]);
+
   if (categories.length === 0) {
     return <> </>;
   }

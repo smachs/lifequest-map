@@ -30,27 +30,26 @@ const FilterWithOptions = ({
         )}
         imgSrc={filter.iconUrl}
         title={filter.title}
-        countType={filter.type}
       />
       <div className={styles.container}>
-        {options.map((option) => (
-          <label
-            key={option}
-            className={classNames(
-              styles.label,
-              filters.includes(`${filter.type}-${option}`) && styles.active
-            )}
-          >
-            {option}
-            <input
-              type="checkbox"
-              checked={filters.includes(`${filter.type}-${option}`)}
-              onChange={(event) =>
-                onToggle([`${filter.type}-${option}`], event.target.checked)
-              }
-            />
-          </label>
-        ))}
+        {options.map((option) => {
+          const checked = filters.includes(`${filter.type}-${option}`);
+          return (
+            <label
+              key={option}
+              className={classNames(styles.label, checked && styles.active)}
+            >
+              {option}
+              <input
+                type="checkbox"
+                checked={checked}
+                onChange={(event) =>
+                  onToggle([`${filter.type}-${option}`], event.target.checked)
+                }
+              />
+            </label>
+          );
+        })}
       </div>
     </>
   );
