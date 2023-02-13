@@ -6,8 +6,10 @@ import {
   TextInput,
 } from '@mantine/core';
 import { IconFilter, IconX } from '@tabler/icons';
+import { useMemo } from 'react';
 import { mapFiltersCategories } from 'static';
 import { useFiltersStore } from '../../utils/filtersStore';
+import { escapeRegExp } from '../../utils/regExp';
 import { usePersistentState } from '../../utils/storage';
 import { useUserStore } from '../../utils/userStore';
 import MarkerSearch from '../MarkerSearch/MarkerSearch';
@@ -35,6 +37,11 @@ function MarkersView(): JSX.Element {
     const uniqueFilters = Array.from(new Set(newFilters));
     setFilters(uniqueFilters);
   }
+  const searchRegExp = useMemo(
+    () => (search ? new RegExp(escapeRegExp(search), 'i') : null),
+    [search]
+  );
+
   return (
     <Stack>
       <Button disabled={!account} onClick={() => upsertStore.setMarker(true)}>
@@ -60,7 +67,7 @@ function MarkersView(): JSX.Element {
             mapFilterCategory={mapFilterCategory}
             filters={filters}
             onToggle={handleToggle}
-            search={search}
+            searchRegExp={searchRegExp}
           />
         ))}
       </ScrollArea>
