@@ -101,8 +101,6 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
           };
         });
       setTexts(texts);
-      // workaround for https://github.com/geoman-io/leaflet-geoman/issues/1300
-      latestLeafletMap!.dragging.enable();
     };
 
     // @ts-ignore
@@ -124,6 +122,7 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
     });
 
     let existingPolyline: leaflet.Polyline | null = null;
+    latestLeafletMap!.on('pm:remove', refreshTexts);
     latestLeafletMap!.on('pm:create', (event) => {
       if (event.shape === 'Text') {
         event.layer.on('pm:textblur', refreshTexts);
