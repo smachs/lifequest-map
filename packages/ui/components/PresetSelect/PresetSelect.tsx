@@ -16,7 +16,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import shallow from 'zustand/shallow';
 import { fetchJSON } from '../../utils/api';
-import { allFilters, useFiltersStore } from '../../utils/filtersStore';
+import { allFilters } from '../../utils/filtersStore';
 import type { AccountDTO } from '../../utils/userStore';
 import { useUserStore } from '../../utils/userStore';
 import AcceptAction from '../AcceptAction/AcceptAction';
@@ -33,16 +33,16 @@ const updatePresets = (presets: Preset[]) =>
   });
 
 type PresetSelectProps = {
+  filters: string[];
   onChange: (filters: string[]) => void;
 };
-function PresetSelect({ onChange }: PresetSelectProps): JSX.Element {
+function PresetSelect({ filters, onChange }: PresetSelectProps): JSX.Element {
   const { account, setAccount } = useUserStore(
     (state) => ({ account: state.account, setAccount: state.setAccount }),
     shallow
   );
   const [openedAdd, setOpenedAdd] = useState(false);
   const [openedDelete, setOpenedDelete] = useState(false);
-  const { filters } = useFiltersStore();
 
   const [presetName, setPresetName] = useState('');
   const updateMutation = useMutation(updatePresets, {

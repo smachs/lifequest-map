@@ -6,7 +6,6 @@ import {
   TextInput,
 } from '@mantine/core';
 import { IconFilter, IconX } from '@tabler/icons';
-import { useMemo } from 'react';
 import { mapFiltersCategories } from 'static';
 import { useFiltersStore } from '../../utils/filtersStore';
 import { escapeRegExp } from '../../utils/regExp';
@@ -37,11 +36,11 @@ function MarkersView(): JSX.Element {
     const uniqueFilters = Array.from(new Set(newFilters));
     setFilters(uniqueFilters);
   }
-  const searchRegExp = useMemo(
-    () => (search ? new RegExp(escapeRegExp(search), 'i') : null),
-    [search]
-  );
+  const searchRegExp = search ? new RegExp(escapeRegExp(search), 'i') : null;
 
+  if (location.search.includes('test=1')) {
+    return <></>;
+  }
   return (
     <Stack>
       <Button disabled={!account} onClick={() => upsertStore.setMarker(true)}>
@@ -59,18 +58,22 @@ function MarkersView(): JSX.Element {
           </ActionIcon>
         }
       />
-      <PresetSelect onChange={setFilters} />
-      <ScrollArea style={{ height: 'calc(100vh - 270px)' }} offsetScrollbars>
-        {mapFiltersCategories.map((mapFilterCategory) => (
-          <MarkerSection
-            key={mapFilterCategory.value}
-            mapFilterCategory={mapFilterCategory}
-            filters={filters}
-            onToggle={handleToggle}
-            searchRegExp={searchRegExp}
-          />
-        ))}
-      </ScrollArea>
+      {!location.search.includes('test=2') && (
+        <PresetSelect onChange={setFilters} filters={filters} />
+      )}
+      {!location.search.includes('test=3') && (
+        <ScrollArea style={{ height: 'calc(100vh - 270px)' }} offsetScrollbars>
+          {mapFiltersCategories.map((mapFilterCategory) => (
+            <MarkerSection
+              key={mapFilterCategory.value}
+              mapFilterCategory={mapFilterCategory}
+              filters={filters}
+              onToggle={handleToggle}
+              searchRegExp={searchRegExp}
+            />
+          ))}
+        </ScrollArea>
+      )}
     </Stack>
   );
 }

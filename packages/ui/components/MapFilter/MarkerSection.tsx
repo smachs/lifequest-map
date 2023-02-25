@@ -1,5 +1,4 @@
-import { useMemo } from 'react';
-import type { MapFiltersCategory } from 'static';
+import type { FilterItem, MapFiltersCategory } from 'static';
 import Checkbox from './Checkbox';
 import FilterSelection from './FilterSelection';
 import styles from './MarkerSection.module.css';
@@ -17,21 +16,21 @@ function MarkerSection({
   searchRegExp,
   onToggle,
 }: MarkerSectionProps): JSX.Element {
-  const categories = useMemo(() => {
-    if (!searchRegExp || mapFilterCategory.title.match(searchRegExp)) {
-      return mapFilterCategory.filters;
-    }
-    return mapFilterCategory.filters.filter((mapFilter) =>
+  let categories: FilterItem[];
+  if (!searchRegExp || mapFilterCategory.title.match(searchRegExp)) {
+    categories = mapFilterCategory.filters;
+  } else {
+    categories = mapFilterCategory.filters.filter((mapFilter) =>
       Boolean(mapFilter.title.match(searchRegExp))
     );
-  }, [searchRegExp]);
+  }
 
   if (categories.length === 0) {
-    return <> </>;
+    return <></>;
   }
 
   return (
-    <section key={mapFilterCategory.value} className={styles.container}>
+    <section className={styles.container}>
       <Checkbox
         onChange={(checked) =>
           onToggle(
