@@ -37,10 +37,6 @@ function MarkersView(): JSX.Element {
     setFilters(uniqueFilters);
   }
   const searchRegExp = search ? new RegExp(escapeRegExp(search), 'i') : null;
-
-  if (location.search.includes('test=1')) {
-    return <></>;
-  }
   return (
     <Stack>
       <Button disabled={!account} onClick={() => upsertStore.setMarker(true)}>
@@ -58,22 +54,18 @@ function MarkersView(): JSX.Element {
           </ActionIcon>
         }
       />
-      {!location.search.includes('test=2') && (
-        <PresetSelect onChange={setFilters} filters={filters} />
-      )}
-      {!location.search.includes('test=3') && (
-        <ScrollArea style={{ height: 'calc(100vh - 270px)' }} offsetScrollbars>
-          {mapFiltersCategories.map((mapFilterCategory) => (
-            <MarkerSection
-              key={mapFilterCategory.value}
-              mapFilterCategory={mapFilterCategory}
-              filters={filters}
-              onToggle={handleToggle}
-              searchRegExp={searchRegExp}
-            />
-          ))}
-        </ScrollArea>
-      )}
+      <PresetSelect onChange={setFilters} filters={filters} />
+      <ScrollArea style={{ height: 'calc(100vh - 270px)' }} offsetScrollbars>
+        {mapFiltersCategories.map((mapFilterCategory) => (
+          <MarkerSection
+            key={mapFilterCategory.value}
+            mapFilterCategory={mapFilterCategory}
+            filters={filters}
+            onToggle={handleToggle}
+            searchRegExp={searchRegExp}
+          />
+        ))}
+      </ScrollArea>
     </Stack>
   );
 }

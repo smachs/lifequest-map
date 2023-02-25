@@ -16,6 +16,9 @@ const FilterWithOptions = ({
   filters,
   onToggle,
 }: FilterWithOptionsProps) => {
+  if (location.search.includes('test=4')) {
+    return <></>;
+  }
   return (
     <>
       <Checkbox
