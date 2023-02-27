@@ -30,7 +30,7 @@ function Checkbox({
         onChange={(event) => onChange(event.target.checked)}
         checked={checked}
       />
-      {!location.search.includes('test=3') && imgSrc && (
+      {imgSrc && (
         <Image
           src={imgSrc}
           width={19}

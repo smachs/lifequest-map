@@ -10,6 +10,9 @@ type FilterSectionProps = {
 
 const FilterSelection = ({ filter, filters, onToggle }: FilterSectionProps) => {
   if (filter.category === 'chests') {
+    if (location.search.includes('test=1')) {
+      return <></>;
+    }
     const options = Array(filter.maxTier || 5)
       .fill(null)
       .map((_, index) => index + 1)
@@ -24,6 +27,9 @@ const FilterSelection = ({ filter, filters, onToggle }: FilterSectionProps) => {
     );
   }
   if (filter.sizes) {
+    if (location.search.includes('test=2')) {
+      return <></>;
+    }
     return (
       <FilterWithOptions
         options={filter.sizes}
@@ -32,6 +38,10 @@ const FilterSelection = ({ filter, filters, onToggle }: FilterSectionProps) => {
         onToggle={onToggle}
       />
     );
+  }
+
+  if (location.search.includes('test=3')) {
+    return <></>;
   }
 
   return (
