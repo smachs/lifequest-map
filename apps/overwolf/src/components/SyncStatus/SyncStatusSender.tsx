@@ -101,9 +101,7 @@ function SyncStatusSender() {
       {newWorldGameInfo?.isRunning && position && (
         <small>
           <span className={styles.success}>Playing</span>
-          {username && ` as ${username}`} at [
-          {position.location?.[1].toFixed(3)},{' '}
-          {position.location?.[0].toFixed(3)}]{' '}
+          {username && ` as ${username}`}{' '}
           <Group spacing="xs">
             <Text size="xs">{region && `${location || region}`}</Text>
             {world && zone && <WorldName world={world} zone={zone} />}
