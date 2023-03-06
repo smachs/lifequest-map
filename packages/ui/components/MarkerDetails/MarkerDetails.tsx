@@ -108,13 +108,15 @@ function MarkerDetails(): JSX.Element {
       opened={!!nodeId}
       withOverlay={false}
       zIndex={99999}
-      padding="sm"
-      size="xl"
-      styles={(theme) => ({
+      size={500}
+      styles={{
         header: {
-          marginBottom: theme.spacing.xs,
+          zIndex: 10,
         },
-      })}
+        body: {
+          width: 500,
+        },
+      }}
       title={
         filterItem && !isLoading ? (
           <Group>
@@ -131,7 +133,7 @@ function MarkerDetails(): JSX.Element {
     >
       {(!filterItem || isLoading) && <Skeleton height={50} />}
       {filterItem && !isLoading && (
-        <Stack style={{ height: 'calc(100vh - 64px)' }} spacing="xs">
+        <Stack style={{ height: 'calc(100vh - 80px)' }} spacing="xs">
           <Meta {...getNodeMeta(marker)} />
 
           <Group>

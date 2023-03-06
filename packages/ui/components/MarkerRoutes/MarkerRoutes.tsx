@@ -1,7 +1,7 @@
 import {
+  Box,
   Button,
   Group,
-  ScrollArea,
   Select,
   Skeleton,
   Stack,
@@ -234,7 +234,7 @@ function MarkerRoutes(): JSX.Element {
           ]}
         />
       </Group>
-      <ScrollArea style={{ height: 'calc(100vh - 170px)' }} offsetScrollbars>
+      <Box>
         {isLoading && <Skeleton height={40} />}
         {!isLoading && sortedMarkerRoutes.length === 0 && (
           <Text color="orange">No routes found</Text>
@@ -259,7 +259,7 @@ function MarkerRoutes(): JSX.Element {
             Load more
           </Button>
         )}
-      </ScrollArea>
+      </Box>
     </Stack>
   );
 }
