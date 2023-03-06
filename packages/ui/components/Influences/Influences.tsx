@@ -4,7 +4,6 @@ import {
   Box,
   Collapse,
   Group,
-  Image,
   Paper,
   Progress,
   SimpleGrid,
@@ -233,11 +232,7 @@ const Influences = () => {
                     Aeternum Map app
                   </Text>
                   .
-                  <Image
-                    src="/influence-preview.webp"
-                    fit="contain"
-                    width={300}
-                  />
+                  <img src="/influence-preview.webp" width={300} />
                   The overlay is visible in-game and usable with a simple click.
                   Please move the influence map to fit the overlay.
                 </Text>

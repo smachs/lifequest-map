@@ -3,7 +3,6 @@ import {
   Button,
   Drawer,
   Group,
-  Image,
   List,
   ScrollArea,
   Skeleton,
@@ -257,7 +256,7 @@ const MarkerRouteDetails = () => {
                 <List.Item
                   key={markerMapFilter.type}
                   icon={
-                    <Image
+                    <img
                       src={markerMapFilter.iconUrl}
                       alt={markerMapFilter.type}
                       width={24}

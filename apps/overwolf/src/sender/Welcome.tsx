@@ -1,4 +1,4 @@
-import { Image, UnstyledButton } from '@mantine/core';
+import { UnstyledButton } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { fetchJSON } from 'ui/utils/api';
@@ -76,15 +76,17 @@ function Welcome(): JSX.Element {
         <li>🗺️ Minimap view</li>
         <li>🤷‍♂️ Conforms to AGS ToS</li>
       </ul>
-      <UnstyledButton onClick={handleLogin}>
-        <Image
+      <UnstyledButton
+        onClick={handleLogin}
+        sx={{
+          margin: '0 auto',
+        }}
+      >
+        <img
           src="/steam.png"
           width={180}
           height={35}
           alt="Sign in through Steam"
-          sx={{
-            margin: '0 auto',
-          }}
         />
       </UnstyledButton>
     </div>
