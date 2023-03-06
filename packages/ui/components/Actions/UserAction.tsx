@@ -4,7 +4,6 @@ import {
   Button,
   Divider,
   Group,
-  Image,
   Popover,
   Stack,
   Text,
@@ -176,15 +175,17 @@ const UserAction = () => {
                   setting nodes as discovered, an account is required. Please
                   sign in:
                 </Text>
-                <UnstyledButton onClick={handleLogin}>
-                  <Image
+                <UnstyledButton
+                  onClick={handleLogin}
+                  sx={{
+                    margin: '0 auto',
+                  }}
+                >
+                  <img
                     src="/steam.png"
                     width={180}
                     height={35}
                     alt="Sign in through Steam"
-                    sx={{
-                      margin: '0 auto',
-                    }}
                   />
                 </UnstyledButton>
                 {verifyingSessionId && (

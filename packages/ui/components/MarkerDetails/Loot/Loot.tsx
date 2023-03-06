@@ -1,12 +1,4 @@
-import {
-  Anchor,
-  Badge,
-  Group,
-  Image,
-  List,
-  Skeleton,
-  Text,
-} from '@mantine/core';
+import { Anchor, Badge, Group, List, Skeleton, Text } from '@mantine/core';
 import { useEffect } from 'react';
 import useLoot from './useLoot';
 
@@ -59,7 +51,9 @@ function Loot({ markerId }: LootProps) {
         items?.map((item) => (
           <List.Item
             key={item.id}
-            icon={<Image src={item.iconSrc} width={24} height={24} />}
+            icon={
+              <img src={item.iconSrc} width={24} height={24} loading="lazy" />
+            }
             sx={{
               width: '100%',
             }}

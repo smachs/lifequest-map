@@ -4,7 +4,6 @@ import {
   Button,
   Drawer,
   Group,
-  Image,
   ScrollArea,
   Skeleton,
   Stack,
@@ -120,7 +119,7 @@ function MarkerDetails(): JSX.Element {
       title={
         filterItem && !isLoading ? (
           <Group>
-            <Image width={32} height={32} src={filterItem.iconUrl} alt="" />{' '}
+            <img width={32} height={32} src={filterItem.iconUrl} alt="" />{' '}
             {marker.chestType
               ? `${marker.chestType} Chest T${marker.tier}`
               : marker.name || filterItem.title}
