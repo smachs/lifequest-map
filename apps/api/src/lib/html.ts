@@ -46,27 +46,31 @@ htmlRouter.get('/nodes/:id', async (req, res) => {
     position: node.position.map(Number) as [number, number, number],
     map: node.map,
   });
+  const contentTitle = `${title} - New World Map - aeternum-map.gg`;
+  const contentDescription = `${
+    description ? ` ${description} ` : ''
+  }Maximize your New World gameplay with Aeternum Map! Discover locations, chests, lore, expeditions & more. Realtime tracking & farming routes. Open-source companion app.`;
   const imageTag =
     node.screenshotFilename &&
     `https://aeternum-map.gg/screenshots/${node.screenshotFilename}`;
   const html = replaceMeta(`
 <link rel="canonical" href="https://aeternum-map.gg/nodes/${id}" />
-<title>${title}</title>
-<meta name="description" content="${description}"/>
+<title>${contentTitle}</title>
+<meta name="description" content="${contentDescription}"/>
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://aeternum-map.gg/nodes/${id}">
-<meta property="og:title" content="${title}">
-<meta property="og:description" content="${description}">
-${imageTag ? `<meta property="og:image" content="${imageTag}">` : ''}
+<meta property="og:title" content="${contentTitle}">
+<meta property="og:description" content="${contentDescription}">
+<meta property="og:image" content="${imageTag || '/social.jpg'}">
 
 <meta property="twitter:card" content="${
     imageTag ? 'summary_large_image' : 'summary'
   }">
 <meta property="twitter:url" content="https://aeternum-map.gg/nodes/${id}">
-<meta property="twitter:title" content="${title}">
-<meta property="twitter:description" content="${description}">
-${imageTag ? `<meta property="twitter:image" content="${imageTag}">` : ''}
+<meta property="twitter:title" content="${contentTitle}">
+<meta property="twitter:description" content="${contentDescription}">
+<meta property="twitter:image" content="${imageTag || '/social.jpg'}">
 `);
   res.send(html);
 });
