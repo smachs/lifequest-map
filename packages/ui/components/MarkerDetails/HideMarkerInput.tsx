@@ -1,7 +1,7 @@
 import { Button } from '@mantine/core';
-import { IconEye, IconEyeOff } from '@tabler/icons';
+import { IconEye, IconEyeOff } from '@tabler/icons-react';
 import { useState } from 'react';
-import shallow from 'zustand/shallow';
+import { shallow } from 'zustand/shallow';
 import { notify } from '../../utils/notifications';
 import { useUserStore } from '../../utils/userStore';
 import { patchUser } from './api';

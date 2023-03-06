@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import { persist, subscribeWithSelector } from 'zustand/middleware';
 import { getJSONItem, withStorageDOMEvents } from './storage';
 

@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { patchUser } from '../components/MarkerDetails/api';
 import type { Preset } from '../components/PresetSelect/presets';

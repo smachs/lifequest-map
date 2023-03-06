@@ -1,5 +1,5 @@
 import { ActionIcon, Group, Stack, Tooltip } from '@mantine/core';
-import { IconMenu2, IconX } from '@tabler/icons';
+import { IconMenu2, IconX } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import BroadcastIcon from 'ui/components/icons/BroadcastIcon';
 import CopyIcon from 'ui/components/icons/CopyIcon';
@@ -12,7 +12,7 @@ import { writeError } from 'ui/utils/logs';
 import { classNames } from 'ui/utils/styles';
 import { useUserStore } from 'ui/utils/userStore';
 import { v4 as uuid } from 'uuid';
-import shallow from 'zustand/shallow';
+import { shallow } from 'zustand/shallow';
 import DebouncedInput from '../components/DebouncedInput/DebouncedInput';
 import InfluenceIcon from '../components/InfluenceIcon/InfluenceIcon';
 import Settings from '../components/Settings/Settings';

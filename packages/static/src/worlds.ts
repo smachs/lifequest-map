@@ -50,5 +50,5 @@ export const validateInfluence = (
     }
   });
 };
-export type World = typeof worlds[0];
-export type Zone = typeof zones[0];
+export type World = (typeof worlds)[0];
+export type Zone = (typeof zones)[0];

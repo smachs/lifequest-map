@@ -1,5 +1,5 @@
 import { getJSONItem, withStorageDOMEvents } from 'ui/utils/storage';
-import create from 'zustand';
+import { create } from 'zustand';
 import { persist, subscribeWithSelector } from 'zustand/middleware';
 
 type Store = {

@@ -10,11 +10,11 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import { IconDeviceFloppy, IconTrashX } from '@tabler/icons';
+import { IconDeviceFloppy, IconTrashX } from '@tabler/icons-react';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import shallow from 'zustand/shallow';
+import { shallow } from 'zustand/shallow';
 import { fetchJSON } from '../../utils/api';
 import { allFilters } from '../../utils/filtersStore';
 import type { AccountDTO } from '../../utils/userStore';

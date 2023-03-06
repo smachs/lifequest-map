@@ -1,5 +1,5 @@
 import { ActionIcon, Group, Stack, Text, Tooltip } from '@mantine/core';
-import { IconAlertCircle, IconCircleCheck } from '@tabler/icons';
+import { IconAlertCircle, IconCircleCheck } from '@tabler/icons-react';
 import { getWorld, getZone } from 'static';
 import WorldName from 'ui/components/SyncStatus/WorldName';
 import { usePosition } from '../../contexts/PositionContext';

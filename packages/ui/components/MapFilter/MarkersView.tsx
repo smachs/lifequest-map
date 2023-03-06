@@ -5,7 +5,7 @@ import {
   Stack,
   TextInput,
 } from '@mantine/core';
-import { IconFilter, IconX } from '@tabler/icons';
+import { IconFilter, IconX } from '@tabler/icons-react';
 import { mapFiltersCategories } from 'static';
 import { useFiltersStore } from '../../utils/filtersStore';
 import { escapeRegExp } from '../../utils/regExp';

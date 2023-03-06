@@ -1,6 +1,6 @@
 import { Button, Modal } from '@mantine/core';
 import { useState } from 'react';
-import shallow from 'zustand/shallow';
+import { shallow } from 'zustand/shallow';
 import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
 import { useUserStore } from '../../utils/userStore';

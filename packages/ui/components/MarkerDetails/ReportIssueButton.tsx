@@ -1,5 +1,5 @@
 import { Anchor, Button, Modal, Stack, Textarea } from '@mantine/core';
-import { IconAlertTriangle } from '@tabler/icons';
+import { IconAlertTriangle } from '@tabler/icons-react';
 import { useQueryClient } from '@tanstack/react-query';
 import type { FormEvent } from 'react';
 import { useState } from 'react';

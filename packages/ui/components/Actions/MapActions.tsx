@@ -19,10 +19,10 @@ import {
   IconPlus,
   IconServer,
   IconUsers,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { servers } from 'realtime';
 import { getWorld, getZone } from 'static';
-import shallow from 'zustand/shallow';
+import { shallow } from 'zustand/shallow';
 import { usePlayerStore } from '../../utils/playerStore';
 import { isEmbed } from '../../utils/routes';
 import { useSettingsStore } from '../../utils/settingsStore';

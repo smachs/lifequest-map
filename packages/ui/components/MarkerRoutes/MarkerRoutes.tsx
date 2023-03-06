@@ -8,7 +8,7 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import { IconFilter } from '@tabler/icons';
+import { IconFilter } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import {

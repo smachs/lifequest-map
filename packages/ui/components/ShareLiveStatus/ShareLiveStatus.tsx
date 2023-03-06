@@ -1,7 +1,7 @@
 import type { FormEvent } from 'react';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import shallow from 'zustand/shallow';
+import { shallow } from 'zustand/shallow';
 import { useSettingsStore } from '../../utils/settingsStore';
 import { useUserStore } from '../../utils/userStore';
 import Button from '../Button/Button';

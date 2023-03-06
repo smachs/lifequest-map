@@ -1,5 +1,5 @@
 import { Button, Dialog, Slider, Text } from '@mantine/core';
-import { IconFlag } from '@tabler/icons';
+import { IconFlag } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import leaflet from 'leaflet';
 import { useEffect, useState } from 'react';

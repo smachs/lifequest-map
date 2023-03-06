@@ -6,7 +6,7 @@ import {
   Notification,
   Tooltip,
 } from '@mantine/core';
-import { IconScreenshot, IconUpload, IconX } from '@tabler/icons';
+import { IconScreenshot, IconUpload, IconX } from '@tabler/icons-react';
 import { StrictMode, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { waitForOverwolf } from 'ui/utils/overwolf';

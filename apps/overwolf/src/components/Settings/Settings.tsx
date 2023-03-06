@@ -11,7 +11,7 @@ import {
   Stack,
   Title,
 } from '@mantine/core';
-import { IconLogout } from '@tabler/icons';
+import { IconLogout } from '@tabler/icons-react';
 import SupporterInput from 'ui/components/SupporterInput/SupporterInput';
 import { useSettingsStore } from 'ui/utils/settingsStore';
 import { useUserStore } from 'ui/utils/userStore';

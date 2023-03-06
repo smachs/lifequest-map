@@ -61,10 +61,10 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
     }
     if (following && player?.position?.location) {
       const location = player.position.location;
-      return [location[1], location[0], 0];
+      return [+location[1].toFixed(2), +location[0].toFixed(2), 0];
     }
     const center = latestLeafletMap!.getCenter();
-    return [center.lng, center.lat, 0];
+    return [+center.lng.toFixed(2), +center.lat.toFixed(2), 0];
   });
 
   useEffect(() => {
