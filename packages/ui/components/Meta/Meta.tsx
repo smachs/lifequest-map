@@ -8,7 +8,7 @@ const Meta = (props: MetaProps) => {
   const title = `${props.title} - New World Map - aeternum-map.gg`;
   const description =
     props.description ||
-    `Get all the New World locations, farming spots, resources, lore documents, chests, mobs and more! The app tracks your position in realtime and displays it on https://aeternum-map.gg. Optimize your resource income with farming routes and coordinate your attacks with group functionality. A free open source companion app for New World.`;
+    'Maximize your New World gameplay with Aeternum Map! Discover locations, chests, lore, expeditions & more. Realtime tracking & farming routes. Open-source companion app.';
   const url = location.origin + location.pathname;
   return (
     <Helmet prioritizeSeoTags>

@@ -5,6 +5,7 @@ import {
   Group,
   MediaQuery,
   Skeleton,
+  Title,
 } from '@mantine/core';
 import { IconFlag, IconMap, IconMapPin, IconRoute2 } from '@tabler/icons-react';
 import { lazy, Suspense } from 'react';
@@ -45,6 +46,9 @@ const NavActions = () => {
 
   return (
     <>
+      <Title order={1} sx={{ display: 'none' }}>
+        Aeternum Map - New World Map
+      </Title>
       <MediaQuery
         smallerThan="sm"
         styles={{
