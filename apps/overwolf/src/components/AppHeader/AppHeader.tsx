@@ -1,5 +1,5 @@
 import { Box } from '@mantine/core';
-import { IconHelp } from '@tabler/icons';
+import { IconHelp } from '@tabler/icons-react';
 import { useState } from 'react';
 import FAQModal from 'ui/components/FAQ/FAQModal';
 import CloseIcon from 'ui/components/icons/CloseIcon';

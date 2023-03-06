@@ -18,11 +18,11 @@ import {
   IconSettings,
   IconShare,
   IconUser,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { AETERNUM_MAP } from 'static';
-import shallow from 'zustand/shallow';
+import { shallow } from 'zustand/shallow';
 import { fetchJSON } from '../../utils/api';
 import { isEmbed, useRouteParams } from '../../utils/routes';
 import { trackOutboundLinkClick } from '../../utils/stats';

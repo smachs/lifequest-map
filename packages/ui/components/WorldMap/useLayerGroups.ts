@@ -10,7 +10,7 @@ import {
   mapIsAeternumMap,
 } from 'static';
 import { isEmbed, useRouteParams } from 'ui/utils/routes';
-import shallow from 'zustand/shallow';
+import { shallow } from 'zustand/shallow';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { writeError } from '../../utils/logs';
 import { usePlayerStore } from '../../utils/playerStore';

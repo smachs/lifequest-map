@@ -1,6 +1,6 @@
 import { Select } from '@mantine/core';
 import { getZone, worlds } from 'static';
-import shallow from 'zustand/shallow';
+import { shallow } from 'zustand/shallow';
 import { useSettingsStore } from '../../utils/settingsStore';
 
 const OtherPlayersServerSelect = () => {

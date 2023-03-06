@@ -1,5 +1,5 @@
 import { Button, Modal, Stack, TextInput } from '@mantine/core';
-import { IconArrowFork } from '@tabler/icons';
+import { IconArrowFork } from '@tabler/icons-react';
 import { useState } from 'react';
 import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';

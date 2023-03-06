@@ -6,7 +6,7 @@ import {
   MediaQuery,
   Skeleton,
 } from '@mantine/core';
-import { IconFlag, IconMap, IconMapPin, IconRoute2 } from '@tabler/icons';
+import { IconFlag, IconMap, IconMapPin, IconRoute2 } from '@tabler/icons-react';
 import { lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { isEmbed, useView } from '../../utils/routes';

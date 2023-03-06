@@ -1,5 +1,5 @@
 import { waitForOverwolf } from 'ui/utils/overwolf';
-import create from 'zustand';
+import { create } from 'zustand';
 import { NEW_WORLD_CLASS_ID } from '../utils/games';
 
 type Store = {

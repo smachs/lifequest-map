@@ -10,14 +10,14 @@ import {
   Stack,
   Text,
 } from '@mantine/core';
-import { IconRoute2 } from '@tabler/icons';
+import { IconRoute2 } from '@tabler/icons-react';
 import { useQueryClient } from '@tanstack/react-query';
 import leaflet from 'leaflet';
 import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FilterItem } from 'static';
 import { findMapDetails, getRouteMeta, mapFilters } from 'static';
-import shallow from 'zustand/shallow';
+import { shallow } from 'zustand/shallow';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { toTimeAgo } from '../../utils/dates';
 import { writeError } from '../../utils/logs';

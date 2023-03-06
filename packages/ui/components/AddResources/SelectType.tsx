@@ -51,14 +51,23 @@ function SelectType({ onSelect, filter }: SelectTypeType): JSX.Element {
           );
         }}
         data={[
-          ...lastSearch.map((type) => {
-            const filter = mapFilters.find((filter) => filter.type === type)!;
-            return {
-              value: filter.type,
-              image: filter.iconUrl,
-              label: filter.title,
-            };
-          }),
+          ...(lastSearch
+            .map((type) => {
+              const filter = mapFilters.find((filter) => filter.type === type)!;
+              if (!filter) {
+                return null;
+              }
+              return {
+                value: filter.type,
+                image: filter.iconUrl,
+                label: filter.title,
+              };
+            })
+            .filter((type) => type !== null) as {
+            value: string;
+            image: string;
+            label: string;
+          }[]),
           ...mapFilters
             .filter(
               (filter) => !lastSearch.some((type) => filter.type === type)

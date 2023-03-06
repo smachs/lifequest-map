@@ -1,5 +1,5 @@
 import { ActionIcon, Button, Card, Group, Modal, Text } from '@mantine/core';
-import { IconTrash } from '@tabler/icons';
+import { IconTrash } from '@tabler/icons-react';
 import { useState } from 'react';
 import { toTimeAgo } from '../../utils/dates';
 import { writeError } from '../../utils/logs';

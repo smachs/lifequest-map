@@ -1,5 +1,9 @@
 import { Badge, Group, Stack, Switch, Text, Title } from '@mantine/core';
-import { IconAlertTriangle, IconArrowFork, IconMessage } from '@tabler/icons';
+import {
+  IconAlertTriangle,
+  IconArrowFork,
+  IconMessage,
+} from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import { findMapDetails } from 'static';
 import { toTimeAgo } from '../../utils/dates';

@@ -1,7 +1,7 @@
 import { ActionIcon, Group, Image, Input, Text } from '@mantine/core';
 import type { DropzoneProps } from '@mantine/dropzone';
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
-import { IconPhoto, IconX } from '@tabler/icons';
+import { IconPhoto, IconX } from '@tabler/icons-react';
 import { useEffect } from 'react';
 
 type ImageDropzoneProps = Omit<DropzoneProps, 'children'> & {

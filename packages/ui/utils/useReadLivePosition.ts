@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { init } from 'realtime';
 import type { Group, Player } from 'realtime/types';
 import type { Socket } from 'socket.io-client';
-import shallow from 'zustand/shallow';
+import { shallow } from 'zustand/shallow';
 import useGroupPositions from '../components/WorldMap/useGroupPositions';
 import { usePlayerStore } from './playerStore';
 import { isEmbed } from './routes';

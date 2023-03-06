@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import type { MarkerFull } from '../MarkerDetails/useMarker';
 import type { MarkerRouteItem } from '../MarkerRoutes/MarkerRoutes';
 

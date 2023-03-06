@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { findMapDetails, mapIsAeternumMap } from 'static';
 import { useMap, useRouteParams } from 'ui/utils/routes';
-import shallow from 'zustand/shallow';
+import { shallow } from 'zustand/shallow';
 import { isOverwolfApp } from '../../utils/overwolf';
 import { usePlayerStore } from '../../utils/playerStore';
 import { useSettingsStore } from '../../utils/settingsStore';

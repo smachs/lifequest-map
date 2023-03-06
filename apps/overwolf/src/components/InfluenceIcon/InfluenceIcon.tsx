@@ -6,7 +6,7 @@ import {
   Text,
   Tooltip,
 } from '@mantine/core';
-import { IconScreenshot } from '@tabler/icons';
+import { IconScreenshot } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { fetchJSON } from 'ui/utils/api';
