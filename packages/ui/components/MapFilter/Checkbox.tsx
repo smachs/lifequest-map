@@ -1,4 +1,3 @@
-import { Image } from '@mantine/core';
 import { classNames } from '../../utils/styles';
 import styles from './Checkbox.module.css';
 
@@ -31,14 +30,13 @@ function Checkbox({
         checked={checked}
       />
       {imgSrc && (
-        <Image
+        <img
           src={imgSrc}
           width={19}
           height={19}
           alt=""
-          imageProps={{
-            loading: 'lazy',
-          }}
+          title=""
+          loading="lazy"
         />
       )}
       {title}
