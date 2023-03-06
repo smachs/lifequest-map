@@ -34,7 +34,9 @@ function DetailsInput({
           label="Level"
           type="number"
           min={1}
-          onChange={(value) => onChange({ ...details, level: value })}
+          onChange={(value) =>
+            onChange({ ...details, level: value || undefined })
+          }
           value={details.level || 0}
           required
         />
@@ -90,7 +92,7 @@ function DetailsInput({
           onChange={(value) =>
             onChange({
               ...details,
-              customRespawnTimer: value,
+              customRespawnTimer: value || undefined,
             })
           }
         />
@@ -105,7 +107,7 @@ function DetailsInput({
           onChange={(value) =>
             onChange({
               ...details,
-              hp: value,
+              hp: value || undefined,
             })
           }
         />

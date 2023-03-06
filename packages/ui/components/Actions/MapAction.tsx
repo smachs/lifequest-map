@@ -1,6 +1,7 @@
 import {
   Card,
   createStyles,
+  getStylesRef,
   Grid,
   Modal,
   Text,
@@ -13,8 +14,8 @@ import { AETERNUM_MAP, findMapDetails, mapDetails } from 'static';
 import { isEmbed, useMap } from '../../utils/routes';
 import useToMap from '../MapFilter/useToMap';
 
-const useStyles = createStyles((theme, _params, getRef) => {
-  const image = getRef('image');
+const useStyles = createStyles((theme) => {
+  const image = getStylesRef('image');
 
   return {
     card: {
@@ -29,7 +30,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
       [`&:hover .${image}`]: {
         transform: 'scale(1.03)',
       },
-      [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
+      [`@media (max-width: ${theme.breakpoints.sm})`]: {
         height: 80,
         width: 80,
       },

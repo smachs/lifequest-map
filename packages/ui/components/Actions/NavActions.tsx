@@ -124,9 +124,16 @@ const NavActions = () => {
         opened={view.section === 'nodes'}
         onClose={() => setView({ section: null })}
         title="Nodes"
-        padding="sm"
-        size="xl"
+        size={500}
         withOverlay={false}
+        styles={{
+          header: {
+            zIndex: 10,
+          },
+          body: {
+            width: 500,
+          },
+        }}
       >
         <ErrorBoundary>
           <Suspense fallback={<Skeleton height={40} />}>
@@ -141,9 +148,16 @@ const NavActions = () => {
         opened={view.section === 'routes'}
         onClose={() => setView({ section: null })}
         title="Routes"
-        padding="sm"
-        size="xl"
+        size={500}
         withOverlay={false}
+        styles={{
+          header: {
+            zIndex: 10,
+          },
+          body: {
+            width: 500,
+          },
+        }}
       >
         <ErrorBoundary>
           <Suspense fallback={<Skeleton height={40} />}>
@@ -158,9 +172,16 @@ const NavActions = () => {
         opened={view.section === 'influences'}
         onClose={() => setView({ section: null })}
         title="Influences"
-        padding="sm"
-        size="xl"
+        size={500}
         withOverlay={false}
+        styles={{
+          header: {
+            zIndex: 10,
+          },
+          body: {
+            width: 500,
+          },
+        }}
       >
         <ErrorBoundary>
           <Suspense fallback={<Skeleton height={40} />}>

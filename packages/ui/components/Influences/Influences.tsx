@@ -7,7 +7,6 @@ import {
   Image,
   Paper,
   Progress,
-  ScrollArea,
   SimpleGrid,
   Text,
   Tooltip,
@@ -211,7 +210,7 @@ const Influences = () => {
   ));
 
   return (
-    <ScrollArea style={{ height: 'calc(100vh - 70px)' }} offsetScrollbars>
+    <>
       <Paper withBorder p="md">
         <Group position="apart">
           <Group align="flex-end" spacing="xs">
@@ -275,7 +274,7 @@ const Influences = () => {
           publicName={publicName}
         />
       ))}
-    </ScrollArea>
+    </>
   );
 };
 

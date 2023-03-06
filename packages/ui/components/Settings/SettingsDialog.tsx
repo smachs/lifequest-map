@@ -35,7 +35,7 @@ const SettingsDialog = ({ opened, onClose }: SettingsDialogProps) => {
       position={{ top: 7, right: 7 }}
     >
       <Title order={4}>Map</Title>
-      <ScrollArea.Autosize maxHeight="80vh" offsetScrollbars>
+      <ScrollArea.Autosize mah="80vh" offsetScrollbars>
         <Stack>
           <Text weight={500} size="sm">
             Node size

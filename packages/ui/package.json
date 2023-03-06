@@ -15,9 +15,9 @@
   "dependencies": {
     "@emotion/react": "11.10.6",
     "@geoman-io/leaflet-geoman-free": "2.14.2",
-    "@mantine/core": "5.10.0",
-    "@mantine/dropzone": "5.10.0",
-    "@mantine/hooks": "5.10.0",
+    "@mantine/core": "6.0.0",
+    "@mantine/dropzone": "6.0.0",
+    "@mantine/hooks": "6.0.0",
     "@tabler/icons-react": "2.7.0",
     "@tanstack/react-query": "4.26.0",
     "color-hash": "2.0.2",
@@ -32,6 +32,6 @@
     "realtime": "*",
     "socket.io-client": "4.6.1",
     "static": "*",
-    "zustand": "4.3.5"
+    "zustand": "4.3.6"
   }
 }

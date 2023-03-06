@@ -198,13 +198,15 @@ const MarkerRouteDetails = () => {
     <Drawer
       opened={!!routeId}
       withOverlay={false}
-      padding="sm"
-      size="xl"
-      styles={(theme) => ({
+      size={500}
+      styles={{
         header: {
-          marginBottom: theme.spacing.xs,
+          zIndex: 10,
         },
-      })}
+        body: {
+          width: 500,
+        },
+      }}
       title={
         markerRoute ? (
           <Text>{markerRoute.name}</Text>
@@ -216,7 +218,7 @@ const MarkerRouteDetails = () => {
     >
       {!markerRoute && <Skeleton height={50} />}
       {markerRoute && (
-        <Stack style={{ height: 'calc(100vh - 64px)' }} spacing="xs">
+        <Stack style={{ height: 'calc(100vh - 74px)' }} spacing="xs">
           <Meta {...getRouteMeta(markerRoute)} />
           <Group>
             <Badge size="sm" color="cyan">
