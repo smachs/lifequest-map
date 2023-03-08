@@ -7,7 +7,7 @@ import { toggleWindow, WINDOWS } from 'ui/utils/windows';
 import { usePosition } from '../../contexts/PositionContext';
 import useWindowIsVisible from '../useWindowIsVisible';
 
-const InfluenceIcon = () => {
+const InfluenceIcon = ({ disabled }: { disabled: boolean }) => {
   const isVisible = useWindowIsVisible(WINDOWS.INFLUENCE);
   const { worldName } = usePosition();
   const { data: todaysCount } = useQuery(
@@ -48,6 +48,7 @@ const InfluenceIcon = () => {
             variant={isVisible ? 'default' : 'filled'}
             onMouseOver={() => todaysCount === 0 && setSawTooltip(true)}
             fullWidth
+            disabled={disabled}
           >
             {isVisible ? 'Close' : 'Open'} Influence Screenshot Overlay
           </Button>

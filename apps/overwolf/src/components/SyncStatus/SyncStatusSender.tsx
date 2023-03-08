@@ -1,15 +1,13 @@
-import { ActionIcon, Group, Paper, Stack, Text, Tooltip } from '@mantine/core';
-import { IconAlertCircle, IconCircleCheck } from '@tabler/icons-react';
-import { getWorld, getZone } from 'static';
-import WorldName from 'ui/components/SyncStatus/WorldName';
+import { ColorSwatch, List, Paper, Stack, Text, Title } from '@mantine/core';
 import { usePosition } from '../../contexts/PositionContext';
+import InfluenceIcon from '../InfluenceIcon/InfluenceIcon';
 import { useNewWorldGameInfo } from '../store';
 import styles from './SyncStatus.module.css';
 import useOverlayActivated from './useOverlayActivated';
 
 function SyncStatusSender() {
   const activated = useOverlayActivated();
-  const { position, location, region, username, worldName } = usePosition();
+  const { position, username, worldName } = usePosition();
   const newWorldGameInfo = useNewWorldGameInfo();
 
   if (!activated) {
@@ -30,102 +28,73 @@ function SyncStatusSender() {
     );
   }
 
-  const details = (
-    <Stack spacing="xs">
-      <Text size="xs">
-        <Text component="span" color="dimmed">
-          Username:{' '}
-        </Text>
-        {username}
-      </Text>
-      <Text size="xs">
-        <Text component="span" color="dimmed">
-          Position:{' '}
-        </Text>
-        [{position?.location?.[1] || '?'}, {position?.location?.[0] || '?'}]
-      </Text>
-      <Text size="xs">
-        <Text component="span" color="dimmed">
-          Rotation:{' '}
-        </Text>
-        {position?.rotation || 0}
-      </Text>
-      <Text size="xs">
-        <Text component="span" color="dimmed">
-          Location:{' '}
-        </Text>
-        {location || 'Unknown'}
-      </Text>
-      <Text size="xs">
-        <Text component="span" color="dimmed">
-          Region:{' '}
-        </Text>
-        {region || 'Unknown'}
-      </Text>
-      <Text size="xs">
-        <Text component="span" color="dimmed">
-          World Name:{' '}
-        </Text>
-        {worldName || 'Unknown'}
-      </Text>
-    </Stack>
-  );
-
-  const world = worldName && getWorld(worldName);
-  const zone = world && getZone(world.zone);
+  const hasIssue =
+    !newWorldGameInfo?.isRunning ||
+    !username ||
+    !position?.location ||
+    !worldName ||
+    worldName === 'Unknown';
 
   return (
     <Paper p="sm">
-      <Group spacing="xs">
-        {location && (
-          <Tooltip multiline label={<>Everything works fine 🤘.{details}</>}>
-            <ActionIcon>
-              <IconCircleCheck size={18} />
-            </ActionIcon>
-          </Tooltip>
-        )}
-        {!location && (
-          <Tooltip
-            multiline
-            label={
-              <>
-                Did you run Overwolf before New World?
-                {details}
-              </>
+      <Stack spacing="xs">
+        <Title order={2} size="sm" align="center">
+          Realtime Status
+        </Title>
+        <List center spacing="xs">
+          <List.Item
+            icon={
+              <ColorSwatch
+                color={newWorldGameInfo?.isRunning ? 'green' : 'orange'}
+                size={14}
+              />
             }
           >
-            <ActionIcon>
-              <IconAlertCircle size={18} />
-            </ActionIcon>
-          </Tooltip>
-        )}
-        {newWorldGameInfo?.isRunning && position && (
-          <small>
-            <span className={styles.success}>Playing</span>
-            {username && ` as ${username}`}{' '}
-            <Group spacing="xs">
-              <Text size="xs">{region && `${location || region}`}</Text>
-              {world && zone && <WorldName world={world} zone={zone} />}
-            </Group>
-          </small>
-        )}
-        {newWorldGameInfo?.isRunning && !position && (
-          <small>
-            <span className={styles.waiting}>Connected</span> to New World.
-            Waiting for position.
-            <br />
-            <span className={styles.warning}>
-              Make sure to run Overwolf before New World.
-            </span>
-          </small>
-        )}
-        {!newWorldGameInfo?.isRunning && (
-          <small>
-            <span className={styles.warning}>Not connected</span> to New World.
-            Please run the game first.
-          </small>
-        )}
-      </Group>
+            {newWorldGameInfo?.isRunning
+              ? 'New World is running'
+              : 'New World is not running'}
+          </List.Item>
+          <List.Item
+            icon={
+              <ColorSwatch color={username ? 'green' : 'orange'} size={14} />
+            }
+          >
+            {username ? `Username: ${username}` : 'Username is not detected'}
+          </List.Item>
+          <List.Item
+            icon={
+              <ColorSwatch
+                color={position?.location ? 'green' : 'orange'}
+                size={14}
+              />
+            }
+          >
+            {position?.location
+              ? 'Position is detected'
+              : 'Position is not detected'}
+          </List.Item>
+          <List.Item
+            icon={
+              <ColorSwatch
+                color={
+                  worldName && worldName !== 'Unknown' ? 'green' : 'orange'
+                }
+                size={14}
+              />
+            }
+          >
+            {worldName && worldName !== 'Unknown'
+              ? `Server: ${worldName}`
+              : 'Server is not detected'}
+          </List.Item>
+        </List>
+        <Text color={hasIssue ? 'orange' : 'dimmed'} size="sm" align="center">
+          {hasIssue
+            ? 'Start this app before starting New World'
+            : 'Everything works fine 🤘'}
+        </Text>
+        <InfluenceIcon disabled={hasIssue} />
+      </Stack>
     </Paper>
   );
 }

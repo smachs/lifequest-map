@@ -13,7 +13,6 @@ import { useUserStore } from 'ui/utils/userStore';
 import { v4 as uuid } from 'uuid';
 import { shallow } from 'zustand/shallow';
 import DebouncedInput from '../components/DebouncedInput/DebouncedInput';
-import InfluenceIcon from '../components/InfluenceIcon/InfluenceIcon';
 import styles from './Streaming.module.css';
 import useShareLivePosition from './useShareLivePosition';
 
@@ -65,7 +64,6 @@ function Streaming(): JSX.Element {
         <Title order={2} size="sm" align="center">
           Welcome back, {account!.name}!<br />
         </Title>
-        <InfluenceIcon />
         <div className={styles.form}>
           <p className={styles.guide}>
             Use the token shown below on{' '}

@@ -58,30 +58,10 @@ function Settings(): JSX.Element {
     <Paper p="sm">
       <ScrollArea offsetScrollbars>
         <Stack>
-          <SupporterInput />
-          <Title order={3} size="sm" align="center">
-            Minimap
+          <Title order={2} size="sm" align="center">
+            Settings
           </Title>
-          <Checkbox
-            label="Show Minimap without nodes"
-            description="Because of the ToS, it's not allowed to display nodes on the Overwolf minimap. But you can setup something similar with Skeleton (see FAQ/Discord)."
-            checked={showMinimap}
-            onChange={(event) => setShowMinimap(event.target.checked)}
-          />
-          <MinimapSetup />
-          <Checkbox
-            label="Region borders"
-            checked={settingsStore.showRegionBorders}
-            description="You'll see thin lines on the map which indicates the regions."
-            onChange={(event) =>
-              settingsStore.setShowRegionBorders(event.target.checked)
-            }
-          />
-          <ColorInput
-            label="Player icon color"
-            value={settingsStore.playerIconColor}
-            onChange={settingsStore.setPlayerIconColor}
-          />
+          <SupporterInput />
           <Title order={3} size="sm" align="center">
             Website Hotkeys
           </Title>
@@ -155,6 +135,29 @@ function Settings(): JSX.Element {
               <Kbd>{showHideInfluenceOverlayBinding}</Kbd>
             </Anchor>
           </Group>
+          <Title order={3} size="sm" align="center">
+            Minimap
+          </Title>
+          <Checkbox
+            label="Show Minimap without nodes"
+            description="Because of the ToS, it's not allowed to display nodes on the Overwolf minimap. But you can setup something similar with Skeleton (see FAQ/Discord)."
+            checked={showMinimap}
+            onChange={(event) => setShowMinimap(event.target.checked)}
+          />
+          <MinimapSetup />
+          <Checkbox
+            label="Region borders"
+            checked={settingsStore.showRegionBorders}
+            description="You'll see thin lines on the map which indicates the regions."
+            onChange={(event) =>
+              settingsStore.setShowRegionBorders(event.target.checked)
+            }
+          />
+          <ColorInput
+            label="Player icon color"
+            value={settingsStore.playerIconColor}
+            onChange={settingsStore.setPlayerIconColor}
+          />
           <Title order={3} size="sm" align="center">
             Connection
           </Title>
