@@ -1,9 +1,18 @@
-import { Paper, Stack, Title, Tooltip } from '@mantine/core';
+import {
+  ActionIcon,
+  Anchor,
+  Group,
+  Paper,
+  SegmentedControl,
+  Stack,
+  Text,
+  Title,
+  Tooltip,
+} from '@mantine/core';
 import { useEffect } from 'react';
 import BroadcastIcon from 'ui/components/icons/BroadcastIcon';
 import CopyIcon from 'ui/components/icons/CopyIcon';
 import RefreshIcon from 'ui/components/icons/RefreshIcon';
-import ServerRadioButton from 'ui/components/LiveServer/ServerRadioButton';
 import { patchLiveShareToken } from 'ui/components/ShareLiveStatus/api';
 import useServers from 'ui/components/ShareLiveStatus/useServers';
 import { copyTextToClipboard } from 'ui/utils/clipboard';
@@ -64,74 +73,76 @@ function Streaming(): JSX.Element {
         <Title order={2} size="sm" align="center">
           Welcome back, {account!.name}!<br />
         </Title>
-        <div className={styles.form}>
-          <p className={styles.guide}>
-            Use the token shown below on{' '}
-            <a href="https://aeternum-map.gg" target="_blank">
-              aeternum-map.gg
-            </a>{' '}
-            or{' '}
-            <a href="https://newworld-map.com" target="_blank">
-              newworld&#8209;map.com
-            </a>{' '}
-            to see your live location on the map. You can use any device that
-            has a browser. Share this token and server with your friends to see
-            each others' location 🤗.
-          </p>
-          <div>
-            Server
-            {servers.map((server) => (
-              <ServerRadioButton
-                key={server.name}
-                server={server}
-                checked={account.liveShareServerUrl === server.url}
-                onChange={(serverUrl) =>
-                  updateAccount(account.liveShareToken, serverUrl)
-                }
-              />
-            ))}
-          </div>
-          <div className={styles.tokenContainer}>
-            <Tooltip
-              multiline
-              label="This token is used to identify you on the map. You can use the
-            same token in your group to see each other 🤘."
-            >
-              <label className={styles.label}>
-                Token
-                <DebouncedInput
-                  value={account.liveShareToken}
-                  placeholder="Use this token to access your live status..."
-                  onChange={(value) =>
-                    updateAccount(value, account.liveShareServerUrl)
+        <Text size="sm">
+          Use the token shown below on{' '}
+          <Anchor href="https://aeternum-map.gg" target="_blank">
+            aeternum-map.gg
+          </Anchor>{' '}
+          or{' '}
+          <Anchor href="https://newworld-map.com" target="_blank">
+            newworld&#8209;map.com
+          </Anchor>{' '}
+          to see your live location on the map. You can use any device that has
+          a browser. Share this token and server with your friends to see each
+          others' location 🤗.
+        </Text>
+        <SegmentedControl
+          value={account.liveShareServerUrl}
+          onChange={(serverUrl) =>
+            updateAccount(account.liveShareToken, serverUrl)
+          }
+          data={servers.map((server) => ({
+            label: (
+              <Text>
+                {server.name}
+                <br />
+                <Text component="span" size="xs">
+                  {!server.delay ? 'Offline' : `${server.delay}ms`}
+                </Text>
+              </Text>
+            ),
+            value: server.url,
+          }))}
+        />
+        <DebouncedInput
+          value={account.liveShareToken}
+          placeholder="Use this token to access your live status..."
+          label="Token"
+          description="This token is used to identify you on the map. You can use the
+        same token in your group to see each other 🤘."
+          onChange={(value) => updateAccount(value, account.liveShareServerUrl)}
+          styles={{
+            rightSection: {
+              width: 'fit-content',
+            },
+          }}
+          rightSection={
+            <Group spacing="xs">
+              <Tooltip label="Generate Random Token">
+                <ActionIcon
+                  onClick={() =>
+                    updateAccount(uuid(), account.liveShareServerUrl)
                   }
-                />
-              </label>
-            </Tooltip>
-            <Tooltip label="Generate Random Token">
-              <button
-                className={styles.action}
-                type="button"
-                onClick={() =>
-                  updateAccount(uuid(), account.liveShareServerUrl)
-                }
-              >
-                <RefreshIcon />
-              </button>
-            </Tooltip>
-            <Tooltip label="Copy Token">
-              <button
-                className={styles.action}
-                type="button"
-                disabled={!account.liveShareToken}
-                onClick={() => {
-                  copyTextToClipboard(account.liveShareToken!);
-                }}
-              >
-                <CopyIcon />
-              </button>
-            </Tooltip>
-          </div>
+                >
+                  <RefreshIcon />
+                </ActionIcon>
+              </Tooltip>
+              <Tooltip label="Copy Token">
+                <ActionIcon
+                  disabled={!account.liveShareToken}
+                  onClick={() => {
+                    copyTextToClipboard(account.liveShareToken!);
+                  }}
+                >
+                  <CopyIcon />
+                </ActionIcon>
+              </Tooltip>
+            </Group>
+          }
+        />
+
+        <div className={styles.form}>
+          <div className={styles.tokenContainer}></div>
           <div className={styles.status}>
             <aside>
               <h5>Senders</h5>

@@ -15,10 +15,6 @@
   row-gap: 0.3rem;
 }
 
-.guide {
-  font-size: 0.8em;
-}
-
 .tokenContainer {
   display: flex;
   gap: 0.5em;
