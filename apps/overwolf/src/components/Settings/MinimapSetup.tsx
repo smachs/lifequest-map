@@ -7,7 +7,7 @@ function MinimapSetup() {
   return (
     <>
       <Text weight={500} size="sm">
-        Zoom
+        Minimap Zoom
         <Slider
           value={store.minimapZoom}
           min={0.5}
@@ -18,7 +18,7 @@ function MinimapSetup() {
         />
       </Text>
       <Text weight={500} size="sm">
-        Border
+        Minimap Border
         <Slider
           value={store.minimapBorderRadius}
           min={0}
@@ -28,7 +28,7 @@ function MinimapSetup() {
         />
       </Text>
       <Text weight={500} size="sm">
-        Opacity
+        Minimap Opacity
         <Slider
           value={store.minimapOpacity}
           min={20}

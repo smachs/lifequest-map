@@ -44,11 +44,6 @@ export async function dragMoveWindow(): Promise<void> {
   overwolf.windows.dragMove(currentWindow.id);
 }
 
-export async function minimizeCurrentWindow(): Promise<void> {
-  const currentWindow = await getCurrentWindow();
-  overwolf.windows.minimize(currentWindow.id);
-}
-
 export async function closeWindow(windowName: string): Promise<void> {
   const window = await obtainDeclaredWindow(windowName);
   overwolf.windows.close(window.id);

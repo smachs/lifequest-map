@@ -1,4 +1,4 @@
-import { ActionIcon, Group, Stack, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Group, Paper, Stack, Text, Tooltip } from '@mantine/core';
 import { IconAlertCircle, IconCircleCheck } from '@tabler/icons-react';
 import { getWorld, getZone } from 'static';
 import WorldName from 'ui/components/SyncStatus/WorldName';
@@ -31,7 +31,7 @@ function SyncStatusSender() {
   }
 
   const details = (
-    <Stack spacing="xs" mt="xs">
+    <Stack spacing="xs">
       <Text size="xs">
         <Text component="span" color="dimmed">
           Username:{' '}
@@ -75,56 +75,58 @@ function SyncStatusSender() {
   const zone = world && getZone(world.zone);
 
   return (
-    <Group spacing="xs">
-      {location && (
-        <Tooltip multiline label={<>Everything works fine 🤘.{details}</>}>
-          <ActionIcon>
-            <IconCircleCheck size={18} />
-          </ActionIcon>
-        </Tooltip>
-      )}
-      {!location && (
-        <Tooltip
-          multiline
-          label={
-            <>
-              Did you run Overwolf before New World?
-              {details}
-            </>
-          }
-        >
-          <ActionIcon>
-            <IconAlertCircle size={18} />
-          </ActionIcon>
-        </Tooltip>
-      )}
-      {newWorldGameInfo?.isRunning && position && (
-        <small>
-          <span className={styles.success}>Playing</span>
-          {username && ` as ${username}`}{' '}
-          <Group spacing="xs">
-            <Text size="xs">{region && `${location || region}`}</Text>
-            {world && zone && <WorldName world={world} zone={zone} />}
-          </Group>
-        </small>
-      )}
-      {newWorldGameInfo?.isRunning && !position && (
-        <small>
-          <span className={styles.waiting}>Connected</span> to New World.
-          Waiting for position.
-          <br />
-          <span className={styles.warning}>
-            Make sure to run Overwolf before New World.
-          </span>
-        </small>
-      )}
-      {!newWorldGameInfo?.isRunning && (
-        <small>
-          <span className={styles.warning}>Not connected</span> to New World.
-          Please run the game first.
-        </small>
-      )}
-    </Group>
+    <Paper p="sm">
+      <Group spacing="xs">
+        {location && (
+          <Tooltip multiline label={<>Everything works fine 🤘.{details}</>}>
+            <ActionIcon>
+              <IconCircleCheck size={18} />
+            </ActionIcon>
+          </Tooltip>
+        )}
+        {!location && (
+          <Tooltip
+            multiline
+            label={
+              <>
+                Did you run Overwolf before New World?
+                {details}
+              </>
+            }
+          >
+            <ActionIcon>
+              <IconAlertCircle size={18} />
+            </ActionIcon>
+          </Tooltip>
+        )}
+        {newWorldGameInfo?.isRunning && position && (
+          <small>
+            <span className={styles.success}>Playing</span>
+            {username && ` as ${username}`}{' '}
+            <Group spacing="xs">
+              <Text size="xs">{region && `${location || region}`}</Text>
+              {world && zone && <WorldName world={world} zone={zone} />}
+            </Group>
+          </small>
+        )}
+        {newWorldGameInfo?.isRunning && !position && (
+          <small>
+            <span className={styles.waiting}>Connected</span> to New World.
+            Waiting for position.
+            <br />
+            <span className={styles.warning}>
+              Make sure to run Overwolf before New World.
+            </span>
+          </small>
+        )}
+        {!newWorldGameInfo?.isRunning && (
+          <small>
+            <span className={styles.warning}>Not connected</span> to New World.
+            Please run the game first.
+          </small>
+        )}
+      </Group>
+    </Paper>
   );
 }
 

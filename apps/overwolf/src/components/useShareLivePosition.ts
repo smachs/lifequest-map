@@ -1,7 +1,6 @@
 import type { DataConnection } from 'peerjs';
 import Peer from 'peerjs';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import type { Group } from 'realtime/types';
 import type { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
@@ -135,7 +134,6 @@ function useShareLivePosition() {
       const message = isOverwolfApp
         ? `${steamName} connected 🎮`
         : 'Website connected 👽';
-      toast.info(message);
       console.info(message);
       updateStatus();
     });
@@ -144,7 +142,6 @@ function useShareLivePosition() {
       const message = isOverwolfApp
         ? `${steamName} disconnected 👋`
         : 'Website disconnected 👋';
-      toast.info(message);
       console.info(message);
       updateStatus();
       peerConnections[clientId]?.close();
@@ -156,7 +153,6 @@ function useShareLivePosition() {
     });
 
     newSocket.io.on('reconnect_failed', () => {
-      toast.error('Reconnection failed');
       console.error('Reconnection failed');
       newSocket.io.connect();
     });

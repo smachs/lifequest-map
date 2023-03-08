@@ -1,4 +1,10 @@
-import { Anchor, Loader, MantineProvider, TextInput } from '@mantine/core';
+import {
+  Anchor,
+  Loader,
+  MantineProvider,
+  Text,
+  TextInput,
+} from '@mantine/core';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { shallow } from 'zustand/shallow';
@@ -47,6 +53,9 @@ const SupporterInput = () => {
                 Patreon
               </Anchor>{' '}
               to disable ads and get the Discord supporter role 🤘
+              {!account && (
+                <Text color="orange">Please sign in to enter secret</Text>
+              )}
             </>
           )
         }
