@@ -10,19 +10,16 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { useEffect } from 'react';
-import BroadcastIcon from 'ui/components/icons/BroadcastIcon';
 import CopyIcon from 'ui/components/icons/CopyIcon';
 import RefreshIcon from 'ui/components/icons/RefreshIcon';
 import { patchLiveShareToken } from 'ui/components/ShareLiveStatus/api';
 import useServers from 'ui/components/ShareLiveStatus/useServers';
 import { copyTextToClipboard } from 'ui/utils/clipboard';
 import { writeError } from 'ui/utils/logs';
-import { classNames } from 'ui/utils/styles';
 import { useUserStore } from 'ui/utils/userStore';
 import { v4 as uuid } from 'uuid';
 import { shallow } from 'zustand/shallow';
 import DebouncedInput from '../components/DebouncedInput/DebouncedInput';
-import styles from './Streaming.module.css';
 import useShareLivePosition from './useShareLivePosition';
 
 function Streaming(): JSX.Element {
@@ -86,6 +83,13 @@ function Streaming(): JSX.Element {
           a browser. Share this token and server with your friends to see each
           others' location 🤗.
         </Text>
+        <Text
+          color={isConnected ? 'dimmed' : 'orange'}
+          size="sm"
+          align="center"
+        >
+          {isConnected ? 'Connected to live server' : 'Connecting...'}
+        </Text>
         <SegmentedControl
           value={account.liveShareServerUrl}
           onChange={(serverUrl) =>
@@ -140,59 +144,42 @@ function Streaming(): JSX.Element {
             </Group>
           }
         />
+        <Group grow align="baseline">
+          <Stack>
+            <Title order={3} size="sm" align="center">
+              App Users
+            </Title>
 
-        <div className={styles.form}>
-          <div className={styles.tokenContainer}></div>
-          <div className={styles.status}>
-            <aside>
-              <h5>Senders</h5>
-              <Stack sx={{ height: 70 }}>
-                <ul className={styles.list}>
-                  {players.length > 0 ? (
-                    players.map((player) => (
-                      <li key={player.steamName}>
-                        {player.username ? player.username : player.steamName}
-                      </li>
-                    ))
-                  ) : (
-                    <li>No connections</li>
-                  )}
-                </ul>
-              </Stack>
-            </aside>
-            <div
-              className={classNames(
-                styles.sharing,
-                !isConnected && styles.connecting,
-                isConnected && styles.connected
-              )}
-            >
-              <BroadcastIcon />
-              {!isConnected && 'Connecting'}
-              {isConnected && 'Sharing'}
-            </div>
-
-            <aside>
-              <h5>Receivers</h5>
-              <Stack sx={{ height: 70 }}>
-                <ul className={styles.list}>
-                  {status?.connections.length ? (
-                    status.connections.map((connection) => (
-                      <li key={connection}>
-                        Browser{' '}
-                        {peerConnections[connection]?.open
-                          ? '(Direct)'
-                          : '(Socket)'}
-                      </li>
-                    ))
-                  ) : (
-                    <li>No connections</li>
-                  )}
-                </ul>
-              </Stack>
-            </aside>
-          </div>
-        </div>
+            {players.length > 0 ? (
+              players.map((player) => (
+                <Text key={player.steamName} size="sm" align="center">
+                  {player.username ? player.username : player.steamName}
+                </Text>
+              ))
+            ) : (
+              <Text size="sm" align="center">
+                No users
+              </Text>
+            )}
+          </Stack>
+          <Stack>
+            <Title order={3} size="sm" align="center">
+              Browsers
+            </Title>
+            {status?.connections.length ? (
+              status.connections.map((connection) => (
+                <Text key={connection} size="sm" align="center">
+                  Browser{' '}
+                  {peerConnections[connection]?.open ? '(Direct)' : '(Socket)'}
+                </Text>
+              ))
+            ) : (
+              <Text size="sm" align="center">
+                No connections
+              </Text>
+            )}
+          </Stack>
+        </Group>
       </Stack>
     </Paper>
   );
