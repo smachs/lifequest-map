@@ -1,6 +1,5 @@
 import { Button, Modal } from '@mantine/core';
 import { useState } from 'react';
-import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
 import { useUserStore } from '../../utils/userStore';
 import { deleteMarkerRoute } from './api';
@@ -22,7 +21,7 @@ function DeleteRoute({ routeId, onDelete }: DeleteRouteProps): JSX.Element {
       });
       onDelete();
     } catch (error) {
-      writeError(error);
+      console.error(error);
     } finally {
       setLoading(false);
       setShowModal(false);

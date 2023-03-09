@@ -1,5 +1,4 @@
 import { Button, Title } from '@mantine/core';
-import { copyTextToClipboard } from 'ui/utils/clipboard';
 import { getGameInfo } from '../../utils/games';
 
 const Debug = () => {
@@ -11,7 +10,7 @@ const Debug = () => {
       <Button
         onClick={() => {
           getGameInfo().then((result) =>
-            copyTextToClipboard(JSON.stringify(result, null, 2))
+            overwolf.utils.placeOnClipboard(JSON.stringify(result, null, 2))
           );
         }}
       >

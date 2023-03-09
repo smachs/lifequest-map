@@ -3,7 +3,6 @@ import { IconAlertTriangle } from '@tabler/icons-react';
 import { useQueryClient } from '@tanstack/react-query';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
-import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
 import { useUserStore } from '../../utils/userStore';
 import { postMarkersComment, postRoutesComment } from '../AddComment/api';
@@ -50,7 +49,7 @@ const ReportIssueButton = ({
       setMessage('');
       onReport();
     } catch (error) {
-      writeError(error);
+      console.error(error);
     } finally {
       setLoading(false);
       setShowModal(false);

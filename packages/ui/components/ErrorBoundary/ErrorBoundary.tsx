@@ -1,7 +1,6 @@
 import { Button, CopyButton, Stack, Text } from '@mantine/core';
 import type { ReactNode } from 'react';
 import { Component } from 'react';
-import { writeError } from '../../utils/logs';
 
 type MyProps = {
   children: ReactNode;
@@ -21,7 +20,7 @@ class ErrorBoundary extends Component<MyProps, MyState> {
   }
 
   componentDidCatch(error: Error) {
-    writeError(error);
+    console.error(error);
   }
 
   render() {

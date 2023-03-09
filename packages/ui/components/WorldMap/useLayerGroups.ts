@@ -12,7 +12,6 @@ import {
 import { isEmbed, useRouteParams } from 'ui/utils/routes';
 import { shallow } from 'zustand/shallow';
 import { useMarkers } from '../../contexts/MarkersContext';
-import { writeError } from '../../utils/logs';
 import { usePlayerStore } from '../../utils/playerStore';
 import { calcDistance } from '../../utils/positions';
 import { useSettingsStore } from '../../utils/settingsStore';
@@ -380,7 +379,7 @@ function useLayerGroups({
           markersLayerGroup.addLayer(allLayers[marker._id].layer);
         }
       } catch (error) {
-        writeError(error);
+        console.error(error);
       }
     }
 

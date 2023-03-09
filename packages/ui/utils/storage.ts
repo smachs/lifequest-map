@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import type { Mutate, StoreApi } from 'zustand';
-import { writeError } from './logs';
 import { isEmbed } from './routes';
 import useDebounce from './useDebounce';
 
@@ -12,7 +11,7 @@ export function getJSONItem<T>(key: string, defaultValue: T): T {
     }
     return JSON.parse(item);
   } catch (e) {
-    writeError(e);
+    console.error(e);
     return defaultValue;
   }
 }
@@ -21,7 +20,7 @@ export function setJSONItem<T>(key: string, item: T): void {
   try {
     localStorage.setItem(key, JSON.stringify(item));
   } catch (e) {
-    writeError(e);
+    console.error(e);
   }
 }
 
@@ -77,7 +76,7 @@ export function usePersistentState<T>(
         typeof value === 'function' ? (value as (value: T) => T)(state) : value;
       setState(valueToStore);
     } catch (e) {
-      writeError(e);
+      console.error(e);
     }
   }
 
@@ -95,7 +94,7 @@ export function usePersistentState<T>(
           setValue(value);
         }
       } catch (e) {
-        writeError(e);
+        console.error(e);
       }
     };
     window.addEventListener('storage', handleStorage, false);

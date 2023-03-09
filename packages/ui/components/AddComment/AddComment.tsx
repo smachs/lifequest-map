@@ -2,7 +2,6 @@ import { Anchor, Textarea } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
 import type { FormEvent, KeyboardEvent } from 'react';
 import { useState } from 'react';
-import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
 import { useUserStore } from '../../utils/userStore';
 import { postMarkersComment, postRoutesComment } from './api';
@@ -47,7 +46,7 @@ function AddComment({
       onAdd();
       setMessage('');
     } catch (error) {
-      writeError(error);
+      console.error(error);
     } finally {
       setLoading(false);
     }

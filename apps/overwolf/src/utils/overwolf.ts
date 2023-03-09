@@ -1,5 +1,3 @@
-import { writeLog } from './logs';
-
 export let isOverwolfApp = typeof overwolf !== 'undefined';
 
 // Sometimes `overwolf` is not loaded if debug_url is set. A simple reload of the page will fix this.
@@ -28,14 +26,14 @@ export function waitForOverwolf(): Promise<void> {
         );
       }
       overwolf.extensions.current.getManifest((manifest) =>
-        writeLog(`v${manifest.meta.version}`)
+        console.log(`v${manifest.meta.version}`)
       );
       resolve();
     } else {
-      writeLog('Overwolf is not ready...');
+      console.log('Overwolf is not ready...');
       setTimeout(() => {
         if (isOverwolfLoading()) {
-          writeLog('Overwolf is still loading...reloading');
+          console.log('Overwolf is still loading...reloading');
           location.reload();
         } else {
           resolve();

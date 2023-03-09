@@ -1,11 +1,11 @@
 import { StrictMode, useEffect, useState } from 'react';
 import { MarkersProvider } from 'ui/contexts/MarkersContext';
-import { waitForOverwolf } from 'ui/utils/overwolf';
-import { dragMoveWindow, WINDOWS } from 'ui/utils/windows';
 import WorldMapBlank from './components/WorldMapBlank';
 import { PositionProvider } from './contexts/PositionContext';
 import './globals.css';
 import styles from './Minimap.module.css';
+import { waitForOverwolf } from './utils/overwolf';
+import { dragMoveWindow, WINDOWS } from './utils/windows';
 
 import { MantineProvider, Paper } from '@mantine/core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

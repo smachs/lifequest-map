@@ -15,7 +15,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { findRegions } from 'static';
 import { useMap } from 'ui/utils/routes';
 import { useMarkers } from '../../contexts/MarkersContext';
-import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import { patchMarkerRoute, postMarkerRoute } from './api';
@@ -234,7 +233,7 @@ function SelectRoute({ markerRoute, onClose }: SelectRouteProps): JSX.Element {
       queryClient.invalidateQueries(['routes']);
       onClose();
     } catch (error) {
-      writeError(error);
+      console.error(error);
     }
   }
 

@@ -1,22 +1,20 @@
-import { waitForOverwolf } from 'ui/utils/overwolf';
 import { PositionProvider } from './contexts/PositionContext';
 import styles from './Main.module.css';
+import { waitForOverwolf } from './utils/overwolf';
 
 import { MantineProvider, Stack } from '@mantine/core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import FAQ from 'ui/components/FAQ/FAQ';
 import { ThemeProvider } from 'ui/contexts/ThemeProvider';
 import { initPlausible } from 'ui/utils/stats';
 import { useUserStore } from 'ui/utils/userStore';
-import { closeWindow, getCurrentWindow, WINDOWS } from 'ui/utils/windows';
 import Ads from './components/Ads/Ads';
 import Settings from './components/Settings/Settings';
 import Streaming from './components/Streaming';
 import SyncStatusSender from './components/SyncStatus/SyncStatusSender';
 import Welcome from './components/Welcome';
-import WorldMap from './components/WorldMapBlank';
+import { closeWindow, getCurrentWindow, WINDOWS } from './utils/windows';
 
 function Sender(): JSX.Element {
   const account = useUserStore((state) => state.account);
@@ -38,7 +36,6 @@ waitForOverwolf().then(async () => {
   console.log('Init main');
   initMain();
   initAppHeader();
-  initAeternumMap();
   initFAQ();
 
   const queryClient = new QueryClient();
@@ -94,7 +91,7 @@ async function initAppHeader() {
 }
 
 async function initMain() {
-  const activeSrc = localStorage.getItem('active-src') || 'aeternum-map';
+  const activeSrc = localStorage.getItem('active-src') || 'www.nw-buddy.de';
 
   function refreshActiveSrc(src: string) {
     const prevActiveElements =
@@ -118,29 +115,6 @@ async function initMain() {
       refreshActiveSrc(src);
     };
   });
-}
-
-function initAeternumMap() {
-  const root = createRoot(
-    document.querySelector<HTMLElement>('#aeternum-map')!
-  );
-  root.render(
-    <MantineProvider
-      theme={{
-        colorScheme: 'dark',
-      }}
-      withGlobalStyles={false}
-    >
-      <RouterProvider
-        router={createBrowserRouter([
-          {
-            path: '*',
-            element: <WorldMap />,
-          },
-        ])}
-      />
-    </MantineProvider>
-  );
 }
 
 function initFAQ() {

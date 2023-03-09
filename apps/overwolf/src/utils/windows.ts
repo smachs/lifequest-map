@@ -1,7 +1,9 @@
-import { writeLog } from './logs';
+import { useSettingsStore } from 'ui/utils/settingsStore';
+import { isNewWorldRunning } from './games';
 
 export const WINDOWS = {
   DESKTOP: 'desktop',
+  OVERLAY: 'overlay',
   BACKGROUND: 'background',
   MINIMAP: 'minimap',
   INFLUENCE: 'influence',
@@ -72,7 +74,7 @@ export async function restoreWindow(windowName: string): Promise<string> {
         await new Promise((resolve) =>
           overwolf.windows.bringToFront(windowName, resolve)
         );
-        writeLog(`Window ${windowName} restored`);
+        console.log(`Window ${windowName} restored`);
 
         resolve(result.window_id!); // window_id is always a string if success
       } else {
@@ -145,5 +147,50 @@ export async function dragResize(
         height: minSize,
       });
     }
+  }
+}
+
+export async function getPreferedWindowName(): Promise<string> {
+  const state = useSettingsStore.getState();
+  if (state.overlayMode === null) {
+    const monitors = await getMonitorsList();
+    const hasSecondScreen = monitors.length > 1;
+    useSettingsStore.setState({
+      overlayMode: !hasSecondScreen,
+    });
+    return hasSecondScreen ? WINDOWS.DESKTOP : WINDOWS.OVERLAY;
+  }
+
+  const preferedWindowName = state.overlayMode
+    ? WINDOWS.OVERLAY
+    : WINDOWS.DESKTOP;
+  return preferedWindowName;
+}
+
+export function getMonitorsList(): Promise<overwolf.utils.Display[]> {
+  return new Promise<overwolf.utils.Display[]>((resolve) => {
+    overwolf.utils.getMonitorsList((result) => {
+      resolve(result.displays);
+    });
+  });
+}
+
+export async function togglePreferedWindow(): Promise<void> {
+  const preferedWindowName = await getPreferedWindowName();
+  const newPreferedWindowName =
+    preferedWindowName === WINDOWS.DESKTOP ? WINDOWS.OVERLAY : WINDOWS.DESKTOP;
+  useSettingsStore.setState({
+    overlayMode: preferedWindowName === WINDOWS.DESKTOP,
+  });
+
+  if (newPreferedWindowName === WINDOWS.OVERLAY) {
+    const isGameRunning = await isNewWorldRunning();
+    if (isGameRunning) {
+      await restoreWindow(WINDOWS.OVERLAY);
+      await closeWindow(WINDOWS.DESKTOP);
+    }
+  } else {
+    await restoreWindow(WINDOWS.DESKTOP);
+    await closeWindow(WINDOWS.OVERLAY);
   }
 }

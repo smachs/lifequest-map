@@ -1,22 +1,24 @@
-import { writeLog } from 'ui/utils/logs';
-import { waitForOverwolf } from 'ui/utils/overwolf';
 import { initPlausible } from 'ui/utils/stats';
 import { getJSONItem } from 'ui/utils/storage';
+import { isNewWorldRunning, NEW_WORLD_CLASS_ID } from './utils/games';
+import { SHOW_HIDE_APP, SHOW_HIDE_INFLUENCE_OVERLAY } from './utils/hotkeys';
+import { waitForOverwolf } from './utils/overwolf';
 import {
   closeMainWindow,
+  closeWindow,
+  getPreferedWindowName,
   restoreWindow,
   toggleWindow,
   WINDOWS,
-} from 'ui/utils/windows';
-import { isNewWorldRunning, NEW_WORLD_CLASS_ID } from './utils/games';
-import { SHOW_HIDE_APP, SHOW_HIDE_INFLUENCE_OVERLAY } from './utils/hotkeys';
+} from './utils/windows';
 
-writeLog('Starting background process');
+console.log('Starting background process');
 
 async function openApp() {
   const newWorldIsRunning = await isNewWorldRunning();
+  const preferedWindowName = await getPreferedWindowName();
   if (newWorldIsRunning) {
-    restoreWindow(WINDOWS.DESKTOP);
+    restoreWindow(preferedWindowName);
     if (getJSONItem('showMinimap', false)) {
       restoreWindow(WINDOWS.MINIMAP);
     }
@@ -30,7 +32,8 @@ async function handleHotkeyPressed(
   event: overwolf.settings.hotkeys.OnPressedEvent
 ) {
   if (event.name === SHOW_HIDE_APP) {
-    toggleWindow(WINDOWS.DESKTOP);
+    const preferedWindowName = await getPreferedWindowName();
+    toggleWindow(preferedWindowName);
   }
   if (event.name === SHOW_HIDE_INFLUENCE_OVERLAY) {
     toggleWindow(WINDOWS.INFLUENCE);
@@ -45,12 +48,19 @@ overwolf.extensions.onAppLaunchTriggered.addListener(handleAppLaunch);
 
 overwolf.games.onGameInfoUpdated.addListener(async (event) => {
   if (event.runningChanged && event.gameInfo?.classId === NEW_WORLD_CLASS_ID) {
+    const preferedWindowName = await getPreferedWindowName();
     if (event.gameInfo.isRunning) {
-      restoreWindow(WINDOWS.DESKTOP);
+      if (preferedWindowName === WINDOWS.OVERLAY) {
+        restoreWindow(WINDOWS.OVERLAY);
+        closeWindow(WINDOWS.DESKTOP);
+      } else {
+        restoreWindow(WINDOWS.DESKTOP);
+        closeWindow(WINDOWS.OVERLAY);
+      }
       if (getJSONItem('showMinimap', false)) {
         restoreWindow(WINDOWS.MINIMAP);
       }
-    } else {
+    } else if (preferedWindowName === WINDOWS.OVERLAY) {
       closeMainWindow();
     }
   }

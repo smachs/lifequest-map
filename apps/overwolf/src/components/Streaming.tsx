@@ -14,8 +14,6 @@ import CopyIcon from 'ui/components/icons/CopyIcon';
 import RefreshIcon from 'ui/components/icons/RefreshIcon';
 import { patchLiveShareToken } from 'ui/components/ShareLiveStatus/api';
 import useServers from 'ui/components/ShareLiveStatus/useServers';
-import { copyTextToClipboard } from 'ui/utils/clipboard';
-import { writeError } from 'ui/utils/logs';
 import { useUserStore } from 'ui/utils/userStore';
 import { v4 as uuid } from 'uuid';
 import { shallow } from 'zustand/shallow';
@@ -59,7 +57,7 @@ function Streaming(): JSX.Element {
   ) => {
     patchLiveShareToken(token || uuid(), serverUrl || servers[0].url)
       .then(() => refreshAccount())
-      .catch((error) => writeError(error));
+      .catch((error) => console.error(error));
   };
 
   const players = status ? Object.values(status.group) : [];
@@ -70,7 +68,7 @@ function Streaming(): JSX.Element {
         <Title order={2} size="sm" align="center">
           Welcome back, {account!.name}!<br />
         </Title>
-        <Text size="sm">
+        <Text size="xs" color="dimmed">
           Use the token shown below on{' '}
           <Anchor href="https://aeternum-map.gg" target="_blank">
             aeternum-map.gg
@@ -135,7 +133,7 @@ function Streaming(): JSX.Element {
                 <ActionIcon
                   disabled={!account.liveShareToken}
                   onClick={() => {
-                    copyTextToClipboard(account.liveShareToken!);
+                    overwolf.utils.placeOnClipboard(account.liveShareToken!);
                   }}
                 >
                   <CopyIcon />

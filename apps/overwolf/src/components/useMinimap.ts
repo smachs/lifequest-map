@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { usePersistentState } from 'ui/utils/storage';
-import { closeWindow, restoreWindow, WINDOWS } from 'ui/utils/windows';
 import { SHOW_HIDE_MINIMAP } from '../utils/hotkeys';
+import { closeWindow, restoreWindow, WINDOWS } from '../utils/windows';
 import { useNewWorldGameInfo } from './store';
 
 function useMinimap(): [

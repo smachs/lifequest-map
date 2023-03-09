@@ -1,6 +1,6 @@
-import { waitForOverwolf } from 'ui/utils/overwolf';
 import { create } from 'zustand';
 import { NEW_WORLD_CLASS_ID } from '../utils/games';
+import { waitForOverwolf } from '../utils/overwolf';
 
 type Store = {
   newWorldGameInfo: overwolf.games.RunningGameInfo | null;

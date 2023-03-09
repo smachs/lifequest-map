@@ -1,8 +1,8 @@
 import { validateInfluence } from 'static';
 import { fetchJSON } from 'ui/utils/api';
-import { getCurrentWindow } from 'ui/utils/windows';
 import { getGameInfo } from './games';
 import { imageToCanvas, takeScreenshot } from './media';
+import { getCurrentWindow } from './windows';
 
 type HSL = [number, number, number];
 

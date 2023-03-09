@@ -7,7 +7,6 @@ import {
   findRegion,
   mapIsAeternumMap,
 } from 'static';
-import { writeError, writeLog } from 'ui/utils/logs';
 import { useNewWorldGameInfo } from '../components/store';
 import { getGameInfo } from '../utils/games';
 
@@ -79,7 +78,7 @@ export function PositionProvider({
       return;
     }
     overwolf.games.events.setRequiredFeatures(['game_info'], (event) =>
-      writeLog(event)
+      console.log(event)
     );
 
     let handler = setTimeout(updatePosition, 50);
@@ -139,7 +138,7 @@ export function PositionProvider({
         }
       } catch (error) {
         if (!hasError) {
-          writeError(error);
+          console.error(error);
           hasError = true;
         }
       } finally {

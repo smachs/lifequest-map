@@ -29,6 +29,7 @@ import {
   ZOOM_OUT_MAP,
   ZOOM_OUT_MINIMAP,
 } from '../../utils/hotkeys';
+import { togglePreferedWindow } from '../../utils/windows';
 import Debug from '../Debug/Debug';
 import useMinimap from '../useMinimap';
 import MinimapSetup from './MinimapSetup';
@@ -62,6 +63,14 @@ function Settings(): JSX.Element {
             Settings
           </Title>
           <SupporterInput />
+          <Checkbox
+            label="Activate Overlay"
+            description="This window is only visible as overlay in-game. Deactivate it, if you like to move this window to second screen or to ALT+TAB it."
+            checked={settingsStore.overlayMode ?? true}
+            onChange={() => {
+              togglePreferedWindow();
+            }}
+          />
           <Title order={3} size="sm" align="center">
             Website Hotkeys
           </Title>

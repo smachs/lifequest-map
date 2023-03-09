@@ -1,7 +1,6 @@
 import { Button, Modal, Stack, TextInput } from '@mantine/core';
 import { IconArrowFork } from '@tabler/icons-react';
 import { useState } from 'react';
-import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
 import { useUserStore } from '../../utils/userStore';
 import { postMarkerRoute } from './api';
@@ -35,7 +34,7 @@ function ForkRoute({ markerRoute, onFork }: ForkRouteProps): JSX.Element {
 
       onFork(forkedMarkerRoute);
     } catch (error) {
-      writeError(error);
+      console.error(error);
     } finally {
       setLoading(false);
       setShowModal(false);

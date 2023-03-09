@@ -3,8 +3,8 @@ import { IconScreenshot } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { fetchJSON } from 'ui/utils/api';
-import { toggleWindow, WINDOWS } from 'ui/utils/windows';
 import { usePosition } from '../../contexts/PositionContext';
+import { toggleWindow, WINDOWS } from '../../utils/windows';
 import useWindowIsVisible from '../useWindowIsVisible';
 
 const InfluenceIcon = ({ disabled }: { disabled: boolean }) => {

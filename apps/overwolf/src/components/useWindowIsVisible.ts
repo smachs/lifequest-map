@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getCurrentWindow, getWindowState } from 'ui/utils/windows';
+import { getCurrentWindow, getWindowState } from '../utils/windows';
 
 function useWindowIsVisible(windowName?: string) {
   const [isVisible, setIsVisible] = useState(true);
