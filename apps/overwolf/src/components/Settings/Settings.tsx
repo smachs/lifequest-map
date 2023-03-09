@@ -1,12 +1,12 @@
 import {
   Anchor,
-  Box,
   Button,
   Checkbox,
   ColorInput,
   Group,
   Input,
   Kbd,
+  Paper,
   ScrollArea,
   Stack,
   Title,
@@ -29,15 +29,12 @@ import {
   ZOOM_OUT_MAP,
   ZOOM_OUT_MINIMAP,
 } from '../../utils/hotkeys';
+import { togglePreferedWindow } from '../../utils/windows';
 import Debug from '../Debug/Debug';
+import useMinimap from '../useMinimap';
 import MinimapSetup from './MinimapSetup';
 
-type SettingsProps = {
-  showMinimap: boolean;
-  onShowMinimap: (show: boolean) => void;
-};
-
-function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
+function Settings(): JSX.Element {
   const settingsStore = useSettingsStore();
   const showHideAppBinding = useHotkeyBinding(SHOW_HIDE_APP);
   const setupMinimapBinding = useHotkeyBinding(SETUP_MINIMAP);
@@ -54,49 +51,29 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
   const showHideInfluenceOverlayBinding = useHotkeyBinding(
     SHOW_HIDE_INFLUENCE_OVERLAY
   );
+  const [showMinimap, setShowMinimap] = useMinimap();
 
   const logoutAccount = useUserStore((state) => state.logoutAccount);
 
   return (
-    <Box
-      sx={(theme) => ({
-        position: 'absolute',
-        inset: 0,
-        zIndex: 1,
-        background: theme.colors.dark[7],
-        display: 'grid',
-      })}
-    >
-      <Title order={3}>Settings</Title>
+    <Paper p="sm">
       <ScrollArea offsetScrollbars>
         <Stack>
-          <Title order={4}>Account</Title>
+          <Title order={2} size="sm" align="center">
+            Settings
+          </Title>
           <SupporterInput />
-          <Button color="red" onClick={logoutAccount} leftIcon={<IconLogout />}>
-            Sign out
-          </Button>
-          <Title order={4}>Blank Minimap</Title>
           <Checkbox
-            label="Show blank Minimap"
-            description="Because of the ToS, it's not allowed to display nodes on the Overwolf minimap. But you can setup something similar with Skeleton (see FAQ/Discord)."
-            checked={showMinimap}
-            onChange={(event) => onShowMinimap(event.target.checked)}
+            label="Activate Overlay"
+            description="This window is only visible as overlay in-game. Deactivate it, if you like to move this window to second screen or to ALT+TAB it."
+            checked={settingsStore.overlayMode ?? true}
+            onChange={() => {
+              togglePreferedWindow();
+            }}
           />
-          <MinimapSetup />
-          <Checkbox
-            label="Region borders"
-            checked={settingsStore.showRegionBorders}
-            description="You'll see thin lines on the map which indicates the regions."
-            onChange={(event) =>
-              settingsStore.setShowRegionBorders(event.target.checked)
-            }
-          />
-          <ColorInput
-            label="Player icon color"
-            value={settingsStore.playerIconColor}
-            onChange={settingsStore.setPlayerIconColor}
-          />
-          <Title order={4}>Website Hotkeys</Title>
+          <Title order={3} size="sm" align="center">
+            Website Hotkeys
+          </Title>
           <Group grow>
             <Input.Label>Zoom in Map</Input.Label>
             <Anchor href="overwolf://settings/games-overlay?hotkey=zoom_in_map&gameId=21816">
@@ -111,13 +88,13 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
           </Group>
 
           <Group grow>
-            <Input.Label>Interact with near marker 1</Input.Label>
+            <Input.Label>Interact with near node 1</Input.Label>
             <Anchor href="overwolf://settings/games-overlay?hotkey=marker_action&gameId=21816">
               <Kbd>{markerActionBinding}</Kbd>
             </Anchor>
           </Group>
           <Group grow>
-            <Input.Label>Interact with near marker 2</Input.Label>
+            <Input.Label>Interact with near node 2</Input.Label>
             <Anchor href="overwolf://settings/games-overlay?hotkey=marker_action_secondary&gameId=21816">
               <Kbd>{markerActionSecondaryBinding}</Kbd>
             </Anchor>
@@ -128,7 +105,9 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
               <Kbd>{showHideDirectionBinding}</Kbd>
             </Anchor>
           </Group>
-          <Title order={4}>App Hotkeys</Title>
+          <Title order={3} size="sm" align="center">
+            App Hotkeys
+          </Title>
           <Group grow>
             <Input.Label>Show/Hide App</Input.Label>
             <Anchor href="overwolf://settings/games-overlay?hotkey=show_hide_app&gameId=21816">
@@ -165,7 +144,32 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
               <Kbd>{showHideInfluenceOverlayBinding}</Kbd>
             </Anchor>
           </Group>
-          <Title order={4}>Connection</Title>
+          <Title order={3} size="sm" align="center">
+            Minimap
+          </Title>
+          <Checkbox
+            label="Show Minimap without nodes"
+            description="Because of the ToS, it's not allowed to display nodes on the Overwolf minimap. But you can setup something similar with Skeleton (see FAQ/Discord)."
+            checked={showMinimap}
+            onChange={(event) => setShowMinimap(event.target.checked)}
+          />
+          <MinimapSetup />
+          <Checkbox
+            label="Region borders"
+            checked={settingsStore.showRegionBorders}
+            description="You'll see thin lines on the map which indicates the regions."
+            onChange={(event) =>
+              settingsStore.setShowRegionBorders(event.target.checked)
+            }
+          />
+          <ColorInput
+            label="Player icon color"
+            value={settingsStore.playerIconColor}
+            onChange={settingsStore.setPlayerIconColor}
+          />
+          <Title order={3} size="sm" align="center">
+            Connection
+          </Title>
           <Checkbox
             label="Peer to peer"
             checked={settingsStore.peerToPeer}
@@ -174,10 +178,16 @@ function Settings({ showMinimap, onShowMinimap }: SettingsProps): JSX.Element {
               settingsStore.setPeerToPeer(event.target.checked)
             }
           />
+          <Title order={3} size="sm" align="center">
+            Account
+          </Title>
+          <Button color="red" onClick={logoutAccount} leftIcon={<IconLogout />}>
+            Sign out
+          </Button>
           <Debug />
         </Stack>
       </ScrollArea>
-    </Box>
+    </Paper>
   );
 }
 

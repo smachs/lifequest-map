@@ -3,7 +3,6 @@ import { persist } from 'zustand/middleware';
 import { patchUser } from '../components/MarkerDetails/api';
 import type { Preset } from '../components/PresetSelect/presets';
 import { fetchJSON } from './api';
-import { writeError, writeWarn } from './logs';
 import { notify } from './notifications';
 import { usePlayerStore } from './playerStore';
 import { getJSONItem } from './storage';
@@ -44,7 +43,7 @@ export const useUserStore = create(
     (set, get) => {
       window.addEventListener('session-expired', () => {
         set({ account: null });
-        writeWarn('Session expired');
+        console.warn('Session expired');
       });
 
       usePlayerStore.subscribe(
@@ -89,7 +88,7 @@ export const useUserStore = create(
             );
             set({ user: updatedUser });
           } catch (error) {
-            writeError(error);
+            console.error(error);
           }
         },
         account: getJSONItem<AccountDTO | null>('account', null), // Deprecated,
@@ -110,7 +109,7 @@ export const useUserStore = create(
             );
             set({ account });
           } catch (error) {
-            writeError(error);
+            console.error(error);
           }
         },
       };

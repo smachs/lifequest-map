@@ -4,7 +4,7 @@
   "meta": {
     "name": "Aeternum Map-DEV",
     "author": "Leon Machens",
-    "version": "2.34.0",
+    "version": "3.0.0",
     "minimum-overwolf-version": "0.169.0",
     "description": "New World Interactive Map",
     "dock_button_title": "Aeternum Map",
@@ -31,30 +31,45 @@
         "allow_local_file_access": true
       },
       "desktop": {
-        "file": "sender.html",
-        "debug_url": "http://localhost:5173/sender.html",
-        "desktop_only": true,
-        "native_window": true,
-        "resizable": false,
-        "transparent": true,
+        "file": "index.html",
+        "debug_url": "http://localhost:5173/index.html",
+        "resizable": true,
         "override_on_update": true,
+        "desktop_only": true,
+        "transparent": true,
+        "native_window": true,
         "size": {
-          "width": 400,
-          "height": 660
+          "width": 1200,
+          "height": 800
         },
         "min_size": {
-          "width": 400,
-          "height": 660
-        },
-        "max_size": {
-          "width": 400,
-          "height": 660
+          "width": 900,
+          "height": 600
         },
         "allow_local_file_access": true,
         "popup_blocker": true,
-        "mute": true,
-        "keep_window_location": true,
-        "disable_hardware_acceleration": true
+        "mute": true
+      },
+      "overlay": {
+        "file": "index.html",
+        "debug_url": "http://localhost:5173/index.html",
+        "resizable": true,
+        "override_on_update": true,
+        "transparent": true,
+        "in_game_only": true,
+        "focus_game_takeover": "ReleaseOnLostFocus",
+        "focus_game_takeover_release_hotkey": "show_hide_app",
+        "size": {
+          "width": 1200,
+          "height": 800
+        },
+        "min_size": {
+          "width": 900,
+          "height": 600
+        },
+        "allow_local_file_access": true,
+        "popup_blocker": true,
+        "mute": true
       },
       "minimap": {
         "file": "minimap.html",

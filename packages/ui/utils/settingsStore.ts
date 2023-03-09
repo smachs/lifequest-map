@@ -43,6 +43,8 @@ type Store = {
   setPlayerIconColor: (playerIconColor: string) => void;
   peerToPeer: boolean;
   setPeerToPeer: (peerToPeer: boolean) => void;
+  overlayMode: boolean | null;
+  setOverlayMode: (overlayMode: boolean) => void;
 };
 
 export const useSettingsStore = create(
@@ -98,6 +100,8 @@ export const useSettingsStore = create(
         setPlayerIconColor: (playerIconColor) => set({ playerIconColor }),
         peerToPeer: getJSONItem('peer-to-peer', true),
         setPeerToPeer: (peerToPeer) => set({ peerToPeer }),
+        overlayMode: null,
+        setOverlayMode: (overlayMode) => set({ overlayMode }),
       }),
       {
         name: 'settings-store',

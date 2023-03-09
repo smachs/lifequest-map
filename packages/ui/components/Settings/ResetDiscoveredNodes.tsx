@@ -1,7 +1,6 @@
 import { Button, Modal } from '@mantine/core';
 import { useState } from 'react';
 import { shallow } from 'zustand/shallow';
-import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
 import { useUserStore } from '../../utils/userStore';
 import { patchUser } from '../MarkerDetails/api';
@@ -25,7 +24,7 @@ const ResetDiscoveredNodes = () => {
       });
       await refreshUser();
     } catch (error) {
-      writeError(error);
+      console.error(error);
     } finally {
       setLoading(false);
       setShowModal(false);

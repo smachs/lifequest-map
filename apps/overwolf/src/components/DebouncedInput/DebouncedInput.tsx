@@ -1,16 +1,16 @@
+import type { TextInputProps } from '@mantine/core';
 import { TextInput } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 
 type DebouncedInputProps = {
   value?: string;
-  placeholder?: string;
   onChange: (value: string) => void;
-};
+} & Omit<TextInputProps, 'onChange' | 'value'>;
 const DebouncedInput = ({
   value = '',
-  placeholder,
   onChange,
+  ...props
 }: DebouncedInputProps) => {
   const [internalValue, setInternalValue] = useState(value);
   const [debounced] = useDebouncedValue(internalValue, 250);
@@ -29,8 +29,8 @@ const DebouncedInput = ({
 
   return (
     <TextInput
+      {...props}
       value={internalValue}
-      placeholder={placeholder}
       onChange={(event) => setInternalValue(event.target.value)}
     />
   );

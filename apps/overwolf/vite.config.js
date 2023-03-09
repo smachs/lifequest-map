@@ -24,9 +24,9 @@ export default defineConfig({
     outDir: resolve(__dirname, 'dist'),
     rollupOptions: {
       input: {
+        index: resolve(__dirname, 'index.html'),
         minimap: resolve(__dirname, 'minimap.html'),
         background: resolve(__dirname, 'background.html'),
-        sender: resolve(__dirname, 'sender.html'),
         influence: resolve(__dirname, 'influence.html'),
       },
     },

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { getCurrentWindow } from 'ui/utils/windows';
 import { useNewWorldGameInfo } from '../components/store';
+import { getCurrentWindow } from './windows';
 
 const useCenterWindow = () => {
   const newWorldGameInfo = useNewWorldGameInfo();

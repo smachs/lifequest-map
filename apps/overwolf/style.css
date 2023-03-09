@@ -1,0 +1,212 @@
+body {
+  margin: 0;
+  color: white;
+  height: 100vh;
+  overflow: hidden;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+* {
+  -webkit-user-drag: none;
+}
+
+button {
+  padding: 0;
+  border: none;
+}
+
+button:focus {
+  outline: none;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: inherit;
+  font-size: 1rem;
+  line-height: 1.25rem;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+input {
+  margin: 0;
+}
+
+.app-header {
+  display: flex;
+  height: 30px;
+  background-color: black;
+  align-items: center;
+  border-bottom: 1px solid #27272a;
+}
+
+.version {
+  font-size: 1rem;
+  margin: 0;
+  margin-left: 12px;
+  color: rgb(199 199 199);
+  font-family: monospace;
+}
+
+.discord {
+  --social-color: #7289da;
+}
+
+.github {
+  padding: 6px;
+}
+
+.icon {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  transition: 0.15s;
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.toggle-icons svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.toggle-icons svg:nth-of-type(1) {
+  opacity: 1;
+}
+
+.toggle-icons svg:nth-of-type(2) {
+  opacity: 0;
+}
+
+.toggle-icons.toggled svg:nth-of-type(1) {
+  opacity: 0;
+}
+
+.toggle-icons.toggled svg:nth-of-type(2) {
+  opacity: 1;
+}
+
+.window-controls-group {
+  margin-left: auto;
+  display: flex;
+
+  --color: rgb(199 199 199);
+  --color-hover: rgb(255 255 255);
+  --bg-color-hover: rgb(41 41 41);
+}
+
+.window-control {
+  color: var(--color);
+  background-color: transparent;
+}
+
+.window-control:hover,
+.window-control:active {
+  color: var(--color-hover);
+  background-color: var(--bg-color-hover);
+}
+
+.window-control-close {
+  --color-hover: rgb(255 255 255);
+  --bg-color-hover: red;
+}
+
+.window-control-social:hover {
+  color: white;
+  background-color: var(--social-color);
+}
+
+.layout {
+  display: flex;
+  height: calc(100% - 31px);
+}
+
+.sidebar {
+  width: 60px;
+  background: #111;
+  border-right: 1px solid #27272a;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav {
+  flex: 1;
+}
+
+.nav button {
+  border-bottom: 1px solid #27272a;
+}
+
+.sidebar button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 4rem;
+  padding: 0.5rem;
+}
+
+.sidebar button:hover {
+  background: #27272a;
+}
+
+.sidebar .active {
+  background: #191919;
+}
+
+.nav img {
+  max-height: 100%;
+  width: 100%;
+}
+
+.main {
+  flex: 1;
+  background: #191919;
+  overflow: auto;
+}
+
+.main iframe {
+  height: 100%;
+  width: 100%;
+}
+
+.main .page {
+  display: none;
+  height: 100%;
+}
+
+.main .page.active {
+  display: block;
+}
+
+.status {
+  width: 401px;
+  background: #111;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #27272a;
+}
+
+.sidebar .faq {
+  border-top: 1px solid #27272a;
+  padding: 0.75rem;
+}

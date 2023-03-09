@@ -1,5 +1,4 @@
 import { ActionIcon, Group, Text } from '@mantine/core';
-import { copyTextToClipboard } from '../../utils/clipboard';
 import CopyIcon from '../icons/CopyIcon';
 
 type CoordinatesProps = {
@@ -13,7 +12,7 @@ function Coordinates({ position }: CoordinatesProps) {
         {coordinates}
         <ActionIcon
           onClick={() => {
-            copyTextToClipboard(coordinates);
+            navigator.clipboard.writeText(coordinates);
           }}
           aria-label="Copy coordinates"
         >

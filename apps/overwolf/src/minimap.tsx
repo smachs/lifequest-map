@@ -1,21 +1,21 @@
 import { StrictMode, useEffect, useState } from 'react';
 import { MarkersProvider } from 'ui/contexts/MarkersContext';
-import { waitForOverwolf } from 'ui/utils/overwolf';
-import { dragMoveWindow, WINDOWS } from 'ui/utils/windows';
 import WorldMapBlank from './components/WorldMapBlank';
 import { PositionProvider } from './contexts/PositionContext';
 import './globals.css';
 import styles from './Minimap.module.css';
+import { waitForOverwolf } from './utils/overwolf';
+import { dragMoveWindow, WINDOWS } from './utils/windows';
 
 import { MantineProvider, Paper } from '@mantine/core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRoot } from 'react-dom/client';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import ResizeBorder from 'ui/components/ResizeBorder/ResizeBorder';
 import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
 import { initPlausible } from 'ui/utils/stats';
 import { classNames } from 'ui/utils/styles';
 import useEventListener from 'ui/utils/useEventListener';
+import ResizeBorder from './components/ResizeBorder/ResizeBorder';
 import MinimapSetup from './components/Settings/MinimapSetup';
 import { useMinimapSettingsStore } from './components/Settings/store';
 import {

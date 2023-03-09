@@ -8,7 +8,6 @@ import { mapFilters, mapIsAeternumMap } from 'static';
 import { useMap } from 'ui/utils/routes';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { getScreenshotUrl } from '../../utils/api';
-import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
 import { usePlayerStore } from '../../utils/playerStore';
 import { useSettingsStore } from '../../utils/settingsStore';
@@ -163,7 +162,7 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
       queryClient.invalidateQueries(['markers']);
       onClose();
     } catch (error) {
-      writeError(error);
+      console.error(error);
     }
   }
 

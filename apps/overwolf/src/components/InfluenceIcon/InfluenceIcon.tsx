@@ -1,20 +1,13 @@
-import {
-  ActionIcon,
-  Anchor,
-  HoverCard,
-  Image,
-  Text,
-  Tooltip,
-} from '@mantine/core';
+import { Anchor, Button, HoverCard, Image, Text, Tooltip } from '@mantine/core';
 import { IconScreenshot } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { fetchJSON } from 'ui/utils/api';
-import { toggleWindow, WINDOWS } from 'ui/utils/windows';
 import { usePosition } from '../../contexts/PositionContext';
+import { toggleWindow, WINDOWS } from '../../utils/windows';
 import useWindowIsVisible from '../useWindowIsVisible';
 
-const InfluenceIcon = () => {
+const InfluenceIcon = ({ disabled }: { disabled: boolean }) => {
   const isVisible = useWindowIsVisible(WINDOWS.INFLUENCE);
   const { worldName } = usePosition();
   const { data: todaysCount } = useQuery(
@@ -24,12 +17,8 @@ const InfluenceIcon = () => {
   );
   const [sawTooltip, setSawTooltip] = useState(false);
   return (
-    <HoverCard width={380} shadow="md" withinPortal openDelay={200}>
-      <HoverCard.Dropdown
-        sx={{
-          left: '8px !important',
-        }}
-      >
+    <HoverCard width={380} shadow="md" openDelay={200} withinPortal>
+      <HoverCard.Dropdown>
         <Text>Influence screenshot overlay</Text>
         <Text color="dimmed">
           You can contribute by scanning the factions influence map on your
@@ -52,14 +41,17 @@ const InfluenceIcon = () => {
           withArrow
           color="cyan"
         >
-          <ActionIcon
+          <Button
+            leftIcon={<IconScreenshot />}
             onClick={() => toggleWindow(WINDOWS.INFLUENCE, true)}
-            color={isVisible ? 'cyan' : 'dark'}
-            variant={isVisible ? 'filled' : 'transparent'}
+            color="cyan"
+            variant={isVisible ? 'default' : 'filled'}
             onMouseOver={() => todaysCount === 0 && setSawTooltip(true)}
+            fullWidth
+            disabled={disabled}
           >
-            <IconScreenshot />
-          </ActionIcon>
+            {isVisible ? 'Close' : 'Open'} Influence Screenshot Overlay
+          </Button>
         </Tooltip>
       </HoverCard.Target>
     </HoverCard>

@@ -1,6 +1,5 @@
 import type { OwAd } from '@overwolf/types/owads';
-import { useEffect, useRef, useState } from 'react';
-import useWindowIsVisible from '../useWindowIsVisible';
+import { useEffect, useRef } from 'react';
 import classes from './Ads.module.css';
 
 declare global {
@@ -11,24 +10,14 @@ declare global {
 
 function Ads(): JSX.Element {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [owAd, setOwAd] = useState<OwAd>();
-  const isDisplayedFirstTime = useRef(true);
-  const windowIsVisible = useWindowIsVisible();
 
   useEffect(() => {
-    if (owAd) {
-      return;
-    }
-
     function onOwAdReady() {
       if (typeof window.OwAd === 'undefined' || containerRef.current === null) {
         return;
       }
-      const ad = new window.OwAd(containerRef.current, {
+      new window.OwAd(containerRef.current, {
         size: { width: 400, height: 300 },
-      });
-      ad.addEventListener('ow_internal_rendered', () => {
-        setOwAd(ad);
       });
     }
 
@@ -40,23 +29,7 @@ function Ads(): JSX.Element {
     return () => {
       document.body.removeChild(script);
     };
-  }, [owAd]);
-
-  useEffect(() => {
-    if (!owAd) {
-      return;
-    }
-    if (isDisplayedFirstTime.current) {
-      isDisplayedFirstTime.current = false;
-      return;
-    }
-
-    if (windowIsVisible) {
-      owAd.refreshAd({});
-    } else {
-      owAd.removeAd();
-    }
-  }, [owAd, windowIsVisible]);
+  }, []);
 
   return (
     <aside className={classes.container}>

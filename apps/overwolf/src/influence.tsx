@@ -9,8 +9,6 @@ import {
 import { IconScreenshot, IconUpload, IconX } from '@tabler/icons-react';
 import { StrictMode, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { waitForOverwolf } from 'ui/utils/overwolf';
-import { closeCurrentWindow } from 'ui/utils/windows';
 import './globals.css';
 import type { Influence } from './utils/influence';
 import {
@@ -21,7 +19,9 @@ import {
   uploadInfluence,
 } from './utils/influence';
 import { getImageData, loadImage, toBlob } from './utils/media';
+import { waitForOverwolf } from './utils/overwolf';
 import useCenterWindow from './utils/useCenterWindow';
+import { closeCurrentWindow } from './utils/windows';
 
 const root = createRoot(document.querySelector('#root')!);
 
@@ -167,7 +167,7 @@ const Influences = () => {
         </Notification>
       )}
       {uploaded && (
-        <Notification color="teal" mt="xs" disallowClose>
+        <Notification color="teal" mt="xs" withCloseButton={false}>
           You are awesome 🤘
         </Notification>
       )}

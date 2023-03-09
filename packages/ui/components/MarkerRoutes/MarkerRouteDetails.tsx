@@ -19,7 +19,6 @@ import { findMapDetails, getRouteMeta, mapFilters } from 'static';
 import { shallow } from 'zustand/shallow';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { toTimeAgo } from '../../utils/dates';
-import { writeError } from '../../utils/logs';
 import { notify } from '../../utils/notifications';
 import { isEmbed, useRouteParams } from '../../utils/routes';
 import { useUserStore } from '../../utils/userStore';
@@ -161,7 +160,7 @@ const MarkerRouteDetails = () => {
       refreshAccount();
       refetch();
     } catch (error) {
-      writeError(error);
+      console.error(error);
     }
   }
 
