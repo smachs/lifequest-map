@@ -9,9 +9,13 @@ const Debug = () => {
       </Title>
       <Button
         onClick={() => {
-          getGameInfo().then((result) =>
-            overwolf.utils.placeOnClipboard(JSON.stringify(result, null, 2))
-          );
+          getGameInfo()
+            .then((result) =>
+              overwolf.utils.placeOnClipboard(JSON.stringify(result, null, 2))
+            )
+            .catch((error) =>
+              overwolf.utils.placeOnClipboard(JSON.stringify(error, null, 2))
+            );
         }}
       >
         Copy game info

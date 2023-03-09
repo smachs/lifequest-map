@@ -66,7 +66,7 @@ function Streaming(): JSX.Element {
     <Paper p="sm">
       <Stack spacing="xs">
         <Title order={2} size="sm" align="center">
-          Welcome back, {account!.name}!<br />
+          Welcome back, {account!.name}!
         </Title>
         <Text size="xs" color="dimmed">
           Use the token shown below on{' '}

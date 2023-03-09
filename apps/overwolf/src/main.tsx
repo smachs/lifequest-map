@@ -2,7 +2,7 @@ import { PositionProvider } from './contexts/PositionContext';
 import styles from './Main.module.css';
 import { waitForOverwolf } from './utils/overwolf';
 
-import { MantineProvider, Stack } from '@mantine/core';
+import { MantineProvider, ScrollArea, Stack } from '@mantine/core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRoot } from 'react-dom/client';
 import FAQ from 'ui/components/FAQ/FAQ';
@@ -22,11 +22,13 @@ function Sender(): JSX.Element {
   const showAds = !account || !account.isSupporter;
   return (
     <div className={styles.container}>
-      <Stack className={styles.main}>
-        {account ? <Streaming /> : <Welcome />}
-        <SyncStatusSender />
-        <Settings />
-      </Stack>
+      <ScrollArea type="auto">
+        <Stack p="xs">
+          {account ? <Streaming /> : <Welcome />}
+          <SyncStatusSender />
+          <Settings />
+        </Stack>
+      </ScrollArea>
       {showAds && <Ads />}
     </div>
   );

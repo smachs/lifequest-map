@@ -4,8 +4,3 @@
   grid-template-rows: 1fr auto;
   position: relative;
 }
-
-.main {
-  padding: 0.5em;
-  overflow: auto;
-}
