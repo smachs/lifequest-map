@@ -23,16 +23,12 @@ export async function getWindowState(
   );
 }
 
-const declaredWindows: {
-  [windowName: string]: overwolf.windows.WindowInfo;
-} = {};
 export async function obtainDeclaredWindow(
   windowName: string
 ): Promise<overwolf.windows.WindowInfo> {
   return new Promise((resolve, reject) => {
     overwolf.windows.obtainDeclaredWindow(windowName, (result) => {
       if (result.success) {
-        declaredWindows[windowName] = result.window;
         resolve(result.window);
       } else {
         reject(result.error);
