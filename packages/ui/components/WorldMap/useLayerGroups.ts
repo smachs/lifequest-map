@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import leaflet from 'leaflet';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Socket } from 'socket.io-client';
 import {
@@ -13,9 +13,7 @@ import { isEmbed, useRouteParams } from 'ui/utils/routes';
 import { shallow } from 'zustand/shallow';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { usePlayerStore } from '../../utils/playerStore';
-import { calcDistance } from '../../utils/positions';
 import { useSettingsStore } from '../../utils/settingsStore';
-import useEventListener from '../../utils/useEventListener';
 import { getAction, sharedRespawnTimers, startTimer } from './actions';
 import CanvasMarker from './CanvasMarker';
 import { fetchRespawnTimers } from './respawnTimers';
@@ -63,11 +61,7 @@ function useLayerGroups({
     };
   }>({});
   const { map, nodeId } = useRouteParams();
-  const {
-    location: playerLocation,
-    worldName,
-    steamId,
-  } = usePlayerStore(
+  const { worldName, steamId } = usePlayerStore(
     (state) => ({
       location: state.player?.position?.location,
       worldName: state.player?.worldName,
@@ -82,34 +76,6 @@ function useLayerGroups({
 
   const [highlightedMapMarker, setHighlightedMapMarker] =
     useState<CanvasMarker | null>(null);
-
-  const onMarkerAction = useCallback(async () => {
-    if (!playerLocation) {
-      return;
-    }
-    const markers = markersLayerGroup.getLayers() as CanvasMarker[];
-    const marker = markers.find((marker) => {
-      const action = getAction(marker.options.image.type);
-      if (!action) {
-        return false;
-      }
-      const latLng = marker.getLatLng();
-      const distance = calcDistance([latLng.lat, latLng.lng], playerLocation);
-      return distance < 5;
-    });
-    if (marker) {
-      const action = getAction(marker.options.image.type);
-      const respawnTimer = action(marker);
-      if (typeof respawnTimer === 'number') {
-        startTimer(marker, respawnTimer, socket);
-      }
-    }
-  }, [playerLocation]);
-
-  useEventListener('hotkey-marker_action', onMarkerAction, [onMarkerAction]);
-  useEventListener('hotkey-marker_action_secondary', onMarkerAction, [
-    onMarkerAction,
-  ]);
 
   useEffect(() => {
     if (!leafletMap) {
