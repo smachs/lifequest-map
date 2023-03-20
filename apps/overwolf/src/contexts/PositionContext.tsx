@@ -85,6 +85,7 @@ export function PositionProvider({
     let active = true;
 
     let lastLocation: [number, number] | null = position?.location || null;
+    let lastRotation: number | null = position?.rotation || null;
     let hasError = false;
     let lastUsername = username;
     let lastWorldName = worldName;
@@ -113,9 +114,11 @@ export function PositionProvider({
             }
             if (
               lastLocation?.[0] !== location[0] ||
-              lastLocation?.[1] !== location[1]
+              lastLocation?.[1] !== location[1] ||
+              lastRotation !== rotation
             ) {
               lastLocation = location;
+              lastRotation = rotation;
               setPosition({
                 location,
                 rotation,
