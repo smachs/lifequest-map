@@ -189,8 +189,8 @@ const MapActions = () => {
                     Playing
                   </Text>
                   {player.username && ` as ${player.username}`} at [
-                  {player.position.location[1].toFixed(3)},{' '}
-                  {player.position.location[0].toFixed(3)}]{' '}
+                  {player.position.location[1].toFixed(0)},{' '}
+                  {player.position.location[0].toFixed(0)}]{' '}
                   <Group spacing="xs">
                     <Text size="xs">
                       {player.region && `${player.location || player.region}`}
