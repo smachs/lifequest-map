@@ -1,6 +1,7 @@
 import {
   ActionIcon,
   Anchor,
+  Badge,
   Button,
   Checkbox,
   Divider,
@@ -136,6 +137,10 @@ const MapActions = () => {
           </ActionIcon>
         </HoverCard.Target>
         <HoverCard.Dropdown>
+          <Text color="orange" size="sm">
+            AGS updated their TOS and we had to decrease the precision of the
+            player position tracking 😌
+          </Text>
           <Text size="sm" weight={500}>
             Display current location
           </Text>
@@ -349,7 +354,7 @@ const MapActions = () => {
               <Slider
                 value={otherPlayersSize}
                 min={1}
-                max={20}
+                max={30}
                 onChange={(value) => setOtherPlayersSize(value)}
               />
             </Text>
@@ -367,6 +372,34 @@ const MapActions = () => {
                 ? 'Hide other respawn timers'
                 : 'Show other respawn timers'}
             </Button>
+            <Group grow>
+              <Text size="xs" color="dimmed">
+                Few
+              </Text>
+              <Badge
+                radius="xs"
+                sx={{ background: '#84ca50' }}
+                variant="filled"
+              />
+              <Badge
+                radius="xs"
+                sx={{ background: '#f07d02' }}
+                variant="filled"
+              />
+              <Badge
+                radius="xs"
+                sx={{ background: '#e60000' }}
+                variant="filled"
+              />
+              <Badge
+                radius="xs"
+                sx={{ background: '#9e1313' }}
+                variant="filled"
+              />
+              <Text size="xs" color="dimmed">
+                Many
+              </Text>
+            </Group>
           </Stack>
         </HoverCard.Dropdown>
       </HoverCard>

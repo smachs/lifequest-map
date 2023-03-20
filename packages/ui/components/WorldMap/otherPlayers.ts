@@ -70,21 +70,55 @@ export const initOtherPlayers = (leafletMap: leaflet.Map) => {
                 (player) => player.worldName === otherPlayersWorldName
               )
             : players;
-          visiblePlayers.forEach(({ position }) => {
-            if (position.location[0] && position.location[1]) {
-              const circle = leaflet.circle(
-                [position.location[0], position.location[1]],
-                {
-                  fillOpacity: 0.8,
-                  radius: state.otherPlayersSize,
-                  stroke: true,
-                  color: 'white',
-                  fillColor: 'white',
-                  interactive: false,
-                }
-              );
-              circle.addTo(layerGroup);
+          const round = (value: number) => {
+            return Math.round(value / 25) * 25;
+          };
+
+          const groups = visiblePlayers.reduce(
+            (prev, curr) => {
+              if (!curr.position.location[0] || !curr.position.location[1]) {
+                return prev;
+              }
+              const location = [
+                round(curr.position.location[0]),
+                round(curr.position.location[1]),
+              ] as [number, number];
+              const key = `${location[0]}:${location[1]}`;
+              return {
+                ...prev,
+                [key]: {
+                  location,
+                  count: (prev[key]?.count || 0) + 1,
+                },
+              };
+            },
+            {} as {
+              [key: string]: {
+                location: [number, number];
+                count: number;
+              };
             }
+          );
+          Object.values(groups).forEach((value) => {
+            let color;
+            if (value.count > 10) {
+              color = '#9e1313';
+            } else if (value.count > 7) {
+              color = '#e60000';
+            } else if (value.count > 2) {
+              color = '#f07d02';
+            } else {
+              color = '#84ca50';
+            }
+            const circle = leaflet.circle(value.location, {
+              fillOpacity: 0.8,
+              radius: state.otherPlayersSize,
+              stroke: true,
+              color: color,
+              fillColor: color,
+              interactive: false,
+            });
+            circle.addTo(layerGroup);
           });
           timeoutId = setTimeout(async () => {
             await updateOtherPlayers(leafletMap);

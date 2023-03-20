@@ -16,8 +16,6 @@ import SupporterInput from 'ui/components/SupporterInput/SupporterInput';
 import { useSettingsStore } from 'ui/utils/settingsStore';
 import { useUserStore } from 'ui/utils/userStore';
 import {
-  MARKER_ACTION,
-  MARKER_ACTION_SECONDARY,
   SETUP_MINIMAP,
   SHOW_HIDE_APP,
   SHOW_HIDE_DIRECTION,
@@ -44,10 +42,6 @@ function Settings(): JSX.Element {
   const showHideDirectionBinding = useHotkeyBinding(SHOW_HIDE_DIRECTION);
   const zoomInMapBinding = useHotkeyBinding(ZOOM_IN_MAP);
   const zoomOutMapBinding = useHotkeyBinding(ZOOM_OUT_MAP);
-  const markerActionBinding = useHotkeyBinding(MARKER_ACTION);
-  const markerActionSecondaryBinding = useHotkeyBinding(
-    MARKER_ACTION_SECONDARY
-  );
   const showHideInfluenceOverlayBinding = useHotkeyBinding(
     SHOW_HIDE_INFLUENCE_OVERLAY
   );
@@ -84,19 +78,6 @@ function Settings(): JSX.Element {
             <Input.Label>Zoom out Map</Input.Label>
             <Anchor href="overwolf://settings/games-overlay?hotkey=zoom_out_map&gameId=21816">
               <Kbd>{zoomOutMapBinding}</Kbd>
-            </Anchor>
-          </Group>
-
-          <Group grow>
-            <Input.Label>Interact with near node 1</Input.Label>
-            <Anchor href="overwolf://settings/games-overlay?hotkey=marker_action&gameId=21816">
-              <Kbd>{markerActionBinding}</Kbd>
-            </Anchor>
-          </Group>
-          <Group grow>
-            <Input.Label>Interact with near node 2</Input.Label>
-            <Anchor href="overwolf://settings/games-overlay?hotkey=marker_action_secondary&gameId=21816">
-              <Kbd>{markerActionSecondaryBinding}</Kbd>
             </Anchor>
           </Group>
           <Group grow>
