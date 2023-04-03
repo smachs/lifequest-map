@@ -171,6 +171,31 @@ export function getMonitorsList(): Promise<overwolf.utils.Display[]> {
   });
 }
 
+export async function moveToSecondScreen(windowId: string) {
+  const monitors = await getMonitorsList();
+  const hasSecondScreen = monitors.length > 1;
+  if (!hasSecondScreen) {
+    return;
+  }
+  const desktopWindow = await obtainDeclaredWindow(WINDOWS.DESKTOP);
+  const secondScreens = monitors.filter(
+    (monitor) => monitor.is_primary === false
+  );
+  const secondScreen =
+    secondScreens.find(
+      (secondScreen) => desktopWindow.monitorId === secondScreen.id
+    ) || secondScreens[0];
+  if (desktopWindow.monitorId === secondScreen.id) {
+    return;
+  }
+
+  const x = secondScreen.x + Math.floor(secondScreen.width / 2 - 1200 / 2);
+  const y = secondScreen.y + Math.floor(secondScreen.height / 2 - 800 / 2);
+  return new Promise((resolve) =>
+    overwolf.windows.changePosition(windowId, x, y, resolve)
+  );
+}
+
 export async function togglePreferedWindow(): Promise<void> {
   const preferedWindowName = await getPreferedWindowName();
   const newPreferedWindowName =

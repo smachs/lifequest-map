@@ -7,6 +7,7 @@ import {
   closeMainWindow,
   closeWindow,
   getPreferedWindowName,
+  moveToSecondScreen,
   restoreWindow,
   toggleWindow,
   WINDOWS,
@@ -18,12 +19,16 @@ async function openApp() {
   const newWorldIsRunning = await isNewWorldRunning();
   const preferedWindowName = await getPreferedWindowName();
   if (newWorldIsRunning) {
-    restoreWindow(preferedWindowName);
+    const windowId = await restoreWindow(preferedWindowName);
+    if (preferedWindowName === WINDOWS.DESKTOP) {
+      moveToSecondScreen(windowId);
+    }
+
     if (getJSONItem('showMinimap', false)) {
       restoreWindow(WINDOWS.MINIMAP);
     }
   } else {
-    restoreWindow(WINDOWS.DESKTOP);
+    await restoreWindow(WINDOWS.DESKTOP);
   }
 }
 waitForOverwolf().then(openApp);
@@ -54,7 +59,8 @@ overwolf.games.onGameInfoUpdated.addListener(async (event) => {
         restoreWindow(WINDOWS.OVERLAY);
         closeWindow(WINDOWS.DESKTOP);
       } else {
-        restoreWindow(WINDOWS.DESKTOP);
+        const windowId = await restoreWindow(WINDOWS.DESKTOP);
+        moveToSecondScreen(windowId);
         closeWindow(WINDOWS.OVERLAY);
       }
       if (getJSONItem('showMinimap', false)) {
