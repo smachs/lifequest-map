@@ -2,7 +2,7 @@ import { PositionProvider } from './contexts/PositionContext';
 import styles from './Main.module.css';
 import { waitForOverwolf } from './utils/overwolf';
 
-import { MantineProvider, ScrollArea, Stack } from '@mantine/core';
+import { MantineProvider, Paper, ScrollArea, Stack, Text } from '@mantine/core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRoot } from 'react-dom/client';
 import FAQ from 'ui/components/FAQ/FAQ';
@@ -24,6 +24,12 @@ function Sender(): JSX.Element {
     <div className={styles.container}>
       <ScrollArea type="auto">
         <Stack p="xs">
+          <Paper p="sm">
+            <Text color="orange" size="sm" align="center">
+              AGS updated their TOS and we had to decrease the precision of the
+              player position tracking 😌
+            </Text>
+          </Paper>
           {account ? <Streaming /> : <Welcome />}
           <SyncStatusSender />
           <Settings />

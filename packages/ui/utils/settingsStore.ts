@@ -70,7 +70,7 @@ export const useSettingsStore = create(
         otherPlayersWorldName: null,
         setOtherPlayersWorldName: (otherPlayersWorldName) =>
           set({ otherPlayersWorldName }),
-        otherPlayersSize: 5,
+        otherPlayersSize: 10,
         setOtherPlayersSize: (otherPlayersSize) => set({ otherPlayersSize }),
         autoFade: true,
         toggleAutoFade: () => set((state) => ({ autoFade: !state.autoFade })),

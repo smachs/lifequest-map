@@ -174,18 +174,6 @@
         "action-type": "custom",
         "default": "F11"
       },
-      "marker_action": {
-        "title": "Interact with near marker (Website)",
-        "action-type": "custom",
-        "default": "E",
-        "passthrough": true
-      },
-      "marker_action_secondary": {
-        "title": "Secondary Interact with near marker (Website)",
-        "action-type": "custom",
-        "default": "T",
-        "passthrough": true
-      },
       "show_hide_influence_overlay": {
         "title": "Show/Hide Influence Overlay",
         "action-type": "custom",

@@ -53,15 +53,38 @@ function useGroupPositions(group: Group): void {
         );
       })
       .reduce(
-        (acc, player) => {
+        (acc, player, index) => {
           const username = player.username!;
           const position = player.position!;
           delete removeablePlayerMarkers[username];
           const existingMarker = playerMarkers[username];
           let marker: PositionMarker = playerMarkers[username];
 
+          const offset = 5 + Math.floor(index / 6) * 5;
+          const location = [position.location[0], position.location[1]] as [
+            number,
+            number
+          ];
+          if (index % 6 === 0) {
+            location[0] += offset;
+          } else if (index % 7 === 1) {
+            location[1] += offset;
+          } else if (index % 7 === 2) {
+            location[0] -= offset;
+            location[1] += offset;
+          } else if (index % 7 === 3) {
+            location[0] -= offset;
+            location[1] -= offset;
+          } else if (index % 7 === 4) {
+            location[0] += offset;
+            location[1] -= offset;
+          } else if (index % 7 === 5) {
+            location[0] -= offset;
+          } else if (index % 7 === 6) {
+            location[1] -= offset;
+          }
           if (!existingMarker) {
-            marker = new PositionMarker(player.position!.location, {
+            marker = new PositionMarker(location, {
               icon: createPlayerIcon(playerIconColor, colorHash.hex(username)),
               zIndexOffset: 8999,
               pmIgnore: true,
@@ -93,7 +116,7 @@ function useGroupPositions(group: Group): void {
           playerImage.setAttribute('data-rotation', rotation.toString());
           const newRotation = -rotation - 90;
           marker.rotation = newRotation;
-          marker.setLatLng(position.location);
+          marker.setLatLng(location);
 
           return {
             ...acc,
