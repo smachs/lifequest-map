@@ -45,6 +45,8 @@ type Store = {
   setPeerToPeer: (peerToPeer: boolean) => void;
   overlayMode: boolean | null;
   setOverlayMode: (overlayMode: boolean) => void;
+  interpolatePlayerPosition: boolean;
+  setInterpolatePlayerPosition: (interpolatePlayerPosition: boolean) => void;
 };
 
 export const useSettingsStore = create(
@@ -102,6 +104,9 @@ export const useSettingsStore = create(
         setPeerToPeer: (peerToPeer) => set({ peerToPeer }),
         overlayMode: null,
         setOverlayMode: (overlayMode) => set({ overlayMode }),
+        interpolatePlayerPosition: true,
+        setInterpolatePlayerPosition: (interpolatePlayerPosition) =>
+          set({ interpolatePlayerPosition }),
       }),
       {
         name: 'settings-store',

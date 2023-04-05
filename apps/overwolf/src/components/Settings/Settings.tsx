@@ -21,11 +21,11 @@ import {
   SHOW_HIDE_DIRECTION,
   SHOW_HIDE_INFLUENCE_OVERLAY,
   SHOW_HIDE_MINIMAP,
-  useHotkeyBinding,
   ZOOM_IN_MAP,
   ZOOM_IN_MINIMAP,
   ZOOM_OUT_MAP,
   ZOOM_OUT_MINIMAP,
+  useHotkeyBinding,
 } from '../../utils/hotkeys';
 import { togglePreferedWindow } from '../../utils/windows';
 import Debug from '../Debug/Debug';
@@ -147,6 +147,14 @@ function Settings(): JSX.Element {
             label="Player icon color"
             value={settingsStore.playerIconColor}
             onChange={settingsStore.setPlayerIconColor}
+          />
+          <Checkbox
+            label="Interpolate player position"
+            checked={settingsStore.interpolatePlayerPosition}
+            description="The app can only get a non-accurate player position from the game due to TOS. This option tries to optimizes the positions by using the player rotation to expect where the next position should be."
+            onChange={(event) =>
+              settingsStore.setInterpolatePlayerPosition(event.target.checked)
+            }
           />
           <Title order={3} size="sm" align="center">
             Connection

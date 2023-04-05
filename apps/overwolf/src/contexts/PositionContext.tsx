@@ -47,6 +47,12 @@ const calcRotation = (
   );
 };
 
+function getOppositeSide(side: number, rotation: number) {
+  const alpha = (Math.PI / 180) * rotation;
+  const oppositeSide = side * Math.tan(alpha);
+  return oppositeSide;
+}
+
 export function PositionProvider({
   children,
 }: PositionProviderProps): JSX.Element {
@@ -117,12 +123,61 @@ export function PositionProvider({
               lastLocation?.[1] !== location[1] ||
               lastRotation !== rotation
             ) {
+              const guessedLocation: [number, number] = [...location];
+              let guessed = false;
+              if (lastLocation) {
+                if (
+                  location[0] > lastLocation[0] &&
+                  location[0] - lastLocation[0] <= 25
+                ) {
+                  guessed = true;
+                  guessedLocation[0] -= 12.5;
+                  if (rotation >= 45 && rotation < 135) {
+                    guessedLocation[1] += getOppositeSide(12.5, rotation - 90);
+                  }
+                } else if (
+                  location[0] < lastLocation[0] &&
+                  lastLocation[0] - location[0] <= 25
+                ) {
+                  guessed = true;
+                  guessedLocation[0] += 12.5;
+                  if (rotation >= 225 && rotation < 315) {
+                    guessedLocation[1] += getOppositeSide(12.5, rotation - 270);
+                  }
+                }
+                if (
+                  location[1] > lastLocation[1] &&
+                  location[1] - lastLocation[1] <= 25
+                ) {
+                  guessed = true;
+                  guessedLocation[1] -= 12.5;
+                  if (rotation < 45 || rotation >= 315) {
+                    guessedLocation[0] += getOppositeSide(12.5, rotation);
+                  }
+                } else if (
+                  location[1] < lastLocation[1] &&
+                  lastLocation[1] - location[1] <= 25
+                ) {
+                  guessed = true;
+                  guessedLocation[1] += 12.5;
+                  if (rotation >= 135 && rotation < 225) {
+                    guessedLocation[0] += getOppositeSide(12.5, rotation - 180);
+                  }
+                }
+              }
+              if (guessed) {
+                setPosition({
+                  location: guessedLocation,
+                  rotation,
+                });
+              } else {
+                setPosition((position) => ({
+                  location: position?.location || location,
+                  rotation,
+                }));
+              }
               lastLocation = location;
               lastRotation = rotation;
-              setPosition({
-                location,
-                rotation,
-              });
             }
           }
           if (username && username !== lastUsername) {
@@ -146,7 +201,7 @@ export function PositionProvider({
         }
       } finally {
         if (active) {
-          handler = setTimeout(updatePosition, 50);
+          handler = setTimeout(updatePosition, 10);
         }
       }
     }
