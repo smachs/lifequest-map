@@ -149,11 +149,11 @@ function Settings(): JSX.Element {
             onChange={settingsStore.setPlayerIconColor}
           />
           <Checkbox
-            label="Interpolate player position"
-            checked={settingsStore.interpolatePlayerPosition}
+            label="Extrapolate player position"
+            checked={settingsStore.extrapolatePlayerPosition}
             description="The app can only get a non-accurate player position from the game due to TOS. This option tries to optimizes the positions by using the player rotation to expect where the next position should be."
             onChange={(event) =>
-              settingsStore.setInterpolatePlayerPosition(event.target.checked)
+              settingsStore.setExtrapolatePlayerPosition(event.target.checked)
             }
           />
           <Title order={3} size="sm" align="center">

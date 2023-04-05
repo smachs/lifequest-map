@@ -7,6 +7,7 @@ import {
   findRegion,
   mapIsAeternumMap,
 } from 'static';
+import { useSettingsStore } from 'ui/utils/settingsStore';
 import { useNewWorldGameInfo } from '../components/store';
 import { getGameInfo } from '../utils/games';
 
@@ -61,6 +62,7 @@ export function PositionProvider({
   const [map, setMap] = useState<string>(AETERNUM_MAP.name);
   const [username, setUsername] = useState<string | null>(null);
   const newWorldGameInfo = useNewWorldGameInfo();
+  const settingsStore = useSettingsStore();
 
   const location = useMemo(
     () =>
@@ -126,7 +128,9 @@ export function PositionProvider({
               const guessedLocation: [number, number] = [...location];
               let guessed = false;
               if (lastLocation) {
-                if (
+                if (!settingsStore.extrapolatePlayerPosition) {
+                  guessed = true;
+                } else if (
                   location[0] > lastLocation[0] &&
                   location[0] - lastLocation[0] <= 25
                 ) {
@@ -144,8 +148,7 @@ export function PositionProvider({
                   if (rotation >= 225 && rotation < 315) {
                     guessedLocation[1] += getOppositeSide(12.5, rotation - 270);
                   }
-                }
-                if (
+                } else if (
                   location[1] > lastLocation[1] &&
                   location[1] - lastLocation[1] <= 25
                 ) {
@@ -210,7 +213,7 @@ export function PositionProvider({
       active = false;
       clearTimeout(handler);
     };
-  }, [newWorldGameInfo?.isRunning]);
+  }, [newWorldGameInfo?.isRunning, settingsStore.extrapolatePlayerPosition]);
 
   return (
     <PositionContext.Provider
