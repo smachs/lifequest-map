@@ -37,7 +37,7 @@ export default defineConfig({
             type: 'image/png',
           },
           {
-            src: '/android-chrome-512x512.png',
+            src: '/maskable_icon_x512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable',
@@ -49,7 +49,7 @@ export default defineConfig({
             purpose: 'any',
           },
         ],
-        theme_color: '#000000',
+        theme_color: '#2c2e33',
         background_color: '#000000',
         display: 'standalone',
         orientation: 'any',
