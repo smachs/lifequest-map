@@ -6,6 +6,7 @@ dist
 !/dist/overwolf/icons
 dist/server
 dist-ssr
+dev-dist
 *.local
 .eslintcache
 /data
