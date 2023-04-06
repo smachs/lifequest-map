@@ -8,10 +8,7 @@ function useMinimap(): [
   boolean,
   (value: boolean | ((value: boolean) => boolean)) => void
 ] {
-  const [showMinimap, setShowMinimap] = usePersistentState(
-    'showMinimap',
-    false
-  );
+  const [showMinimap, setShowMinimap] = usePersistentState('showMinimap', true);
 
   const newWorldGameInfo = useNewWorldGameInfo();
 

@@ -130,7 +130,7 @@ function Settings(): JSX.Element {
           </Title>
           <Checkbox
             label="Show Minimap without nodes"
-            description="Because of the ToS, it's not allowed to display nodes on the Overwolf minimap. But you can setup something similar with Skeleton (see FAQ/Discord)."
+            description="Because of the ToS, it's not allowed to display most nodes on the Overwolf minimap. But you can setup something similar with Skeleton (see FAQ/Discord)."
             checked={showMinimap}
             onChange={(event) => setShowMinimap(event.target.checked)}
           />

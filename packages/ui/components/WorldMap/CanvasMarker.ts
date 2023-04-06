@@ -111,11 +111,25 @@ leaflet.Canvas.include({
 
       ctx.translate(p.x, p.y);
       ctx.rotate((image.rotate * Math.PI) / 180);
-      ctx.drawImage(layer.imageElement, -radius, -radius, imageSize, imageSize);
+      try {
+        ctx.drawImage(
+          layer.imageElement,
+          -radius,
+          -radius,
+          imageSize,
+          imageSize
+        );
+      } catch (error) {
+        //
+      }
       ctx.translate(-p.x, -p.y);
       ctx.restore();
     } else {
-      ctx.drawImage(layer.imageElement, dx, dy, imageSize, imageSize);
+      try {
+        ctx.drawImage(layer.imageElement, dx, dy, imageSize, imageSize);
+      } catch (error) {
+        //
+      }
     }
 
     if (image.comments) {
