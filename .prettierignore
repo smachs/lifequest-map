@@ -10,6 +10,7 @@ dist-ssr
 .eslintcache
 /data
 *.js
+!*.config.js
 *.d.ts
 .next
 .vercel
