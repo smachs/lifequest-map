@@ -175,6 +175,13 @@ async function runServer() {
       res.sendFile(path.join(__dirname, '../../www/dist/privacy.html'));
     });
 
+    app.all('/sw.js', (_req, res) => {
+      res.sendFile(path.join(__dirname, '../../www/dist/sw.js'));
+    });
+    app.all('/manifest.webmanifest', (_req, res) => {
+      res.sendFile(path.join(__dirname, '../../www/dist/manifest.webmanifest'));
+    });
+
     app.use(
       express.static(path.join(__dirname, '../../www/dist'), {
         immutable: true,
