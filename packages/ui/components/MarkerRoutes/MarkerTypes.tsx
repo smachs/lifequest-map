@@ -43,7 +43,7 @@ function MarkerTypes({ markersByType }: MarkerTypesProps): JSX.Element {
               leftSection={
                 <Avatar
                   size={24}
-                  src={`${VITE_API_ENDPOINT}/${markerMapFilter.iconUrl}`}
+                  src={`${VITE_API_ENDPOINT}/assets${markerMapFilter.iconUrl}`}
                   alt={markerMapFilter.type}
                 />
               }

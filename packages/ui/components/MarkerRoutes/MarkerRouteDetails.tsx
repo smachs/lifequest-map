@@ -257,7 +257,7 @@ const MarkerRouteDetails = () => {
                   key={markerMapFilter.type}
                   icon={
                     <img
-                      src={`${VITE_API_ENDPOINT}/${markerMapFilter.iconUrl}`}
+                      src={`${VITE_API_ENDPOINT}/assets${markerMapFilter.iconUrl}`}
                       alt={markerMapFilter.type}
                       width={24}
                       height={24}

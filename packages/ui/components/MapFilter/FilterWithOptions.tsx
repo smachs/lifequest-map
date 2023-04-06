@@ -29,7 +29,7 @@ const FilterWithOptions = ({
         checked={filters.some((activeFilter) =>
           options.some((option) => `${filter.type}-${option}` === activeFilter)
         )}
-        imgSrc={`${VITE_API_ENDPOINT}/${filter.iconUrl}`}
+        imgSrc={`${VITE_API_ENDPOINT}/assets${filter.iconUrl}`}
         title={filter.title}
       />
       <div className={styles.container}>

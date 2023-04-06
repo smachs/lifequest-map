@@ -123,7 +123,7 @@ function MarkerDetails(): JSX.Element {
             <img
               width={32}
               height={32}
-              src={`${VITE_API_ENDPOINT}/${filterItem.iconUrl}`}
+              src={`${VITE_API_ENDPOINT}/assets${filterItem.iconUrl}`}
               alt=""
             />{' '}
             {marker.chestType

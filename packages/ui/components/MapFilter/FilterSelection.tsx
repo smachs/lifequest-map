@@ -39,7 +39,7 @@ const FilterSelection = ({ filter, filters, onToggle }: FilterSectionProps) => {
     <Checkbox
       onChange={(checked) => onToggle([filter.type], checked)}
       checked={filters.includes(filter.type)}
-      imgSrc={`${VITE_API_ENDPOINT}/${filter.iconUrl}`}
+      imgSrc={`${VITE_API_ENDPOINT}/assets${filter.iconUrl}`}
       title={filter.title}
     />
   );
