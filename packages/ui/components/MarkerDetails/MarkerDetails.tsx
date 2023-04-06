@@ -39,6 +39,7 @@ import ImagePreview from './ImagePreview';
 import Loot from './Loot/Loot';
 import ReportIssueButton from './ReportIssueButton';
 import useMarker from './useMarker';
+const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 function MarkerDetails(): JSX.Element {
   const { nodeId } = useRouteParams();
@@ -119,7 +120,12 @@ function MarkerDetails(): JSX.Element {
       title={
         filterItem && !isLoading ? (
           <Group>
-            <img width={32} height={32} src={filterItem.iconUrl} alt="" />{' '}
+            <img
+              width={32}
+              height={32}
+              src={`${VITE_API_ENDPOINT}/${filterItem.iconUrl}`}
+              alt=""
+            />{' '}
             {marker.chestType
               ? `${marker.chestType} Chest T${marker.tier}`
               : marker.name || filterItem.title}

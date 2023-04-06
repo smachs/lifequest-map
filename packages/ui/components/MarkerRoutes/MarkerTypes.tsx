@@ -5,6 +5,7 @@ import { mapFilters } from 'static';
 import { useFiltersStore } from '../../utils/filtersStore';
 import { classNames } from '../../utils/styles';
 import styles from './MarkerTypes.module.css';
+const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 type MarkerTypesProps = {
   markersByType: {
@@ -42,7 +43,7 @@ function MarkerTypes({ markersByType }: MarkerTypesProps): JSX.Element {
               leftSection={
                 <Avatar
                   size={24}
-                  src={markerMapFilter.iconUrl}
+                  src={`${VITE_API_ENDPOINT}/${markerMapFilter.iconUrl}`}
                   alt={markerMapFilter.type}
                 />
               }

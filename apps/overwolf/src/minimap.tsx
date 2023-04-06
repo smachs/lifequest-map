@@ -1,16 +1,16 @@
 import { StrictMode, useEffect, useState } from 'react';
 import { MarkersProvider } from 'ui/contexts/MarkersContext';
-import WorldMapBlank from './components/WorldMapBlank';
+import styles from './Minimap.module.css';
 import { PositionProvider } from './contexts/PositionContext';
 import './globals.css';
-import styles from './Minimap.module.css';
 import { waitForOverwolf } from './utils/overwolf';
-import { dragMoveWindow, WINDOWS } from './utils/windows';
+import { WINDOWS, dragMoveWindow } from './utils/windows';
 
 import { MantineProvider, Paper } from '@mantine/core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRoot } from 'react-dom/client';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
+import WorldMap from 'ui/components/WorldMap/WorldMap';
 import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
 import { initPlausible } from 'ui/utils/stats';
 import { classNames } from 'ui/utils/styles';
@@ -118,7 +118,9 @@ function Minimap(): JSX.Element {
           borderRadius: `${state.minimapBorderRadius}%`,
         }}
       >
-        <WorldMapBlank
+        <WorldMap
+          isMinimap
+          hideControls
           initialZoom={state.minimapZoom}
           className={styles.minimap}
           rotate={state.rotateMinimap}

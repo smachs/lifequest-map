@@ -1,6 +1,7 @@
 import type { FilterItem } from 'static';
 import Checkbox from './Checkbox';
 import FilterWithOptions from './FilterWithOptions';
+const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 type FilterSectionProps = {
   filters: string[];
@@ -38,7 +39,7 @@ const FilterSelection = ({ filter, filters, onToggle }: FilterSectionProps) => {
     <Checkbox
       onChange={(checked) => onToggle([filter.type], checked)}
       checked={filters.includes(filter.type)}
-      imgSrc={filter.iconUrl}
+      imgSrc={`${VITE_API_ENDPOINT}/${filter.iconUrl}`}
       title={filter.title}
     />
   );

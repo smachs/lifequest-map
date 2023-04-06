@@ -5,6 +5,7 @@ import type { Details } from './AddResources';
 import PlayerPositionButton from './PlayerPositionButton';
 import styles from './SelectPosition.module.css';
 import useGeoman from './useGeoman';
+const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 type SelectPositionType = {
   details: Details | null;
@@ -21,7 +22,7 @@ function SelectPosition({
   useGeoman({
     details,
     leafletMap: latestLeafletMap!,
-    iconUrl: filter?.iconUrl,
+    iconUrl: `${VITE_API_ENDPOINT}/${filter?.iconUrl}`,
     filter,
     x: location[0],
     y: location[1],

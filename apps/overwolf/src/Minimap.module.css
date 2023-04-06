@@ -6,6 +6,16 @@
   transition: 0.2s opacity ease-in;
   display: grid;
   place-items: center;
+  border: 2px solid #101010;
+}
+
+.container::before {
+  box-shadow: inset 0 0 8px 2px rgb(0 0 0 / 77%);
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
 }
 
 .hideOnHover:hover {

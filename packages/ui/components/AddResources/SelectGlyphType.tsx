@@ -3,6 +3,7 @@ import { forwardRef } from 'react';
 import { Avatar, Group, Select, Text } from '@mantine/core';
 import { glyphs } from 'static';
 import type { Details } from './AddResources';
+const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {
   image: string;
@@ -48,7 +49,7 @@ function SelectGlyphType({
       }}
       data={glyphs.map((glyph) => ({
         value: glyph.id.toString(),
-        image: glyph.iconUrl,
+        image: `${VITE_API_ENDPOINT}/${glyph.iconUrl}`,
         label: glyph.name,
       }))}
     />

@@ -18,6 +18,13 @@ export const allFilters = mapFilters
   })
   .flat();
 
+export function getOverwolfFilters() {
+  return mapFilters
+    .filter((filter) => ['service', 'locations'].includes(filter.category))
+    .map((filter) => filter.type)
+    .flat();
+}
+
 type Store = {
   filters: string[];
   setFilters: (value: string[]) => void;

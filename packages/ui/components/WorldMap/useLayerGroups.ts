@@ -14,10 +14,11 @@ import { shallow } from 'zustand/shallow';
 import { useMarkers } from '../../contexts/MarkersContext';
 import { usePlayerStore } from '../../utils/playerStore';
 import { useSettingsStore } from '../../utils/settingsStore';
-import { getAction, sharedRespawnTimers, startTimer } from './actions';
 import CanvasMarker from './CanvasMarker';
+import { getAction, sharedRespawnTimers, startTimer } from './actions';
 import { fetchRespawnTimers } from './respawnTimers';
 import { getTooltipContent } from './tooltips';
+const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 export const LeafIcon: new ({ iconUrl }: { iconUrl: string }) => leaflet.Icon =
   leaflet.Icon.extend({
@@ -274,7 +275,7 @@ function useLayerGroups({
             markerId: marker._id,
             type: marker.type,
             markerSize: marker.size,
-            src: mapFilter.iconUrl,
+            src: `${VITE_API_ENDPOINT}/${mapFilter.iconUrl}`,
             showBackground: markerShowBackground,
             borderColor: filterCategory.borderColor,
             highlight: isHighlighted,

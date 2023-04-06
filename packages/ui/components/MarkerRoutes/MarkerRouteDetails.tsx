@@ -30,11 +30,12 @@ import ReportIssueButton from '../MarkerDetails/ReportIssueButton';
 import Meta from '../Meta/Meta';
 import { useUpsertStore } from '../UpsertArea/upsertStore';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
-import { patchFavoriteMarkerRoute } from './api';
 import DeleteRoute from './DeleteRoute';
 import ForkRoute from './ForkRoute';
 import type { MarkerRouteItem } from './MarkerRoutes';
+import { patchFavoriteMarkerRoute } from './api';
 import useMarkerRoute from './useMarkerRoute';
+const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 const MarkerRouteDetails = () => {
   const { routeId } = useRouteParams();
@@ -256,7 +257,7 @@ const MarkerRouteDetails = () => {
                   key={markerMapFilter.type}
                   icon={
                     <img
-                      src={markerMapFilter.iconUrl}
+                      src={`${VITE_API_ENDPOINT}/${markerMapFilter.iconUrl}`}
                       alt={markerMapFilter.type}
                       width={24}
                       height={24}

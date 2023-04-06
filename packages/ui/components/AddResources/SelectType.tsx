@@ -3,6 +3,7 @@ import { forwardRef } from 'react';
 import type { FilterItem } from 'static';
 import { mapFilters } from 'static';
 import { usePersistentState } from '../../utils/storage';
+const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {
   image: string;
@@ -59,7 +60,7 @@ function SelectType({ onSelect, filter }: SelectTypeType): JSX.Element {
               }
               return {
                 value: filter.type,
-                image: filter.iconUrl,
+                image: `${VITE_API_ENDPOINT}/${filter.iconUrl}`,
                 label: filter.title,
               };
             })
@@ -74,7 +75,7 @@ function SelectType({ onSelect, filter }: SelectTypeType): JSX.Element {
             )
             .map((filter) => ({
               value: filter.type,
-              image: filter.iconUrl,
+              image: `${VITE_API_ENDPOINT}/${filter.iconUrl}`,
               label: filter.title,
             })),
         ]}

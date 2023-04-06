@@ -2,6 +2,7 @@ import type { FilterItem } from 'static';
 import { classNames } from '../../utils/styles';
 import Checkbox from './Checkbox';
 import styles from './FilterWithOptions.module.css';
+const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 type FilterWithOptionsProps = {
   options: string[];
@@ -28,7 +29,7 @@ const FilterWithOptions = ({
         checked={filters.some((activeFilter) =>
           options.some((option) => `${filter.type}-${option}` === activeFilter)
         )}
-        imgSrc={filter.iconUrl}
+        imgSrc={`${VITE_API_ENDPOINT}/${filter.iconUrl}`}
         title={filter.title}
       />
       <div className={styles.container}>

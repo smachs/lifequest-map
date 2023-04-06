@@ -8,7 +8,7 @@ import useMarkerRoute from '../components/MarkerRoutes/useMarkerRoute';
 import { useMarkerSearchStore } from '../components/MarkerSearch/markerSearchStore';
 import { latestLeafletMap } from '../components/WorldMap/useWorldMap';
 import { fetchJSON } from '../utils/api';
-import { useFiltersStore } from '../utils/filtersStore';
+import { getOverwolfFilters, useFiltersStore } from '../utils/filtersStore';
 import { isOverwolfApp } from '../utils/overwolf';
 import { isEmbed, useRouteParams } from '../utils/routes';
 import { usePersistentState } from '../utils/storage';
@@ -71,7 +71,7 @@ export function MarkersProvider({
       ]).then(([newMarkers, privateMarkers]) =>
         newMarkers.concat(privateMarkers)
       ),
-    { enabled: !isOverwolfApp, refetchOnWindowFocus: false }
+    { refetchOnWindowFocus: false }
   );
 
   const [allMarkerRoutes, setMarkerRoutes] = usePersistentState<
@@ -84,10 +84,11 @@ export function MarkersProvider({
     string[]
   >([]);
 
-  const { filters } = useFiltersStore();
+  const { filters } = isOverwolfApp
+    ? { filters: getOverwolfFilters() }
+    : useFiltersStore();
   const { map, nodeId, routeId, world } = useRouteParams();
   const { data: markerRouteData } = useMarkerRoute(routeId);
-
   const hiddenMarkerIds = useUserStore(
     (state) => state.user?.hiddenMarkerIds || []
   );
