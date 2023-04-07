@@ -340,6 +340,14 @@ const UserAction = () => {
               >
                 Skeleton
               </Anchor>
+              <Anchor
+                size="xs"
+                href="https://gaming.tools/newworld/"
+                title="New World Trade Skill Leveling Guides and Crafting Calculators"
+                target="_blank"
+              >
+                Crafting Guides
+              </Anchor>
               <Anchor size="xs" href="/privacy.html" target="_blank">
                 Privacy Policy
               </Anchor>
