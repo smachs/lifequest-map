@@ -4,7 +4,7 @@ import { useUserStore } from '../../utils/userStore';
 const NitroPay = () => {
   const account = useUserStore((state) => state.account);
   useEffect(() => {
-    if (account?.isSupporter) {
+    if (navigator.userAgent.includes('Overwolf') || account?.isSupporter) {
       return;
     }
     // @ts-ignore
