@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import fs from 'fs/promises';
 import type { UpdateFilter } from 'mongodb';
 import { ObjectId } from 'mongodb';
 import passport from 'passport';
@@ -18,6 +19,15 @@ import { updateUsername } from './utils.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const failedHTML = (
+  await fs.readFile(path.join(__dirname, '../../../src/lib/auth/failed.html'))
+).toString();
+const successfulHTML = (
+  await fs.readFile(
+    path.join(__dirname, '../../../src/lib/auth/successful.html')
+  )
+).toString();
 
 declare module 'express-session' {
   interface SessionData {
@@ -136,10 +146,10 @@ authRouter.get(
         { upsert: true }
       );
       if (!result.ok) {
-        res.status(500).sendFile(path.join(__dirname, './failed.html'));
+        res.status(500).send(failedHTML);
         return;
       }
-      res.sendFile(path.join(__dirname, './successful.html'));
+      res.send(successfulHTML);
       updateUsername(req.user.steamId, req.user.displayName);
       postToDiscord(`🔒 ${req.user.displayName} authenticated`, false);
     } catch (error) {
@@ -147,7 +157,7 @@ authRouter.get(
         `Login failed for ${req.user.displayName} (${req.user.steamId}) with ${req.session.sessionId}`,
         error
       );
-      res.status(500).sendFile(path.join(__dirname, './failed.html'));
+      res.status(500).send(failedHTML);
     }
   }
 );
