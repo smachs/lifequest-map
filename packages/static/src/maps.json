@@ -22,17 +22,6 @@
     ]
   },
   {
-    "name": "NW_Dungeon_BrimstoneSands_00",
-    "title": "The Ennead",
-    "folder": "nw_dungeon_brimstonesands_00",
-    "maxZoom": 6,
-    "minZoom": 3,
-    "maxBounds": [
-      [740, 550],
-      [1450, 1500]
-    ]
-  },
-  {
     "name": "NW_Dungeon_CutlassKeys_00",
     "title": "Barnacles & Black Powder",
     "folder": "nw_dungeon_cutlasskeys_00",
@@ -43,6 +32,17 @@
       [1240, 750]
     ]
   },
+  {
+    "name": "NW_Dungeon_GreatCleave_01",
+    "title": "Empyrean Forge",
+    "folder": "nw_dungeon_greatcleave_01",
+    "maxZoom": 6,
+    "minZoom": 3,
+    "maxBounds": [
+      [680, 460],
+      [200, 950]
+    ]
+  }
   {
     "name": "NW_Dungeon_Edengrove_00",
     "title": "Garden of Genesis",
@@ -77,6 +77,17 @@
     ]
   },
   {
+    "name": "NW_Dungeon_ShatterMtn_00",
+    "title": "Tempest's Heart",
+    "folder": "nw_dungeon_shattermtn_00",
+    "maxZoom": 6,
+    "minZoom": 3,
+    "maxBounds": [
+      [300, 250],
+      [1970, 2100]
+    ]
+  },
+  {
     "name": "NW_Dungeon_RestlessShores_01",
     "title": "The Depths",
     "folder": "nw_dungeon_restlessshores_01",
@@ -88,14 +99,14 @@
     ]
   },
   {
-    "name": "NW_Dungeon_ShatterMtn_00",
-    "title": "Tempest's Heart",
-    "folder": "nw_dungeon_shattermtn_00",
+    "name": "NW_Dungeon_BrimstoneSands_00",
+    "title": "The Ennead",
+    "folder": "nw_dungeon_brimstonesands_00",
     "maxZoom": 6,
     "minZoom": 3,
     "maxBounds": [
-      [300, 250],
-      [1970, 2100]
+      [740, 550],
+      [1450, 1500]
     ]
   },
   {
