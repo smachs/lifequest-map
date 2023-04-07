@@ -8,8 +8,8 @@ import { usePlayerStore } from '../../utils/playerStore';
 import { useUserStore } from '../../utils/userStore';
 import { patchUser } from '../MarkerDetails/api';
 import type CanvasMarker from './CanvasMarker';
-import { latestLeafletMap } from './useWorldMap';
 import styles from './WorldMap.module.css';
+import { latestLeafletMap } from './useWorldMap';
 
 const format = (value: number) => `0${Math.floor(value)}`.slice(-2);
 const formatTimer = (seconds: number) => {
@@ -245,7 +245,7 @@ const actions: {
   pigment_red_primsabloom: respawnAction(600),
   pigment_turquoise_primsabloom: respawnAction(600),
   pigment_violet_primsabloom: respawnAction(600),
-  pigment_white_primsabloom: respawnAction(600),
+  pigment_white_primsabloom: respawnAction(900),
   pigment_yellow_primsabloom: respawnAction(600),
   fish_hotspot1: respawnAction(1800),
   fish_hotspot2: respawnAction(2700),
