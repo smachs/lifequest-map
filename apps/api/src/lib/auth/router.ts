@@ -2,6 +2,8 @@ import { Router } from 'express';
 import type { UpdateFilter } from 'mongodb';
 import { ObjectId } from 'mongodb';
 import passport from 'passport';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { v4 as uuid, validate as validateUUID } from 'uuid';
 import { postToDiscord } from '../discord.js';
 import { getMarkerRoutesCollection } from '../markerRoutes/collection.js';
@@ -13,6 +15,9 @@ import { getAccountCollection } from './collection.js';
 import { ensureAuthenticated } from './middlewares.js';
 import type { AccountDTO } from './types.js';
 import { updateUsername } from './utils.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 declare module 'express-session' {
   interface SessionData {
@@ -131,12 +136,10 @@ authRouter.get(
         { upsert: true }
       );
       if (!result.ok) {
-        res
-          .status(500)
-          .send('Login failed. Please try again or visit Discord for support.');
+        res.status(500).sendFile(path.join(__dirname, './failed.html'));
         return;
       }
-      res.send(`logged in successfully, you can close this window now`);
+      res.sendFile(path.join(__dirname, './successful.html'));
       updateUsername(req.user.steamId, req.user.displayName);
       postToDiscord(`🔒 ${req.user.displayName} authenticated`, false);
     } catch (error) {
@@ -144,9 +147,7 @@ authRouter.get(
         `Login failed for ${req.user.displayName} (${req.user.steamId}) with ${req.session.sessionId}`,
         error
       );
-      res
-        .status(500)
-        .send('Login failed. Please try again or visit Discord for support.');
+      res.status(500).sendFile(path.join(__dirname, './failed.html'));
     }
   }
 );
