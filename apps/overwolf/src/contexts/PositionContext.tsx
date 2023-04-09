@@ -131,36 +131,29 @@ export function PositionProvider({
                 if (!settingsStore.extrapolatePlayerPosition) {
                   guessed = true;
                 } else if (
-                  location[0] > lastLocation[0] &&
-                  location[0] - lastLocation[0] <= 25
+                  location[0] - lastLocation[0] > 25 ||
+                  location[1] - lastLocation[1] > 25
                 ) {
+                  guessed = true;
+                } else if (location[0] > lastLocation[0]) {
                   guessed = true;
                   guessedLocation[0] -= 12.5;
                   if (rotation >= 45 && rotation < 135) {
                     guessedLocation[1] += getOppositeSide(12.5, rotation - 90);
                   }
-                } else if (
-                  location[0] < lastLocation[0] &&
-                  lastLocation[0] - location[0] <= 25
-                ) {
+                } else if (location[0] < lastLocation[0]) {
                   guessed = true;
                   guessedLocation[0] += 12.5;
                   if (rotation >= 225 && rotation < 315) {
                     guessedLocation[1] += getOppositeSide(12.5, rotation - 270);
                   }
-                } else if (
-                  location[1] > lastLocation[1] &&
-                  location[1] - lastLocation[1] <= 25
-                ) {
+                } else if (location[1] > lastLocation[1]) {
                   guessed = true;
                   guessedLocation[1] -= 12.5;
                   if (rotation < 45 || rotation >= 315) {
                     guessedLocation[0] += getOppositeSide(12.5, rotation);
                   }
-                } else if (
-                  location[1] < lastLocation[1] &&
-                  lastLocation[1] - location[1] <= 25
-                ) {
+                } else if (location[1] < lastLocation[1]) {
                   guessed = true;
                   guessedLocation[1] += 12.5;
                   if (rotation >= 135 && rotation < 225) {
