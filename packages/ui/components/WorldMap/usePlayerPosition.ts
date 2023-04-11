@@ -10,8 +10,8 @@ import { useSettingsStore } from '../../utils/settingsStore';
 import type { Position } from '../../utils/useReadLivePosition';
 import { useUpsertStore } from '../UpsertArea/upsertStore';
 import type CanvasMarker from './CanvasMarker';
-import { createPlayerIcon } from './playerIcon';
 import PositionMarker from './PositionMarker';
+import { createPlayerIcon } from './playerIcon';
 import { updateRotation } from './rotation';
 import useAdaptiveZoom from './useAdaptiveZoom';
 import useDirectionLine from './useDirectionLine';
@@ -210,7 +210,9 @@ function usePlayerPosition({
         leaftletMapContainer.style.transform = '';
       }
 
-      divElement.innerHTML = `<span>[${playerPosition.location[1]}, ${playerPosition.location[0]}]</span>`;
+      divElement.innerHTML = `<span>[${playerPosition.location[1].toFixed(
+        2
+      )}, ${playerPosition.location[0].toFixed(2)}]</span>`;
     }
     if (isFollowing) {
       leafletMap.panTo(

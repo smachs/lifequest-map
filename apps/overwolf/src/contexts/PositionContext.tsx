@@ -48,12 +48,6 @@ const calcRotation = (
   );
 };
 
-function getOppositeSide(side: number, rotation: number) {
-  const alpha = (Math.PI / 180) * rotation;
-  const oppositeSide = side * Math.tan(alpha);
-  return oppositeSide;
-}
-
 export function PositionProvider({
   children,
 }: PositionProviderProps): JSX.Element {
@@ -93,15 +87,19 @@ export function PositionProvider({
     let active = true;
 
     let lastLocation: [number, number] | null = position?.location || null;
+    let lastGuessedLocation: [number, number] | null = null;
+    let lastZ: number | null = null;
     let lastRotation: number | null = position?.rotation || null;
     let hasError = false;
     let lastUsername = username;
     let lastWorldName = worldName;
     let lastMap = map;
+    let lastUpdate = Date.now();
 
     async function updatePosition() {
       try {
         const gameInfo = await getGameInfo();
+        const timeDiff = Date.now() - lastUpdate;
         if (gameInfo?.game_info) {
           const {
             player_name: username,
@@ -114,18 +112,24 @@ export function PositionProvider({
               +locationList.match(/position.y,(\d+.\d{3})/)[1],
               +locationList.match(/position.x,(\d+.\d{3})/)[1],
             ];
+            const z = +locationList.match(/position.z,(\d+.\d+)/)[1];
             let rotation: number;
             if (locationList.includes('player.compass,NONE')) {
               rotation = calcRotation(location, lastLocation);
             } else {
               rotation = +locationList.match(/rotation.z,(\d+)/)[1];
             }
+            const isMoving = lastZ !== z;
             if (
               lastLocation?.[0] !== location[0] ||
               lastLocation?.[1] !== location[1] ||
-              lastRotation !== rotation
+              lastRotation !== rotation ||
+              isMoving
             ) {
               const guessedLocation: [number, number] = [...location];
+              if (!lastGuessedLocation) {
+                lastGuessedLocation = [...guessedLocation];
+              }
               let guessed = false;
               if (lastLocation) {
                 if (!settingsStore.extrapolatePlayerPosition) {
@@ -137,30 +141,61 @@ export function PositionProvider({
                   guessed = true;
                 } else if (location[0] > lastLocation[0]) {
                   guessed = true;
-                  guessedLocation[0] -= 12.5;
-                  if (rotation >= 45 && rotation < 135) {
-                    guessedLocation[1] += getOppositeSide(12.5, rotation - 90);
-                  }
+                  guessedLocation[0] = lastLocation[0];
+                  guessedLocation[1] = lastGuessedLocation[1];
                 } else if (location[0] < lastLocation[0]) {
                   guessed = true;
-                  guessedLocation[0] += 12.5;
-                  if (rotation >= 225 && rotation < 315) {
-                    guessedLocation[1] += getOppositeSide(12.5, rotation - 270);
-                  }
+                  guessedLocation[0] = location[0];
+                  guessedLocation[1] = lastGuessedLocation[1];
                 } else if (location[1] > lastLocation[1]) {
                   guessed = true;
-                  guessedLocation[1] -= 12.5;
-                  if (rotation < 45 || rotation >= 315) {
-                    guessedLocation[0] += getOppositeSide(12.5, rotation);
-                  }
+                  guessedLocation[1] = location[1] - 25;
+                  guessedLocation[0] = lastGuessedLocation[0];
                 } else if (location[1] < lastLocation[1]) {
                   guessed = true;
-                  guessedLocation[1] += 12.5;
-                  if (rotation >= 135 && rotation < 225) {
-                    guessedLocation[0] += getOppositeSide(12.5, rotation - 180);
+                  guessedLocation[1] = location[1];
+                  guessedLocation[0] = lastGuessedLocation[0];
+                } else if (isMoving) {
+                  guessed = true;
+                  guessedLocation[0] = lastGuessedLocation[0];
+                  guessedLocation[1] = lastGuessedLocation[1];
+
+                  const velocity = 0.0125;
+                  const distance = velocity * timeDiff;
+                  const yDiff = Math.sin((rotation * Math.PI) / 180) * distance;
+                  const xDiff = Math.cos((rotation * Math.PI) / 180) * distance;
+                  if (yDiff > 0) {
+                    if (guessedLocation[0] + yDiff < location[0] + 25) {
+                      guessedLocation[0] = guessedLocation[0] + yDiff;
+                    } else {
+                      guessedLocation[0] = location[0] + 25;
+                    }
+                  } else {
+                    if (guessedLocation[0] + yDiff > location[0] - 25) {
+                      guessedLocation[0] = guessedLocation[0] + yDiff;
+                    } else {
+                      guessedLocation[0] = location[0] - 25;
+                    }
+                  }
+                  if (xDiff > 0) {
+                    if (guessedLocation[1] + xDiff < location[1] + 25) {
+                      guessedLocation[1] = guessedLocation[1] + xDiff;
+                    } else {
+                      guessedLocation[1] = location[1] + 25;
+                    }
+                  } else {
+                    if (guessedLocation[1] + xDiff > location[1] - 25) {
+                      guessedLocation[1] = guessedLocation[1] + xDiff;
+                    } else {
+                      guessedLocation[1] = location[1] - 25;
+                    }
                   }
                 }
               }
+              lastLocation = location;
+              lastGuessedLocation = guessedLocation;
+              lastRotation = rotation;
+              lastZ = z;
               if (guessed) {
                 setPosition({
                   location: guessedLocation,
@@ -172,8 +207,6 @@ export function PositionProvider({
                   rotation,
                 }));
               }
-              lastLocation = location;
-              lastRotation = rotation;
             }
           }
           if (username && username !== lastUsername) {
@@ -197,7 +230,8 @@ export function PositionProvider({
         }
       } finally {
         if (active) {
-          handler = setTimeout(updatePosition, 10);
+          lastUpdate = Date.now();
+          handler = setTimeout(updatePosition, 50);
         }
       }
     }
