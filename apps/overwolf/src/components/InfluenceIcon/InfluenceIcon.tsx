@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { fetchJSON } from 'ui/utils/api';
 import { usePosition } from '../../contexts/PositionContext';
-import { toggleWindow, WINDOWS } from '../../utils/windows';
+import { WINDOWS, toggleWindow } from '../../utils/windows';
 import useWindowIsVisible from '../useWindowIsVisible';
 
 const InfluenceIcon = ({ disabled }: { disabled: boolean }) => {
@@ -17,7 +17,13 @@ const InfluenceIcon = ({ disabled }: { disabled: boolean }) => {
   );
   const [sawTooltip, setSawTooltip] = useState(false);
   return (
-    <HoverCard width={380} shadow="md" openDelay={200} withinPortal>
+    <HoverCard
+      width={380}
+      shadow="md"
+      openDelay={200}
+      withinPortal
+      position="right"
+    >
       <HoverCard.Dropdown>
         <Text>Influence screenshot overlay</Text>
         <Text color="dimmed">

@@ -30,8 +30,8 @@ function Sender(): JSX.Element {
               player position tracking 😌
             </Text>
           </Paper>
-          {account ? <Streaming /> : <Welcome />}
           <SyncStatusSender />
+          {account ? <Streaming /> : <Welcome />}
           <Settings />
         </Stack>
       </ScrollArea>
