@@ -10,6 +10,7 @@ import { ThemeProvider } from 'ui/contexts/ThemeProvider';
 import { initPlausible } from 'ui/utils/stats';
 import { useUserStore } from 'ui/utils/userStore';
 import Ads from './components/Ads/Ads';
+import InfluenceIcon from './components/InfluenceIcon/InfluenceIcon';
 import Settings from './components/Settings/Settings';
 import Streaming from './components/Streaming';
 import SyncStatusSender from './components/SyncStatus/SyncStatusSender';
@@ -25,13 +26,16 @@ function Sender(): JSX.Element {
       <ScrollArea type="auto">
         <Stack p="xs">
           <Paper p="sm">
-            <Text color="orange" size="sm" align="center">
-              AGS updated their TOS and we had to decrease the precision of the
-              player position tracking 😌
-            </Text>
+            <Stack>
+              <Text color="orange" size="sm" align="center" weight="bold">
+                AGS updated their TOS and we had to decrease the precision of
+                the player position tracking 😌
+              </Text>
+              <InfluenceIcon />
+            </Stack>
           </Paper>
-          <SyncStatusSender />
           {account ? <Streaming /> : <Welcome />}
+          <SyncStatusSender />
           <Settings />
         </Stack>
       </ScrollArea>

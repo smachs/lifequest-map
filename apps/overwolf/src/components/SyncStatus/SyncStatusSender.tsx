@@ -1,14 +1,29 @@
 import { ColorSwatch, List, Paper, Stack, Text, Title } from '@mantine/core';
+import { useInterval } from '@mantine/hooks';
+import { IconClick, IconClock, IconKeyboard } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
 import { usePosition } from '../../contexts/PositionContext';
-import InfluenceIcon from '../InfluenceIcon/InfluenceIcon';
 import { useNewWorldGameInfo } from '../store';
 import styles from './SyncStatus.module.css';
 import useOverlayActivated from './useOverlayActivated';
 
 function SyncStatusSender() {
   const activated = useOverlayActivated();
-  const { position, username, worldName } = usePosition();
+  const { position, username, worldName, map } = usePosition();
   const newWorldGameInfo = useNewWorldGameInfo();
+  const [activity, setActivity] =
+    useState<overwolf.games.inputTracking.InputActivity | null>(null);
+
+  const interval = useInterval(() => {
+    overwolf.games.inputTracking.getActivityInformation((info) => {
+      setActivity(info.activity);
+    });
+  }, 1000);
+
+  useEffect(() => {
+    interval.start();
+    return interval.stop;
+  }, []);
 
   if (!activated) {
     return (
@@ -42,6 +57,30 @@ function SyncStatusSender() {
           Realtime Status
         </Title>
         <List center spacing="xs">
+          <List.Item icon={<IconClock size={14} />}>
+            Active Time: {activity?.aTime || 0} minutes
+          </List.Item>
+          <List.Item icon={<IconClock size={14} />}>
+            Idle Time: {activity?.iTime || 0} minutes
+          </List.Item>
+          <List.Item icon={<IconClock size={14} />}>
+            APM: {activity?.apm}
+          </List.Item>
+          <List.Item icon={<IconClick size={14} />}>
+            Left Click: {activity?.mouse.keys.M_Left || 0}
+          </List.Item>
+          <List.Item icon={<IconClick size={14} />}>
+            Right Click: {activity?.mouse.keys.M_Right || 0}
+          </List.Item>
+          <List.Item icon={<IconKeyboard size={14} />}>
+            Q Key: {activity?.keyboard.keys.Q || 0}
+          </List.Item>
+          <List.Item icon={<IconKeyboard size={14} />}>
+            R Key: {activity?.keyboard.keys.R || 0}
+          </List.Item>
+          <List.Item icon={<IconKeyboard size={14} />}>
+            F Key: {activity?.keyboard.keys.F || 0}
+          </List.Item>
           <List.Item
             icon={
               <ColorSwatch
@@ -87,13 +126,17 @@ function SyncStatusSender() {
               ? `Server: ${worldName}`
               : 'Server is not detected'}
           </List.Item>
+          <List.Item
+            icon={<ColorSwatch color={map ? 'green' : 'orange'} size={14} />}
+          >
+            {map ? `Map: ${map}` : 'Map is not detected'}
+          </List.Item>
         </List>
         <Text color={hasIssue ? 'orange' : 'dimmed'} size="sm" align="center">
           {hasIssue
             ? 'Start this app before starting New World'
             : 'Everything works fine 🤘'}
         </Text>
-        <InfluenceIcon disabled={hasIssue} />
       </Stack>
     </Paper>
   );

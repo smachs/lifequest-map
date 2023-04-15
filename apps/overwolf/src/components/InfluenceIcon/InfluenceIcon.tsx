@@ -7,7 +7,7 @@ import { usePosition } from '../../contexts/PositionContext';
 import { WINDOWS, toggleWindow } from '../../utils/windows';
 import useWindowIsVisible from '../useWindowIsVisible';
 
-const InfluenceIcon = ({ disabled }: { disabled: boolean }) => {
+const InfluenceIcon = ({ disabled }: { disabled?: boolean }) => {
   const isVisible = useWindowIsVisible(WINDOWS.INFLUENCE);
   const { worldName } = usePosition();
   const { data: todaysCount } = useQuery(
