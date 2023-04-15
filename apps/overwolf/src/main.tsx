@@ -109,8 +109,9 @@ async function initAppHeader() {
   };
 }
 
+const DEFAULT_SRC = 'www.nw-buddy.de';
 async function initMain() {
-  const activeSrc = localStorage.getItem('active-src') || 'www.nw-buddy.de';
+  const activeSrc = localStorage.getItem('active-src') || DEFAULT_SRC;
 
   function refreshActiveSrc(src: string) {
     const prevActiveElements =
@@ -120,6 +121,12 @@ async function initMain() {
     const activeElements = document.querySelectorAll<HTMLElement>(
       `[data-src="${src}"]`
     );
+    if (activeElements.length === 0) {
+      localStorage.setItem('active-src', DEFAULT_SRC);
+
+      refreshActiveSrc(DEFAULT_SRC);
+      return;
+    }
     activeElements.forEach((element) => {
       element.classList.add('active');
       if (
