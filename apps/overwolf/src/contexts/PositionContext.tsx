@@ -10,6 +10,8 @@ import {
 import { useSettingsStore } from 'ui/utils/settingsStore';
 import { useNewWorldGameInfo } from '../components/store';
 import { getGameInfo } from '../utils/games';
+import type { MOVEMENT } from '../utils/inputTracking';
+import { listenToMovement } from '../utils/inputTracking';
 
 export type Position = { location: [number, number]; rotation: number };
 type PositionContextProps = {
@@ -96,6 +98,13 @@ export function PositionProvider({
     let lastMap = map;
     let lastUpdate = Date.now();
 
+    let lastMovement: MOVEMENT = 'none';
+    let lastIsJumping = false;
+    const stopListenToKeysDown = listenToMovement((movement, isJumping) => {
+      lastMovement = movement;
+      lastIsJumping = isJumping;
+    });
+
     async function updatePosition() {
       try {
         const gameInfo = await getGameInfo();
@@ -160,10 +169,36 @@ export function PositionProvider({
                   guessedLocation[0] = lastGuessedLocation[0];
                   guessedLocation[1] = lastGuessedLocation[1];
 
-                  const velocity = 0.0125;
+                  let velocity = lastMovement.startsWith('backward')
+                    ? 0.00625
+                    : 0.0125;
+                  let movementRotation = rotation;
+                  if (lastMovement === 'left') {
+                    movementRotation = rotation + 90;
+                  } else if (lastMovement === 'right') {
+                    movementRotation = rotation - 90;
+                  } else if (lastMovement === 'backward') {
+                    movementRotation = rotation + 180;
+                  } else if (lastMovement === 'backward_left') {
+                    movementRotation = rotation + 135;
+                  } else if (lastMovement === 'backward_right') {
+                    movementRotation = rotation + 225;
+                  } else if (lastMovement === 'forward_left') {
+                    movementRotation = rotation + 45;
+                  } else if (lastMovement === 'forward_right') {
+                    movementRotation = rotation + 315;
+                  } else if (lastMovement === 'forward') {
+                    movementRotation = rotation;
+                  } else if (lastIsJumping) {
+                    velocity = 0;
+                  }
+
                   const distance = velocity * timeDiff;
-                  const yDiff = Math.sin((rotation * Math.PI) / 180) * distance;
-                  const xDiff = Math.cos((rotation * Math.PI) / 180) * distance;
+
+                  const yDiff =
+                    Math.sin((movementRotation * Math.PI) / 180) * distance;
+                  const xDiff =
+                    Math.cos((movementRotation * Math.PI) / 180) * distance;
                   if (yDiff > 0) {
                     if (guessedLocation[0] + yDiff < location[0] + 25) {
                       guessedLocation[0] = guessedLocation[0] + yDiff;
@@ -239,6 +274,7 @@ export function PositionProvider({
     return () => {
       active = false;
       clearTimeout(handler);
+      stopListenToKeysDown();
     };
   }, [newWorldGameInfo?.isRunning, settingsStore.extrapolatePlayerPosition]);
 
