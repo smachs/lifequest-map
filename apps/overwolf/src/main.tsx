@@ -120,7 +120,15 @@ async function initMain() {
     const activeElements = document.querySelectorAll<HTMLElement>(
       `[data-src="${src}"]`
     );
-    activeElements.forEach((element) => element.classList.add('active'));
+    activeElements.forEach((element) => {
+      element.classList.add('active');
+      if (
+        element instanceof HTMLIFrameElement &&
+        element.src === 'about:blank'
+      ) {
+        element.src = `https://${src}`;
+      }
+    });
   }
 
   refreshActiveSrc(activeSrc);
