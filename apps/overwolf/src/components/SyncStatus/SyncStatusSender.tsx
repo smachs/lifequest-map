@@ -67,19 +67,19 @@ function SyncStatusSender() {
             APM: {activity?.apm}
           </List.Item>
           <List.Item icon={<IconClick size={14} />}>
-            Left Click: {activity?.mouse.keys.M_Left || 0}
+            Left Click: {activity?.mouse?.keys?.M_Left || 0}
           </List.Item>
           <List.Item icon={<IconClick size={14} />}>
-            Right Click: {activity?.mouse.keys.M_Right || 0}
+            Right Click: {activity?.mouse?.keys?.M_Right || 0}
           </List.Item>
           <List.Item icon={<IconKeyboard size={14} />}>
-            Q Key: {activity?.keyboard.keys.Q || 0}
+            Q Key: {activity?.keyboard?.keys?.Q || 0}
           </List.Item>
           <List.Item icon={<IconKeyboard size={14} />}>
-            R Key: {activity?.keyboard.keys.R || 0}
+            R Key: {activity?.keyboard?.keys?.R || 0}
           </List.Item>
           <List.Item icon={<IconKeyboard size={14} />}>
-            F Key: {activity?.keyboard.keys.F || 0}
+            F Key: {activity?.keyboard?.keys?.F || 0}
           </List.Item>
           <List.Item
             icon={
