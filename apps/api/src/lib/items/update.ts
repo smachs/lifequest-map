@@ -1,3 +1,4 @@
+import type { Response } from 'node-fetch';
 import fetch from 'node-fetch';
 import { getMarkersCollection } from '../markers/collection.js';
 import { getItemsCollection } from './collection.js';
@@ -40,6 +41,23 @@ type CreatureLootResult = {
   }[];
 };
 
+const fetchWithTimeout = async (
+  url: string,
+  timeout: number,
+  retry: boolean
+): Promise<Response> => {
+  console.log(`Fetching ${url}`);
+
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  const response = await fetch(url, { signal: controller.signal });
+  clearTimeout(id);
+  if (response.status === 429 && retry) {
+    return fetchWithTimeout(url, timeout, false);
+  }
+  return response;
+};
+
 let busy = false;
 export const updateItems = async () => {
   if (busy) {
@@ -75,6 +93,7 @@ export const updateItems = async () => {
   ).then((response) => response.json())) as CreatureLootResult;
 
   const invalidNames: string[] = [];
+  let i = 0;
   for (const creature of creatures) {
     let result: CreatureLootResult | null = null;
     switch (creature.type) {
@@ -87,10 +106,16 @@ export const updateItems = async () => {
       default:
         {
           try {
-            const response = await fetch(
+            console.log(
+              `Fetching ${creature.name}. ${++i} / ${creatures.length}`
+            );
+
+            const response = await fetchWithTimeout(
               `https://api.newworldfans.com/api/v2/db/creature/name/${encodeURIComponent(
                 creature.name!
-              )}/loot`
+              )}/loot`,
+              2000,
+              true
             );
             if (response.ok) {
               result = (await response.json()) as CreatureLootResult;
@@ -106,6 +131,9 @@ export const updateItems = async () => {
       continue;
     }
     for (const item of result.items) {
+      if (item.item_type_display_name === 'Event Key') {
+        continue;
+      }
       if (!items.some((i) => i.item_id === item.item_id)) {
         items.push(item);
       }
@@ -120,6 +148,7 @@ export const updateItems = async () => {
   let updatedItems = 0;
   const now = new Date();
   for (const item of items) {
+    console.log(`Updating ${item.name} (${item.item_id})`);
     const result = await getItemsCollection().updateOne(
       { id: item.item_id },
       {
