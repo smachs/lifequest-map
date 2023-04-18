@@ -1,13 +1,13 @@
 import { initPlausible } from 'ui/utils/stats';
 import { getJSONItem } from 'ui/utils/storage';
-import { isNewWorldRunning, NEW_WORLD_CLASS_ID } from './utils/games';
+import { getRunningNewWorld, NEW_WORLD_CLASS_ID } from './utils/games';
 import { SHOW_HIDE_APP, SHOW_HIDE_INFLUENCE_OVERLAY } from './utils/hotkeys';
 import { waitForOverwolf } from './utils/overwolf';
 import {
   closeMainWindow,
   closeWindow,
   getPreferedWindowName,
-  moveToSecondScreen,
+  moveToOtherScreen,
   restoreWindow,
   toggleWindow,
   WINDOWS,
@@ -16,12 +16,12 @@ import {
 console.log('Starting background process');
 
 async function openApp() {
-  const newWorldIsRunning = await isNewWorldRunning();
+  const runningNewWorld = await getRunningNewWorld();
   const preferedWindowName = await getPreferedWindowName();
-  if (newWorldIsRunning) {
+  if (runningNewWorld) {
     const windowId = await restoreWindow(preferedWindowName);
     if (preferedWindowName === WINDOWS.DESKTOP) {
-      moveToSecondScreen(windowId);
+      moveToOtherScreen(windowId, runningNewWorld.monitorHandle.value);
     }
 
     if (getJSONItem('showMinimap', false)) {
@@ -60,7 +60,10 @@ overwolf.games.onGameInfoUpdated.addListener(async (event) => {
         closeWindow(WINDOWS.DESKTOP);
       } else {
         const windowId = await restoreWindow(WINDOWS.DESKTOP);
-        moveToSecondScreen(windowId);
+        const runningNewWorld = await getRunningNewWorld();
+        if (runningNewWorld) {
+          moveToOtherScreen(windowId, runningNewWorld.monitorHandle.value);
+        }
         closeWindow(WINDOWS.OVERLAY);
       }
       if (getJSONItem('showMinimap', false)) {

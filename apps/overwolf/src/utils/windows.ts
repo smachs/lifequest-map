@@ -1,5 +1,5 @@
 import { useSettingsStore } from 'ui/utils/settingsStore';
-import { isNewWorldRunning } from './games';
+import { getRunningNewWorld } from './games';
 
 export const WINDOWS = {
   DESKTOP: 'desktop',
@@ -171,20 +171,23 @@ export function getMonitorsList(): Promise<overwolf.utils.Display[]> {
   });
 }
 
-export async function moveToSecondScreen(windowId: string) {
+export async function moveToOtherScreen(
+  windowId: string,
+  monitorHandleValue: number
+) {
   const monitors = await getMonitorsList();
   const hasSecondScreen = monitors.length > 1;
   if (!hasSecondScreen) {
     return;
   }
   const desktopWindow = await obtainDeclaredWindow(WINDOWS.DESKTOP);
-  const secondScreens = monitors.filter(
-    (monitor) => monitor.is_primary === false
+  const otherScreens = monitors.filter(
+    (monitor) => monitor.handle.value !== monitorHandleValue
   );
   const secondScreen =
-    secondScreens.find(
+    otherScreens.find(
       (secondScreen) => desktopWindow.monitorId === secondScreen.id
-    ) || secondScreens[0];
+    ) || otherScreens[0];
 
   if (desktopWindow.monitorId === secondScreen.id) {
     return;
@@ -210,8 +213,8 @@ export async function togglePreferedWindow(): Promise<void> {
   });
 
   if (newPreferedWindowName === WINDOWS.OVERLAY) {
-    const isGameRunning = await isNewWorldRunning();
-    if (isGameRunning) {
+    const runningNewWorld = await getRunningNewWorld();
+    if (runningNewWorld) {
       await restoreWindow(WINDOWS.OVERLAY);
       await closeWindow(WINDOWS.DESKTOP);
     }

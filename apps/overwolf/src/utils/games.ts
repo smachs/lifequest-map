@@ -1,9 +1,9 @@
 export const NEW_WORLD_CLASS_ID = 21816;
 
-export function isNewWorldRunning(): Promise<boolean> {
+export function getRunningNewWorld(): Promise<overwolf.games.GetRunningGameInfoResult | null> {
   return new Promise((resolve) => {
     overwolf.games.getRunningGameInfo((result) => {
-      resolve(result && result.classId === NEW_WORLD_CLASS_ID);
+      resolve(result && result.classId === NEW_WORLD_CLASS_ID ? result : null);
     });
   });
 }
