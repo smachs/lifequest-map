@@ -139,6 +139,7 @@ input {
 .layout {
   display: flex;
   height: calc(100% - 31px);
+  overflow: hidden;
 }
 
 .sidebar {
