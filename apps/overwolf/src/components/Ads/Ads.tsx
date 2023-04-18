@@ -1,5 +1,6 @@
 import type { OwAd } from '@overwolf/types/owads';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { trackOutboundLinkClick } from 'ui/utils/stats';
 import classes from './Ads.module.css';
 
 declare global {
@@ -10,14 +11,30 @@ declare global {
 
 function Ads(): JSX.Element {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     function onOwAdReady() {
       if (typeof window.OwAd === 'undefined' || containerRef.current === null) {
         return;
       }
-      new window.OwAd(containerRef.current, {
+      const owAd = new window.OwAd(containerRef.current, {
         size: { width: 400, height: 300 },
+      });
+
+      owAd.addEventListener('display_ad_loaded', () => {
+        setIsPlaying(true);
+      });
+
+      owAd.addEventListener('impression', () => {
+        setIsPlaying(true);
+      });
+
+      owAd.addEventListener('complete', () => {
+        setIsPlaying(false);
+      });
+      owAd.addEventListener('error', () => {
+        setIsPlaying(false);
       });
     }
 
@@ -33,12 +50,28 @@ function Ads(): JSX.Element {
 
   return (
     <aside className={classes.container}>
-      <div className={classes.text}>
-        Ads support the development of this app.
-        <br />
-        Become a supporter to deactivate ads 🤘.
-      </div>
-      <div ref={containerRef} className={classes.ads} />
+      {!isPlaying && (
+        <div className={classes.fallback}>
+          <a
+            href="https://youtu.be/YcrwMXjwfRc"
+            target="_blank"
+            onClick={() =>
+              trackOutboundLinkClick('https://youtu.be/YcrwMXjwfRc')
+            }
+          >
+            <img
+              src="https://i.ytimg.com/vi/YcrwMXjwfRc/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLA8Jq5DqzH1dSaKXebor99ozwpAfw"
+              alt=""
+              className={classes.fallbackImage}
+            />
+          </a>
+        </div>
+      )}
+      <div
+        ref={containerRef}
+        className={classes.ads}
+        style={isPlaying ? {} : { pointerEvents: 'none' }}
+      />
     </aside>
   );
 }

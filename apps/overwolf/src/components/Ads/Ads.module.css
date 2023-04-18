@@ -5,11 +5,17 @@
   border-top: 1px solid var(--color-shade-three);
 }
 
-.text {
+.fallback {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
+}
+
+.fallbackImage {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
 }
 
 .ads {
@@ -18,4 +24,5 @@
   height: 300px;
   width: 400px;
   z-index: 1;
+  color-scheme: initial;
 }
