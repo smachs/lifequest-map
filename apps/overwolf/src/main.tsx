@@ -82,9 +82,7 @@ async function initAppHeader() {
 
   const header = document.querySelector<HTMLElement>('.app-header')!;
   header.onmousedown = () => {
-    if (!isMaximized) {
-      overwolf.windows.dragMove(currentWindow.id);
-    }
+    overwolf.windows.dragMove(currentWindow.id);
   };
 
   const version = document.querySelector<HTMLElement>('.version')!;
