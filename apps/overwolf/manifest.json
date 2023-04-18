@@ -43,7 +43,7 @@
           "height": 800
         },
         "min_size": {
-          "width": 900,
+          "width": 461,
           "height": 600
         },
         "allow_local_file_access": true,
@@ -66,7 +66,7 @@
           "height": 800
         },
         "min_size": {
-          "width": 900,
+          "width": 454,
           "height": 600
         },
         "allow_local_file_access": true,
