@@ -60,7 +60,7 @@ function Ads(): JSX.Element {
             }
           >
             <img
-              src="https://i.ytimg.com/vi/YcrwMXjwfRc/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLA8Jq5DqzH1dSaKXebor99ozwpAfw"
+              src="/thumbnails/flame_core_farm.webp"
               alt=""
               className={classes.fallbackImage}
             />
