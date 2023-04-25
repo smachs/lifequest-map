@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { trackAdFallbackYoutube } from '../../utils/stats';
 import styles from './AdsFallback.module.css';
 
-const VIDEO_ID = 'Jk72xAcSQd8';
+const VIDEO_ID = 'YcrwMXjwfRc';
 const AdsFallback = ({ onClose }: { onClose: () => void }) => {
   useEffect(() => {
     const script = document.createElement('script');
