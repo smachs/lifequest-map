@@ -298,7 +298,15 @@ const UserAction = () => {
                 title="New World Faction Territory Map"
                 target="_blank"
               >
-                nwmap
+                New World Territory Map
+              </Anchor>
+              <Anchor
+                size="xs"
+                href="https://sotf.th.gl/"
+                title="Sons Of The Forest"
+                target="_blank"
+              >
+                Sons Of The Forest
               </Anchor>
               <Anchor
                 size="xs"
@@ -306,7 +314,7 @@ const UserAction = () => {
                 title="Hogwarts Legacy fansite"
                 target="_blank"
               >
-                Hogwarts.gg
+                Hogwarts Legacy
               </Anchor>
               <Anchor
                 size="xs"
@@ -314,7 +322,7 @@ const UserAction = () => {
                 title="Interactive map for Lost Ark"
                 target="_blank"
               >
-                Arkesia.gg
+                Lost Ark
               </Anchor>
               <Anchor
                 size="xs"
@@ -322,7 +330,7 @@ const UserAction = () => {
                 title="Trophies app for League of Legends"
                 target="_blank"
               >
-                Trophy Hunter
+                League of Legends
               </Anchor>
               <Anchor
                 size="xs"
@@ -330,7 +338,7 @@ const UserAction = () => {
                 title="A Songs of Conquest fansite"
                 target="_blank"
               >
-                SoC.gg
+                Songs of Conquest
               </Anchor>
               <Anchor
                 size="xs"
@@ -338,7 +346,7 @@ const UserAction = () => {
                 title="Simply display any website as customizable Overlay"
                 target="_blank"
               >
-                Skeleton
+                Customizable Overlays
               </Anchor>
               <Anchor
                 size="xs"
