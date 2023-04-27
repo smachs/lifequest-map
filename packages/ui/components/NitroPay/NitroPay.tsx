@@ -11,36 +11,24 @@ const NitroPay = () => {
       return;
     }
 
-    const script = document.createElement('script');
-    script.src = 'https://s.nitropay.com/ads-1042.js';
-    script.setAttribute('data-cfasync', 'false');
-    script.async = true;
+    // @ts-ignore
+    window['nitroAds'].createAd('nitro', {
+      format: 'video-nc',
+      video: {
+        float: 'always',
+      },
+    });
 
     const timeoutId = setTimeout(() => {
+      // @ts-ignore
+      if (window['nitroAds'].loaded) {
+        return;
+      }
       setShowFallback(true);
     }, 1000);
 
-    script.onload = () => {
-      clearTimeout(timeoutId);
-      setShowFallback(false);
-      // @ts-ignore
-      window['nitroAds'].createAd('nitro', {
-        format: 'video-nc',
-        video: {
-          float: 'always',
-        },
-      });
-    };
-
-    script.onerror = () => {
-      clearTimeout(timeoutId);
-      setShowFallback(true);
-    };
-
-    document.body.appendChild(script);
-
     return () => {
-      document.body.removeChild(script);
+      clearTimeout(timeoutId);
     };
   }, []);
 
