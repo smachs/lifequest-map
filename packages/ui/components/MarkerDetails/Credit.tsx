@@ -21,6 +21,12 @@ function Credit({ username }: CreditProps): JSX.Element {
         New World Map
       </Anchor>
     );
+  } else if (username === 'nwdb') {
+    content = (
+      <Anchor href="https://nwdb.info/" target="_blank">
+        NWDB
+      </Anchor>
+    );
   } else {
     content = (
       <Text component="span" weight="bold">

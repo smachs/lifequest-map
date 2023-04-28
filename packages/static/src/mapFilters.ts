@@ -1045,6 +1045,12 @@ export const mapFilters: FilterItem[] = [
     iconUrl: '/pois/showOfStrength.webp',
     hasName: true,
   },
+  {
+    category: 'events',
+    type: 'wispybloom',
+    title: 'Wispybloom',
+    iconUrl: '/pois/wispybloom.webp',
+  },
 ];
 
 export type MapFiltersCategory = {
