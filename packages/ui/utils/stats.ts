@@ -34,3 +34,7 @@ export const trackOutboundLinkClick = (url: string) => {
 export const trackAdFallbackYoutube = (url: string) => {
   trackEvent('Ad Fallback: YouTube', { props: { url: url } });
 };
+
+export const trackAdFallbackTwitch = (url: string) => {
+  trackEvent('Ad Fallback: Twitch', { props: { url: url } });
+};
