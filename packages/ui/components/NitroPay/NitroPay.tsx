@@ -67,10 +67,13 @@ const NitroPay = () => {
   if (account?.isSupporter) {
     return <></>;
   }
-  if (showFallback) {
-    return <AdsFallback onClose={() => setShowFallback(false)} />;
-  }
-  return <div id="nitro" />;
+
+  return (
+    <>
+      {showFallback && <AdsFallback onClose={() => setShowFallback(false)} />}
+      <div id="nitro" />
+    </>
+  );
 };
 
 export default NitroPay;

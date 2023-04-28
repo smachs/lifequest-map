@@ -1,6 +1,6 @@
 .floating {
   display: block;
-  z-index: 2147483646;
+  z-index: 2147483640;
   overflow: hidden;
   border-radius: 5px;
   height: 200px;
@@ -14,7 +14,7 @@
   position: fixed;
   display: block;
   cursor: pointer;
-  z-index: 2147483647;
+  z-index: 2147483641;
   background: rgb(238 238 238);
   margin: 5px;
   padding: 0 5px;
