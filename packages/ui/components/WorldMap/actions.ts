@@ -267,6 +267,7 @@ const actions: {
   bossElite: respawnAction(21600),
   rafflebones_25: respawnAction(5400),
   rafflebones_66: respawnAction(21600),
+  wispybloom: respawnAction(1800),
 };
 
 export const getAction = (type: string) => {
@@ -361,4 +362,5 @@ export const sharedRespawnTimers = [
   'winterWarrior',
   'rafflebones_25',
   'rafflebones_66',
+  'wispybloom',
 ];
