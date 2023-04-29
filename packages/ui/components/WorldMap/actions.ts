@@ -267,7 +267,7 @@ const actions: {
   bossElite: respawnAction(21600),
   rafflebones_25: respawnAction(5400),
   rafflebones_66: respawnAction(21600),
-  wispybloom: respawnAction(1800),
+  wispybloom: respawnAction(180),
 };
 
 export const getAction = (type: string) => {
