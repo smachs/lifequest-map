@@ -302,6 +302,14 @@ const UserAction = () => {
               </Anchor>
               <Anchor
                 size="xs"
+                href="https://www.th.gl/"
+                title="The Hidden Gaming Lair"
+                target="_blank"
+              >
+                More Gaming Apps & Tools
+              </Anchor>
+              <Anchor
+                size="xs"
                 href="https://sotf.th.gl/"
                 title="Sons Of The Forest"
                 target="_blank"
@@ -326,7 +334,7 @@ const UserAction = () => {
               </Anchor>
               <Anchor
                 size="xs"
-                href="https://th.gl/"
+                href="https://lol.th.gl/"
                 title="Trophies app for League of Legends"
                 target="_blank"
               >
