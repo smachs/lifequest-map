@@ -137,10 +137,6 @@ const MapActions = () => {
           </ActionIcon>
         </HoverCard.Target>
         <HoverCard.Dropdown>
-          <Text color="orange" size="sm">
-            AGS updated their TOS and we had to decrease the precision of the
-            player position tracking 😌
-          </Text>
           <Text size="sm" weight={500}>
             Display current location
           </Text>
