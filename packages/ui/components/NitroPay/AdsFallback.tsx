@@ -1,8 +1,5 @@
 import { useEffect } from 'react';
-import {
-  trackAdFallbackTwitch,
-  trackAdFallbackYoutube,
-} from '../../utils/stats';
+import { trackEvent } from '../../utils/stats';
 import styles from './AdsFallback.module.css';
 
 declare global {
@@ -10,6 +7,7 @@ declare global {
     onYouTubeIframeAPIReady: () => void;
     YT: {
       Player: any;
+      PlayerState: any;
     };
     Twitch: any;
   }
@@ -25,15 +23,22 @@ const AdsFallback = ({ onClose }: { onClose: () => void }) => {
         script.remove();
         script = loadYouTube({
           onPlay: (videoId) => {
-            trackAdFallbackYoutube(
-              `https://www.youtube.com/watch?v=${videoId}`
-            );
+            trackEvent('Ad Fallback: YouTube Play', {
+              props: { url: `https://www.youtube.com/watch?v=${videoId}` },
+            });
+          },
+          onReady: (videoId) => {
+            trackEvent('Ad Fallback: YouTube Ready', {
+              props: { url: `https://www.youtube.com/watch?v=${videoId}` },
+            });
           },
         });
         document.body.append(script);
       },
       onOnline: (channel) => {
-        trackAdFallbackTwitch(`https://www.twitch.tv/${channel}`);
+        trackEvent('Ad Fallback: Twitch', {
+          props: { url: `https://www.twitch.tv/${channel}` },
+        });
       },
     });
 
@@ -79,7 +84,6 @@ function loadTwitch({
       layout: 'video',
       autoplay: true,
       muted: true,
-      // Only needed if this page is going to be embedded on other websites
       parent: ['aeternum-map.gg'],
     });
 
@@ -95,20 +99,35 @@ function loadTwitch({
   return script;
 }
 
-function loadYouTube({ onPlay }: { onPlay: (videoId: string) => void }) {
+function loadYouTube({
+  onPlay,
+  onReady,
+}: {
+  onPlay: (videoId: string) => void;
+  onReady: (videoId: string) => void;
+}) {
   const videoId = getRandom(YT_VIDEO_IDS);
+  let played = false;
   window.onYouTubeIframeAPIReady = function () {
     const player = new window.YT.Player('player', {
       videoId,
       playerVars: {
         playsinline: 1,
         loop: 1,
+        autoplay: 0,
       },
       events: {
         onReady: () => {
+          onReady(videoId);
           player.mute();
-          player.playVideo();
-          onPlay(videoId);
+        },
+        onStateChange: (event: any) => {
+          if (event.data === window.YT.PlayerState.PLAYING) {
+            if (!played) {
+              onPlay(videoId);
+            }
+            played = true;
+          }
         },
       },
     });

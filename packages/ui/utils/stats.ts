@@ -30,11 +30,3 @@ export const trackEvent = (
 export const trackOutboundLinkClick = (url: string) => {
   trackEvent('Outbound Link: Click', { props: { url: url } });
 };
-
-export const trackAdFallbackYoutube = (url: string) => {
-  trackEvent('Ad Fallback: YouTube', { props: { url: url } });
-};
-
-export const trackAdFallbackTwitch = (url: string) => {
-  trackEvent('Ad Fallback: Twitch', { props: { url: url } });
-};
