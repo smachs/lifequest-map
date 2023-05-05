@@ -53,17 +53,13 @@ function Ads(): JSX.Element {
       {!isPlaying && (
         <div className={classes.fallback}>
           <a
-            href="https://youtu.be/YcrwMXjwfRc"
+            href="https://www.patreon.com/devleon"
             target="_blank"
             onClick={() =>
-              trackOutboundLinkClick('https://youtu.be/YcrwMXjwfRc')
+              trackOutboundLinkClick('https://www.patreon.com/devleon')
             }
           >
-            <img
-              src="/thumbnails/flame_core_farm.webp"
-              alt=""
-              className={classes.fallbackImage}
-            />
+            <img src="/support.webp" alt="" className={classes.fallbackImage} />
           </a>
         </div>
       )}
