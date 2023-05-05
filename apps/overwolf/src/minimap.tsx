@@ -28,8 +28,6 @@ const queryClient = new QueryClient();
 const root = createRoot(document.querySelector('#root')!);
 
 function Minimap(): JSX.Element {
-  const [showSetup, setShowSetup] = useState(false);
-
   const state = useMinimapSettingsStore();
 
   const [isHovering, setIsHovering] = useState(false);
@@ -72,7 +70,7 @@ function Minimap(): JSX.Element {
   }, [isHovering]);
 
   useEffect(() => {
-    if (showSetup) {
+    if (state.showSetup) {
       overwolf.windows.removeWindowStyle(
         WINDOWS.MINIMAP,
         overwolf.windows.enums.WindowStyle.InputPassThrough,
@@ -92,7 +90,7 @@ function Minimap(): JSX.Element {
       event: overwolf.settings.hotkeys.OnPressedEvent
     ) {
       if (event.name === SETUP_MINIMAP) {
-        setShowSetup(!showSetup);
+        state.setShowSetup(!state.showSetup);
       } else if (event.name === ZOOM_IN_MINIMAP) {
         state.setMinimapZoom(Math.min(state.minimapZoom + 0.5, 8));
       } else if (event.name === ZOOM_OUT_MINIMAP) {
@@ -103,7 +101,7 @@ function Minimap(): JSX.Element {
     return () => {
       overwolf.settings.hotkeys.onPressed.removeListener(handleHotkeyPressed);
     };
-  }, [showSetup, state.minimapZoom]);
+  }, [state.showSetup, state.minimapZoom]);
 
   return (
     <>
@@ -111,7 +109,7 @@ function Minimap(): JSX.Element {
         onMouseMove={() => setIsHovering(true)}
         className={classNames(
           styles.container,
-          !showSetup && isHovering && styles.hideOnHover
+          !state.showSetup && isHovering && styles.hideOnHover
         )}
         style={{
           opacity: state.minimapOpacity / 100,
@@ -126,7 +124,7 @@ function Minimap(): JSX.Element {
           rotate={state.rotateMinimap}
         />
       </div>
-      {showSetup && (
+      {state.showSetup && (
         <div className={styles.setup} onMouseDown={dragMoveWindow}>
           <Paper className={styles.toolbar} onMouseDown={dragMoveWindow}>
             <MinimapSetup />

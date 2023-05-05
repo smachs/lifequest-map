@@ -1,8 +1,10 @@
-import { getJSONItem, withStorageDOMEvents } from 'ui/utils/storage';
+import { withStorageDOMEvents } from 'ui/utils/storage';
 import { create } from 'zustand';
 import { persist, subscribeWithSelector } from 'zustand/middleware';
 
 type Store = {
+  showSetup: boolean;
+  setShowSetup: (showSetup: boolean) => void;
   rotateMinimap: boolean;
   setRotateMinimap: (rotateMinimap: boolean) => void;
   minimapOpacity: number;
@@ -17,14 +19,16 @@ export const useMinimapSettingsStore = create(
   subscribeWithSelector(
     persist<Store>(
       (set) => ({
-        rotateMinimap: getJSONItem('rotateMinimap', false), // Deprecated
+        showSetup: true,
+        setShowSetup: (showSetup) => set({ showSetup }),
+        rotateMinimap: false,
         setRotateMinimap: (rotateMinimap) => set({ rotateMinimap }),
-        minimapOpacity: getJSONItem('minimapOpacity', 80), // Deprecated
+        minimapOpacity: 80,
         setMinimapOpacity: (minimapOpacity) => set({ minimapOpacity }),
-        minimapBorderRadius: getJSONItem('minimapBorderRadius', 50), // Deprecated
+        minimapBorderRadius: 50,
         setMinimapBorderRadius: (minimapBorderRadius) =>
           set({ minimapBorderRadius }),
-        minimapZoom: getJSONItem('minimapZoom', 5), // Deprecated
+        minimapZoom: 5,
         setMinimapZoom: (minimapZoom) => set({ minimapZoom }),
       }),
       {

@@ -47,6 +47,10 @@ type Store = {
   setOverlayMode: (overlayMode: boolean) => void;
   extrapolatePlayerPosition: boolean;
   setExtrapolatePlayerPosition: (extrapolatePlayerPosition: boolean) => void;
+  openMinimized: boolean;
+  setOpenMinimized: (openMinimized: boolean) => void;
+  openAeternumMap: boolean;
+  setOpenAeternumMap: (openAeternumMap: boolean) => void;
 };
 
 export const useSettingsStore = create(
@@ -107,6 +111,10 @@ export const useSettingsStore = create(
         extrapolatePlayerPosition: true,
         setExtrapolatePlayerPosition: (extrapolatePlayerPosition) =>
           set({ extrapolatePlayerPosition }),
+        openMinimized: false,
+        setOpenMinimized: (openMinimized) => set({ openMinimized }),
+        openAeternumMap: false,
+        setOpenAeternumMap: (openAeternumMap) => set({ openAeternumMap }),
       }),
       {
         name: 'settings-store',

@@ -15,6 +15,7 @@ import { IconLogout } from '@tabler/icons-react';
 import SupporterInput from 'ui/components/SupporterInput/SupporterInput';
 import { useSettingsStore } from 'ui/utils/settingsStore';
 import { useUserStore } from 'ui/utils/userStore';
+import { shallow } from 'zustand/shallow';
 import {
   SETUP_MINIMAP,
   SHOW_HIDE_APP,
@@ -46,8 +47,13 @@ function Settings(): JSX.Element {
     SHOW_HIDE_INFLUENCE_OVERLAY
   );
   const [showMinimap, setShowMinimap] = useMinimap();
-
-  const logoutAccount = useUserStore((state) => state.logoutAccount);
+  const { account, logoutAccount } = useUserStore(
+    (state) => ({
+      account: state.account,
+      logoutAccount: state.logoutAccount,
+    }),
+    shallow
+  );
 
   return (
     <Paper p="sm">
@@ -63,6 +69,37 @@ function Settings(): JSX.Element {
             checked={settingsStore.overlayMode ?? true}
             onChange={() => {
               togglePreferedWindow();
+            }}
+          />
+          <Checkbox
+            label="Open Minimized"
+            disabled={!account?.isSupporter}
+            description={
+              <>
+                Open this window minimized on game launch. You can still open it
+                with the hotkey.
+                <br />
+                <b>This feature is only available for supporters.</b>
+              </>
+            }
+            checked={settingsStore.openMinimized ?? false}
+            onChange={(event) => {
+              settingsStore.setOpenMinimized(event.target.checked);
+            }}
+          />
+          <Checkbox
+            label="Open aeternum-map.gg"
+            disabled={!account?.isSupporter}
+            description={
+              <>
+                Open aeternum-map.gg on game launch.
+                <br />
+                <b>This feature is only available for supporters.</b>
+              </>
+            }
+            checked={settingsStore.openAeternumMap ?? false}
+            onChange={(event) => {
+              settingsStore.setOpenAeternumMap(event.target.checked);
             }}
           />
           <Title order={3} size="sm" align="center">

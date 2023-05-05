@@ -1,3 +1,4 @@
+import { useSettingsStore } from 'ui/utils/settingsStore';
 import { initPlausible } from 'ui/utils/stats';
 import { getJSONItem } from 'ui/utils/storage';
 import { getRunningNewWorld, NEW_WORLD_CLASS_ID } from './utils/games';
@@ -15,17 +16,34 @@ import {
 
 console.log('Starting background process');
 
+let triggerGameLaunchEvents = window.location.href.includes('gamelaunchevent');
 async function openApp() {
   const runningNewWorld = await getRunningNewWorld();
   const preferedWindowName = await getPreferedWindowName();
+  console.log(runningNewWorld, preferedWindowName);
   if (runningNewWorld) {
     const windowId = await restoreWindow(preferedWindowName);
     if (preferedWindowName === WINDOWS.DESKTOP) {
-      moveToOtherScreen(windowId, runningNewWorld.monitorHandle.value);
+      await moveToOtherScreen(windowId, runningNewWorld.monitorHandle.value);
     }
 
     if (getJSONItem('showMinimap', false)) {
-      restoreWindow(WINDOWS.MINIMAP);
+      await restoreWindow(WINDOWS.MINIMAP);
+    }
+
+    console.log(useSettingsStore.getState().openMinimized);
+
+    if (triggerGameLaunchEvents) {
+      triggerGameLaunchEvents = false;
+
+      if (useSettingsStore.getState().openMinimized) {
+        console.log('Minimizing window');
+        overwolf.windows.minimize(windowId);
+      }
+      if (useSettingsStore.getState().openAeternumMap) {
+        console.log('Open aeternum-map.gg');
+        overwolf.utils.openUrlInDefaultBrowser('https://aeternum-map.gg');
+      }
     }
   } else {
     await restoreWindow(WINDOWS.DESKTOP);
