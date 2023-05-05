@@ -161,6 +161,8 @@ input {
 .nav-anchor,
 .nav-button {
   position: relative;
+  overflow: hidden;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -183,6 +185,11 @@ input {
   position: absolute;
   top: 10px;
   right: 6px;
+}
+
+.contrast {
+  background: #b2b2b2;
+  border-radius: 50%;
 }
 
 .sidebar .active {
@@ -226,6 +233,15 @@ input {
 .sidebar .faq {
   border-top: 1px solid #27272a;
   padding: 0.75rem;
+}
+
+.sidebar .discord {
+  border-top: 1px solid #27272a;
+  color: white;
+}
+
+.sidebar .discord:hover {
+  background-color: var(--social-color);
 }
 
 .resize {
