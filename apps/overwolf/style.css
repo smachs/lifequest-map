@@ -158,7 +158,9 @@ input {
   border-bottom: 1px solid #27272a;
 }
 
-.sidebar button {
+.nav-anchor,
+.nav-button {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -166,8 +168,21 @@ input {
   padding: 0.5rem;
 }
 
-.sidebar button:hover {
+.nav-anchor:hover,
+.nav-button:hover {
   background: #27272a;
+}
+
+.nav-anchor[target='_blank']::after {
+  content: '';
+  background: url('/external-link.webp');
+  background-size: contain;
+  display: block;
+  width: 13px;
+  height: 13px;
+  position: absolute;
+  top: 10px;
+  right: 6px;
 }
 
 .sidebar .active {
