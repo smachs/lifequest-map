@@ -86,6 +86,7 @@ authRouter.get('/logout', ensureAuthenticated, async (req, res) => {
 authRouter.get(
   '/steam',
   (req, res, next) => {
+    req.url = req.originalUrl;
     if (
       typeof req.query?.sessionId === 'string' &&
       validateUUID(req.query.sessionId)
@@ -108,6 +109,7 @@ authRouter.get(
 authRouter.get(
   '/steam/return',
   (req, res, next) => {
+    req.url = req.originalUrl;
     if (
       typeof req.session?.sessionId === 'string' &&
       validateUUID(req.session.sessionId)
