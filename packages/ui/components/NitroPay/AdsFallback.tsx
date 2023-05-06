@@ -81,7 +81,7 @@ function loadTwitch({
       width: '100%',
       height: '100%',
       channel,
-      layout: 'video',
+      layout: 'video-with-chat',
       autoplay: true,
       muted: true,
       parent: ['aeternum-map.gg'],
