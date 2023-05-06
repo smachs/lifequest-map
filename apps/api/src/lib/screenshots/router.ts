@@ -122,14 +122,7 @@ screenshotsRouter.post(
         return;
       }
 
-      const webhookUrl =
-        process.env[
-          `DISCORD_${world.publicName
-            .toUpperCase()
-            .replaceAll(' ', '')}_WEBHOOK_URL`
-        ];
-
-      if (!webhookUrl || changedInfluence.length === 0) {
+      if (changedInfluence.length === 0) {
         res.status(200).json({ message: 'Influence added without change' });
         return;
       }
@@ -140,7 +133,6 @@ screenshotsRouter.post(
             `${item.regionName}: ${ICONS[item.before]} -> ${ICONS[item.after]}`
         )
         .join('\n');
-
       const ranking: {
         [factionName: string]: number;
       } = {
@@ -163,25 +155,33 @@ screenshotsRouter.post(
 
       const svgBlob = new Blob([buffer]);
 
-      const response = await uploadToDiscord(
-        [screenshotBlob, svgBlob],
-        `
+      const WEBHOOK_URLS = JSON.parse(
+        process.env.DISCORD_WEBHOOK_URLS || '[]'
+      ) as [string, string][];
+      const webhookUrls = WEBHOOK_URLS.filter(
+        (url) => url[0] === world.publicName.toUpperCase()
+      ).map((url) => url[1]);
+      for (const webhookUrl of webhookUrls) {
+        const response = await uploadToDiscord(
+          [screenshotBlob, svgBlob],
+          `
 **Source**: [aeternum-map.gg](<https://aeternum-map.gg/influences/${encodeURIComponent(
-          world.publicName
-        )}>)
+            world.publicName
+          )}>)
 **Server**: ${world.publicName}
 **User**: ${account.name}
 **Date**: ${now.toLocaleDateString()}
 **Changes**:
 ${changedInfluenceMessage}
 **Influence**: ${ICONS.Covenant} ${covenantPart}% | ${
-          ICONS.Marauder
-        } ${marauderPart}% | ${ICONS.Syndicate} ${syndicatePart}%
+            ICONS.Marauder
+          } ${marauderPart}% | ${ICONS.Syndicate} ${syndicatePart}%
 `,
-        webhookUrl
-      );
-      const result = await response.json();
-      res.status(response.status).json(result);
+          webhookUrl
+        );
+        await response.json();
+      }
+      res.status(200).json({ success: true });
     } catch (error) {
       next(error);
     }
