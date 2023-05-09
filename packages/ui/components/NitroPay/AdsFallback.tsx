@@ -14,7 +14,7 @@ declare global {
 }
 
 const TWITCH_CHANNELS = ['DannehTV'];
-const YT_VIDEO_IDS = ['YxbMrdL97xE'];
+const YT_VIDEO_IDS = ['aVqhxEE0ec4'];
 
 const AdsFallback = ({ onClose }: { onClose: () => void }) => {
   useEffect(() => {
