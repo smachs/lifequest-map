@@ -7,31 +7,31 @@
   "devDependencies": {
     "@overwolf/types": "3.23.1",
     "@types/color-hash": "1.0.2",
-    "@types/leaflet": "1.9.1",
-    "@types/react": "18.0.28",
-    "@types/react-dom": "18.0.11",
-    "typescript": "4.9.5"
+    "@types/leaflet": "1.9.3",
+    "@types/react": "18.2.6",
+    "@types/react-dom": "18.2.4",
+    "typescript": "5.0.4"
   },
   "dependencies": {
-    "@emotion/react": "11.10.6",
+    "@emotion/react": "11.11.0",
     "@geoman-io/leaflet-geoman-free": "2.14.2",
-    "@mantine/core": "6.0.0",
-    "@mantine/dropzone": "6.0.0",
-    "@mantine/hooks": "6.0.0",
-    "@tabler/icons-react": "2.7.0",
-    "@tanstack/react-query": "4.26.0",
+    "@mantine/core": "6.0.10",
+    "@mantine/dropzone": "6.0.10",
+    "@mantine/hooks": "6.0.10",
+    "@tabler/icons-react": "2.18.0",
+    "@tanstack/react-query": "4.29.5",
     "color-hash": "2.0.2",
     "leaflet": "1.9.3",
-    "markdown-to-jsx": "7.1.9",
+    "markdown-to-jsx": "7.2.0",
     "plausible-tracker": "0.3.8",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-helmet-async": "1.3.0",
-    "react-router-dom": "6.8.2",
-    "react-toastify": "9.1.1",
+    "react-router-dom": "6.11.1",
+    "react-toastify": "9.1.2",
     "realtime": "*",
     "socket.io-client": "4.6.1",
     "static": "*",
-    "zustand": "4.3.6"
+    "zustand": "4.3.8"
   }
 }
