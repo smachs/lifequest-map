@@ -29,7 +29,7 @@
   right: 0;
 }
 
-@media screen and (min-width: 426px) {
+@media screen and (width >= 426px) {
   .floating {
     width: 361px;
     height: 203px;
