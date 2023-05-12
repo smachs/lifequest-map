@@ -1,6 +1,6 @@
 import { usePlayerStore } from '../../utils/playerStore';
-import type { Position } from '../../utils/useReadLivePosition';
 import Button from '../Button/Button';
+import type { Position } from '../WorldMap/MapData';
 import PlayerIcon from '../icons/PlayerIcon';
 import styles from './PlayerPositionButton.module.css';
 
