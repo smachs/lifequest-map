@@ -1,4 +1,4 @@
-import { servers } from 'realtime';
+import { servers } from 'realtime/servers';
 
 export type LiveServer = {
   name: string;

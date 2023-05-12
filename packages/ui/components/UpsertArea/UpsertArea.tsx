@@ -1,5 +1,5 @@
 import { Dialog, Skeleton } from '@mantine/core';
-import { lazy, Suspense } from 'react';
+import { Suspense, lazy } from 'react';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import { useUpsertStore } from './upsertStore';
 const AddResources = lazy(() => import('../AddResources/AddResources'));

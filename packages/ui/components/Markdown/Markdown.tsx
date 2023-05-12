@@ -1,6 +1,6 @@
 import { Box } from '@mantine/core';
-import MarkdownToJSX from 'markdown-to-jsx';
-import { useEffect, useRef } from 'react';
+import { Suspense, lazy, useEffect, useRef } from 'react';
+const MarkdownToJSX = lazy(() => import('markdown-to-jsx'));
 
 type MarkdownProps = {
   children: string;
@@ -23,7 +23,9 @@ function Markdown({ children }: MarkdownProps): JSX.Element {
         whiteSpace: 'nowrap',
       }}
     >
-      <MarkdownToJSX>{children}</MarkdownToJSX>
+      <Suspense>
+        <MarkdownToJSX>{children}</MarkdownToJSX>
+      </Suspense>
     </Box>
   );
 }

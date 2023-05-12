@@ -1,10 +1,9 @@
 import type { CSSProperties } from 'react';
+import { Suspense, lazy } from 'react';
 import { classNames } from '../../utils/styles';
-import useReadLivePosition from '../../utils/useReadLivePosition';
-import useLayerGroups from './useLayerGroups';
-import usePlayerPosition from './usePlayerPosition';
-import useWorldMap from './useWorldMap';
 import styles from './WorldMap.module.css';
+import useWorldMap from './useWorldMap';
+const MapData = lazy(() => import('./MapData'));
 
 type WorldMapProps = {
   isMinimap?: boolean;
@@ -27,20 +26,21 @@ function WorldMap({
     hideControls,
     initialZoom,
   });
-  const socket = useReadLivePosition();
-
-  useLayerGroups({
-    leafletMap,
-    socket,
-  });
-  usePlayerPosition({ isMinimap, leafletMap, rotate });
 
   return (
     <div
       className={classNames(styles.map, className)}
       ref={elementRef}
       style={style}
-    />
+    >
+      <Suspense>
+        <MapData
+          leafletMap={leafletMap}
+          isMinimap={isMinimap}
+          rotate={rotate}
+        />
+      </Suspense>
+    </div>
   );
 }
 

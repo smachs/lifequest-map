@@ -1,5 +1,6 @@
 import { MantineProvider, Modal } from '@mantine/core';
-import FAQ from './FAQ';
+import { Suspense, lazy } from 'react';
+const FAQ = lazy(() => import('./FAQ'));
 
 type FAQModalProps = {
   opened: boolean;
@@ -13,7 +14,9 @@ const FAQModal = ({ opened, onClose }: FAQModalProps) => {
       }}
     >
       <Modal centered opened={opened} onClose={onClose} title="FAQ" fullScreen>
-        <FAQ />
+        <Suspense>
+          <FAQ />
+        </Suspense>
       </Modal>
     </MantineProvider>
   );
