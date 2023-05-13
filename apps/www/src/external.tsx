@@ -72,34 +72,37 @@ export default function External() {
 
     regions.forEach((region) => region.addTo(map));
 
+    let geoJSON: leaflet.GeoJSON | null = null;
     const handleMessage = (event: MessageEvent<any>) => {
-      console.log(event);
       const data = event.data;
       switch (data.type) {
-        case 'SET_EXTERNAL_DATA':
-          leaflet
-            .geoJSON(data.data, {
-              pointToLayer: (feature, latlng) =>
-                leaflet.circleMarker(latlng, {
-                  stroke: true,
-                  color: feature.properties['circle-stroke-color'],
-                  fillColor: feature.properties['circle-color'],
-                  weight: feature.properties['circle-stroke-width'],
-                  radius: feature.properties['circle-radius'],
-                  opacity: feature.properties['circle-opacity'],
-                  fillOpacity: 1,
-                }),
-              style: (feature: any) => ({
+        case 'SET_EXTERNAL_DATA': {
+          if (geoJSON) {
+            geoJSON.remove();
+          }
+          geoJSON = leaflet.geoJSON(data.data, {
+            pointToLayer: (feature, latlng) =>
+              leaflet.circleMarker(latlng, {
                 stroke: true,
-                color: feature.properties['fill-outline-color'],
-                fillColor: feature.properties['fill-color'],
-                opacity: 1,
-                fillOpacity: feature.properties['fill-opacity'],
-                weight: 1,
+                color: feature.properties['circle-stroke-color'],
+                fillColor: feature.properties['circle-color'],
+                weight: feature.properties['circle-stroke-width'],
+                radius: feature.properties['circle-radius'],
+                opacity: feature.properties['circle-opacity'],
+                fillOpacity: 1,
               }),
-            })
-            .bindTooltip((layer: any) => layer.feature.properties.title)
-            .addTo(map);
+            style: (feature: any) => ({
+              stroke: true,
+              color: feature.properties['fill-outline-color'],
+              fillColor: feature.properties['fill-color'],
+              opacity: 1,
+              fillOpacity: feature.properties['fill-opacity'],
+              weight: 1,
+            }),
+          });
+          geoJSON.bindTooltip((layer: any) => layer.feature.properties.title);
+          geoJSON.addTo(map);
+        }
       }
     };
     window.addEventListener('message', handleMessage);
