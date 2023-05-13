@@ -14,17 +14,28 @@
       width="776"
       height="437"
     ></iframe>
-    <input type="number" id="zoom" disabled />
+    <div>
+      <input type="text" id="zoom" disabled />
+      <button id="zoom-in">+</button>
+      <button id="zoom-out">-</button>
+      <button id="center">Center</button>
+      <button id="view">View</button>
+    </div>
     <script>
       const external = document.querySelector('#external');
       const zoom = document.querySelector('#zoom');
+      const zoomIn = document.querySelector('#zoom-in');
+      const zoomOut = document.querySelector('#zoom-out');
+      const center = document.querySelector('#center');
+      const view = document.querySelector('#view');
+
       window.addEventListener('message', (event) => {
         console.log('message', event.data);
         if (event.data?.type === 'ready') {
           external.contentWindow.postMessage(
             {
               type: 'SET_EXTERNAL_DATA',
-              data: [
+              payload: [
                 {
                   type: 'Feature',
                   properties: {
@@ -386,9 +397,51 @@
             '*'
           );
         } else if (event.data?.type === 'zoom') {
-          zoom.value = event.data.payload;
+          zoom.value = event.data.payload.toString();
         }
       });
+
+      zoomIn.onclick = () => {
+        external.contentWindow.postMessage(
+          {
+            type: 'SET_EXTERNAL_ZOOM',
+            payload: +zoom.value + 1,
+          },
+          '*'
+        );
+      };
+      zoomOut.onclick = () => {
+        external.contentWindow.postMessage(
+          {
+            type: 'SET_EXTERNAL_ZOOM',
+            payload: +zoom.value - 1,
+          },
+          '*'
+        );
+      };
+
+      center.onclick = () => {
+        external.contentWindow.postMessage(
+          {
+            type: 'SET_EXTERNAL_CENTER',
+            payload: [5000.22, 3000.34],
+          },
+          '*'
+        );
+      };
+
+      view.onclick = () => {
+        external.contentWindow.postMessage(
+          {
+            type: 'SET_EXTERNAL_VIEW',
+            payload: {
+              zoom: 2,
+              center: [6000.22, 8000.34],
+            },
+          },
+          '*'
+        );
+      };
     </script>
   </body>
 </html>

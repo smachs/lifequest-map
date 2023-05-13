@@ -26,7 +26,7 @@ function getRegions() {
 }
 
 function postMessageToParent(type: string, payload?: any) {
-  if (payload) {
+  if (typeof payload !== 'undefined') {
     window.parent.postMessage({ type, payload }, '*');
   } else {
     window.parent.postMessage({ type }, '*');
@@ -37,9 +37,12 @@ export default function External() {
   const elementRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const mapName =
-      location.search.match(/map=([^&]+)/)?.[1] ?? 'NewWorld_VitaeEterna';
-    const mapDetail = findMapDetails(mapName) ?? AETERNUM_MAP;
+    const searchParams = new URLSearchParams(location.search);
+    const mapParam = searchParams.get('map') ?? 'NewWorld_VitaeEterna';
+    const zoomParam = searchParams.get('zoom');
+    const centerParam = searchParams.get('center');
+
+    const mapDetail = findMapDetails(mapParam) ?? AETERNUM_MAP;
     const latLngBounds = leaflet.latLngBounds(mapDetail.maxBounds);
 
     const worldCRS = leaflet.extend({}, leaflet.CRS.Simple, {
@@ -63,10 +66,19 @@ export default function External() {
       // Disable default context menu
     });
 
-    map.fitBounds(latLngBounds, {
-      animate: false,
-      noMoveStart: true,
-    });
+    if (zoomParam && centerParam) {
+      const center = JSON.parse(centerParam);
+      const zoom = parseFloat(zoomParam);
+      map.setView(center, zoom, {
+        animate: false,
+        noMoveStart: true,
+      });
+    } else {
+      map.fitBounds(latLngBounds, {
+        animate: false,
+        noMoveStart: true,
+      });
+    }
 
     const CanvasLayer = createCanvasLayer(mapDetail);
     const worldTiles = new CanvasLayer();
@@ -79,12 +91,13 @@ export default function External() {
     let geoJSON: leaflet.GeoJSON | null = null;
     const handleMessage = (event: MessageEvent<any>) => {
       const data = event.data;
+      console.log(data);
       switch (data.type) {
-        case 'SET_EXTERNAL_DATA': {
+        case 'SET_EXTERNAL_DATA':
           if (geoJSON) {
             geoJSON.remove();
           }
-          geoJSON = leaflet.geoJSON(data.data, {
+          geoJSON = leaflet.geoJSON(data.payload, {
             pointToLayer: (feature, latlng) =>
               leaflet.circleMarker(latlng, {
                 stroke: true,
@@ -102,11 +115,24 @@ export default function External() {
               opacity: 1,
               fillOpacity: feature.properties['fill-opacity'],
               weight: 1,
+              interactive: feature.geometry.type === 'Point',
             }),
           });
           geoJSON.bindTooltip((layer: any) => layer.feature.properties.title);
           geoJSON.addTo(map);
-        }
+
+          break;
+        case 'SET_EXTERNAL_ZOOM':
+          map.setZoom(data.payload);
+          break;
+
+        case 'SET_EXTERNAL_CENTER':
+          map.panTo(data.payload);
+          break;
+
+        case 'SET_EXTERNAL_VIEW':
+          map.setView(data.payload.center, data.payload.zoom);
+          break;
       }
     };
     window.addEventListener('message', handleMessage);
@@ -122,7 +148,6 @@ export default function External() {
       regions.forEach((region) => region.removeFrom(map));
       map.remove();
       worldTiles.remove();
-      window.removeEventListener('message', handleMessage);
     };
   }, []);
 
