@@ -1,12 +1,11 @@
 import { Box, Button } from '@mantine/core';
-import { IconMap, IconMinus, IconPlus } from '@tabler/icons-react';
+import { IconMap } from '@tabler/icons-react';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { StrictMode, useEffect, useRef, useState } from 'react';
+import { StrictMode, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { AETERNUM_MAP, findMapDetails, regions } from 'static';
 import ErrorBoundary from 'ui/components/ErrorBoundary/ErrorBoundary';
-import FadingBox from 'ui/components/FadingBox/FadingBox';
 import createCanvasLayer from 'ui/components/WorldMap/CanvasLayer';
 import { ThemeProvider } from 'ui/contexts/ThemeProvider';
 import { initPlausible } from 'ui/utils/stats';
@@ -26,9 +25,16 @@ function getRegions() {
   );
 }
 
+function postMessageToParent(type: string, payload?: any) {
+  if (payload) {
+    window.parent.postMessage({ type, payload }, '*');
+  } else {
+    window.parent.postMessage({ type }, '*');
+  }
+}
+
 export default function External() {
   const elementRef = useRef<HTMLDivElement | null>(null);
-  const [map, setMap] = useState<leaflet.Map | null>(null);
 
   useEffect(() => {
     const mapName =
@@ -65,8 +71,6 @@ export default function External() {
     const CanvasLayer = createCanvasLayer(mapDetail);
     const worldTiles = new CanvasLayer();
     worldTiles.addTo(map);
-
-    setMap(map);
 
     const regions = getRegions();
 
@@ -107,7 +111,13 @@ export default function External() {
     };
     window.addEventListener('message', handleMessage);
 
-    window.parent.postMessage('aeternum-map-ready', '*');
+    postMessageToParent('ready');
+    postMessageToParent('zoom', map.getZoom());
+
+    map.on('zoom', () => {
+      postMessageToParent('zoom', map.getZoom());
+    });
+
     return () => {
       regions.forEach((region) => region.removeFrom(map));
       map.remove();
@@ -120,7 +130,14 @@ export default function External() {
     <ErrorBoundary>
       <ThemeProvider>
         <Box>
-          <FadingBox left={7} top={7} fadeFrom="top" noFade>
+          <Box
+            sx={{
+              position: 'fixed',
+              left: 7,
+              top: 7,
+              zIndex: 1,
+            }}
+          >
             <Button
               variant="default"
               component="a"
@@ -131,29 +148,7 @@ export default function External() {
             >
               Full Map
             </Button>
-          </FadingBox>
-          <FadingBox top="calc(50% - 26px)" right={12} fadeFrom="right" noFade>
-            <Button.Group orientation="vertical">
-              <Button
-                compact
-                variant="default"
-                p={0}
-                onClick={() => map!.zoomIn()}
-                aria-label="Zoom in"
-              >
-                <IconPlus />
-              </Button>
-              <Button
-                compact
-                variant="default"
-                p={0}
-                onClick={() => map!.zoomOut()}
-                aria-label="Zoom out"
-              >
-                <IconMinus />
-              </Button>
-            </Button.Group>
-          </FadingBox>
+          </Box>
           <Box
             sx={{
               width: '100vw',

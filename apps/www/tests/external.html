@@ -7,18 +7,20 @@
     <title>Document</title>
   </head>
   <body>
-    <h1>Externally embedded example</h1>
+    <h1>Externally embedded example!</h1>
     <iframe
       id="external"
       src="http://localhost:5174/external.html"
       width="776"
       height="437"
     ></iframe>
+    <input type="number" id="zoom" disabled />
     <script>
       const external = document.querySelector('#external');
-
+      const zoom = document.querySelector('#zoom');
       window.addEventListener('message', (event) => {
-        if (event.data === 'aeternum-map-ready') {
+        console.log('message', event.data);
+        if (event.data?.type === 'ready') {
           external.contentWindow.postMessage(
             {
               type: 'SET_EXTERNAL_DATA',
@@ -383,6 +385,8 @@
             },
             '*'
           );
+        } else if (event.data?.type === 'zoom') {
+          zoom.value = event.data.payload;
         }
       });
     </script>
