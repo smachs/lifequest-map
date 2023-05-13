@@ -119,3 +119,26 @@ hr {
 .leaflet-control-container > .leaflet-left {
   left: 50%;
 }
+
+.leaflet-tooltip {
+  background-color: #25262b !important;
+  color: white !important;
+  border: 0.0625rem solid #373a40 !important;
+  box-shadow: none !important;
+}
+
+.leaflet-tooltip-top::before {
+  border-top-color: #25262b !important;
+}
+
+.leaflet-tooltip-right::before {
+  border-right-color: #25262b !important;
+}
+
+.leaflet-tooltip-bottom::before {
+  border-bottom-color: #25262b !important;
+}
+
+.leaflet-tooltip-left::before {
+  border-left-color: #25262b !important;
+}
