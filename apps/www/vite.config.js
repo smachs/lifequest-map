@@ -79,6 +79,7 @@ export default defineConfig({
     outDir: resolve(__dirname, 'dist'),
     rollupOptions: {
       input: {
+        external: resolve(__dirname, 'src/external.html'),
         minimap: resolve(__dirname, 'src/minimap.html'),
         privacy: resolve(__dirname, 'src/privacy.html'),
         index: resolve(__dirname, 'src/index.html'),
