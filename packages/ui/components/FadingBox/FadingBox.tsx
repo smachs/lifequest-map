@@ -13,6 +13,7 @@ type FadingBoxProps = {
   children: ReactNode;
   fadeFrom: 'top' | 'right' | 'left' | 'bottom';
   className?: string;
+  noFade?: boolean;
 };
 
 const FadingBox = ({
@@ -20,6 +21,7 @@ const FadingBox = ({
   zIndex = 1,
   fadeFrom,
   className,
+  noFade,
   ...props
 }: FadingBoxProps) => {
   const active = useActive();
@@ -34,7 +36,7 @@ const FadingBox = ({
         ...props,
       }}
       style={
-        !isEmbed && !active && autoFade
+        !noFade && !isEmbed && !active && autoFade
           ? {
               [fadeFrom]: '-120px',
               transitionDelay: '1.5s',

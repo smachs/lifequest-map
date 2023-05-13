@@ -120,7 +120,7 @@ export default function External() {
     <ErrorBoundary>
       <ThemeProvider>
         <Box>
-          <FadingBox left={7} top={7} fadeFrom="top">
+          <FadingBox left={7} top={7} fadeFrom="top" noFade>
             <Button
               variant="default"
               component="a"
@@ -132,7 +132,7 @@ export default function External() {
               Full Map
             </Button>
           </FadingBox>
-          <FadingBox top="calc(50% - 26px)" right={12} fadeFrom="right">
+          <FadingBox top="calc(50% - 26px)" right={12} fadeFrom="right" noFade>
             <Button.Group orientation="vertical">
               <Button
                 compact
