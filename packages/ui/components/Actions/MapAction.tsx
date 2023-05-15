@@ -91,7 +91,7 @@ const MapCard = ({ mapDetail, onClick, to }: MapCardProps) => {
       <div
         className={classes.image}
         style={{
-          backgroundImage: `url(/maps/${mapDetail.name.toLowerCase()}.webp)`,
+          backgroundImage: `url(/maps/${mapDetail.name.toLowerCase()}.webp?v=2)`,
         }}
       />
       <div className={classes.overlay} />
