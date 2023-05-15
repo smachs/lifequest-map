@@ -7,6 +7,7 @@ import NavActions from 'ui/components/Actions/NavActions';
 import UserAction from 'ui/components/Actions/UserAction';
 import ErrorBoundary from 'ui/components/ErrorBoundary/ErrorBoundary';
 import FadingBox from 'ui/components/FadingBox/FadingBox';
+import NitroPay from 'ui/components/NitroPay/NitroPay';
 import UpsertArea from 'ui/components/UpsertArea/UpsertArea';
 import WorldMap from 'ui/components/WorldMap/WorldMap';
 import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
@@ -59,6 +60,7 @@ function App(): JSX.Element {
         <Head />
         <ToastContainer theme="dark" pauseOnFocusLoss={false} />
         <UpsertArea />
+        <NitroPay />
       </Box>
     </ErrorBoundary>
   );
