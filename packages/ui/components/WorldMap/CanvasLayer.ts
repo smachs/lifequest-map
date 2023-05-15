@@ -36,7 +36,7 @@ const createCanvasLayer = (mapDetail: Map): new () => TileLayer =>
       }
       return `${VITE_API_ENDPOINT}/assets/${
         mapDetail.folder
-      }/map_l${zoom}_y${toThreeDigits(y)}_x${toThreeDigits(x)}.webp`;
+      }/map_l${zoom}_y${toThreeDigits(y)}_x${toThreeDigits(x)}.webp?v=2`;
     },
     getTileSize() {
       return { x: 1024, y: 1024 };

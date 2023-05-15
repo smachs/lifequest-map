@@ -194,7 +194,7 @@ async function runServer() {
       '/assets',
       express.static(path.join(__dirname, '../public'), {
         immutable: true,
-        maxAge: '1w',
+        maxAge: '1y',
       })
     );
 
