@@ -5,7 +5,6 @@ const intervalMS = 60 * 60 * 1000;
 
 function ReloadPrompt() {
   const {
-    offlineReady: [offlineReady, setOfflineReady],
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
   } = useRegisterSW({
@@ -22,13 +21,12 @@ function ReloadPrompt() {
   });
 
   const close = () => {
-    setOfflineReady(false);
     setNeedRefresh(false);
   };
 
   return (
     <>
-      {(offlineReady || needRefresh) && (
+      {needRefresh && (
         <Dialog
           opened
           withCloseButton
@@ -36,16 +34,9 @@ function ReloadPrompt() {
           position={{ top: 50, right: 7 }}
         >
           <Text size="sm" mb="xs" weight={500}>
-            {offlineReady
-              ? 'App ready to work offline'
-              : 'New version available'}
+            New version available
           </Text>
-
-          {needRefresh && (
-            <Button onClick={() => updateServiceWorker(true)}>
-              Update now
-            </Button>
-          )}
+          <Button onClick={() => updateServiceWorker(true)}>Update now</Button>
         </Dialog>
       )}
     </>
