@@ -123,7 +123,7 @@ function MarkerDetails(): JSX.Element {
             <img
               width={32}
               height={32}
-              src={`${VITE_API_ENDPOINT}/assets${filterItem.iconUrl}`}
+              src={`${VITE_API_ENDPOINT}/assets${filterItem.iconUrl}?v=2`}
               alt=""
             />{' '}
             {marker.chestType
@@ -166,7 +166,13 @@ function MarkerDetails(): JSX.Element {
               <Badge
                 size="sm"
                 color="red"
-                leftSection={<Avatar size={18} mr={0} src={glyph.iconUrl} />}
+                leftSection={
+                  <Avatar
+                    size={18}
+                    mr={0}
+                    src={`${VITE_API_ENDPOINT}/assets${glyph.iconUrl}?v=2`}
+                  />
+                }
               >
                 <Text size="xs">{glyph.name + ' (' + glyph.id + ')'}</Text>
               </Badge>

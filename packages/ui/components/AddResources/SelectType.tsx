@@ -60,7 +60,7 @@ function SelectType({ onSelect, filter }: SelectTypeType): JSX.Element {
               }
               return {
                 value: filter.type,
-                image: `${VITE_API_ENDPOINT}/assets${filter.iconUrl}`,
+                image: `${VITE_API_ENDPOINT}/assets${filter.iconUrl}?v=2`,
                 label: filter.title,
               };
             })
@@ -75,7 +75,7 @@ function SelectType({ onSelect, filter }: SelectTypeType): JSX.Element {
             )
             .map((filter) => ({
               value: filter.type,
-              image: `${VITE_API_ENDPOINT}/assets${filter.iconUrl}`,
+              image: `${VITE_API_ENDPOINT}/assets${filter.iconUrl}?v=2`,
               label: filter.title,
             })),
         ]}
