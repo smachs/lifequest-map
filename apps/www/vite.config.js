@@ -56,7 +56,7 @@ export default defineConfig({
         dir: 'ltr',
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,ico,png,svg,webp}'],
+        globPatterns: ['**/*.{js,html,css,ico,png,svg,webp}'],
         navigateFallbackDenylist: [/^\/api/],
       },
       devOptions: {

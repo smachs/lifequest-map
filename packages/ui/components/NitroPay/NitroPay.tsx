@@ -45,6 +45,7 @@ const NitroPay = () => {
     const script = document.createElement('script');
     script.src = 'https://s.nitropay.com/ads-1042.js';
     script.setAttribute('data-cfasync', 'false');
+    script.setAttribute('data-log-level', 'silent');
     script.async = true;
 
     const timeoutId = setTimeout(() => {
