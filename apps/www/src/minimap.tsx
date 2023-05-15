@@ -3,15 +3,14 @@ import { broadcastQueryClient } from '@tanstack/query-broadcast-client-experimen
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StrictMode, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import WorldMap from 'ui/components/WorldMap/WorldMap';
+import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
 import { MarkersProvider } from 'ui/contexts/MarkersContext';
 import { initPlausible } from 'ui/utils/stats';
 import { usePersistentState } from 'ui/utils/storage';
 import { classNames } from 'ui/utils/styles';
 import useEventListener from 'ui/utils/useEventListener';
-import './globals.css';
 import styles from './Minimap.module.css';
 
 const queryClient = new QueryClient();

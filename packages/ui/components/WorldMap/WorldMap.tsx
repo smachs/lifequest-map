@@ -1,7 +1,6 @@
+import { Box } from '@mantine/core';
 import type { CSSProperties } from 'react';
 import { Suspense, lazy } from 'react';
-import { classNames } from '../../utils/styles';
-import styles from './WorldMap.module.css';
 import useWorldMap from './useWorldMap';
 const MapData = lazy(() => import('./MapData'));
 
@@ -28,8 +27,15 @@ function WorldMap({
   });
 
   return (
-    <div
-      className={classNames(styles.map, className)}
+    <Box
+      sx={{
+        height: '100%',
+        width: '100%',
+        background: '#859594 !important',
+        transition: 'transform 1s linear',
+        zIndex: 0,
+      }}
+      className={className}
       ref={elementRef}
       style={style}
     >
@@ -40,7 +46,7 @@ function WorldMap({
           rotate={rotate}
         />
       </Suspense>
-    </div>
+    </Box>
   );
 }
 

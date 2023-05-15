@@ -13,7 +13,9 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      strategies: 'generateSW',
+      injectRegister: 'inline',
+      registerType: 'prompt',
       includeAssets: [
         'favicon.ico',
         'apple-touch-icon.png',
@@ -57,10 +59,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,html,css,ico,png,svg,webp}'],
-        navigateFallbackDenylist: [/^\/api/],
-      },
-      devOptions: {
-        enabled: true,
+        navigateFallbackDenylist: [/^\/api/, /^\/assets/],
       },
     }),
   ],

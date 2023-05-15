@@ -1,6 +1,6 @@
+import { Box } from '@mantine/core';
 import { useEffect } from 'react';
 import { trackEvent } from '../../utils/stats';
-import styles from './AdsFallback.module.css';
 
 declare global {
   interface Window {
@@ -51,10 +51,55 @@ const AdsFallback = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <div>
-      <div className={styles.close} onClick={onClose}>
+      <Box
+        onClick={onClose}
+        sx={{
+          position: 'fixed',
+          display: 'block',
+          cursor: 'pointer',
+          zIndex: 2147483641,
+          background: 'rgb(238 238 238)',
+          margin: 5,
+          padding: '0 5px',
+          fontSize: 12,
+          fontWeight: 'bold',
+          fontFamily: 'Arial, sans-serif',
+          opacity: 0.8,
+          border: '1px solid rgb(34 34 34)',
+          borderRadius: 12,
+          color: 'rgb(34 34 34)',
+          bottom: 200,
+          right: 0,
+
+          '@media screen and (width >= 426px)': {
+            bottom: 207,
+            right: 7,
+          },
+        }}
+      >
         X
-      </div>
-      <div id="player" className={styles.floating} />
+      </Box>
+      <Box
+        id="player"
+        sx={{
+          display: 'block',
+          zIndex: 2147483640,
+          overflow: 'hidden',
+          borderRadius: 5,
+          height: 200,
+          width: '100vw',
+          position: 'fixed',
+          bottom: 0,
+          right: 0,
+
+          '@media screen and (width >= 426px)': {
+            width: 361,
+            height: 203,
+            bottom: 7,
+            right: 7,
+          },
+        }}
+      />
     </div>
   );
 };

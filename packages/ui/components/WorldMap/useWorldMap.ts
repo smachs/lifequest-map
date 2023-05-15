@@ -1,5 +1,4 @@
 import leaflet from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AETERNUM_MAP, findMapDetails, mapIsAeternumMap } from 'static';

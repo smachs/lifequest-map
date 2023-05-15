@@ -31,7 +31,11 @@ const NitroPay = () => {
   const [showFallback, setShowFallback] = useState(false);
 
   useEffect(() => {
-    if (navigator.userAgent.includes('Overwolf') || account?.isSupporter) {
+    if (
+      navigator.userAgent.includes('Overwolf') ||
+      account?.isSupporter ||
+      location.href === 'http://localhost:3001/'
+    ) {
       return;
     }
 

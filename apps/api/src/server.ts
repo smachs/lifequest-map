@@ -163,10 +163,18 @@ async function runServer() {
 
     // Serve webversion (only on production)
     app.all('/', (_req, res) => {
-      res.sendFile(path.join(__dirname, '../../www/dist/index.html'));
+      res.sendFile(path.join(__dirname, '../../www/dist/index.html'), {
+        headers: {
+          'Cache-Control': 'public, max-age=0, s-maxage=0, must-revalidate',
+        },
+      });
     });
     app.all('/index.html', (_req, res) => {
-      res.sendFile(path.join(__dirname, '../../www/dist/index.html'));
+      res.sendFile(path.join(__dirname, '../../www/dist/index.html'), {
+        headers: {
+          'Cache-Control': 'public, max-age=0, s-maxage=0, must-revalidate',
+        },
+      });
     });
     app.all('/minimap.html', (_req, res) => {
       res.sendFile(path.join(__dirname, '../../www/dist/minimap.html'));
@@ -185,7 +193,7 @@ async function runServer() {
     app.use(
       express.static(path.join(__dirname, '../../www/dist'), {
         immutable: true,
-        maxAge: '1w',
+        maxAge: '1y',
       })
     );
 
@@ -234,7 +242,11 @@ async function runServer() {
 
     // All other requests are answered with a 404
     app.all('*', (_req, res) => {
-      res.sendFile(path.join(__dirname, '../../www/dist/index.html'));
+      res.sendFile(path.join(__dirname, '../../www/dist/index.html'), {
+        headers: {
+          'Cache-Control': 'public, max-age=0, s-maxage=0, must-revalidate',
+        },
+      });
     });
 
     await connectToMongoDb(MONGODB_URI!);

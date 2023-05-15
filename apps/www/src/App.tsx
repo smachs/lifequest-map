@@ -12,6 +12,7 @@ import WorldMap from 'ui/components/WorldMap/WorldMap';
 import { latestLeafletMap } from 'ui/components/WorldMap/useWorldMap';
 import useEventListener from 'ui/utils/useEventListener';
 import Head from './Head';
+import ReloadPrompt from './ReloadPrompt';
 
 function App(): JSX.Element {
   useEventListener(
@@ -60,6 +61,7 @@ function App(): JSX.Element {
         <Notifications position="top-right" autoClose={4000} />
         <UpsertArea />
         <NitroPay />
+        <ReloadPrompt />
       </Box>
     </ErrorBoundary>
   );

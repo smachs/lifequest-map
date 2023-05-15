@@ -142,3 +142,67 @@ hr {
 .leaflet-tooltip-left::before {
   border-left-color: #25262b !important;
 }
+
+/* stylelint-disable */
+.leaflet-position {
+  color: rgb(209, 209, 209);
+  text-shadow: 1px 1px 2px #000000;
+}
+
+.leaflet-player-position {
+  color: #fff;
+  text-shadow: 1px 1px 2px #000000;
+}
+
+.leaflet-own-player-marker {
+  pointer-events: none !important;
+}
+
+.leaflet-polygon-text {
+  color: #fff;
+  text-shadow: 1px 1px 2px #000000;
+  width: auto !important;
+  background: none !important;
+  border: none !important;
+  font-size: 1em;
+}
+
+.leaflet-polygon-text-0 {
+  font-size: 0.5em;
+}
+
+.leaflet-polygon-text-1 {
+  font-size: 0.8em;
+}
+
+.leaflet-revert {
+  background: #f4f4f4;
+  color: #000;
+  display: flex;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  background-clip: padding-box;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  cursor: pointer;
+}
+
+.pm-textarea {
+  padding: 0 !important;
+  color: white !important;
+  background: none !important;
+  text-shadow: 1px 1px 2px #000000;
+}
+
+.action-finish,
+.action-finishMode {
+  background: green !important;
+}
+
+.action-removeLastVertex {
+  background: #00698c !important;
+}
+
+.action-cancel {
+  background: #a50000 !important;
+}

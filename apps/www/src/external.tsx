@@ -1,7 +1,6 @@
 import { Box, Button } from '@mantine/core';
 import { IconMap } from '@tabler/icons-react';
 import leaflet from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import { StrictMode, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { AETERNUM_MAP, findMapDetails, regions } from 'static';
@@ -9,7 +8,6 @@ import ErrorBoundary from 'ui/components/ErrorBoundary/ErrorBoundary';
 import createCanvasLayer from 'ui/components/WorldMap/CanvasLayer';
 import { ThemeProvider } from 'ui/contexts/ThemeProvider';
 import { initPlausible } from 'ui/utils/stats';
-import './globals.css';
 
 const COLOR = 'rgb(200 200 200)';
 
