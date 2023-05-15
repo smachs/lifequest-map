@@ -1,6 +1,6 @@
+import { notifications } from '@mantine/notifications';
 import type { FormEvent } from 'react';
 import { useEffect } from 'react';
-import { toast } from 'react-toastify';
 import { shallow } from 'zustand/shallow';
 import { useSettingsStore } from '../../utils/settingsStore';
 import { useUserStore } from '../../utils/userStore';
@@ -50,7 +50,10 @@ function ShareLiveStatus({ onActivate }: ShareLiveStatusProps): JSX.Element {
     event.preventDefault();
 
     if (!liveShareToken || !liveShareServerUrl) {
-      toast.error('Token and server are required 🙄');
+      notifications.show({
+        message: 'Token and server are required 🙄',
+        color: 'red',
+      });
       return;
     }
 

@@ -1,6 +1,5 @@
 import { Box } from '@mantine/core';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Notifications } from '@mantine/notifications';
 import MapAction from 'ui/components/Actions/MapAction';
 import MapActions from 'ui/components/Actions/MapActions';
 import NavActions from 'ui/components/Actions/NavActions';
@@ -58,7 +57,7 @@ function App(): JSX.Element {
           </ErrorBoundary>
         </Box>
         <Head />
-        <ToastContainer theme="dark" pauseOnFocusLoss={false} />
+        <Notifications position="top-right" autoClose={4000} />
         <UpsertArea />
         <NitroPay />
       </Box>

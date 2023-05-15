@@ -1,5 +1,5 @@
+import { notifications } from '@mantine/notifications';
 import leaflet from 'leaflet';
-import { toast } from 'react-toastify';
 import type { Socket } from 'socket.io-client';
 import type { MarkerSize } from 'static';
 import { getWorld, getZone } from 'static';
@@ -139,9 +139,10 @@ const respawnSizeAction =
 const hideMarker = async (marker: CanvasMarker) => {
   const { user, refreshUser } = useUserStore.getState();
   if (!user) {
-    toast.warn(
-      'User not detected. Make sure to run Overwolf before New World.'
-    );
+    notifications.show({
+      message: 'User not detected. Make sure to run Overwolf before New World.',
+      color: 'yellow',
+    });
     return;
   }
   const markerId = marker.options.image.markerId;

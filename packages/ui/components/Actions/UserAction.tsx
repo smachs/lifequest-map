@@ -11,6 +11,7 @@ import {
   UnstyledButton,
 } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
+import { notifications } from '@mantine/notifications';
 import {
   IconHelp,
   IconLogout,
@@ -19,7 +20,6 @@ import {
   IconUser,
 } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { AETERNUM_MAP } from 'static';
 import { shallow } from 'zustand/shallow';
 import { fetchJSON } from '../../utils/api';
@@ -112,7 +112,9 @@ const UserAction = () => {
       url += `?bounds=${latestLeafletMap!.getBounds().toBBoxString()}`;
     }
     clipboard.copy(url);
-    toast('Copied URL to clipboard');
+    notifications.show({
+      message: 'Copied URL to clipboard',
+    });
   };
 
   if (isEmbed) {

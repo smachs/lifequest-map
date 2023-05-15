@@ -1,4 +1,4 @@
-import { toast } from 'react-toastify';
+import { notifications } from '@mantine/notifications';
 
 export function notify<T>(
   promise: Promise<T>,
@@ -11,20 +11,24 @@ export function notify<T>(
   } = {}
 ): Promise<T> {
   if (pending) {
-    const info = toast.info(pending);
+    const id = Date.now().toString();
+    notifications.show({ id: id, message: pending, loading: true });
     promise.then((data) => {
-      toast.dismiss(info);
+      notifications.hide(id);
       return data;
     });
   }
   if (success) {
     promise.then((data) => {
-      toast.success(success);
+      notifications.show({ message: success, color: 'green' });
       return data;
     });
   }
   promise.catch((data) => {
-    toast.error(data instanceof Error ? data.message : data);
+    notifications.show({
+      message: data instanceof Error ? data.message : data,
+      color: 'red',
+    });
     return data;
   });
   return promise;
