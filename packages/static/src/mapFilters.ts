@@ -1014,7 +1014,7 @@ export const mapFilters: FilterItem[] = [
     category: 'private',
     type: 'generic',
     title: 'Generic',
-    iconUrl: '/pois/private/generic.webp',
+    iconUrl: '/pois/generic.webp',
     hasName: true,
   },
   {
