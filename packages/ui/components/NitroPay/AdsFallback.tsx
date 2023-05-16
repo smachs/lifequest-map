@@ -129,7 +129,7 @@ function loadTwitch({
       layout: 'video-with-chat',
       autoplay: true,
       muted: true,
-      parent: ['aeternum-map.gg'],
+      parent: ['aeternum-map.gg', 'influence.th.gl'],
     });
 
     twitchEmbed.addEventListener(window.Twitch.Player.OFFLINE, () => {
