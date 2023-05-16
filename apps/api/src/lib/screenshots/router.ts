@@ -162,24 +162,28 @@ screenshotsRouter.post(
         (url) => url[0] === world.publicName.toUpperCase()
       ).map((url) => url[1]);
       for (const webhookUrl of webhookUrls) {
-        const response = await uploadToDiscord(
-          [screenshotBlob, svgBlob],
-          `
-**Source**: [aeternum-map.gg](<https://aeternum-map.gg/influences/${encodeURIComponent(
-            world.publicName
-          )}>)
-**Server**: ${world.publicName}
-**User**: ${account.name}
-**Date**: ${now.toLocaleDateString()}
-**Changes**:
-${changedInfluenceMessage}
-**Influence**: ${ICONS.Covenant} ${covenantPart}% | ${
-            ICONS.Marauder
-          } ${marauderPart}% | ${ICONS.Syndicate} ${syndicatePart}%
-`,
-          webhookUrl
-        );
-        await response.json();
+        try {
+          const response = await uploadToDiscord(
+            [screenshotBlob, svgBlob],
+            `
+  **Source**: [aeternum-map.gg](<https://aeternum-map.gg/influences/${encodeURIComponent(
+    world.publicName
+  )}>)
+  **Server**: ${world.publicName}
+  **User**: ${account.name}
+  **Date**: ${now.toLocaleDateString()}
+  **Changes**:
+  ${changedInfluenceMessage}
+  **Influence**: ${ICONS.Covenant} ${covenantPart}% | ${
+              ICONS.Marauder
+            } ${marauderPart}% | ${ICONS.Syndicate} ${syndicatePart}%
+  `,
+            webhookUrl
+          );
+          await response.json();
+        } catch (error) {
+          console.error(error);
+        }
       }
       res.status(200).json({ success: true });
     } catch (error) {
