@@ -1,5 +1,45 @@
 [
   {
+    "publicName": "El Dorado",
+    "worldName": "live-3-03-1",
+    "zone": "pdx"
+  },
+  {
+    "publicName": "Isabella",
+    "worldName": "live-3-fsw01-04",
+    "zone": "pdx"
+  },
+  {
+    "publicName": "Castle of Steel",
+    "worldName": "live-2-06-7",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Lilith",
+    "worldName": "live-2-fsw01-08",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Maramma",
+    "worldName": "live-2-05-2",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Valhalla",
+    "worldName": "live-2-02-1",
+    "zone": "iad"
+  },
+  {
+    "publicName": "Artorius",
+    "worldName": "live-4-fsw01-02",
+    "zone": "gru"
+  },
+  {
+    "publicName": "Devaloka",
+    "worldName": "live-4-09-2",
+    "zone": "gru"
+  },
+  {
     "publicName": "Aaru",
     "worldName": "live-1-10-1",
     "zone": "fra"
@@ -8,21 +48,6 @@
     "publicName": "Abaton",
     "worldName": "live-1-02-4",
     "zone": "fra"
-  },
-  {
-    "publicName": "Amarah",
-    "worldName": "live-2-fsw01-05",
-    "zone": "iad"
-  },
-  {
-    "publicName": "Artemis",
-    "worldName": "live-1-fsw01-02",
-    "zone": "fra"
-  },
-  {
-    "publicName": "Artorius",
-    "worldName": "live-4-fsw01-02",
-    "zone": "gru"
   },
   {
     "publicName": "Asgard",
@@ -35,69 +60,9 @@
     "zone": "fra"
   },
   {
-    "publicName": "Castle of Steel",
-    "worldName": "live-2-06-7",
-    "zone": "iad"
-  },
-  {
-    "publicName": "Cleopatra",
-    "worldName": "live-1-fsw01-05",
-    "zone": "fra"
-  },
-  {
-    "publicName": "Crassus",
-    "worldName": "live-1-fsw01-06",
-    "zone": "fra"
-  },
-  {
-    "publicName": "Delos",
-    "worldName": "live-5-05-1",
-    "zone": "syd"
-  },
-  {
-    "publicName": "Devaloka",
-    "worldName": "live-4-09-2",
-    "zone": "gru"
-  },
-  {
-    "publicName": "Death",
-    "worldName": "live-2-fsw01-01",
-    "zone": "iad"
-  },
-  {
-    "publicName": "Dracul",
-    "worldName": "live-1-fsw01-01",
-    "zone": "fra"
-  },
-  {
-    "publicName": "El Dorado",
-    "worldName": "live-3-03-1",
-    "zone": "pdx"
-  },
-  {
-    "publicName": "Gaea",
-    "worldName": "live-4-fsw01-03",
-    "zone": "gru"
-  },
-  {
-    "publicName": "Isabella",
-    "worldName": "live-3-fsw01-04",
-    "zone": "pdx"
-  },
-  {
-    "publicName": "Lilith",
-    "worldName": "live-2-fsw01-08",
-    "zone": "iad"
-  },
-  {
     "publicName": "Kronos",
     "worldName": "live-1-fsw01-09",
     "zone": "fra"
-  },
-  {
-    "publicName": "Maramma",
-    "worldName": "live-2-05-2",
-    "zone": "iad"
   },
   {
     "publicName": "Nysa",
@@ -110,28 +75,13 @@
     "zone": "fra"
   },
   {
-    "publicName": "Orofena",
-    "worldName": "live-2-15-1",
-    "zone": "iad"
-  },
-  {
-    "publicName": "Seer",
-    "worldName": "live-2-fsw01-07",
-    "zone": "iad"
+    "publicName": "Delos",
+    "worldName": "live-5-05-1",
+    "zone": "syd"
   },
   {
     "publicName": "Sutekh",
     "worldName": "live-5-fsw01-01",
     "zone": "syd"
-  },
-  {
-    "publicName": "Titan",
-    "worldName": "live-3-fsw01-01",
-    "zone": "pdx"
-  },
-  {
-    "publicName": "Valhalla",
-    "worldName": "live-2-02-1",
-    "zone": "iad"
   }
 ]
