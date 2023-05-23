@@ -176,6 +176,13 @@ async function runServer() {
         },
       });
     });
+    app.all('/external.html', (_req, res) => {
+      res.sendFile(path.join(__dirname, '../../www/dist/external.html'), {
+        headers: {
+          'Cache-Control': 'public, max-age=0, s-maxage=0, must-revalidate',
+        },
+      });
+    });
     app.all('/minimap.html', (_req, res) => {
       res.sendFile(path.join(__dirname, '../../www/dist/minimap.html'));
     });
