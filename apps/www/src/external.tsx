@@ -39,6 +39,7 @@ export default function External() {
     const mapParam = searchParams.get('map') ?? 'NewWorld_VitaeEterna';
     const zoomParam = searchParams.get('zoom');
     const centerParam = searchParams.get('center');
+    const fit = searchParams.get('fit') === 'true';
 
     const mapDetail = findMapDetails(mapParam) ?? AETERNUM_MAP;
     const latLngBounds = leaflet.latLngBounds(mapDetail.maxBounds);
@@ -71,7 +72,7 @@ export default function External() {
         animate: false,
         noMoveStart: true,
       });
-    } else {
+    } else if (!fit) {
       map.fitBounds(latLngBounds, {
         animate: false,
         noMoveStart: true,
@@ -120,7 +121,12 @@ export default function External() {
           });
           geoJSON.bindTooltip((layer: any) => layer.feature.properties.title);
           geoJSON.addTo(map);
-
+          if (fit) {
+            map.fitBounds(geoJSON.getBounds(), {
+              animate: false,
+              noMoveStart: true,
+            });
+          }
           break;
         case 'SET_EXTERNAL_ZOOM':
           map.setZoom(data.payload);
