@@ -82,9 +82,11 @@ export default function External() {
     const worldTiles = new CanvasLayer();
     worldTiles.addTo(map);
 
-    const regions = getRegions();
-
-    regions.forEach((region) => region.addTo(map));
+    let regions: leaflet.Polygon<any>[] = [];
+    if (mapDetail.name === AETERNUM_MAP.name) {
+      regions = getRegions();
+      regions.forEach((region) => region.addTo(map));
+    }
 
     let geoJSON: leaflet.GeoJSON | null = null;
     const handleMessage = (event: MessageEvent<any>) => {
@@ -135,7 +137,7 @@ export default function External() {
     };
     window.addEventListener('message', handleMessage);
 
-    postMessageToParent('ready');
+    postMessageToParent('ready', mapDetail);
     postMessageToParent('zoom', map.getZoom());
 
     map.on('zoom', () => {
