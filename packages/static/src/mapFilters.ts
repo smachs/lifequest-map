@@ -1047,9 +1047,9 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'events',
-    type: 'wispybloom',
-    title: 'Wispybloom',
-    iconUrl: '/pois/wispybloom.webp',
+    type: 'spriggan',
+    title: 'Spriggan',
+    iconUrl: '/pois/spriggan.webp',
   },
 ];
 
