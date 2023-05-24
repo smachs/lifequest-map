@@ -60,6 +60,7 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,html,css,ico,png,svg,webp}'],
         navigateFallbackDenylist: [/^\/api/, /^\/assets/],
+        ignoreURLParametersMatching: [/.*/],
       },
     }),
   ],

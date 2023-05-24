@@ -92,7 +92,6 @@ export default function External() {
     let geoJSON: leaflet.GeoJSON | null = null;
     const handleMessage = (event: MessageEvent<any>) => {
       const data = event.data;
-      console.log(data);
       switch (data.type) {
         case 'SET_EXTERNAL_DATA':
           if (geoJSON) {
