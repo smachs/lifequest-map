@@ -176,7 +176,7 @@ export default function External() {
               leftIcon={<IconMap />}
               radius="xl"
             >
-              Full Map
+              Aeternum Map
             </Button>
           </Box>
           <Box

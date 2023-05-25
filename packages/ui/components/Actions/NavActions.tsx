@@ -8,7 +8,7 @@ import {
   Title,
 } from '@mantine/core';
 import { IconFlag, IconMap, IconMapPin, IconRoute2 } from '@tabler/icons-react';
-import { lazy, Suspense } from 'react';
+import { Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
 import { isEmbed, useView } from '../../utils/routes';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
@@ -33,7 +33,7 @@ const NavActions = () => {
           leftIcon={<IconMap />}
           radius="xl"
         >
-          Full Map
+          Aeternum Map
         </Button>
         <ErrorBoundary>
           <MarkerDetails />
