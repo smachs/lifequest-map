@@ -124,6 +124,7 @@ export default function External() {
             map.fitBounds(geoJSON.getBounds(), {
               animate: false,
               noMoveStart: true,
+              padding: [5, 5],
             });
           }
           break;
