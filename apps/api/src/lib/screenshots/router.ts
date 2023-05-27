@@ -159,7 +159,7 @@ screenshotsRouter.post(
         process.env.DISCORD_WEBHOOK_URLS || '[]'
       ) as [string, string][];
       const webhookUrls = WEBHOOK_URLS.filter(
-        (url) => url[0] === world.publicName.toUpperCase()
+        (url) => url[0] === world.publicName.toUpperCase().replaceAll(' ','').replaceAll('-', '')
       ).map((url) => url[1]);
       for (const webhookUrl of webhookUrls) {
         try {
