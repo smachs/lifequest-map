@@ -13,14 +13,17 @@ declare global {
   }
 }
 
-const TWITCH_CHANNELS = ['DannehTV'];
-const YT_VIDEO_IDS = ['aVqhxEE0ec4'];
+const TWITCH_CHANNELS: string[] = ['dukesloth', 'DannehTV'];
+const YT_VIDEO_IDS: string[] = [];
 
 const AdsFallback = ({ onClose }: { onClose: () => void }) => {
   useEffect(() => {
     let script = loadTwitch({
       onOffline: () => {
         script.remove();
+        if (YT_VIDEO_IDS.length === 0) {
+          return;
+        }
         script = loadYouTube({
           onPlay: (videoId) => {
             trackEvent('Ad Fallback: YouTube Play', {
