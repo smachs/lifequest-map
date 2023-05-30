@@ -13,7 +13,7 @@ declare global {
   }
 }
 
-const TWITCH_CHANNELS: string[] = ['dukesloth', 'DannehTV'];
+const TWITCH_CHANNELS: string[] = ['DannehTV'];
 const YT_VIDEO_IDS: string[] = [];
 
 const AdsFallback = ({ onClose }: { onClose: () => void }) => {
@@ -48,7 +48,9 @@ const AdsFallback = ({ onClose }: { onClose: () => void }) => {
     document.body.append(script);
 
     return () => {
-      document.body.removeChild(script);
+      if (script.parentNode) {
+        script.remove();
+      }
     };
   }, []);
 
