@@ -13,17 +13,37 @@ declare global {
   }
 }
 
-const TWITCH_CHANNELS: string[] = ['DannehTV'];
+const TWITCH_CHANNELS: string[] = ['dukesloth', 'DannehTV'];
 const YT_VIDEO_IDS: string[] = [];
 
 const AdsFallback = ({ onClose }: { onClose: () => void }) => {
   useEffect(() => {
-    let script = loadTwitch({
-      onOffline: () => {
-        script.remove();
+    let channels = [...TWITCH_CHANNELS];
+    let script = loadTwitch();
+
+    script.onload = () => {
+      const channel = getRandom(channels);
+      channels = channels.filter((c) => c !== channel);
+      const twitchEmbed = new window.Twitch.Embed('player', {
+        width: '100%',
+        height: '100%',
+        channel,
+        layout: 'video',
+        autoplay: true,
+        muted: true,
+        parent: ['aeternum-map.gg', 'influence.th.gl'],
+      });
+
+      twitchEmbed.addEventListener(window.Twitch.Player.OFFLINE, () => {
+        console.log('offline', channel);
+        if (channels.length > 0) {
+          twitchEmbed.setChannel(getRandom(channels));
+          return;
+        }
         if (YT_VIDEO_IDS.length === 0) {
           return;
         }
+        script.remove();
         script = loadYouTube({
           onPlay: (videoId) => {
             trackEvent('Ad Fallback: YouTube Play', {
@@ -37,18 +57,18 @@ const AdsFallback = ({ onClose }: { onClose: () => void }) => {
           },
         });
         document.body.append(script);
-      },
-      onOnline: (channel) => {
+      });
+
+      twitchEmbed.addEventListener(window.Twitch.Player.ONLINE, () => {
+        console.log('online', channel);
         trackEvent('Ad Fallback: Twitch', {
           props: { url: `https://www.twitch.tv/${channel}` },
         });
-      },
-    });
-
+      });
+    };
     document.body.append(script);
-
     return () => {
-      if (script.parentNode) {
+      if (script?.parentNode) {
         script.remove();
       }
     };
@@ -115,37 +135,10 @@ function getRandom(arr: string[]) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function loadTwitch({
-  onOnline,
-  onOffline,
-}: {
-  onOnline: (channel: string) => void;
-  onOffline: (channel: string) => void;
-}) {
-  const channel = getRandom(TWITCH_CHANNELS);
+function loadTwitch() {
   const script = document.createElement('script');
   script.async = true;
   script.src = 'https://embed.twitch.tv/embed/v1.js';
-  script.onload = () => {
-    const twitchEmbed = new window.Twitch.Embed('player', {
-      width: '100%',
-      height: '100%',
-      channel,
-      layout: 'video-with-chat',
-      autoplay: true,
-      muted: true,
-      parent: ['aeternum-map.gg', 'influence.th.gl'],
-    });
-
-    twitchEmbed.addEventListener(window.Twitch.Player.OFFLINE, () => {
-      onOffline(channel);
-    });
-
-    twitchEmbed.addEventListener(window.Twitch.Player.ONLINE, () => {
-      onOnline(channel);
-    });
-  };
-
   return script;
 }
 

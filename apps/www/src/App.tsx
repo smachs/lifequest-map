@@ -60,7 +60,9 @@ function App(): JSX.Element {
         <Head />
         <Notifications position="top-right" autoClose={4000} />
         <UpsertArea />
-        <NitroPay />
+        <ErrorBoundary>
+          <NitroPay />
+        </ErrorBoundary>
         <ReloadPrompt />
       </Box>
     </ErrorBoundary>
