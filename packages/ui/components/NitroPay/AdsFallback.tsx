@@ -35,7 +35,6 @@ const AdsFallback = ({ onClose }: { onClose: () => void }) => {
       });
 
       twitchEmbed.addEventListener(window.Twitch.Player.OFFLINE, () => {
-        console.log('offline', channel);
         if (channels.length > 0) {
           twitchEmbed.setChannel(getRandom(channels));
           return;
@@ -60,7 +59,6 @@ const AdsFallback = ({ onClose }: { onClose: () => void }) => {
       });
 
       twitchEmbed.addEventListener(window.Twitch.Player.ONLINE, () => {
-        console.log('online', channel);
         trackEvent('Ad Fallback: Twitch', {
           props: { url: `https://www.twitch.tv/${channel}` },
         });
