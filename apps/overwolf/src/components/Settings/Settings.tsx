@@ -173,9 +173,9 @@ function Settings(): JSX.Element {
           />
           <MinimapSetup />
           <Checkbox
-            label="Region borders"
+            label="Regions"
             checked={settingsStore.showRegionBorders}
-            description="You'll see thin lines on the map which indicates the regions."
+            description="You'll see thin lines and the names on the map which indicates the regions."
             onChange={(event) =>
               settingsStore.setShowRegionBorders(event.target.checked)
             }

@@ -175,6 +175,12 @@ hr {
   font-size: 0.8em;
 }
 
+.leaflet-area-text {
+  font-size: 1.5em;
+  text-align: center;
+  transform: translateX(-50%) translateY(-50%);
+}
+
 .leaflet-revert {
   background: #f4f4f4;
   color: #000;

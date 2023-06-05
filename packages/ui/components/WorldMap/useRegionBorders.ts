@@ -6,17 +6,17 @@ import { useSettingsStore } from '../../utils/settingsStore';
 const COLOR = 'rgb(200 200 200)';
 
 function getRegions() {
-  return regions.map((region) =>
-    leaflet.polygon(region.coordinates as [number, number][], {
+  return regions.map((region) => ({
+    name: region.name,
+    polygons: leaflet.polygon(region.coordinates as [number, number][], {
       color: COLOR,
       fill: false,
       weight: 1.2,
       interactive: false,
       pmIgnore: true,
-    })
-  );
+    }),
+  }));
 }
-
 function useRegionBorders(leafletMap: leaflet.Map | null, show: boolean) {
   const showRegionBorders = useSettingsStore(
     (state) => state.showRegionBorders
@@ -26,11 +26,24 @@ function useRegionBorders(leafletMap: leaflet.Map | null, show: boolean) {
     if (!showRegionBorders || !leafletMap || !show) {
       return;
     }
+    const regionsGroup = new leaflet.FeatureGroup();
+    regionsGroup.addTo(leafletMap);
+
     const regions = getRegions();
 
-    regions.forEach((region) => region.addTo(leafletMap));
+    regions.forEach((region) => {
+      region.polygons.addTo(regionsGroup);
+      const textLabel = leaflet.marker(region.polygons.getCenter(), {
+        icon: leaflet.divIcon({
+          className: 'leaflet-polygon-text',
+          html: `<div class="leaflet-area-text">${region.name}</div>`,
+        }),
+        interactive: false,
+      });
+      textLabel.addTo(regionsGroup);
+    });
     return () => {
-      regions.forEach((region) => region.removeFrom(leafletMap));
+      regionsGroup.removeFrom(leafletMap);
     };
   }, [leafletMap, showRegionBorders, show]);
 }
