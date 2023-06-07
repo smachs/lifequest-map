@@ -25,8 +25,8 @@ type Store = {
   setMarkerSize: (markerSize: number) => void;
   markerShowBackground: boolean;
   setMarkerShowBackground: (markerShowBackground: boolean) => void;
-  showRegionBorders: boolean;
-  setShowRegionBorders: (showRegionBorders: boolean) => void;
+  showRegionNames: boolean;
+  setShowRegionNames: (showRegionNames: boolean) => void;
   maxTraceLines: number;
   setMaxTraceLines: (maxTraceLines: number) => void;
   showTraceLines: boolean;
@@ -87,8 +87,8 @@ export const useSettingsStore = create(
         markerShowBackground: getJSONItem('markerShowBackground', false),
         setMarkerShowBackground: (markerShowBackground) =>
           set({ markerShowBackground }),
-        showRegionBorders: getJSONItem('showRegionBorders', true),
-        setShowRegionBorders: (showRegionBorders) => set({ showRegionBorders }),
+        showRegionNames: getJSONItem('showRegionNames', true),
+        setShowRegionNames: (showRegionNames) => set({ showRegionNames }),
         maxTraceLines: getJSONItem('max-trace-lines', 250),
         setMaxTraceLines: (maxTraceLines) => set({ maxTraceLines }),
         showTraceLines: getJSONItem('show-trace-lines', true),

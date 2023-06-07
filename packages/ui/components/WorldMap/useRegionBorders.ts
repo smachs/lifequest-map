@@ -18,12 +18,10 @@ function getRegions() {
   }));
 }
 function useRegionBorders(leafletMap: leaflet.Map | null, show: boolean) {
-  const showRegionBorders = useSettingsStore(
-    (state) => state.showRegionBorders
-  );
+  const showRegionNames = useSettingsStore((state) => state.showRegionNames);
 
   useEffect(() => {
-    if (!showRegionBorders || !leafletMap || !show) {
+    if (!leafletMap || !show) {
       return;
     }
     const regionsGroup = new leaflet.FeatureGroup();
@@ -33,19 +31,21 @@ function useRegionBorders(leafletMap: leaflet.Map | null, show: boolean) {
 
     regions.forEach((region) => {
       region.polygons.addTo(regionsGroup);
-      const textLabel = leaflet.marker(region.polygons.getCenter(), {
-        icon: leaflet.divIcon({
-          className: 'leaflet-polygon-text',
-          html: `<div class="leaflet-area-text">${region.name}</div>`,
-        }),
-        interactive: false,
-      });
-      textLabel.addTo(regionsGroup);
+      if (showRegionNames) {
+        const textLabel = leaflet.marker(region.polygons.getCenter(), {
+          icon: leaflet.divIcon({
+            className: 'leaflet-polygon-text',
+            html: `<div class="leaflet-area-text">${region.name}</div>`,
+          }),
+          interactive: false,
+        });
+        textLabel.addTo(regionsGroup);
+      }
     });
     return () => {
       regionsGroup.removeFrom(leafletMap);
     };
-  }, [leafletMap, showRegionBorders, show]);
+  }, [leafletMap, showRegionNames, show]);
 }
 
 export default useRegionBorders;
