@@ -535,6 +535,13 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'farming',
+    type: 'succulent',
+    title: 'Succulent Plant',
+    iconUrl: '/pois/succulent.webp',
+    sizes: defaultSizes,
+  },
+  {
+    category: 'farming',
     type: 'silkweed',
     title: 'Silkweed',
     iconUrl: '/pois/silkweed.webp',

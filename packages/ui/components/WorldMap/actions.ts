@@ -210,6 +210,7 @@ const actions: {
   weeping_shellbed: respawnAction(1800),
   hemp: respawnSizeAction([0, 720, 900, 1020, 0]),
   herb: respawnSizeAction([0, 720, 900, 1020, 0]),
+  succulent: respawnSizeAction([0, 720, 900, 1020, 0]),
   silkweed: respawnSizeAction([0, 720, 900, 1020, 0]),
   wirefiber: respawnSizeAction([0, 720, 900, 1020, 0]),
   barley: respawnAction(600),
