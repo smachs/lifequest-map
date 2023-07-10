@@ -40,7 +40,12 @@ export const validateInfluence = (
   }
   influence.forEach(({ regionName, factionName }) => {
     if (
-      ['Great Cleave', 'Edengrove', 'Shattered Mountain'].includes(regionName)
+      [
+        'Great Cleave',
+        'Edengrove',
+        'Shattered Mountain',
+        'First Light',
+      ].includes(regionName)
     ) {
       if (factionName !== 'Neutral') {
         throw new Error(`${regionName} is invalid`);
