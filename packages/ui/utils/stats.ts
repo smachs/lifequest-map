@@ -2,7 +2,7 @@ import type { EventOptions, PlausibleOptions } from 'plausible-tracker';
 import Plausible from 'plausible-tracker';
 
 let plausible: ReturnType<typeof Plausible> | null = null;
-export const initPlausible = () => {
+export const initPlausible = (suffix = '') => {
   const { VITE_PLAUSIBLE_API_HOST, VITE_PLAUSIBLE_DOMAIN } = import.meta.env;
   if (
     typeof VITE_PLAUSIBLE_DOMAIN === 'string' &&
@@ -10,7 +10,7 @@ export const initPlausible = () => {
     !plausible
   ) {
     plausible = Plausible({
-      domain: VITE_PLAUSIBLE_DOMAIN,
+      domain: VITE_PLAUSIBLE_DOMAIN + suffix,
       apiHost: VITE_PLAUSIBLE_API_HOST,
     });
     plausible.enableAutoPageviews();

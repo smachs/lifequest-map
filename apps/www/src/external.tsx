@@ -203,4 +203,4 @@ root.render(
   </StrictMode>
 );
 
-initPlausible();
+initPlausible('-external');

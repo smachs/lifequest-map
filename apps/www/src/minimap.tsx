@@ -100,4 +100,4 @@ root.render(
   </StrictMode>
 );
 
-initPlausible();
+initPlausible('-minimap');
