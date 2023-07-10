@@ -110,6 +110,28 @@
     ]
   },
   {
+    "name": "NW_Trial_Season_02",
+    "title": "Trial of the Devourer",
+    "folder": "nw_trial_season_02",
+    "maxZoom": 6,
+    "minZoom": 3,
+    "maxBounds": [
+      [930, 970],
+      [1180, 1180]
+    ]
+  },
+  {
+    "name": "NW_Trial_Season_02_Q13",
+    "title": "The Hatchery",
+    "folder": "nw_trial_season_02_q13",
+    "maxZoom": 6,
+    "minZoom": 3,
+    "maxBounds": [
+      [770, 850],
+      [1150, 1100]
+    ]
+  },
+  {
     "name": "NW_Arena01",
     "title": "3v3 PvP Arena",
     "folder": "nw_arena01",
