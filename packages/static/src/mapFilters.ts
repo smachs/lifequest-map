@@ -1054,12 +1054,6 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'events',
-    type: 'spriggan',
-    title: 'Spriggan',
-    iconUrl: '/pois/spriggan.webp',
-  },
-  {
-    category: 'events',
     type: 'siege_of_sulfur',
     title: 'Siege Of Sulfur',
     iconUrl: '/pois/siege_of_sulfur.webp',
