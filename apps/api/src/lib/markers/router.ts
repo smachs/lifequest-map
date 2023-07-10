@@ -292,7 +292,7 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
     if (marker.position) {
       const nearByMarker = await getMarkersCollection().findOne({
         type: marker.type,
-        position: { $near: marker.position, $maxDistance: 1 },
+        position: { $near: marker.position, $maxDistance: 0.5 },
       });
       if (nearByMarker) {
         res.status(409).send('A similar marker is too close');
