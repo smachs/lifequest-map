@@ -120,7 +120,7 @@ export const regions = [
     center: [305, 330],
   },
   {
-    name: 'First Light',
+    name: 'Old First Light',
     top: 513,
     left: 270,
     right: 360,

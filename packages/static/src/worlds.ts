@@ -44,7 +44,7 @@ export const validateInfluence = (
         'Great Cleave',
         'Edengrove',
         'Shattered Mountain',
-        'First Light',
+        'Old First Light',
       ].includes(regionName)
     ) {
       if (factionName !== 'Neutral') {
