@@ -89,6 +89,9 @@ function ensureMarkersSchema(): Promise<Document> {
           requiredGlyphId: {
             bsonType: 'int',
           },
+          isTemporary: {
+            bsonType: 'bool',
+          },
           isPrivate: {
             bsonType: 'bool',
           },

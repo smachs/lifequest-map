@@ -18,6 +18,7 @@ export type MarkerFull = {
   chestType?: string;
   tier?: number;
   requiredGlyphId?: number;
+  isTemporary?: boolean;
   customRespawnTimer?: number;
   _id: string;
 };

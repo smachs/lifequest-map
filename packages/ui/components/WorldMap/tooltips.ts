@@ -7,6 +7,22 @@ export function getTooltipContent(
   mapFilter: FilterItem
 ): () => string {
   return () => {
+    let additionalContent = '';
+    if ('comments' in markerOrDetails && markerOrDetails.comments) {
+      additionalContent +=
+        '<p class="leaflet-tooltip-comments">Has Comments</p>';
+    }
+    if ('issues' in markerOrDetails && markerOrDetails.issues) {
+      additionalContent += '<p class="leaflet-tooltip-issues">Has Issues</p>';
+    }
+    if (markerOrDetails.isTemporary) {
+      additionalContent +=
+        '<p class="leaflet-tooltip-temporary">Temporary/Randomly</p>';
+    }
+    if ('description' in markerOrDetails && markerOrDetails.description) {
+      additionalContent += `<p class="leaflet-tooltip-description">${markerOrDetails.description}</p>`;
+    }
+
     if (
       mapFilter.category === 'chests' &&
       mapFilter.type.includes('Supplies')
@@ -19,6 +35,7 @@ export function getTooltipContent(
       if (markerOrDetails.tier) {
         content += ` T${markerOrDetails.tier}`;
       }
+      content += additionalContent;
       return content;
     }
     if (mapFilter.category === 'chests') {
@@ -26,6 +43,7 @@ export function getTooltipContent(
       if (markerOrDetails.tier) {
         content += ` T${markerOrDetails.tier}`;
       }
+      content += additionalContent;
       return content;
     }
     let tooltipContent = markerOrDetails.name
@@ -38,6 +56,7 @@ export function getTooltipContent(
     if (markerOrDetails.level) {
       tooltipContent += `<br/>Level ${markerOrDetails.level}`;
     }
+    tooltipContent += additionalContent;
     return tooltipContent;
   };
 }

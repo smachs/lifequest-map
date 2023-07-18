@@ -15,6 +15,7 @@ type CanvasMarkerOptions = {
     issues?: number;
     rotate?: number;
     highlight?: boolean;
+    isTemporary?: boolean;
   };
   customRespawnTimer?: number;
 };
@@ -152,6 +153,29 @@ leaflet.Canvas.include({
         true
       );
       ctx.fillStyle = '#ff5722';
+      ctx.fill();
+      ctx.strokeStyle = '#333';
+      ctx.stroke();
+    }
+    if (image.isTemporary) {
+      ctx.beginPath();
+      let offsetY = 0;
+      if (image.comments) {
+        offsetY += 4;
+      }
+      if (image.issues) {
+        offsetY += 4;
+      }
+
+      ctx.arc(
+        dx + imageSize - 8,
+        dy + radius - 8 + offsetY,
+        3,
+        0,
+        Math.PI * 2,
+        true
+      );
+      ctx.fillStyle = '#20C997';
       ctx.fill();
       ctx.strokeStyle = '#333';
       ctx.stroke();

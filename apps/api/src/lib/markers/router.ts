@@ -30,7 +30,6 @@ export const refreshMarkers = async () => {
       },
       {
         projection: {
-          description: 0,
           userId: 0,
           username: 0,
           screenshotFilename: 0,
@@ -139,7 +138,7 @@ markersRouter.delete(
       if (marker.size) {
         nameType += ` (${marker.size})`;
       }
-      await postToDiscord(
+      postToDiscord(
         `📌💀 ${nameType} from ${marker.username} at [${marker.position}] was deleted by ${account.name}`,
         !marker.isPrivate
       );
@@ -204,6 +203,9 @@ markersRouter.patch(
       if (!marker.description) {
         unset.description = 1;
       }
+      if (!marker.isTemporary) {
+        unset.isTemporary = 1;
+      }
       const oldMarker = await getMarkersCollection().findOne(query);
       if (
         oldMarker?.screenshotFilename &&
@@ -247,7 +249,7 @@ markersRouter.patch(
       if (marker.size) {
         nameType += ` (${marker.size})`;
       }
-      await postToDiscord(
+      postToDiscord(
         `📌 ${nameType} was updated by ${account.name} at [${
           marker.position
         }]\n${getMarkerURL(result.value._id.toString(), result.value.map)}`,
@@ -318,7 +320,7 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
     if (marker.size) {
       nameType += ` (${marker.size})`;
     }
-    await postToDiscord(
+    postToDiscord(
       `📌 ${nameType} was added by ${account.name} at [${
         marker.position
       }]\n${getMarkerURL(inserted.insertedId.toString(), marker.map)}`,
@@ -388,7 +390,7 @@ markersRouter.post(
       res.status(200).json(comment);
       const position = marker.position ? marker.position.join(', ') : 'unknown';
       if (comment.isIssue) {
-        await postToDiscord(
+        postToDiscord(
           `⚠️ ${account.name} added an issue for ${
             marker.type
           } at [${position}]:\n${comment.message}\n${getMarkerURL(
@@ -398,7 +400,7 @@ markersRouter.post(
           !marker.isPrivate
         );
       } else {
-        await postToDiscord(
+        postToDiscord(
           `✍ ${account.name} added a comment for ${
             marker.type
           } at [${position}]:\n${comment.message}\n${getMarkerURL(
@@ -433,6 +435,7 @@ async function bodyToMarker(
     customRespawnTimer,
     hp,
     requiredGlyphId,
+    isTemporary,
   } = body;
 
   const marker: Partial<MarkerDTO> = {};
@@ -480,6 +483,9 @@ async function bodyToMarker(
   }
   if (typeof requiredGlyphId === 'number') {
     marker.requiredGlyphId = requiredGlyphId;
+  }
+  if (isTemporary === true) {
+    marker.isTemporary = isTemporary;
   }
 
   if (description) {

@@ -158,6 +158,11 @@ function MarkerDetails(): JSX.Element {
                 Respawns {marker.customRespawnTimer}s
               </Badge>
             )}
+            {marker.isTemporary && (
+              <Badge size="sm" color="teal">
+                Temporary/Randomly
+              </Badge>
+            )}
             <Coordinates position={marker.position} />
           </Group>
           {glyph && (

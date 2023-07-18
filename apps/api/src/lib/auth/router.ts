@@ -317,7 +317,6 @@ authRouter.get('/markers', async (req, res, next) => {
         },
         {
           projection: {
-            description: 0,
             userId: 0,
             username: 0,
             screenshotFilename: 0,

@@ -12,12 +12,12 @@ import { notify } from '../../utils/notifications';
 import { usePlayerStore } from '../../utils/playerStore';
 import { useSettingsStore } from '../../utils/settingsStore';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
-import type { MarkerDTO } from './api';
-import { patchMarker, postMarker, uploadScreenshot } from './api';
 import DetailsInput from './DetailsInput';
 import ImageDropzone from './ImageDropzone';
 import SelectPosition from './SelectPosition';
 import SelectType from './SelectType';
+import type { MarkerDTO } from './api';
+import { patchMarker, postMarker, uploadScreenshot } from './api';
 
 export type Details = {
   description?: string;
@@ -30,6 +30,7 @@ export type Details = {
   hp?: number;
   screenshotFilename?: string;
   requiredGlyphId?: number;
+  isTemporary?: boolean;
 };
 
 type AddResourcesProps = {
@@ -109,6 +110,7 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
     if (filter.glyph) {
       details.requiredGlyphId = marker?.requiredGlyphId;
     }
+    details.isTemporary = marker?.isTemporary;
     details.screenshotFilename = marker?.screenshotFilename;
     setDetails(details);
   }, [filter]);
