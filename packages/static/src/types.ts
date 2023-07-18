@@ -20,6 +20,7 @@ export type MarkerDTO = {
   customRespawnTimer?: number;
   hp?: number;
   requiredGlyphId?: number;
+  isTemporary?: boolean;
   updatedAt?: Date;
   createdAt: Date;
 };

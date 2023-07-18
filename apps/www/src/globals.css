@@ -125,6 +125,7 @@ hr {
   color: white !important;
   border: 0.0625rem solid #373a40 !important;
   box-shadow: none !important;
+  text-align: center;
 }
 
 .leaflet-tooltip-top::before {
@@ -191,6 +192,34 @@ hr {
   height: 30px;
   line-height: 30px;
   cursor: pointer;
+}
+
+.leaflet-tooltip-comments {
+  font-size: 0.875em;
+  color: #3791f9;
+}
+
+.leaflet-tooltip-issues {
+  font-size: 0.875em;
+  color: #ff5722;
+}
+
+.leaflet-tooltip-temporary {
+  font-size: 0.875em;
+  color: #20c997;
+}
+
+.leaflet-tooltip-description {
+  color: #cacaca;
+  border-top: 1px solid #333333;
+  padding-top: 0.5em;
+  margin-top: 0.5em;
+  max-width: 20em;
+  white-space: pre;
+  text-overflow: ellipsis;
+  overflow-wrap: break-word;
+  max-height: 15em;
+  overflow: hidden;
 }
 
 .pm-textarea {

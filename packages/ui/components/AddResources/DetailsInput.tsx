@@ -1,4 +1,10 @@
-import { NumberInput, Text, Textarea, TextInput } from '@mantine/core';
+import {
+  Checkbox,
+  NumberInput,
+  Text,
+  Textarea,
+  TextInput,
+} from '@mantine/core';
 import type { FilterItem } from 'static';
 import type { Details } from './AddResources';
 import SelectGlyphType from './SelectGlyphType';
@@ -119,6 +125,14 @@ function DetailsInput({
           isRequired={filter.glyph?.isRequired}
         />
       )}
+      <Checkbox
+        label="Spawns temporary/randomly"
+        description="This node spawns under certain conditions."
+        checked={!!details.isTemporary}
+        onChange={(event) =>
+          onChange({ ...details, isTemporary: event.target.checked })
+        }
+      />
       <Textarea
         label="Description"
         onChange={(event) =>

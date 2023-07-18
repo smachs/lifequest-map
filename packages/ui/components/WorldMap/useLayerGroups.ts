@@ -281,6 +281,7 @@ function useLayerGroups({
             highlight: isHighlighted,
             comments: marker.comments,
             issues: marker.issues,
+            isTemporary: marker.isTemporary,
           },
           customRespawnTimer: marker.customRespawnTimer,
           pmIgnore: false,

@@ -15,6 +15,7 @@ export type MarkerDTO = {
   customRespawnTimer?: number;
   hp?: number;
   requiredGlyphId?: number;
+  isTemporary?: boolean;
   description?: string;
   screenshotFilename?: string;
   screenshotId?: string;
