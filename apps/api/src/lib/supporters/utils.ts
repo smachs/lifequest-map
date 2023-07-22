@@ -32,10 +32,10 @@ export const getPatrons = async (next?: string) => {
       Authorization: `Bearer ${process.env.PATREON_CREATORS_ACCESS_TOKEN}`,
     },
   });
-  const result = await response.json();
   if (!response.ok) {
-    throw new Error(JSON.stringify(result));
+    return [];
   }
+  const result = await response.json();
   const { data, links } = result as Result;
   const patrons = data.map((item) => ({
     id: item.id,
@@ -52,29 +52,38 @@ export const getPatrons = async (next?: string) => {
 
 const cache: {
   timestamp: number;
-  promise: ReturnType<typeof getPatrons> | null;
+  data: {
+    id: string;
+    email: string;
+    status: 'declined_patron' | 'former_patron' | 'active_patron';
+  }[];
 } = {
   timestamp: 0,
-  promise: null,
+  data: [],
 };
 
-export const isPatron = async (id: string) => {
-  if (cache.timestamp < Date.now() - 1000 * 60 || !cache.promise) {
-    cache.promise = getPatrons();
+const refreshCache = async () => {
+  try {
+    cache.data = await getPatrons();
     cache.timestamp = Date.now();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    await new Promise((resolve) => setTimeout(resolve, 1000 * 60 * 10));
+    refreshCache();
   }
-  const patrons = await cache.promise;
+};
+refreshCache();
+
+export const isPatron = async (id: string) => {
+  const patrons = cache.data;
   return patrons.find(
     (patron) => patron.id === id && patron.status === 'active_patron'
   );
 };
 
 export const findPatron = async (email: string) => {
-  if (cache.timestamp < Date.now() - 1000 * 60 || !cache.promise) {
-    cache.promise = getPatrons();
-    cache.timestamp = Date.now();
-  }
-  const patrons = await cache.promise;
+  const patrons = cache.data;
   return patrons.find(
     (patron) => patron.email === email && patron.status === 'active_patron'
   );
