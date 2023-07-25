@@ -129,10 +129,13 @@ async function initMain() {
         element instanceof HTMLIFrameElement &&
         element.src === 'about:blank'
       ) {
-        if (src.includes('?')) {
-          element.src = `https://${src}&ref=aeternum_map_overwolf`;
-        } else {
-          element.src = `https://${src}?ref=aeternum_map_overwolf`;
+        element.src = `https://${src}`;
+        if (!src.includes('ref=')) {
+          if (src.includes('?')) {
+            element.src += `&ref=aeternum_map_overwolf`;
+          } else {
+            element.src += `?ref=aeternum_map_overwolf`;
+          }
         }
       }
     });
