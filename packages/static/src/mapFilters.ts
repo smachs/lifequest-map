@@ -226,6 +226,12 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'skinning',
+    type: 'armadillo',
+    title: 'Armadillo',
+    iconUrl: '/pois/armadillo.webp',
+  },
+  {
+    category: 'skinning',
     type: 'bear',
     title: 'Bear',
     iconUrl: '/pois/bear.webp',

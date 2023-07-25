@@ -1,877 +1,1527 @@
 {
   "map": "newworld_vitaeeterna",
   "coordinates": [
-    [5775, 9597, 304],
-    [5445, 9605, 301],
-    [5443, 9660, 304],
-    [5932, 8825, 215],
-    [5919, 9295, 251],
-    [5913, 9134, 199],
-    [5912, 9289, 252],
-    [5910, 9197, 225],
-    [5910, 8883, 216],
-    [5909, 9194, 224],
-    [5890, 8880, 218],
-    [5877, 8851, 217],
-    [5859, 8697, 216],
-    [5844, 8795, 234],
-    [5743, 9383, 235],
-    [5743, 9383, 235],
-    [5727, 8413, 175],
-    [5721, 9384, 236],
-    [5514, 8488, 177],
-    [5233, 8732, 175],
-    [5226, 8967, 192],
-    [5193, 8727, 176],
-    [6837, 7070, 172],
-    [6831, 7086, 173],
-    [6799, 7106, 169],
-    [6795, 7142, 167],
-    [6787, 7124, 169],
-    [6786, 7123, 169],
-    [6768, 7136, 170],
-    [6750, 7107, 167],
-    [6749, 7119, 167],
-    [6745, 7116, 166],
-    [6732, 7099, 162],
-    [6729, 7098, 161],
-    [6725, 7108, 161],
-    [6716, 7094, 157],
-    [7271, 7439, 196],
-    [7269, 7440, 197],
-    [7058, 7542, 182],
-    [7056, 7539, 182],
-    [7052, 7541, 182],
-    [7051, 7820, 178],
-    [6600, 8684, 226],
-    [6590, 8659, 227],
-    [6575, 8673, 226],
-    [6574, 8683, 227],
-    [6539, 8616, 228],
-    [6232, 8712, 174],
-    [6193, 8773, 178],
-    [6167, 8502, 182],
-    [5838, 9652, 299],
-    [5815, 9662, 299],
-    [5815, 9654, 298],
-    [5813, 9694, 305],
-    [5788, 9580, 302],
-    [5779, 9594, 303],
-    [5766, 9688, 303],
-    [5761, 9693, 302],
-    [5752, 9631, 300],
-    [5746, 9639, 299],
-    [5738, 9680, 300],
-    [5562, 9627, 309],
-    [5472, 9649, 299],
-    [5462, 9613, 301],
-    [5443, 9663, 304],
-    [6093, 8572, 185],
-    [6077, 8625, 192],
-    [6072, 8594, 191],
-    [6059, 8596, 192],
-    [6038, 8611, 201],
-    [6028, 8582, 192],
-    [5993, 8504, 192],
-    [5992, 8537, 196],
-    [5979, 8486, 190],
-    [5979, 8568, 198],
-    [5974, 8573, 198],
-    [5973, 8519, 195],
-    [5967, 8524, 197],
-    [5958, 8587, 199],
-    [5956, 8468, 188],
-    [5954, 8486, 192],
-    [5952, 8548, 198],
-    [5945, 8446, 189],
-    [5938, 8753, 223],
-    [5936, 8448, 190],
-    [5930, 8786, 221],
-    [5928, 8497, 194],
-    [5926, 8837, 216],
-    [5919, 8756, 221],
-    [5917, 8453, 190],
-    [5913, 8877, 216],
-    [5913, 9122, 196],
-    [5907, 8570, 201],
-    [5905, 8545, 201],
-    [5903, 8597, 202],
-    [5893, 8876, 217],
-    [5890, 8601, 206],
-    [5889, 8956, 210],
-    [5884, 8655, 213],
-    [5879, 8686, 215],
-    [5878, 8976, 205],
-    [5878, 8855, 218],
-    [5874, 8342, 186],
-    [5867, 8477, 194],
-    [5859, 8694, 216],
-    [5857, 8695, 216],
-    [5852, 8469, 194],
-    [5848, 8749, 225],
-    [5845, 8800, 234],
-    [5842, 8471, 196],
-    [5841, 8404, 189],
-    [5840, 8321, 172],
-    [5839, 8410, 188],
-    [5838, 8759, 221],
-    [5829, 8337, 173],
-    [5826, 8416, 187],
-    [5816, 8745, 219],
-    [5800, 8658, 217],
-    [5790, 8734, 222],
-    [5788, 8638, 214],
-    [5787, 8642, 215],
-    [5783, 8679, 224],
-    [5780, 8305, 153],
-    [5778, 8533, 201],
-    [5774, 8460, 181],
-    [5766, 8522, 198],
-    [5765, 8453, 179],
-    [5763, 8678, 218],
-    [5754, 8295, 149],
-    [5744, 8508, 198],
-    [5739, 8654, 218],
-    [5674, 8439, 179],
-    [5666, 8559, 186],
-    [5665, 8439, 177],
-    [5658, 8560, 186],
-    [5646, 8700, 216],
-    [5639, 8682, 211],
-    [5506, 8533, 175],
-    [5223, 8759, 175],
-    [4688, 8664, 272],
-    [4682, 8666, 272],
-    [4676, 8645, 273],
-    [4674, 8647, 273],
-    [7558, 8074, 245],
-    [7453, 8111, 273],
-    [7271, 7447, 196],
-    [7049, 7803, 174],
-    [7044, 8124, 184],
-    [6436, 7652, 114],
-    [5810, 9694, 304],
-    [5808, 9612, 299],
-    [5761, 9655, 300],
-    [5748, 9639, 299],
-    [5736, 9683, 300],
-    [5561, 9631, 310],
-    [5522, 9630, 312],
-    [5518, 9693, 301],
-    [5473, 9647, 299],
-    [5473, 9568, 310],
-    [5463, 9614, 302],
-    [6093, 8569, 185],
-    [6089, 8644, 193],
-    [6078, 8618, 191],
-    [5972, 8478, 189],
-    [5937, 8758, 222],
-    [5931, 9269, 243],
-    [5916, 8803, 222],
-    [5916, 9269, 244],
-    [5913, 9146, 203],
-    [5909, 9190, 223],
-    [5887, 8959, 209],
-    [5882, 8344, 187],
-    [5822, 8749, 219],
-    [5819, 8751, 220],
-    [5819, 8738, 218],
-    [5816, 9340, 241],
-    [5815, 8652, 214],
-    [5792, 8639, 214],
-    [5785, 9355, 239],
-    [5778, 8730, 222],
-    [5760, 8682, 219],
-    [5739, 8473, 183],
-    [5716, 8470, 178],
-    [5544, 8527, 177],
-    [4689, 8667, 272],
-    [4686, 8664, 272],
-    [4682, 8670, 272],
-    [4679, 8668, 272],
-    [7489, 8125, 263],
-    [7470, 8111, 269],
-    [7469, 8113, 270],
-    [7458, 8088, 275],
-    [7507, 7393, 183],
-    [7492, 7355, 186],
-    [6345, 7771, 94],
-    [6534, 8965, 206],
-    [6511, 8945, 202],
-    [6231, 8775, 173],
-    [6212, 8608, 183],
-    [6174, 8705, 187],
-    [7399, 8388, 186],
-    [7278, 8293, 187],
-    [7045, 8852, 227],
-    [7035, 8676, 224],
-    [6986, 8927, 229]
+    [6031, 7572, 42],
+    [6031, 7544, 42],
+    [6007, 7523, 42],
+    [5546, 7311, 231],
+    [5527, 7332, 233],
+    [5519, 7297, 237],
+    [5505, 7370, 228],
+    [4962, 7550, 211],
+    [4940, 7633, 205],
+    [4909, 7644, 206],
+    [4901, 7607, 197],
+    [4884, 7548, 195],
+    [4881, 7592, 193],
+    [4871, 7522, 195],
+    [4862, 7542, 193],
+    [4861, 7619, 197],
+    [4841, 7598, 195],
+    [4834, 7546, 189],
+    [4829, 7506, 190],
+    [4817, 7405, 208],
+    [4746, 7999, 209],
+    [4744, 7998, 209],
+    [4724, 7525, 177],
+    [4697, 8034, 221],
+    [4689, 7589, 201],
+    [4678, 7621, 209],
+    [4663, 7604, 210],
+    [4663, 7578, 204],
+    [4633, 7610, 220],
+    [4595, 7624, 222],
+    [4559, 7619, 217],
+    [4526, 7603, 216],
+    [5641, 8275, 118],
+    [5593, 8340, 118],
+    [5593, 8205, 114],
+    [5590, 8384, 125],
+    [5579, 8222, 114],
+    [5577, 8364, 117],
+    [5548, 8387, 121],
+    [5528, 8268, 117],
+    [5527, 8287, 116],
+    [5519, 8247, 117],
+    [5508, 8280, 120],
+    [5507, 8303, 119],
+    [5506, 8316, 120],
+    [5121, 8935, 223],
+    [5109, 9417, 302],
+    [5102, 8966, 230],
+    [5096, 9443, 307],
+    [5093, 8942, 221],
+    [5092, 9014, 240],
+    [5089, 8994, 237],
+    [5088, 9053, 250],
+    [5087, 9396, 306],
+    [5081, 9425, 307],
+    [5080, 9270, 299],
+    [5079, 9467, 310],
+    [5079, 9361, 310],
+    [5079, 9505, 311],
+    [5078, 9328, 308],
+    [5077, 9295, 306],
+    [5076, 8885, 208],
+    [5073, 9448, 309],
+    [5073, 8981, 237],
+    [5072, 8924, 214],
+    [5072, 9182, 286],
+    [5067, 8943, 224],
+    [5063, 9228, 296],
+    [5062, 9517, 314],
+    [5061, 9251, 301],
+    [5058, 9183, 290],
+    [5056, 9202, 296],
+    [5054, 9396, 310],
+    [5053, 8877, 206],
+    [5053, 9356, 313],
+    [5053, 9422, 311],
+    [5052, 8908, 208],
+    [5051, 9500, 316],
+    [5045, 9453, 313],
+    [5045, 9290, 306],
+    [5028, 9161, 294],
+    [5027, 9193, 296],
+    [5017, 8900, 203],
+    [4989, 8906, 198],
+    [4980, 8878, 196],
+    [4965, 8858, 194],
+    [4962, 8908, 199],
+    [4960, 8876, 194],
+    [4957, 8725, 186],
+    [4955, 8928, 204],
+    [4940, 8871, 197],
+    [4939, 8836, 191],
+    [4933, 8919, 201],
+    [4929, 8944, 211],
+    [4920, 8738, 189],
+    [4920, 8875, 198],
+    [4916, 8859, 197],
+    [4914, 8829, 195],
+    [4904, 8968, 226],
+    [4903, 8878, 201],
+    [4900, 8918, 208],
+    [4890, 8855, 199],
+    [4876, 8933, 216],
+    [4869, 8976, 238],
+    [4861, 9002, 254],
+    [4856, 8948, 227],
+    [4847, 8972, 239],
+    [4842, 8837, 203],
+    [4821, 9029, 260],
+    [4818, 8959, 239],
+    [4815, 8841, 209],
+    [4813, 9008, 250],
+    [4786, 8954, 238],
+    [4780, 9003, 260],
+    [4764, 8965, 240],
+    [4762, 8843, 222],
+    [4752, 8887, 222],
+    [4738, 8855, 225],
+    [4718, 8657, 271],
+    [4714, 8884, 231],
+    [4709, 9205, 368],
+    [4700, 8648, 272],
+    [4695, 9237, 374],
+    [4683, 8879, 236],
+    [4682, 8626, 275],
+    [4679, 8653, 273],
+    [4674, 9398, 344],
+    [4661, 9394, 343],
+    [4657, 8674, 274],
+    [4655, 8693, 272],
+    [4654, 9290, 341],
+    [4653, 9389, 343],
+    [4650, 9299, 340],
+    [4649, 8651, 277],
+    [4640, 9385, 342],
+    [4630, 9377, 341],
+    [4624, 9389, 342],
+    [4623, 9380, 341],
+    [4618, 9386, 341],
+    [4598, 9304, 334],
+    [4585, 9308, 333],
+    [4584, 9297, 332],
+    [4532, 9090, 326],
+    [4477, 9161, 314],
+    [4474, 9175, 312],
+    [4463, 9117, 311],
+    [4461, 9146, 309],
+    [4456, 9167, 308],
+    [4449, 9133, 308],
+    [4446, 9117, 309],
+    [4446, 9106, 310],
+    [4444, 9145, 308],
+    [4441, 9111, 308],
+    [4434, 9107, 307],
+    [4430, 9098, 304],
+    [4425, 9119, 304],
+    [6889, 7461, 126],
+    [6886, 7504, 130],
+    [6868, 7550, 125],
+    [6860, 7182, 168],
+    [6860, 7134, 168],
+    [6857, 7160, 168],
+    [6846, 7422, 128],
+    [6828, 7452, 121],
+    [6821, 7411, 131],
+    [6805, 7399, 133],
+    [6778, 7471, 121],
+    [6778, 7394, 129],
+    [6764, 7530, 114],
+    [6761, 7436, 120],
+    [6760, 7457, 119],
+    [6759, 7508, 117],
+    [6751, 7424, 121],
+    [6737, 7500, 113],
+    [6715, 7481, 111],
+    [6664, 7427, 113],
+    [6643, 7396, 115],
+    [6623, 7381, 110],
+    [6480, 7644, 118],
+    [6474, 7623, 116],
+    [6470, 7604, 116],
+    [6469, 7665, 117],
+    [6467, 7645, 117],
+    [6453, 7645, 115],
+    [6363, 7528, 95],
+    [6362, 7556, 98],
+    [6350, 7543, 92],
+    [6341, 7524, 86],
+    [6325, 7555, 84],
+    [6321, 7309, 52],
+    [6321, 7403, 61],
+    [6287, 7399, 59],
+    [6261, 7372, 61],
+    [6204, 7403, 47],
+    [6195, 7295, 50],
+    [6178, 7325, 55],
+    [6871, 7581, 124],
+    [6513, 7727, 117],
+    [6512, 7750, 117],
+    [6481, 7703, 117],
+    [6481, 7787, 117],
+    [6479, 7682, 117],
+    [6469, 7797, 117],
+    [6465, 7779, 117],
+    [6462, 7807, 117],
+    [6454, 7689, 114],
+    [6452, 7794, 117],
+    [6449, 7779, 117],
+    [7780, 6809, 195],
+    [7769, 6770, 184],
+    [7769, 6732, 187],
+    [7761, 6804, 194],
+    [7756, 6747, 184],
+    [7741, 6809, 194],
+    [7735, 6834, 197],
+    [7731, 6739, 191],
+    [7728, 6797, 193],
+    [7718, 6759, 191],
+    [7718, 6870, 205],
+    [7715, 6843, 199],
+    [7712, 6888, 207],
+    [7705, 6778, 193],
+    [7699, 6754, 193],
+    [7698, 6797, 196],
+    [7694, 6861, 202],
+    [7677, 6879, 204],
+    [7676, 6840, 201],
+    [7674, 6757, 204],
+    [7670, 6785, 202],
+    [7669, 6815, 202],
+    [7666, 6913, 201],
+    [7647, 6796, 207],
+    [7646, 6820, 204],
+    [7563, 6938, 182],
+    [7438, 6731, 224],
+    [7392, 7516, 186],
+    [7337, 7501, 189],
+    [7241, 7613, 186],
+    [7190, 6511, 129],
+    [7183, 7471, 193],
+    [7145, 7358, 189],
+    [7131, 7514, 187],
+    [7103, 6403, 90],
+    [7073, 6428, 84],
+    [7072, 7547, 181],
+    [7051, 6445, 89],
+    [7018, 7613, 164],
+    [7018, 6412, 74],
+    [6992, 6479, 85],
+    [6938, 6544, 68],
+    [6922, 6525, 60],
+    [7757, 7820, 227],
+    [6842, 8503, 184],
+    [6780, 8296, 178],
+    [6775, 8248, 175],
+    [6771, 8466, 176],
+    [6732, 8315, 174],
+    [6730, 8382, 173],
+    [6713, 8456, 174],
+    [6675, 8386, 172],
+    [6657, 8512, 171],
+    [6575, 8497, 170],
+    [6557, 8433, 167],
+    [6544, 8389, 171],
+    [6530, 8505, 172],
+    [6527, 8462, 168],
+    [6522, 8412, 167],
+    [6511, 8347, 166],
+    [6511, 8347, 163],
+    [6504, 8538, 160],
+    [6463, 8602, 158],
+    [6426, 8597, 159],
+    [6330, 8721, 169],
+    [6290, 8695, 171],
+    [6286, 8403, 169],
+    [6282, 8549, 166],
+    [6270, 8435, 169],
+    [6269, 8744, 171],
+    [6225, 8253, 123],
+    [6223, 8288, 126],
+    [6205, 8272, 125],
+    [6204, 8670, 183],
+    [6204, 8306, 129],
+    [7188, 8707, 224],
+    [7170, 8769, 226],
+    [7149, 8826, 227],
+    [7146, 8703, 232],
+    [7143, 8695, 229],
+    [7137, 8667, 221],
+    [7131, 8792, 234],
+    [7123, 8737, 230],
+    [7112, 8677, 226],
+    [7108, 8625, 223],
+    [7104, 8777, 226],
+    [7084, 8738, 224],
+    [7078, 8673, 225],
+    [7071, 8566, 222],
+    [7068, 8602, 224],
+    [7057, 8525, 219],
+    [7040, 8599, 221],
+    [7036, 8572, 221],
+    [7018, 8683, 223],
+    [6994, 8572, 224],
+    [6968, 8593, 229],
+    [6942, 8686, 230],
+    [8174, 9678, 563],
+    [8171, 9688, 565],
+    [8159, 9699, 566],
+    [8157, 9687, 566],
+    [8150, 9699, 565],
+    [8144, 9686, 565],
+    [8138, 9856, 553],
+    [8130, 9826, 553],
+    [8128, 9839, 553],
+    [8128, 9853, 553],
+    [8117, 9841, 553],
+    [8117, 9832, 554],
+    [8091, 8475, 474],
+    [8083, 8493, 477],
+    [8072, 9371, 549],
+    [8067, 9385, 550],
+    [8065, 8362, 460],
+    [8065, 9365, 548],
+    [8059, 9374, 548],
+    [8051, 8539, 483],
+    [8049, 9364, 549],
+    [8040, 9369, 549],
+    [8036, 8506, 485],
+    [8024, 8362, 453],
+    [8015, 8531, 484],
+    [7998, 9408, 547],
+    [7996, 8502, 489],
+    [7990, 8433, 453],
+    [7990, 8407, 447],
+    [7989, 9413, 547],
+    [7979, 9403, 548],
+    [7973, 9412, 547],
+    [7971, 9392, 549],
+    [7968, 8543, 484],
+    [7966, 9406, 548],
+    [7962, 8444, 452],
+    [7937, 9522, 547],
+    [7930, 8305, 390],
+    [7928, 8581, 482],
+    [7926, 8520, 489],
+    [7926, 9530, 547],
+    [7925, 8424, 441],
+    [7923, 9517, 546],
+    [7921, 9549, 547],
+    [7917, 9524, 547],
+    [7916, 9540, 547],
+    [7910, 9629, 556],
+    [7909, 8326, 402],
+    [7906, 8338, 406],
+    [7902, 9599, 552],
+    [7900, 8547, 486],
+    [7900, 9612, 554],
+    [7900, 9626, 555],
+    [7895, 8413, 434],
+    [7889, 9614, 556],
+    [7889, 9605, 555],
+    [7886, 8379, 420],
+    [7876, 8404, 426],
+    [7869, 9544, 558],
+    [7868, 9560, 560],
+    [7864, 9535, 556],
+    [7862, 8559, 491],
+    [7862, 9567, 562],
+    [7859, 9554, 562],
+    [7848, 9562, 566],
+    [7838, 8463, 430],
+    [7833, 8581, 489],
+    [7807, 8607, 491],
+    [7773, 9383, 526],
+    [7764, 9388, 527],
+    [7754, 9378, 527],
+    [7748, 9387, 528],
+    [7746, 9367, 527],
+    [7741, 9381, 529],
+    [7474, 9069, 496]
   ],
   "meta": [
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "category": "Mature Succulent (Large)",
-      "s": "l"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "s"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
     },
     {
-      "s": "m"
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
+    },
+    {
+      "category": "Armadillo"
     }
   ]
 }
