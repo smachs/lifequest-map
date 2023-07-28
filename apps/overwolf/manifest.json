@@ -4,7 +4,7 @@
   "meta": {
     "name": "Aeternum Map-DEV",
     "author": "Leon Machens",
-    "version": "3.11.0",
+    "version": "3.11.1",
     "minimum-overwolf-version": "0.169.0",
     "description": "New World Interactive Map",
     "dock_button_title": "Aeternum Map",
@@ -27,12 +27,14 @@
       "background": {
         "file": "background.html",
         "debug_url": "http://localhost:5173/background.html",
+        "block_top_window_navigation": false,
         "is_background_page": true,
         "allow_local_file_access": true
       },
       "desktop": {
         "file": "index.html",
         "debug_url": "http://localhost:5173/index.html",
+        "block_top_window_navigation": false,
         "resizable": true,
         "override_on_update": true,
         "desktop_only": true,
@@ -55,6 +57,7 @@
       "overlay": {
         "file": "index.html",
         "debug_url": "http://localhost:5173/index.html",
+        "block_top_window_navigation": false,
         "resizable": true,
         "override_on_update": true,
         "transparent": true,
@@ -76,6 +79,7 @@
       "minimap": {
         "file": "minimap.html",
         "debug_url": "http://localhost:5173/minimap.html",
+        "block_top_window_navigation": false,
         "desktop_only": false,
         "in_game_only": true,
         "style": "inputPassThrough",
@@ -99,6 +103,7 @@
       "influence": {
         "file": "influence.html",
         "debug_url": "http://localhost:5173/influence.html",
+        "block_top_window_navigation": false,
         "desktop_only": false,
         "in_game_only": true,
         "resizable": false,
