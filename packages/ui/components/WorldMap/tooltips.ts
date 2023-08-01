@@ -2,6 +2,15 @@ import type { FilterItem } from 'static';
 import type { MarkerBasic } from '../../contexts/MarkersContext';
 import type { Details } from '../AddResources/AddResources';
 
+function escapeHtml(unsafe: string) {
+  return unsafe
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
 export function getTooltipContent(
   markerOrDetails: MarkerBasic | Details,
   mapFilter: FilterItem
@@ -20,7 +29,9 @@ export function getTooltipContent(
         '<p class="leaflet-tooltip-temporary">Temporary/Randomly</p>';
     }
     if ('description' in markerOrDetails && markerOrDetails.description) {
-      additionalContent += `<p class="leaflet-tooltip-description">${markerOrDetails.description}</p>`;
+      additionalContent += `<p class="leaflet-tooltip-description">${escapeHtml(
+        markerOrDetails.description
+      )}</p>`;
     }
 
     if (
@@ -47,7 +58,7 @@ export function getTooltipContent(
       return content;
     }
     let tooltipContent = markerOrDetails.name
-      ? `${markerOrDetails.name} (${mapFilter.title})`
+      ? `${escapeHtml(markerOrDetails.name)} (${mapFilter.title})`
       : mapFilter.title;
     if (markerOrDetails.size) {
       tooltipContent += ` (${markerOrDetails.size})`;

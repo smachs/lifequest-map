@@ -27,7 +27,6 @@ import { isEmbed, useRouteParams } from '../../utils/routes';
 import { useUserStore } from '../../utils/userStore';
 import AddComment from '../AddComment/AddComment';
 import Comment from '../Comment/Comment';
-import Markdown from '../Markdown/Markdown';
 import Meta from '../Meta/Meta';
 import { useUpsertStore } from '../UpsertArea/upsertStore';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
@@ -192,8 +191,17 @@ function MarkerDetails(): JSX.Element {
             {marker.username && <Credit username={marker.username} />}
           </Text>
           {marker.description && (
-            <Text italic size="sm">
-              <Markdown>{marker.description}</Markdown>
+            <Text
+              italic
+              size="sm"
+              sx={{
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+                overflowWrap: 'break-word',
+                whiteSpace: 'pre',
+              }}
+            >
+              {marker.description}
             </Text>
           )}
           {marker.screenshotFilename && (
