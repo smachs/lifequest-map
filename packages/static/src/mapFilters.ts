@@ -263,19 +263,19 @@ export const mapFilters: FilterItem[] = [
   {
     category: 'skinning',
     type: 'elemential_forest',
-    title: 'Elemential Forest',
+    title: 'Elemental Forest',
     iconUrl: '/pois/elk.webp',
   },
   {
     category: 'skinning',
     type: 'elemential_mountain',
-    title: 'Elemential Mountain',
+    title: 'Elemental Mountain',
     iconUrl: '/pois/bear.webp',
   },
   {
     category: 'skinning',
     type: 'elemential_tundra',
-    title: 'Elemential Tundra',
+    title: 'Elemental Tundra',
     iconUrl: '/pois/wolf.webp',
   },
   {
