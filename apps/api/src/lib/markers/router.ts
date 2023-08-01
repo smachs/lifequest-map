@@ -16,7 +16,7 @@ import { getMarkersCollection } from './collection.js';
 const markersRouter = Router();
 
 const MAX_NAME_LENGTH = 50;
-const MAX_DESCRIPTION_LENGTH = 200;
+const MAX_DESCRIPTION_LENGTH = 2000;
 
 export let lastMarkers: WithId<MarkerDTO>[] = [];
 let lastMarkersJSON = '[]';
