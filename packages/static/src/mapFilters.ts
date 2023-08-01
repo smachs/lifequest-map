@@ -90,6 +90,7 @@ export const mapFilters: FilterItem[] = [
     glyph: {
       isRequired: false,
     },
+    maxTier: 1,
   },
   {
     category: 'chests',
@@ -108,6 +109,7 @@ export const mapFilters: FilterItem[] = [
     type: 'chestsEliteOffering',
     title: 'Elite Grave Offering',
     iconUrl: '/pois/chest_elite_offering.webp',
+    maxTier: 1,
   },
   {
     category: 'chests',
@@ -140,6 +142,7 @@ export const mapFilters: FilterItem[] = [
     type: 'chestsOffering',
     title: 'Grave Offering',
     iconUrl: '/pois/chest_offering.webp',
+    maxTier: 1,
   },
   {
     category: 'chests',
