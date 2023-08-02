@@ -13,7 +13,7 @@ declare global {
   }
 }
 
-const TWITCH_CHANNELS: string[] = ['dukesloth', 'DannehTV'];
+const TWITCH_CHANNELS: string[] = ['dukesloth', 'thehiddengaminglair'];
 const YT_VIDEO_IDS: string[] = [];
 
 const AdsFallback = ({ onClose }: { onClose: () => void }) => {
