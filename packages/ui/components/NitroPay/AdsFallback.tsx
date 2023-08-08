@@ -31,6 +31,7 @@ const AdsFallback = ({ onClose }: { onClose: () => void }) => {
         layout: 'video',
         autoplay: true,
         muted: true,
+        quality: '160p30',
         parent: ['aeternum-map.gg', 'influence.th.gl'],
       });
 
