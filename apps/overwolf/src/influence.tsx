@@ -19,7 +19,6 @@ import {
   uploadInfluence,
 } from './utils/influence';
 import { getImageData, loadImage, toBlob } from './utils/media';
-import { waitForOverwolf } from './utils/overwolf';
 import useCenterWindow from './utils/useCenterWindow';
 import { closeCurrentWindow } from './utils/windows';
 
@@ -184,16 +183,14 @@ const Influences = () => {
   );
 };
 
-waitForOverwolf().then(() =>
-  root.render(
-    <StrictMode>
-      <MantineProvider
-        theme={{
-          colorScheme: 'dark',
-        }}
-      >
-        <Influences />
-      </MantineProvider>
-    </StrictMode>
-  )
+root.render(
+  <StrictMode>
+    <MantineProvider
+      theme={{
+        colorScheme: 'dark',
+      }}
+    >
+      <Influences />
+    </MantineProvider>
+  </StrictMode>
 );

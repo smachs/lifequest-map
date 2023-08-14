@@ -1,6 +1,5 @@
 import { PositionProvider } from './contexts/PositionContext';
 import styles from './Main.module.css';
-import { waitForOverwolf } from './utils/overwolf';
 
 import { MantineProvider, Paper, ScrollArea, Stack } from '@mantine/core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -38,32 +37,30 @@ function Sender(): JSX.Element {
   );
 }
 
-waitForOverwolf().then(async () => {
-  console.log('Init main');
-  initMain();
-  initAppHeader();
-  initFAQ();
-  initResizeBorders();
+console.log('Init main');
+initMain();
+initAppHeader();
+initFAQ();
+initResizeBorders();
 
-  const queryClient = new QueryClient();
-  const root = createRoot(document.querySelector('#root')!);
-  root.render(
-    <QueryClientProvider client={queryClient}>
-      <MantineProvider
-        theme={{
-          colorScheme: 'dark',
-        }}
-        withGlobalStyles={false}
-      >
-        <ThemeProvider>
-          <PositionProvider>
-            <Sender />
-          </PositionProvider>
-        </ThemeProvider>
-      </MantineProvider>
-    </QueryClientProvider>
-  );
-});
+const queryClient = new QueryClient();
+const root = createRoot(document.querySelector('#root')!);
+root.render(
+  <QueryClientProvider client={queryClient}>
+    <MantineProvider
+      theme={{
+        colorScheme: 'dark',
+      }}
+      withGlobalStyles={false}
+    >
+      <ThemeProvider>
+        <PositionProvider>
+          <Sender />
+        </PositionProvider>
+      </ThemeProvider>
+    </MantineProvider>
+  </QueryClientProvider>
+);
 
 initPlausible();
 

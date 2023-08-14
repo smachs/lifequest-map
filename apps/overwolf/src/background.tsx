@@ -3,7 +3,6 @@ import { initPlausible } from 'ui/utils/stats';
 import { getJSONItem } from 'ui/utils/storage';
 import { getRunningNewWorld, NEW_WORLD_CLASS_ID } from './utils/games';
 import { SHOW_HIDE_APP, SHOW_HIDE_INFLUENCE_OVERLAY } from './utils/hotkeys';
-import { waitForOverwolf } from './utils/overwolf';
 import {
   closeMainWindow,
   closeWindow,
@@ -49,7 +48,7 @@ async function openApp() {
     await restoreWindow(WINDOWS.DESKTOP);
   }
 }
-waitForOverwolf().then(openApp);
+openApp();
 
 async function handleHotkeyPressed(
   event: overwolf.settings.hotkeys.OnPressedEvent

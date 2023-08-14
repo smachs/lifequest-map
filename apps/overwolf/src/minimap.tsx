@@ -3,7 +3,6 @@ import { MarkersProvider } from 'ui/contexts/MarkersContext';
 import styles from './Minimap.module.css';
 import { PositionProvider } from './contexts/PositionContext';
 import './globals.css';
-import { waitForOverwolf } from './utils/overwolf';
 import { WINDOWS, dragMoveWindow } from './utils/windows';
 
 import { MantineProvider, Paper } from '@mantine/core';
@@ -158,18 +157,16 @@ const router = createMemoryRouter([
   },
 ]);
 
-waitForOverwolf().then(() => {
-  root.render(
-    <StrictMode>
-      <MantineProvider
-        theme={{
-          colorScheme: 'dark',
-        }}
-      >
-        <RouterProvider router={router} />
-      </MantineProvider>
-    </StrictMode>
-  );
-});
+root.render(
+  <StrictMode>
+    <MantineProvider
+      theme={{
+        colorScheme: 'dark',
+      }}
+    >
+      <RouterProvider router={router} />
+    </MantineProvider>
+  </StrictMode>
+);
 
 initPlausible();
