@@ -4,22 +4,16 @@ import { trackEvent } from '../../utils/stats';
 
 declare global {
   interface Window {
-    onYouTubeIframeAPIReady: () => void;
-    YT: {
-      Player: any;
-      PlayerState: any;
-    };
     Twitch: any;
   }
 }
 
 const TWITCH_CHANNELS: string[] = ['dukesloth', 'thehiddengaminglair'];
-const YT_VIDEO_IDS: string[] = [];
 
 const AdsFallback = ({ onClose }: { onClose: () => void }) => {
   useEffect(() => {
     let channels = [...TWITCH_CHANNELS];
-    let script = loadTwitch();
+    const script = loadTwitch();
 
     script.onload = () => {
       const channel = getRandom(channels);
@@ -38,25 +32,7 @@ const AdsFallback = ({ onClose }: { onClose: () => void }) => {
       twitchEmbed.addEventListener(window.Twitch.Player.OFFLINE, () => {
         if (channels.length > 0) {
           twitchEmbed.setChannel(getRandom(channels));
-          return;
         }
-        if (YT_VIDEO_IDS.length === 0) {
-          return;
-        }
-        script.remove();
-        script = loadYouTube({
-          onPlay: (videoId) => {
-            trackEvent('Ad Fallback: YouTube Play', {
-              props: { url: `https://www.youtube.com/watch?v=${videoId}` },
-            });
-          },
-          onReady: (videoId) => {
-            trackEvent('Ad Fallback: YouTube Ready', {
-              props: { url: `https://www.youtube.com/watch?v=${videoId}` },
-            });
-          },
-        });
-        document.body.append(script);
       });
 
       twitchEmbed.addEventListener(window.Twitch.Player.ONLINE, () => {
@@ -64,8 +40,46 @@ const AdsFallback = ({ onClose }: { onClose: () => void }) => {
           props: { url: `https://www.twitch.tv/${channel}` },
         });
       });
+
+      const REFRESH_INTERVAL = 1000 * 60;
+      let lastUpdate = Date.now();
+      let timeout = setTimeout(refreshTwitchEmbed, REFRESH_INTERVAL);
+      function refreshTwitchEmbed() {
+        lastUpdate = Date.now();
+        if (
+          !(
+            twitchEmbed.getPlayerState()?.playback === 'Playing' &&
+            twitchEmbed.getDuration() === 0
+          )
+        ) {
+          twitchEmbed.setChannel(
+            [...twitchEmbed.getChannel()]
+              ?.map((char) =>
+                char === char.toUpperCase()
+                  ? char.toLowerCase()
+                  : char.toUpperCase()
+              )
+              .join('')
+          );
+        }
+        timeout = setTimeout(refreshTwitchEmbed, REFRESH_INTERVAL);
+      }
+
+      window.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          const timeLeft = REFRESH_INTERVAL - (Date.now() - lastUpdate);
+          if (timeLeft < 0) {
+            refreshTwitchEmbed();
+          } else {
+            timeout = setTimeout(refreshTwitchEmbed, timeLeft);
+          }
+        } else {
+          clearTimeout(timeout);
+        }
+      });
     };
     document.body.append(script);
+
     return () => {
       if (script?.parentNode) {
         script.remove();
@@ -96,7 +110,7 @@ const AdsFallback = ({ onClose }: { onClose: () => void }) => {
           right: 0,
 
           '@media screen and (width >= 426px)': {
-            bottom: 207,
+            bottom: 232,
             right: 7,
           },
         }}
@@ -117,8 +131,8 @@ const AdsFallback = ({ onClose }: { onClose: () => void }) => {
           right: 0,
 
           '@media screen and (width >= 426px)': {
-            width: 361,
-            height: 203,
+            width: 400,
+            height: 225,
             bottom: 7,
             right: 7,
           },
@@ -138,45 +152,5 @@ function loadTwitch() {
   const script = document.createElement('script');
   script.async = true;
   script.src = 'https://embed.twitch.tv/embed/v1.js';
-  return script;
-}
-
-function loadYouTube({
-  onPlay,
-  onReady,
-}: {
-  onPlay: (videoId: string) => void;
-  onReady: (videoId: string) => void;
-}) {
-  const videoId = getRandom(YT_VIDEO_IDS);
-  let played = false;
-  window.onYouTubeIframeAPIReady = function () {
-    const player = new window.YT.Player('player', {
-      videoId,
-      playerVars: {
-        playsinline: 1,
-        loop: 1,
-        autoplay: 0,
-      },
-      events: {
-        onReady: () => {
-          onReady(videoId);
-          player.mute();
-        },
-        onStateChange: (event: any) => {
-          if (event.data === window.YT.PlayerState.PLAYING) {
-            if (!played) {
-              onPlay(videoId);
-            }
-            played = true;
-          }
-        },
-      },
-    });
-  };
-
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = 'https://www.youtube.com/iframe_api';
   return script;
 }
