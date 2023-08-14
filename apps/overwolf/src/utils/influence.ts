@@ -121,10 +121,10 @@ export const regions = [
   },
   {
     name: 'Old First Light',
-    top: 513,
-    left: 270,
-    right: 360,
-    bottom: 605,
+    top: 523,
+    left: 280,
+    right: 350,
+    bottom: 585,
     center: [285, 550],
   },
   {
@@ -245,12 +245,6 @@ export const validationRects = [
     left: 47,
     right: 68,
     bottom: 29,
-  },
-  {
-    top: 130,
-    left: 0,
-    right: 15,
-    bottom: 160,
   },
   {
     top: 214,
