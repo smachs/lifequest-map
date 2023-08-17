@@ -102,8 +102,8 @@ async function initAppHeader() {
   };
 }
 
-const DEFAULT_SRC = 'www.nw-buddy.de';
 async function initMain() {
+  const DEFAULT_SRC = 'www.nw-buddy.de';
   const activeSrc = localStorage.getItem('active-src') || DEFAULT_SRC;
 
   function refreshActiveSrc(src: string) {
