@@ -10,6 +10,7 @@ import { latestLeafletMap } from '../components/WorldMap/useWorldMap';
 import { fetchJSON } from '../utils/api';
 import { getOverwolfFilters, useFiltersStore } from '../utils/filtersStore';
 import { isOverwolfApp } from '../utils/overwolf';
+import { useRealmStore } from '../utils/realmStore';
 import { isEmbed, useRouteParams } from '../utils/routes';
 import { usePersistentState } from '../utils/storage';
 import { useUserStore } from '../utils/userStore';
@@ -17,6 +18,7 @@ import { useUserStore } from '../utils/userStore';
 export type MarkerBasic = {
   type: string;
   map?: string;
+  realm?: string;
   position: [number, number, number];
   name?: string;
   chestType?: string;
@@ -95,6 +97,7 @@ export function MarkersProvider({
   );
   const searchValues = useMarkerSearchStore((state) => state.searchValues);
   const markerFilters = useMarkerSearchStore((state) => state.markerFilters);
+  const isPTR = useRealmStore((state) => state.isPTR);
 
   const visibleMarkers = useMemo(() => {
     const nameSearchValues = searchValues.filter((value) =>
@@ -115,6 +118,15 @@ export function MarkersProvider({
 
       if (marker._id === nodeId) {
         return true;
+      }
+
+      if (marker.realm) {
+        if (isPTR && marker.realm !== 'ptr') {
+          return false;
+        }
+        if (!isPTR && marker.realm !== 'live') {
+          return false;
+        }
       }
       if (
         markerRouteData?.markerRoute.positions?.some(
@@ -197,6 +209,7 @@ export function MarkersProvider({
     markerRoutes,
     markerRouteData,
     world,
+    isPTR,
   ]);
 
   const toggleMarkerRoute = (markerRoute: MarkerRouteItem, force?: boolean) => {

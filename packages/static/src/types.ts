@@ -4,6 +4,7 @@ export type MarkerSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | '?';
 export type MarkerDTO = {
   type: string;
   map?: string;
+  realm?: string;
   position: [Double, Double, Double];
   name?: string;
   level?: number;

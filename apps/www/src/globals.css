@@ -209,6 +209,11 @@ hr {
   color: #20c997;
 }
 
+.leaflet-tooltip-realm {
+  font-size: 0.875em;
+  color: #c9b820;
+}
+
 .leaflet-tooltip-description {
   color: #cacaca;
   border-top: 1px solid #333333;

@@ -28,6 +28,9 @@ export function getTooltipContent(
       additionalContent +=
         '<p class="leaflet-tooltip-temporary">Temporary/Randomly</p>';
     }
+    if (markerOrDetails.realm) {
+      additionalContent += `<p class="leaflet-tooltip-realm">${markerOrDetails.realm.toUpperCase()} Only</p>`;
+    }
     if ('description' in markerOrDetails && markerOrDetails.description) {
       additionalContent += `<p class="leaflet-tooltip-description">${escapeHtml(
         markerOrDetails.description

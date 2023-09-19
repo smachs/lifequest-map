@@ -55,6 +55,17 @@
     ]
   },
   {
+    "name": "NW_Dungeon_FirstLight_01",
+    "title": "The Savage Divide",
+    "folder": "nw_dungeon_firstlight_01",
+    "maxZoom": 6,
+    "minZoom": 3,
+    "maxBounds": [
+      [600, 400],
+      [1300, 1000]
+    ]
+  },
+  {
     "name": "NW_Dungeon_Reekwater_00",
     "title": "Lazarus Instrumentality",
     "folder": "nw_dungeon_reekwater_00",

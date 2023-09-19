@@ -1,6 +1,7 @@
 import {
   Checkbox,
   NumberInput,
+  SegmentedControl,
   Text,
   Textarea,
   TextInput,
@@ -132,6 +133,15 @@ function DetailsInput({
         onChange={(event) =>
           onChange({ ...details, isTemporary: event.target.checked })
         }
+      />
+      <SegmentedControl
+        value={details.realm}
+        onChange={(value) => onChange({ ...details, realm: value })}
+        data={[
+          { label: 'All Realms', value: '' },
+          { label: 'Live Only', value: 'live' },
+          { label: 'PTR Only', value: 'ptr' },
+        ]}
       />
       <Textarea
         label="Description"

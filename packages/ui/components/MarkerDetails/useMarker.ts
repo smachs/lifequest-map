@@ -7,6 +7,7 @@ export type MarkerFull = {
   position: [number, number, number];
   name?: string;
   map?: string;
+  realm?: string;
   level?: number;
   hp?: number;
   description?: string;

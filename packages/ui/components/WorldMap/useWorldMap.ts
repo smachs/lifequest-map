@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AETERNUM_MAP, findMapDetails, mapIsAeternumMap } from 'static';
 import { isEmbed, useView } from 'ui/utils/routes';
+import { useRealmStore } from '../../utils/realmStore';
 import createCanvasLayer from './CanvasLayer';
 import { initOtherPlayers } from './otherPlayers';
 import { coordinates as playerCoordinates } from './usePlayerPosition';
@@ -25,6 +26,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
   const [leafletMap, setLeafletMap] = useState<leaflet.Map | null>(null);
   const { view, setView } = useView();
   const navigate = useNavigate();
+  const isPTR = useRealmStore((state) => state.isPTR);
 
   useEffect(() => {
     if (leafletMap && initialZoom) {
@@ -96,7 +98,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
     };
 
     if (latestLeafletMap) {
-      const CanvasLayer = createCanvasLayer(mapDetail);
+      const CanvasLayer = createCanvasLayer(mapDetail, isPTR);
       const worldTiles = new CanvasLayer();
       worldTiles.addTo(latestLeafletMap);
       updateView(latestLeafletMap);
@@ -152,7 +154,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
 
       coordinates.addTo(latestLeafletMap);
     }
-    const CanvasLayer = createCanvasLayer(mapDetail);
+    const CanvasLayer = createCanvasLayer(mapDetail, isPTR);
     const worldTiles = new CanvasLayer();
 
     worldTiles.addTo(latestLeafletMap);
@@ -160,7 +162,7 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
     return () => {
       worldTiles.remove();
     };
-  }, [elementRef, view.map]);
+  }, [elementRef, view.map, isPTR]);
 
   useEffect(() => {
     if (!leafletMap) {

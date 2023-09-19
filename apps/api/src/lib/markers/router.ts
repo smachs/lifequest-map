@@ -130,6 +130,7 @@ markersRouter.delete(
           filename: marker.screenshotFilename,
         });
       }
+      await refreshMarkers();
       res.status(200).json({});
 
       let nameType = marker.name
@@ -140,10 +141,9 @@ markersRouter.delete(
       }
       postToDiscord(
         `📌💀 ${nameType} from ${marker.username} at [${marker.position}] was deleted by ${account.name}`,
-        !marker.isPrivate
+        !marker.isPrivate,
+        marker.realm
       );
-
-      await refreshMarkers();
     } catch (error) {
       next(error);
     }
@@ -206,6 +206,9 @@ markersRouter.patch(
       if (!marker.isTemporary) {
         unset.isTemporary = 1;
       }
+      if (!marker.realm || !['live', 'ptr'].includes(marker.realm)) {
+        unset.realm = 1;
+      }
       const oldMarker = await getMarkersCollection().findOne(query);
       if (
         oldMarker?.screenshotFilename &&
@@ -242,6 +245,7 @@ markersRouter.patch(
         return;
       }
 
+      await refreshMarkers();
       res.status(200).json(result.value);
       let nameType = marker.name
         ? `${marker.type} ${marker.name}`
@@ -253,10 +257,9 @@ markersRouter.patch(
         `📌 ${nameType} was updated by ${account.name} at [${
           marker.position
         }]\n${getMarkerURL(result.value._id.toString(), result.value.map)}`,
-        !marker.isPrivate
+        !marker.isPrivate,
+        marker.realm
       );
-
-      await refreshMarkers();
     } catch (error) {
       next(error);
     }
@@ -313,6 +316,7 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       res.status(500).send('Error inserting marker');
       return;
     }
+    await refreshMarkers();
     res.status(200).json(marker);
     let nameType = marker.name
       ? `${mapFilter.title} ${marker.name}`
@@ -324,10 +328,9 @@ markersRouter.post('/', ensureAuthenticated, async (req, res, next) => {
       `📌 ${nameType} was added by ${account.name} at [${
         marker.position
       }]\n${getMarkerURL(inserted.insertedId.toString(), marker.map)}`,
-      !marker.isPrivate
+      !marker.isPrivate,
+      marker.realm
     );
-
-    await refreshMarkers();
   } catch (error) {
     console.error(`Error creating marker ${JSON.stringify(req.body)}`);
     next(error);
@@ -397,7 +400,8 @@ markersRouter.post(
             markerId,
             marker.map
           )}`,
-          !marker.isPrivate
+          !marker.isPrivate,
+          marker.realm
         );
       } else {
         postToDiscord(
@@ -407,7 +411,8 @@ markersRouter.post(
             markerId,
             marker.map
           )}`,
-          !marker.isPrivate
+          !marker.isPrivate,
+          marker.realm
         );
       }
     } catch (error) {
@@ -423,6 +428,7 @@ async function bodyToMarker(
   const {
     type,
     map,
+    realm,
     position,
     name,
     level,
@@ -453,7 +459,9 @@ async function bodyToMarker(
   ) {
     marker.map = map;
   }
-
+  if (typeof realm === 'string' && ['live', 'ptr'].includes(realm)) {
+    marker.realm = realm;
+  }
   if (Array.isArray(position) && position.length >= 2) {
     marker.position = position.map(
       (part: number) => new Double(part ? +part.toFixed(2) : 0)

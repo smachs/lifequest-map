@@ -16,7 +16,10 @@ function toThreeDigits(number: number): string {
   return `${number}`;
 }
 
-const createCanvasLayer = (mapDetail: Map): new () => TileLayer =>
+const createCanvasLayer = (
+  mapDetail: Map,
+  isPTR: boolean
+): new () => TileLayer =>
   leaflet.TileLayer.extend({
     _delays: {},
     _delaysForZoom: null,
@@ -34,7 +37,7 @@ const createCanvasLayer = (mapDetail: Map): new () => TileLayer =>
       if (x < 0 || y < 0 || y >= 64 || x >= 64) {
         return 'data:,';
       }
-      return `${VITE_API_ENDPOINT}/assets/${
+      return `${VITE_API_ENDPOINT}/assets/${isPTR ? 'ptr/' : ''}${
         mapDetail.folder
       }/map_l${zoom}_y${toThreeDigits(y)}_x${toThreeDigits(x)}.webp?v=3`;
     },
