@@ -1,14 +1,21 @@
 import { Helmet } from 'react-helmet-async';
+import { useRealmStore } from '../../utils/realmStore';
 
 type MetaProps = {
   title: string;
   description?: string;
 };
 const Meta = (props: MetaProps) => {
-  const contentTitle = `${props.title} - New World Map - aeternum-map.gg`;
+  const isPTR = useRealmStore((state) => state.isPTR);
+
+  const contentTitle = `${props.title}${
+    isPTR ? ' - Public Test Realm' : ''
+  } - New World Map - aeternum-map.gg`;
   const contentDescription = `${
     props.description ? ` ${props.description} ` : ''
-  }Maximize your New World gameplay with Aeternum Map! Discover locations, chests, lore, expeditions & more. Realtime tracking & farming routes. Open-source companion app.`;
+  }Maximize your New World gameplay with Aeternum Map${
+    isPTR ? ' on Public Test Realm (PTR)' : ''
+  }! Discover locations, chests, lore, expeditions & more. Realtime tracking & farming routes. Open-source companion app.`;
 
   const url = location.origin + location.pathname;
   return (

@@ -136,6 +136,7 @@ const MapAction = () => {
         centered
         opened={opened}
         onClose={() => setOpened(false)}
+        keepMounted
       >
         <Grid gutter="xs" justify="space-around">
           {mapDetails.map((mapDetail, index) => (

@@ -160,6 +160,7 @@ const UserAction = () => {
         position="bottom"
         opened={opened}
         onChange={setOpened}
+        keepMounted
         withinPortal
       >
         <Popover.Target>
@@ -324,6 +325,14 @@ const UserAction = () => {
                 target="_blank"
               >
                 More Gaming Apps & Tools
+              </Anchor>
+              <Anchor
+                size="xs"
+                href="https://palia.th.gl/"
+                title="Palia Map"
+                target="_blank"
+              >
+                Palia Map
               </Anchor>
               <Anchor
                 size="xs"

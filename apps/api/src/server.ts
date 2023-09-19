@@ -20,7 +20,10 @@ import {
   STEAM_API_KEY,
   VITE_API_ENDPOINT,
 } from './lib/env.js';
-import { initMarkerRoutesCollection } from './lib/markerRoutes/collection.js';
+import {
+  getMarkerRoutesCollection,
+  initMarkerRoutesCollection,
+} from './lib/markerRoutes/collection.js';
 import markerRoutesRouter from './lib/markerRoutes/router.js';
 import { initMarkersCollection } from './lib/markers/collection.js';
 import markersRouter, {
@@ -33,6 +36,7 @@ import { initUsersCollection } from './lib/users/collection.js';
 import usersRouter from './lib/users/router.js';
 // @ts-ignore
 import SteamStrategy from 'passport-steam';
+import { AETERNUM_MAP, mapDetails } from 'static';
 import { initAccountsCollection } from './lib/auth/collection.js';
 import { readAccount } from './lib/auth/middlewares.js';
 import htmlRouter from './lib/html.js';
@@ -227,12 +231,42 @@ async function runServer() {
       return res.send(robotText);
     });
 
-    app.get('/sitemap.xml', (_req, res) => {
-      const urls: string[] = [];
-      lastMarkers.forEach((marker) => {
+    app.get('/sitemap.xml', async (_req, res) => {
+      const urls: string[] = [
+        `<url><loc>https://aeternum-map.gg</loc></url>`,
+        `<url><loc>https://aeternum-map.gg/?realm=ptr</loc></url>`,
+      ];
+      mapDetails.forEach((map) => {
+        if (map.name !== AETERNUM_MAP.name) {
+          urls.push(
+            `<url><loc>https://aeternum-map.gg/${encodeURIComponent(
+              map.title
+            )}</loc></url>`
+          );
+        }
+      });
+      for await (const markerRoute of getMarkerRoutesCollection().find(
+        { isPublic: true },
+        { projection: { _id: 1 } }
+      )) {
         urls.push(
-          `<url><loc>https://aeternum-map.gg/nodes/${marker._id.toString()}</loc></url>`
+          `<url><loc>https://aeternum-map.gg/routes/${markerRoute._id.toString()}</loc></url>`
         );
+      }
+
+      const existingTypes: string[] = [];
+
+      lastMarkers.forEach((marker) => {
+        if (marker.name) {
+          urls.push(
+            `<url><loc>https://aeternum-map.gg/nodes/${marker._id.toString()}</loc></url>`
+          );
+        } else if (!existingTypes.includes(marker.type)) {
+          urls.push(
+            `<url><loc>https://aeternum-map.gg/nodes/${marker._id.toString()}</loc></url>`
+          );
+          existingTypes.push(marker.type);
+        }
       });
 
       const content = `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.join(
