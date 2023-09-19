@@ -337,6 +337,13 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'mining',
+    type: 'mythril',
+    title: 'Mythril',
+    iconUrl: '/pois/mythril.webp',
+    sizes: defaultSizes,
+  },
+  {
+    category: 'mining',
     type: 'gold',
     title: 'Gold',
     iconUrl: '/pois/gold.webp',
