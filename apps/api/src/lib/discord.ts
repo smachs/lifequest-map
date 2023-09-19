@@ -10,11 +10,17 @@ import {
 const MAX_DISCORD_MESSAGE_LENGTH = 2000;
 export const postToDiscord = (
   content: string,
-  isPublic = true
+  isPublic = true,
+  realm?: string
 ): Promise<Response> => {
   const webhookURL = isPublic
     ? DISCORD_PUBLIC_WEBHOOK_URL
     : DISCORD_PRIVATE_WEBHOOK_URL;
+  let message = content.substring(0, MAX_DISCORD_MESSAGE_LENGTH);
+  if (realm) {
+    message += `\nRealm: ${realm.toUpperCase()}`;
+  }
+
   return fetch(webhookURL!, {
     method: 'POST',
     headers: {
@@ -22,7 +28,7 @@ export const postToDiscord = (
     },
     body: JSON.stringify({
       username: 'BottyMcBotface',
-      content: content.substring(0, MAX_DISCORD_MESSAGE_LENGTH),
+      content: message,
     }),
   });
 };

@@ -79,7 +79,8 @@ export default function External() {
       });
     }
 
-    const CanvasLayer = createCanvasLayer(mapDetail);
+    const isPTR = searchParams.get('realm') === 'ptr';
+    const CanvasLayer = createCanvasLayer(mapDetail, isPTR);
     const worldTiles = new CanvasLayer();
     worldTiles.addTo(map);
 

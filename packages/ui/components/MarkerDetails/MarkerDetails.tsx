@@ -166,6 +166,11 @@ function MarkerDetails(): JSX.Element {
                 Temporary/Randomly
               </Badge>
             )}
+            {marker.realm && (
+              <Badge size="sm" color="orange">
+                {marker.realm.toUpperCase()} Only
+              </Badge>
+            )}
             <Coordinates position={marker.position} />
           </Group>
           {glyph && (

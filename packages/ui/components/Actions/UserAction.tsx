@@ -5,6 +5,7 @@ import {
   Divider,
   Group,
   Popover,
+  SegmentedControl,
   Stack,
   Text,
   Tooltip,
@@ -23,6 +24,7 @@ import { useEffect, useState } from 'react';
 import { AETERNUM_MAP } from 'static';
 import { shallow } from 'zustand/shallow';
 import { fetchJSON } from '../../utils/api';
+import { useRealmStore } from '../../utils/realmStore';
 import { isEmbed, useRouteParams } from '../../utils/routes';
 import { trackOutboundLinkClick } from '../../utils/stats';
 import type { AccountDTO } from '../../utils/userStore';
@@ -54,6 +56,7 @@ const UserAction = () => {
   const [showSettings, setShowSettings] = useState(false);
   const clipboard = useClipboard({ timeout: 500 });
   const { nodeId, map, routeId, world } = useRouteParams();
+  const realmStore = useRealmStore();
 
   useEffect(() => {
     if (account) {
@@ -124,6 +127,18 @@ const UserAction = () => {
   return (
     <Group spacing="xs">
       <FAQModal opened={showFAQ} onClose={() => setShowFAQ(false)} />
+      <SegmentedControl
+        data={[
+          { label: 'LIVE', value: 'live' },
+          { label: 'PTR', value: 'ptr' },
+        ]}
+        size="xs"
+        radius="xl"
+        value={realmStore.isPTR ? 'ptr' : 'live'}
+        onChange={(value) => {
+          realmStore.setIsPTR(value === 'ptr');
+        }}
+      />
       <Tooltip label="Settings">
         <ActionIcon
           size="lg"

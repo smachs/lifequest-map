@@ -31,6 +31,7 @@ export type Details = {
   screenshotFilename?: string;
   requiredGlyphId?: number;
   isTemporary?: boolean;
+  realm?: string;
 };
 
 type AddResourcesProps = {
