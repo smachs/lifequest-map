@@ -122,7 +122,7 @@ function MarkerDetails(): JSX.Element {
             <img
               width={32}
               height={32}
-              src={`${VITE_API_ENDPOINT}/assets${filterItem.iconUrl}?v=2`}
+              src={`${VITE_API_ENDPOINT}/assets${filterItem.iconUrl}?v=3`}
               alt=""
             />{' '}
             {marker.chestType
@@ -183,7 +183,7 @@ function MarkerDetails(): JSX.Element {
                   <Avatar
                     size={18}
                     mr={0}
-                    src={`${VITE_API_ENDPOINT}/assets${glyph.iconUrl}?v=2`}
+                    src={`${VITE_API_ENDPOINT}/assets${glyph.iconUrl}?v=3`}
                   />
                 }
               >

@@ -446,6 +446,13 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'logging',
+    type: 'runewood',
+    title: 'Runewood Tree',
+    iconUrl: '/pois/runewood.webp',
+    sizes: treeSizes,
+  },
+  {
+    category: 'logging',
     type: 'wyrdwood',
     title: 'Wyrdwood Tree',
     iconUrl: '/pois/wyrdwood_compass.webp',
@@ -551,6 +558,13 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'farming',
+    type: 'spinfiber',
+    title: 'Spinfiber',
+    iconUrl: '/pois/spinfiber.webp',
+    sizes: defaultSizes,
+  },
+  {
+    category: 'farming',
     type: 'succulent',
     title: 'Succulent Plant',
     iconUrl: '/pois/succulent.webp',
@@ -575,6 +589,12 @@ export const mapFilters: FilterItem[] = [
     type: 'azoth_spring',
     title: 'Azoth Spring',
     iconUrl: '/pois/azoth_spring.webp',
+  },
+  {
+    category: 'cooking_ingredients',
+    type: 'banana',
+    title: 'Banana',
+    iconUrl: '/pois/banana.webp',
   },
   {
     category: 'cooking_ingredients',

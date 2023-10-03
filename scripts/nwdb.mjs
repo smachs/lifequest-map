@@ -3,7 +3,7 @@ import { Double, MongoClient } from 'mongodb';
 dotenv.config();
 
 import nwdbLocations from './nwdbLocations.json' assert { type: 'json' };
-const TYPE = 'mythril';
+const TYPE = 'spinfiber';
 
 const amMarkers = await fetch('https://aeternum-map.gg/api/markers').then(
   (resolve) => resolve.json()
