@@ -11,7 +11,7 @@ dotenv.config();
 const markers = await fetch('https://aeternum-map.gg/api/markers').then(
   (resolve) => resolve.json()
 );
-const region = regions.find((region) => region.name === 'Old First Light');
+const region = regions.find((region) => region.name === 'Elysian Wilds');
 
 const checkPointInsidePolygon = (point, polygon) => {
   const x = point[0];
