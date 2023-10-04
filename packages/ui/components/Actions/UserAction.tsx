@@ -312,6 +312,14 @@ const UserAction = () => {
               </Anchor>
               <Anchor
                 size="xs"
+                href="https://aeternum-tracker.th.gl/"
+                title="Aeternum Tracker"
+                target="_blank"
+              >
+                Aeternum Tracker
+              </Anchor>
+              <Anchor
+                size="xs"
                 href="https://www.nwmap.info/"
                 title="New World Faction Territory Map"
                 target="_blank"

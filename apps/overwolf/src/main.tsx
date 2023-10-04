@@ -103,7 +103,7 @@ async function initAppHeader() {
 }
 
 async function initMain() {
-  const DEFAULT_SRC = 'www.nw-buddy.de';
+  const DEFAULT_SRC = 'aeternum-tracker.th.gl';
   const activeSrc = localStorage.getItem('active-src') || DEFAULT_SRC;
 
   function refreshActiveSrc(src: string) {
