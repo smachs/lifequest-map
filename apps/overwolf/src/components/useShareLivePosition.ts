@@ -186,42 +186,42 @@ function useShareLivePosition() {
   ]);
 
   useEffect(() => {
-    if (socket && isConnected) {
+    if (socket && isConnected && position) {
       sendToPeers({ steamId, position });
       socket.emit('position', position);
     }
   }, [socket, isConnected, position]);
 
   useEffect(() => {
-    if (socket && isConnected) {
+    if (socket && isConnected && location) {
       sendToPeers({ steamId, location });
       socket.emit('location', location);
     }
   }, [socket, isConnected, location]);
 
   useEffect(() => {
-    if (socket && isConnected) {
+    if (socket && isConnected && worldName) {
       sendToPeers({ steamId, worldName });
       socket.emit('worldName', worldName);
     }
   }, [socket, isConnected, worldName]);
 
   useEffect(() => {
-    if (socket && isConnected) {
+    if (socket && isConnected && map) {
       sendToPeers({ steamId, map });
       socket.emit('map', map);
     }
   }, [socket, isConnected, map]);
 
   useEffect(() => {
-    if (socket && isConnected) {
+    if (socket && isConnected && region) {
       sendToPeers({ steamId, region });
       socket.emit('region', region);
     }
   }, [socket, isConnected, region]);
 
   useEffect(() => {
-    if (socket && isConnected) {
+    if (socket && isConnected && username) {
       sendToPeers({ steamId, username });
       socket.emit('username', username);
     }

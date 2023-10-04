@@ -1,12 +1,12 @@
 import leaflet from 'leaflet';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import type { Position } from 'realtime/types';
 import { findMapDetails, mapIsAeternumMap } from 'static';
-import { createPlayerIcon } from 'ui/components/WorldMap//playerIcon';
 import PositionMarker from 'ui/components/WorldMap//PositionMarker';
+import { createPlayerIcon } from 'ui/components/WorldMap//playerIcon';
 import { useMap } from 'ui/utils/routes';
 import { useSettingsStore } from 'ui/utils/settingsStore';
-import type { Position } from 'ui/utils/useReadLivePosition';
 import { usePosition } from '../contexts/PositionContext';
 
 const divElement = leaflet.DomUtil.create('div', 'leaflet-player-position');

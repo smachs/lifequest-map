@@ -89,7 +89,12 @@ export function initSocket(server: http.Server) {
     });
 
     client.on('position', (position) => {
-      if (!isOverwolfApp || !activeGroups[token][client.id] || !steamId) {
+      if (
+        !isOverwolfApp ||
+        !activeGroups[token][client.id] ||
+        !steamId ||
+        !position
+      ) {
         return;
       }
       activeGroups[token][client.id].position = position;
@@ -103,7 +108,12 @@ export function initSocket(server: http.Server) {
     });
 
     client.on('location', (location) => {
-      if (!isOverwolfApp || !activeGroups[token][client.id] || !steamId) {
+      if (
+        !isOverwolfApp ||
+        !activeGroups[token][client.id] ||
+        !steamId ||
+        !location
+      ) {
         return;
       }
       activeGroups[token][client.id].location = location;
@@ -131,7 +141,12 @@ export function initSocket(server: http.Server) {
     });
 
     client.on('worldName', (worldName) => {
-      if (!isOverwolfApp || !activeGroups[token][client.id] || !steamId) {
+      if (
+        !isOverwolfApp ||
+        !activeGroups[token][client.id] ||
+        !steamId ||
+        !worldName
+      ) {
         return;
       }
       activeGroups[token][client.id].worldName = worldName;
@@ -145,7 +160,12 @@ export function initSocket(server: http.Server) {
     });
 
     client.on('map', (map) => {
-      if (!isOverwolfApp || !activeGroups[token][client.id] || !steamId) {
+      if (
+        !isOverwolfApp ||
+        !activeGroups[token][client.id] ||
+        !steamId ||
+        !map
+      ) {
         return;
       }
       activeGroups[token][client.id].map = map;
@@ -156,7 +176,12 @@ export function initSocket(server: http.Server) {
     });
 
     client.on('username', (username) => {
-      if (!isOverwolfApp || !activeGroups[token][client.id] || !steamId) {
+      if (
+        !isOverwolfApp ||
+        !activeGroups[token][client.id] ||
+        !steamId ||
+        !username
+      ) {
         return;
       }
       activeGroups[token][client.id].username = username;

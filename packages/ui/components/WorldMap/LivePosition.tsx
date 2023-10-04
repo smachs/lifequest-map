@@ -34,5 +34,5 @@ export default function LivePosition({
     };
   }, [token, serverUrl]);
 
-  return <> </>;
+  return <></>;
 }
