@@ -180,6 +180,7 @@ const actions: {
   chestsCommonProvisions: respawnAction(3600),
   chestsCommonSupplies: respawnAction(3600),
   chestsOffering: respawnAction(3600),
+  chestsEliteBeast: respawnWorldAction(5),
   chestsEliteOffering: respawnWorldAction(5),
   glyphChest: respawnWorldAction(4),
   mythril: respawnSizeAction([0, 360, 450, 510, 0]),
