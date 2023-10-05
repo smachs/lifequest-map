@@ -100,9 +100,10 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'chests',
-    type: 'chestsEliteSupplies',
-    title: 'Elite Supply Stockpile',
-    iconUrl: '/pois/chest_elite4.webp',
+    type: 'chestsEliteBeast',
+    title: 'Elite Beast Hoard',
+    iconUrl: '/pois/chest_elite_beast.webp',
+    maxTier: 1,
   },
   {
     category: 'chests',
@@ -110,6 +111,12 @@ export const mapFilters: FilterItem[] = [
     title: 'Elite Grave Offering',
     iconUrl: '/pois/chest_elite_offering.webp',
     maxTier: 1,
+  },
+  {
+    category: 'chests',
+    type: 'chestsEliteSupplies',
+    title: 'Elite Supply Stockpile',
+    iconUrl: '/pois/chest_elite4.webp',
   },
   {
     category: 'chests',
