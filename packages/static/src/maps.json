@@ -152,5 +152,16 @@
       [850, 860],
       [950, 1000]
     ]
+  },
+  {
+    "name": "NW_Arena02",
+    "title": "3v3 PvP Arena 2",
+    "folder": "nw_arena02",
+    "maxZoom": 6,
+    "minZoom": 3,
+    "maxBounds": [
+      [900, 900],
+      [1050, 1050]
+    ]
   }
 ]
