@@ -143,6 +143,39 @@
     ]
   },
   {
+    "name": "NW_Ori_Eg_QuestMotherwell",
+    "title": "Quest Motherwell",
+    "folder": "nw_ori_eg_questmotherwell",
+    "maxZoom": 6,
+    "minZoom": 3,
+    "maxBounds": [
+      [700, 950],
+      [960, 1200]
+    ]
+  },
+  {
+    "name": "NW_ORI_FL_QuestAdiana",
+    "title": "Quest Adiana",
+    "folder": "nw_ori_fl_questadiana",
+    "maxZoom": 6,
+    "minZoom": 3,
+    "maxBounds": [
+      [750, 650],
+      [860, 780]
+    ]
+  },
+  {
+    "name": "NW_ORI_GC_QuestNihilo",
+    "title": "Quest Nihilo",
+    "folder": "nw_ori_gc_questnihilo",
+    "maxZoom": 6,
+    "minZoom": 3,
+    "maxBounds": [
+      [650, 870],
+      [790, 1070]
+    ]
+  },
+  {
     "name": "NW_Arena01",
     "title": "3v3 PvP Arena",
     "folder": "nw_arena01",
