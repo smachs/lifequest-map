@@ -40,6 +40,11 @@
     "zone": "iad"
   },
   {
+    "publicName": "Pollux",
+    "worldName": "live-2-03-2",
+    "zone": "iad"
+  },
+  {
     "publicName": "Valhalla",
     "worldName": "live-2-02-1",
     "zone": "iad"
