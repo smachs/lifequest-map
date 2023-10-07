@@ -153,7 +153,7 @@ function MarkerDetails(): JSX.Element {
             {marker.level && <Badge size="sm">Level {marker.level}</Badge>}
             {marker.hp && (
               <Badge size="sm" color="orange">
-                {marker.hp} HP
+                {marker.hp.toLocaleString('en')} HP
               </Badge>
             )}
             {marker.customRespawnTimer && (
