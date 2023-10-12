@@ -1,4 +1,4 @@
-import { Box } from '@mantine/core';
+import { Anchor, Box, CloseButton } from '@mantine/core';
 import { useEffect } from 'react';
 import { trackEvent } from '../../utils/stats';
 
@@ -27,6 +27,7 @@ const AdsFallback = ({ onClose }: { onClose: () => void }) => {
         muted: true,
         quality: '160p30',
         parent: ['aeternum-map.gg', 'influence.th.gl'],
+        controls: false,
       });
 
       twitchEmbed.addEventListener(window.Twitch.Player.OFFLINE, () => {
@@ -90,54 +91,54 @@ const AdsFallback = ({ onClose }: { onClose: () => void }) => {
   return (
     <div>
       <Box
-        onClick={onClose}
-        sx={{
-          position: 'fixed',
-          display: 'block',
-          cursor: 'pointer',
-          zIndex: 2147483641,
-          background: 'rgb(238 238 238)',
-          margin: 5,
-          padding: '0 5px',
-          fontSize: 12,
-          fontWeight: 'bold',
-          fontFamily: 'Arial, sans-serif',
-          opacity: 0.8,
-          border: '1px solid rgb(34 34 34)',
-          borderRadius: 12,
-          color: 'rgb(34 34 34)',
-          bottom: 200,
-          right: 0,
-
-          '@media screen and (width >= 426px)': {
-            bottom: 232,
-            right: 7,
-          },
-        }}
-      >
-        X
-      </Box>
-      <Box
         id="player"
         sx={{
-          display: 'block',
           zIndex: 2147483640,
           overflow: 'hidden',
           borderRadius: 5,
-          height: 200,
-          width: '100vw',
+          height: 180,
+          width: 320,
           position: 'fixed',
-          bottom: 0,
-          right: 0,
+          bottom: 4,
+          right: 4,
 
-          '@media screen and (width >= 426px)': {
-            width: 400,
-            height: 225,
-            bottom: 7,
-            right: 7,
+          ':hover > div': {
+            opacity: 1,
           },
         }}
-      />
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 2147483641,
+            background: 'rgb(0 0 0 / 0.5)',
+            padding: '4px 8px',
+            fontSize: 14,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            color: 'white',
+            '@media screen and (width >= 768px)': {
+              opacity: 0,
+            },
+          }}
+        >
+          <span>
+            Watching{' '}
+            <Anchor
+              weight="bold"
+              href="https://www.twitch.tv/thehiddengaminglair?tt_content=channel_name&tt_medium=embed"
+              target="_blank"
+            >
+              The Hidden Gaming Lair
+            </Anchor>
+          </span>
+          <CloseButton onClick={onClose} />
+        </Box>
+      </Box>
     </div>
   );
 };
