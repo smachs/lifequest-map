@@ -39,7 +39,7 @@ const NitroPay = () => {
       return;
     }
 
-    window['nitroAds'].createAd('nitro', {
+    window['nitroAds'].createAd('am-video', {
       format: 'video-nc',
       video: {
         float: 'always',
@@ -76,7 +76,7 @@ const NitroPay = () => {
   return (
     <>
       {showFallback && <AdsFallback onClose={() => setShowFallback(false)} />}
-      <div id="nitro" />
+      <div id="am-video" />
     </>
   );
 };
