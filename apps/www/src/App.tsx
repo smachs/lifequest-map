@@ -40,7 +40,7 @@ function App(): JSX.Element {
   return (
     <ErrorBoundary>
       <Box>
-        <FadingBox left={7} top={7} fadeFrom="top">
+        <FadingBox left={7} top={7} fadeFrom="top" dynamic>
           <NavActions />
         </FadingBox>
         <FadingBox right={7} top={7} zIndex={2} fadeFrom="top">
@@ -49,7 +49,7 @@ function App(): JSX.Element {
         <FadingBox top="calc(50% - 45px)" right={12} fadeFrom="right">
           <MapActions />
         </FadingBox>
-        <FadingBox bottom={7} left={7} fadeFrom="bottom">
+        <FadingBox bottom={7} left={7} fadeFrom="bottom" dynamic>
           <MapAction />
         </FadingBox>
         <Box sx={{ width: '100vw', height: '100vh' }}>

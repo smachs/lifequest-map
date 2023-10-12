@@ -17,9 +17,9 @@ import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   COVENANT_COLOR,
-  getZonesWithWorlds,
   MARAUDER_COLOR,
   SYNDICATE_COLOR,
+  getZonesWithWorlds,
 } from 'static';
 import { fetchJSON } from '../../utils/api';
 import { toTimeAgo } from '../../utils/dates';
@@ -69,11 +69,7 @@ const WorldZone = ({ zone, influences, publicName }: ZoneProps) => {
         key={world.worldName}
         component={Link}
         className={cx(classes.world, isSelected && classes.selected)}
-        to={
-          isSelected
-            ? '/?section=influences'
-            : `/influences/${world.publicName}?section=influences`
-        }
+        to={isSelected ? '/' : `/influences/${world.publicName}`}
       >
         <Text size="sm" weight={500}>
           {world.publicName}

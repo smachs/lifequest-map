@@ -3,6 +3,8 @@ import { persist, subscribeWithSelector } from 'zustand/middleware';
 import { getJSONItem, withStorageDOMEvents } from './storage';
 
 type Store = {
+  section: string | null;
+  setSection: (section: string | null) => void;
   liveShareServerUrl: string;
   setLiveShareServerUrl: (liveShareServerUrl: string) => void;
   liveShareToken: string;
@@ -57,6 +59,10 @@ export const useSettingsStore = create(
   subscribeWithSelector(
     persist<Store>(
       (set) => ({
+        section: window.matchMedia('(min-width: 768px)').matches
+          ? 'nodes'
+          : null,
+        setSection: (section) => set({ section }),
         liveShareServerUrl: getJSONItem('live-share-server-url', ''), // Deprecated
         setLiveShareServerUrl: (liveShareServerUrl) =>
           set({ liveShareServerUrl }),

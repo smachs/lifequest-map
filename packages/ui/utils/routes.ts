@@ -3,14 +3,6 @@ import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { AETERNUM_MAP, findMapDetails, mapDetails } from 'static';
 import { deserializeMapView, serializeMapView } from './storage';
 
-export type Section = 'nodes' | 'routes' | 'settings' | 'influences' | null;
-export const SECTIONS: Section[] = [
-  'nodes',
-  'routes',
-  'settings',
-  'influences',
-];
-
 export const useRouteParams = () => {
   const { map = mapDetails[0].title, nodeId, routeId, world } = useParams();
   const existingMap = findMapDetails(map)?.title || AETERNUM_MAP.title;
@@ -53,11 +45,6 @@ const getView = (
   routeId?: string
 ) => {
   const searchParamsView = getMapView(searchParams) ?? deserializeMapView(map);
-  const sectionParam = searchParams.get('section');
-  const section: Section =
-    !sectionParam || !SECTIONS.includes(sectionParam as Section)
-      ? null
-      : (sectionParam as Section);
 
   const existingMap = findMapDetails(map) ? map : AETERNUM_MAP.title;
 
@@ -66,7 +53,6 @@ const getView = (
     map: existingMap,
     nodeId,
     routeId,
-    section,
   };
 };
 
@@ -79,7 +65,6 @@ export const useView = (): {
         y: number;
         x: number;
         zoom: number;
-        section: Section;
       }
     | {
         map: string;
@@ -88,25 +73,12 @@ export const useView = (): {
         x: null;
         y: null;
         zoom: null;
-        section: Section;
       };
-  setView: (
-    props: { x: number; y: number; zoom: number } | { section: Section }
-  ) => void;
-  toView: (
-    props:
-      | {
-          x: number;
-          y: number;
-          zoom: number;
-        }
-      | {
-          section: Section;
-        }
-  ) => string;
+  setView: (props: { x: number; y: number; zoom: number }) => void;
+  toView: (props: { x: number; y: number; zoom: number }) => string;
 } => {
   const { map, nodeId, routeId, world } = useRouteParams();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const location = useLocation();
 
   const [internalView, setInternalView] = useState(() =>
@@ -128,21 +100,9 @@ export const useView = (): {
   }, [searchParams]);
 
   const setView = useCallback(
-    (props: { x: number; y: number; zoom: number } | { section: Section }) => {
-      if ('section' in props) {
-        const newSearchParams: { [key: string]: string } = {};
-        if (props.section) {
-          newSearchParams.section = props.section;
-        }
-        setSearchParams((searchParams) => {
-          searchParams.delete('bounds');
-          return {
-            ...searchParams,
-            ...newSearchParams,
-          };
-        });
-      } else {
-        setInternalView((internalView) => ({ ...internalView, ...props }));
+    (props: { x: number; y: number; zoom: number }) => {
+      setInternalView((internalView) => ({ ...internalView, ...props }));
+      if ('zoom' in props) {
         serializeMapView(map, {
           x: props.x,
           y: props.y,
@@ -154,19 +114,12 @@ export const useView = (): {
   );
 
   const toView = useCallback(
-    (props: { x: number; y: number; zoom: number } | { section: Section }) => {
+    (props: { x: number; y: number; zoom: number }) => {
       const newSearchParams = new URLSearchParams(searchParams);
-      if ('section' in props) {
-        if (props.section === null) {
-          newSearchParams.delete('section');
-        } else {
-          newSearchParams.set('section', props.section);
-        }
-      } else {
-        newSearchParams.set('x', props.x.toString());
-        newSearchParams.set('y', props.y.toString());
-        newSearchParams.set('zoom', props.zoom.toString());
-      }
+
+      newSearchParams.set('x', props.x.toString());
+      newSearchParams.set('y', props.y.toString());
+      newSearchParams.set('zoom', props.zoom.toString());
       return `${location.pathname}?${newSearchParams.toString()}`;
     },
     [location.pathname, searchParams]

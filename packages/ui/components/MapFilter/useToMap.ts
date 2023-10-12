@@ -1,22 +1,13 @@
 import { mapIsAeternumMap } from 'static';
-import type { Section } from '../../utils/routes';
-import { useView } from '../../utils/routes';
 
-const toMap = (title: string, section: Section) => {
-  let to = mapIsAeternumMap(title) ? '/' : `/${title}`;
-  if (section !== null) {
-    if (!to.endsWith('/')) {
-      to += '/';
-    }
-    to += `?section=${section}`;
-  }
+const toMap = (title: string) => {
+  const to = mapIsAeternumMap(title) ? '/' : `/${title}`;
+
   return to;
 };
 
 const useToMap = () => {
-  const { view } = useView();
-
-  return (title: string) => toMap(title, view.section);
+  return (title: string) => toMap(title);
 };
 
 export default useToMap;

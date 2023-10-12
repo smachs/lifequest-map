@@ -9,8 +9,8 @@ import {
 } from '@mantine/core';
 import { IconFlag, IconMap, IconMapPin, IconRoute2 } from '@tabler/icons-react';
 import { Suspense, lazy } from 'react';
-import { Link } from 'react-router-dom';
-import { isEmbed, useView } from '../../utils/routes';
+import { isEmbed } from '../../utils/routes';
+import { useSettingsStore } from '../../utils/settingsStore';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import InfluenceDetails from '../Influences/InfluenceDetails';
 import MarkerDetails from '../MarkerDetails/MarkerDetails';
@@ -20,8 +20,8 @@ const MarkerRoutes = lazy(() => import('../MarkerRoutes/MarkerRoutes'));
 const Influences = lazy(() => import('../Influences/Influences'));
 
 const NavActions = () => {
-  const { view, toView, setView } = useView();
-
+  const section = useSettingsStore((state) => state.section);
+  const setSection = useSettingsStore((state) => state.setSection);
   if (isEmbed) {
     return (
       <Group spacing="xs">
@@ -58,16 +58,14 @@ const NavActions = () => {
         <Group spacing="xs">
           <Button
             variant="default"
-            component={Link}
-            to={toView({ section: 'nodes' })}
+            onClick={() => setSection('nodes')}
             leftIcon={<IconMapPin />}
             radius="xl"
           >
             Nodes
           </Button>
           <Button
-            component={Link}
-            to={toView({ section: 'routes' })}
+            onClick={() => setSection('routes')}
             leftIcon={<IconRoute2 />}
             variant="default"
             radius="xl"
@@ -75,8 +73,7 @@ const NavActions = () => {
             Routes
           </Button>
           <Button
-            component={Link}
-            to={toView({ section: 'influences' })}
+            onClick={() => setSection('influences')}
             leftIcon={<IconFlag />}
             variant="default"
             radius="xl"
@@ -96,8 +93,7 @@ const NavActions = () => {
             size="lg"
             radius="xl"
             variant="default"
-            component={Link}
-            to={toView({ section: 'nodes' })}
+            onClick={() => setSection('nodes')}
             aria-label="Nodes"
           >
             <IconMapPin />
@@ -106,8 +102,7 @@ const NavActions = () => {
             size="lg"
             radius="xl"
             variant="default"
-            component={Link}
-            to={toView({ section: 'routes' })}
+            onClick={() => setSection('routes')}
             aria-label="Routes"
           >
             <IconRoute2 />
@@ -116,8 +111,7 @@ const NavActions = () => {
             size="lg"
             radius="xl"
             variant="default"
-            component={Link}
-            to={toView({ section: 'influences' })}
+            onClick={() => setSection('influences')}
             aria-label="Influences"
           >
             <IconFlag />
@@ -125,8 +119,8 @@ const NavActions = () => {
         </Group>
       </MediaQuery>
       <Drawer
-        opened={view.section === 'nodes'}
-        onClose={() => setView({ section: null })}
+        opened={section === 'nodes'}
+        onClose={() => setSection(null)}
         title="Nodes"
         size={500}
         withOverlay={false}
@@ -149,8 +143,8 @@ const NavActions = () => {
         <MarkerDetails />
       </ErrorBoundary>
       <Drawer
-        opened={view.section === 'routes'}
-        onClose={() => setView({ section: null })}
+        opened={section === 'routes'}
+        onClose={() => setSection(null)}
         title="Routes"
         size={500}
         withOverlay={false}
@@ -173,8 +167,8 @@ const NavActions = () => {
         <MarkerRouteDetails />
       </ErrorBoundary>
       <Drawer
-        opened={view.section === 'influences'}
-        onClose={() => setView({ section: null })}
+        opened={section === 'influences'}
+        onClose={() => setSection(null)}
         title="Influences"
         size={500}
         withOverlay={false}

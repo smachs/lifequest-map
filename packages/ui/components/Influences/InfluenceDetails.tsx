@@ -8,8 +8,8 @@ import {
   COVENANT_COLOR,
   MARAUDER_COLOR,
   NEUTRAL_COLOR,
-  regions,
   SYNDICATE_COLOR,
+  regions,
   worlds,
 } from 'static';
 import { fetchJSON } from '../../utils/api';
@@ -127,7 +127,7 @@ const InfluenceDetails = () => {
         <Button
           variant="default"
           component="a"
-          href={`https://aeternum-map.gg/influences/${publicName}?section=influences`}
+          href={`https://aeternum-map.gg/influences/${publicName}`}
           target="_blank"
           leftIcon={<IconFlag />}
           radius="xl"

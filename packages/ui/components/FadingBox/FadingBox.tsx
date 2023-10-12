@@ -13,6 +13,7 @@ type FadingBoxProps = {
   children: ReactNode;
   fadeFrom: 'top' | 'right' | 'left' | 'bottom';
   className?: string;
+  dynamic?: boolean;
 };
 
 const FadingBox = ({
@@ -20,10 +21,21 @@ const FadingBox = ({
   zIndex = 1,
   fadeFrom,
   className,
+  dynamic,
+  left,
   ...props
 }: FadingBoxProps) => {
   const active = useActive();
   const autoFade = useSettingsStore((state) => state.autoFade);
+  const section = useSettingsStore((state) => state.section);
+
+  const dynamicLeft =
+    dynamic &&
+    section &&
+    left &&
+    window.matchMedia('(min-width: 1150px)').matches
+      ? +left + 500
+      : left;
   return (
     <Box
       sx={{
@@ -31,6 +43,7 @@ const FadingBox = ({
         transitionDelay: '0s',
         position: 'fixed',
         zIndex,
+        left: dynamicLeft,
         ...props,
       }}
       style={
