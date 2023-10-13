@@ -755,6 +755,13 @@ export const mapFilters: FilterItem[] = [
     hasName: true,
   },
   {
+    category: 'lore',
+    type: 'beastloadSignets',
+    title: 'Beastlord Signets',
+    iconUrl: '/pois/beastloadSignets.webp',
+    hasName: true,
+  },
+  {
     category: 'essences',
     type: 'essences_shockbulb',
     title: 'Shockbulb',
