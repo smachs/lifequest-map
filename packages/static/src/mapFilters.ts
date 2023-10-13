@@ -344,6 +344,13 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'mining',
+    type: 'gypsum',
+    title: 'Gypsum',
+    iconUrl: '/pois/gypsum.webp',
+    sizes: defaultSizes,
+  },
+  {
+    category: 'mining',
     type: 'mythril',
     title: 'Mythril',
     iconUrl: '/pois/mythril.webp',

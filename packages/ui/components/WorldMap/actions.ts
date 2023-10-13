@@ -183,6 +183,7 @@ const actions: {
   chestsEliteBeast: respawnWorldAction(5),
   chestsEliteOffering: respawnWorldAction(5),
   glyphChest: respawnWorldAction(4),
+  gypsum: respawnSizeAction([0, 64000, 64000, 64000, 0]),
   mythril: respawnSizeAction([0, 360, 450, 510, 0]),
   gold: respawnSizeAction([0, 720, 900, 1020, 0]),
   iron: respawnSizeAction([0, 720, 900, 1020, 0]),
