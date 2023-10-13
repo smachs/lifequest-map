@@ -14,7 +14,10 @@ export async function fetchJSON<T>(
       'x-session-id': sessionId,
     };
   }
-  const response = await fetch(`${VITE_API_ENDPOINT}${url}`, init);
+  const targetUrl = url.toString().startsWith('http')
+    ? url
+    : `${VITE_API_ENDPOINT}${url}`;
+  const response = await fetch(targetUrl, init);
 
   if (!response.ok) {
     if (response.status === 401) {

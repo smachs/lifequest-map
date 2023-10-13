@@ -36,6 +36,7 @@ import SupporterInput from '../SupporterInput/SupporterInput';
 import { latestLeafletMap } from '../WorldMap/useWorldMap';
 import DiscordIcon from '../icons/DiscordIcon';
 import GitHubIcon from '../icons/GitHubIcon';
+import ServerStatus from './ServerStatus';
 const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 const UserAction = () => {
@@ -139,6 +140,7 @@ const UserAction = () => {
           realmStore.setIsPTR(value === 'ptr');
         }}
       />
+      <ServerStatus />
       <Tooltip label="Settings">
         <ActionIcon
           size="lg"
