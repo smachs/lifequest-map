@@ -3,7 +3,7 @@ import { Double, MongoClient } from 'mongodb';
 dotenv.config();
 
 import nwdbLocations from './nwdbLocations.json' assert { type: 'json' };
-const TYPE = 'spinfiber';
+const TYPE = 'sporePodBeast';
 
 const amMarkers = await fetch('https://aeternum-map.gg/api/markers').then(
   (resolve) => resolve.json()
@@ -24,14 +24,19 @@ const isNotNearBy = (node) => {
 
 const now = new Date();
 
-const nwdbMarkers = nwdbLocations.coordinates.map((coordinates, index) => {
+const coordinates = nwdbLocations.coordinates.filter((coordinates, index) => {
+  const meta = nwdbLocations.meta[index];
+  return meta.s === 'B';
+});
+
+const nwdbMarkers = coordinates.map((coordinates, index) => {
   const [x, y] = coordinates;
   return {
     position: [x, y],
     username: 'nwdb',
     createdAt: now,
     type: TYPE,
-    size: nwdbLocations.meta[index].s.toUpperCase(),
+    // size: nwdbLocations.meta[index].s.toUpperCase(),
   };
 });
 const newMarkers = nwdbMarkers.filter(isNotNearBy);
