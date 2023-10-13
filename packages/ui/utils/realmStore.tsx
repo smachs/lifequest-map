@@ -48,10 +48,13 @@ export const useRealmStore = create(
           } else {
             searchParams.delete('realm');
           }
+          const searchParamsString = searchParams.toString();
           history.replaceState(
             null,
             '',
-            `${location.pathname}?${searchParams.toString()}`
+            `${location.pathname}${
+              searchParamsString ? `?${searchParamsString}` : ''
+            }`
           );
         }
 
