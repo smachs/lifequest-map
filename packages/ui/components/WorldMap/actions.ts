@@ -276,6 +276,10 @@ const actions: {
   rafflebones_25: respawnAction(5400),
   rafflebones_66: respawnAction(21600),
   wispybloom: respawnAction(180),
+  sporePodAngryEarth: respawnAction(420),
+  sporePodAncient: respawnAction(420),
+  sporePodBeast: respawnAction(420),
+  sporePodGeneric: respawnAction(420),
 };
 
 export const getAction = (type: string) => {

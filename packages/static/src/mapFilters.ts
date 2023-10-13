@@ -1110,6 +1110,30 @@ export const mapFilters: FilterItem[] = [
     hasName: true,
   },
   {
+    category: 'sporePods',
+    type: 'sporePodAngryEarth',
+    title: 'Spore Pod Angry Earth',
+    iconUrl: '/pois/sporeplant_compass.webp',
+  },
+  {
+    category: 'sporePods',
+    type: 'sporePodAncient',
+    title: 'Spore Pod Ancient',
+    iconUrl: '/pois/sporeplant_compass.webp',
+  },
+  {
+    category: 'sporePods',
+    type: 'sporePodBeast',
+    title: 'Spore Pod Beast',
+    iconUrl: '/pois/sporeplant_compass.webp',
+  },
+  {
+    category: 'sporePods',
+    type: 'sporePodGeneric',
+    title: 'Spore Pod Generic',
+    iconUrl: '/pois/sporeplant_compass.webp',
+  },
+  {
     category: 'events',
     type: 'baalphazu',
     title: 'Baalphazu',
@@ -1154,6 +1178,14 @@ export const mapFiltersCategories: MapFiltersCategory[] = [
     title: 'Fungus',
     filters: mapFilters.filter((mapFilter) => mapFilter.category === 'fungus'),
     borderColor: 'rgba(34, 139, 34, 0.7)',
+  },
+  {
+    value: 'sporePods',
+    title: 'Spore Pods',
+    filters: mapFilters.filter(
+      (mapFilter) => mapFilter.category === 'sporePods'
+    ),
+    borderColor: 'rgba(54, 120, 44, 0.7)',
   },
   {
     value: 'cooking_ingredients',
