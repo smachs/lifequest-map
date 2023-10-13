@@ -1097,15 +1097,9 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'events',
-    type: 'rafflebones_portal',
-    title: 'Rafflebones Portal',
-    iconUrl: '/pois/rafflebones_portal.webp',
-  },
-  {
-    category: 'events',
-    type: 'siege_of_sulfur',
-    title: 'Siege Of Sulfur',
-    iconUrl: '/pois/siege_of_sulfur.webp',
+    type: 'baalphazu',
+    title: 'Baalphazu',
+    iconUrl: '/pois/baalphazu.webp',
   },
 ];
 
