@@ -434,6 +434,24 @@ export const mapFilters: FilterItem[] = [
     sizes: defaultSizes,
   },
   {
+    category: 'mining',
+    type: 'statue_bear',
+    title: 'Bear Statue',
+    iconUrl: '/pois/statue_bear.webp',
+  },
+  {
+    category: 'mining',
+    type: 'statue_wolf',
+    title: 'Wolf Statue',
+    iconUrl: '/pois/statue_wolf.webp',
+  },
+  {
+    category: 'mining',
+    type: 'statue_human',
+    title: 'Human Statue',
+    iconUrl: '/pois/statue_human.webp',
+  },
+  {
     category: 'fishing',
     type: 'fish_hotspot1',
     title: 'Fish Broad',
