@@ -272,6 +272,12 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'skinning',
+    type: 'drake',
+    title: 'Drake',
+    iconUrl: '/pois/drake.webp',
+  },
+  {
+    category: 'skinning',
     type: 'elk',
     title: 'Elk',
     iconUrl: '/pois/elk.webp',
@@ -299,6 +305,12 @@ export const mapFilters: FilterItem[] = [
     type: 'goat',
     title: 'Goat',
     iconUrl: '/pois/sheep.webp',
+  },
+  {
+    category: 'skinning',
+    type: 'lampyrid',
+    title: 'Lampyrid',
+    iconUrl: '/pois/lampyrid.webp',
   },
   {
     category: 'skinning',
