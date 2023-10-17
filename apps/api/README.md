@@ -3,7 +3,7 @@
 You can start by copying the template environment variables file.
 
 ```
-cp template.env .env
+cp .env.template .env
 ```
 
 The following list shows the variables you need to set:
