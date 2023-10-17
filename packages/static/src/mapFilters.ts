@@ -266,6 +266,18 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'skinning',
+    type: 'chameleon',
+    title: 'Chameleon',
+    iconUrl: '/pois/chameleon.webp',
+  },
+  {
+    category: 'skinning',
+    type: 'drake',
+    title: 'Drake',
+    iconUrl: '/pois/drake.webp',
+  },
+  {
+    category: 'skinning',
     type: 'elk',
     title: 'Elk',
     iconUrl: '/pois/elk.webp',
@@ -296,6 +308,12 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'skinning',
+    type: 'lampyrid',
+    title: 'Lampyrid',
+    iconUrl: '/pois/lampyrid.webp',
+  },
+  {
+    category: 'skinning',
     type: 'lion',
     title: 'Lion',
     iconUrl: '/pois/puma.webp',
@@ -305,6 +323,12 @@ export const mapFilters: FilterItem[] = [
     type: 'lynx',
     title: 'Lynx',
     iconUrl: '/pois/lynx.webp',
+  },
+  {
+    category: 'skinning',
+    type: 'mammoth',
+    title: 'Mammoth',
+    iconUrl: '/pois/mammoth.webp',
   },
   {
     category: 'skinning',
