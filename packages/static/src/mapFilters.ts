@@ -460,19 +460,19 @@ export const mapFilters: FilterItem[] = [
   {
     category: 'mining',
     type: 'statue_bear',
-    title: 'Bear Statue',
+    title: 'Statue (Bear)',
     iconUrl: '/pois/statue_bear.webp',
   },
   {
     category: 'mining',
     type: 'statue_wolf',
-    title: 'Wolf Statue',
+    title: 'Statue (Wolf)',
     iconUrl: '/pois/statue_wolf.webp',
   },
   {
     category: 'mining',
     type: 'statue_human',
-    title: 'Human Statue',
+    title: 'Statue (Human)',
     iconUrl: '/pois/statue_human.webp',
   },
   {

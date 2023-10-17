@@ -90,8 +90,23 @@
     "zone": "fra"
   },
   {
+    "publicName": "Canis",
+    "worldName": "live-1-03-3",
+    "zone": "fra"
+  },
+  {
     "publicName": "Delphnius",
     "worldName": "live-1-03-10",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Felis",
+    "worldName": "live-1-03-4",
+    "zone": "fra"
+  },
+  {
+    "publicName": "Fornax",
+    "worldName": "live-1-03-2",
     "zone": "fra"
   },
   {
