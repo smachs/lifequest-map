@@ -8,7 +8,7 @@ declare global {
   }
 }
 
-const TWITCH_CHANNELS: string[] = ['dukesloth', 'thehiddengaminglair'];
+const TWITCH_CHANNELS: string[] = ['thehiddengaminglair'];
 
 const AdsFallback = ({ onClose }: { onClose: () => void }) => {
   useEffect(() => {
