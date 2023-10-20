@@ -1179,7 +1179,7 @@ export const mapFilters: FilterItem[] = [
     category: 'events',
     type: 'baalphazu',
     title: 'Baalphazu',
-    iconUrl: '/pois/baalphazu.webp',
+    iconUrl: '/pois/baalphazu.webp?v=2',
   },
   {
     category: 'events',
