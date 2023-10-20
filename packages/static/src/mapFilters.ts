@@ -1181,6 +1181,12 @@ export const mapFilters: FilterItem[] = [
     title: 'Baalphazu',
     iconUrl: '/pois/baalphazu.webp',
   },
+  {
+    category: 'events',
+    type: 'treats',
+    title: 'Treats',
+    iconUrl: '/pois/halloween_treats.webp',
+  },
 ];
 
 export type MapFiltersCategory = {
