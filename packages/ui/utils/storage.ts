@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { Mutate, StoreApi } from 'zustand';
 import { isEmbed } from './routes';
 import useDebounce from './useDebounce';
@@ -70,15 +70,20 @@ export function usePersistentState<T>(
   });
   useDebounce(state, (value) => setJSONItem<T>(key, value));
 
-  function setValue(value: T | ((value: T) => T)) {
-    try {
-      const valueToStore =
-        typeof value === 'function' ? (value as (value: T) => T)(state) : value;
-      setState(valueToStore);
-    } catch (e) {
-      console.error(e);
-    }
-  }
+  const setValue = useCallback(
+    (value: T | ((value: T) => T)) => {
+      try {
+        const valueToStore =
+          typeof value === 'function'
+            ? (value as (value: T) => T)(state)
+            : value;
+        setState(valueToStore);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [state]
+  );
 
   useEffect(() => {
     if (!listener) {

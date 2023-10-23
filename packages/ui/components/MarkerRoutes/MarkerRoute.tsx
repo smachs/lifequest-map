@@ -37,7 +37,7 @@ function MarkerRoute({
     <article
       className={classNames(styles.container, selected && styles.selected)}
     >
-      <Group>
+      <Group spacing="xs">
         <Switch
           title="Toggle route"
           color="green"
@@ -78,16 +78,24 @@ function MarkerRoute({
         >
           {markerRoute.issues || 0}
         </Badge>
+        <Badge size="sm" color="indigo">
+          Used By: {markerRoute.usageCount ?? 0}
+        </Badge>
+        <Badge size="sm" color="red">
+          Last Usage:{' '}
+          {markerRoute.lastUsedAt
+            ? toTimeAgo(new Date(markerRoute.lastUsedAt))
+            : 'Never'}
+        </Badge>
       </Group>
       <Link to={url} style={{ textDecoration: 'none' }}>
         <Stack spacing={2}>
           <Title order={4} color="yellow" size="md">
             {markerRoute.name}
           </Title>
-
           <div className={styles.regions}>{markerRoute.regions.join(', ')}</div>
           <Text size="xs" className={styles.info}>
-            {toTimeAgo(new Date(markerRoute.updatedAt))} by{' '}
+            Updated {toTimeAgo(new Date(markerRoute.updatedAt))} by{' '}
             <span
               className={classNames(isOwner ? styles.owner : styles.notOwner)}
             >

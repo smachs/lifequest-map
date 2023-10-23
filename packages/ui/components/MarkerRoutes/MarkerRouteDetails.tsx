@@ -229,9 +229,18 @@ const MarkerRouteDetails = () => {
             <Badge leftSection="🤘" size="sm" color="orange">
               {markerRoute.favorites || 0} favored
             </Badge>
+            <Badge size="sm" color="indigo">
+              Used By: {markerRoute.usageCount ?? 0}
+            </Badge>
+            <Badge size="sm" color="red">
+              Last Usage:{' '}
+              {markerRoute.lastUsedAt
+                ? toTimeAgo(new Date(markerRoute.lastUsedAt))
+                : 'Never'}
+            </Badge>
           </Group>
           <Text size="xs">
-            Added {markerRoute && toTimeAgo(new Date(markerRoute.createdAt))}{' '}
+            Updated {markerRoute && toTimeAgo(new Date(markerRoute.updatedAt))}{' '}
             {markerRoute.username && <Credit username={markerRoute.username} />}
           </Text>
           {markerRoute.description && (

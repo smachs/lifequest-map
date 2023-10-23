@@ -12,6 +12,7 @@ import {
 import { isEmbed, useRouteParams } from 'ui/utils/routes';
 import { shallow } from 'zustand/shallow';
 import { useMarkers } from '../../contexts/MarkersContext';
+import { fetchJSON } from '../../utils/api';
 import { usePlayerStore } from '../../utils/playerStore';
 import { useSettingsStore } from '../../utils/settingsStore';
 import CanvasMarker from './CanvasMarker';
@@ -466,6 +467,9 @@ function useLayerGroups({
           textLabel.addTo(layerGroup);
         }
       }
+      fetchJSON(`/api/marker-routes/${markerRoute._id}/usage`, {
+        method: 'POST',
+      }).catch(() => console.error('Failed to update usage count'));
     }
     layerGroup.addTo(leafletMap);
 

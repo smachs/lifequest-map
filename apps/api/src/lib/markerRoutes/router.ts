@@ -135,8 +135,8 @@ markerRoutesRouter.get('/', async (req, res, next) => {
       query = { isPublic: true };
     }
     const markerRoutes = await getMarkerRoutesCollection()
-      .find(query)
-      .sort({ updatedAt: -1 })
+      .find(query, { projection: { usage: 0 } })
+      .sort({ lastUsedAt: -1, updatedAt: -1 })
       .toArray();
     res.status(200).json(markerRoutes);
   } catch (error) {
@@ -152,9 +152,12 @@ markerRoutesRouter.get('/:id', async (req, res, next) => {
       return;
     }
     const markerRouteId = new ObjectId(id);
-    const markerRoute = await getMarkerRoutesCollection().findOne({
-      _id: markerRouteId,
-    });
+    const markerRoute = await getMarkerRoutesCollection().findOne(
+      {
+        _id: markerRouteId,
+      },
+      { projection: { usage: 0 } }
+    );
     if (!markerRoute) {
       res.status(404).json({ message: 'No route found' });
       return;
@@ -276,8 +279,9 @@ markerRoutesRouter.patch(
         return;
       }
 
+      const now = new Date();
       const markerRoute: Partial<MarkerRouteDTO> = {
-        updatedAt: new Date(),
+        updatedAt: now,
       };
       if (typeof name === 'string' && name.length <= MAX_MARKER_ROUTE_LENGTH) {
         markerRoute.name = name;
@@ -409,6 +413,56 @@ markerRoutesRouter.post(
           markerRoute.isPublic
         );
       }
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+markerRoutesRouter.post(
+  '/:id/usage',
+  ensureAuthenticated,
+  async (req, res, next) => {
+    try {
+      const account = req.account!;
+
+      const { id } = req.params;
+      if (!ObjectId.isValid(id)) {
+        res.status(400).send('Invalid payload');
+        return;
+      }
+
+      const query: Filter<MarkerRouteDTO> = {
+        _id: new ObjectId(id),
+      };
+      const markerRoute = await getMarkerRoutesCollection().findOne(query);
+      if (!markerRoute) {
+        res.status(404).end(`No marker route found for id ${id}`);
+        return;
+      }
+      if (!markerRoute.usage) {
+        markerRoute.usage = [];
+      }
+      const existingUsage = markerRoute.usage.find(
+        (usage) => usage.userId === account.steamId
+      );
+      const now = new Date();
+      if (!existingUsage) {
+        markerRoute.usage.push({
+          userId: account.steamId,
+          lastUsedAt: now,
+        });
+      } else {
+        existingUsage.lastUsedAt = now;
+      }
+      await getMarkerRoutesCollection().updateOne(query, {
+        $set: {
+          lastUsedAt: now,
+          usageCount: markerRoute.usage.length,
+          usage: markerRoute.usage,
+        },
+      });
+      res.status(201).json({ success: true });
     } catch (error) {
       next(error);
     }

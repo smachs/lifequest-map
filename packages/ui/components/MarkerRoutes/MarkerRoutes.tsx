@@ -25,8 +25,8 @@ import { usePersistentState } from '../../utils/storage';
 import type { AccountDTO } from '../../utils/userStore';
 import { useUserStore } from '../../utils/userStore';
 import { useUpsertStore } from '../UpsertArea/upsertStore';
-import { getMarkerRoutes } from './api';
 import MarkerRoute from './MarkerRoute';
+import { getMarkerRoutes } from './api';
 
 export type MarkerRouteItem = {
   _id: string;
@@ -51,9 +51,18 @@ export type MarkerRouteItem = {
   issues?: number;
   createdAt: string;
   updatedAt: string;
+  lastUsedAt?: string;
+  usageCount?: number;
 };
 
-type SortBy = 'match' | 'favorites' | 'date' | 'name' | 'username';
+type SortBy =
+  | 'match'
+  | 'favorites'
+  | 'usage'
+  | 'lastUsage'
+  | 'date'
+  | 'name'
+  | 'username';
 type Filter = 'all' | 'myRoutes' | 'favorites' | string;
 
 function handleFilter(
@@ -95,6 +104,14 @@ function handleSort(sortBy: SortBy, filters: string[]) {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
       (b.favorites || 0) - (a.favorites || 0);
   }
+  if (sortBy === 'usage') {
+    return (a: MarkerRouteItem, b: MarkerRouteItem) =>
+      (b.usageCount ?? 0) - (a.usageCount ?? 0);
+  }
+  if (sortBy === 'lastUsage') {
+    return (a: MarkerRouteItem, b: MarkerRouteItem) =>
+      (b.lastUsedAt ?? '').localeCompare(a.lastUsedAt ?? '');
+  }
   if (sortBy === 'date') {
     return (a: MarkerRouteItem, b: MarkerRouteItem) =>
       b.updatedAt?.localeCompare(a.updatedAt);
@@ -123,7 +140,7 @@ function handleSort(sortBy: SortBy, filters: string[]) {
 }
 
 function MarkerRoutes(): JSX.Element {
-  const { data: allMarkerRoutes = [], isLoading } = useQuery(
+  const { data: allMarkerRoutes, isLoading } = useQuery(
     ['routes'],
     getMarkerRoutes
   );
@@ -149,23 +166,32 @@ function MarkerRoutes(): JSX.Element {
   }, [sortBy, filter, search]);
 
   useEffect(() => {
+    if (!allMarkerRoutes) {
+      return;
+    }
     const selectedMarkerRoutes: MarkerRouteItem[] = [];
+    let isChanged = false;
     markerRoutes.forEach((markerRoute) => {
-      const newMarkerRoute = allMarkerRoutes.find(
-        (targetMarkerRoute) => targetMarkerRoute._id === markerRoute._id
+      const newMarkerRoute = allMarkerRoutes?.find(
+        (targetMarkerRoute) =>
+          targetMarkerRoute._id === markerRoute._id &&
+          markerRoute.updatedAt !== targetMarkerRoute.updatedAt
       );
       if (newMarkerRoute) {
         selectedMarkerRoutes.push(newMarkerRoute);
+        isChanged = true;
       } else {
         selectedMarkerRoutes.push(markerRoute);
       }
     });
-    setMarkerRoutes(selectedMarkerRoutes);
+    if (isChanged) {
+      setMarkerRoutes(selectedMarkerRoutes);
+    }
   }, [allMarkerRoutes]);
 
   const visibleMarkerRoutes = useMemo(
     () =>
-      allMarkerRoutes.filter((markerRoute) => {
+      allMarkerRoutes?.filter((markerRoute) => {
         if (markerRoute.map) {
           if (mapIsAeternumMap(map)) {
             return false;
@@ -177,7 +203,7 @@ function MarkerRoutes(): JSX.Element {
           return false;
         }
         return true;
-      }),
+      }) ?? [],
     [allMarkerRoutes, map]
   );
 
@@ -215,6 +241,8 @@ function MarkerRoutes(): JSX.Element {
           data={[
             { value: 'match', label: 'By match' },
             { value: 'favorites', label: 'By favorites' },
+            { value: 'usage', label: 'By total usage' },
+            { value: 'lastUsage', label: 'By last usage' },
             { value: 'date', label: 'By date' },
             { value: 'name', label: 'By name' },
             { value: 'username', label: 'By username' },

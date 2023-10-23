@@ -96,6 +96,28 @@ function ensureMarkerRoutesSchema(): Promise<Document> {
           updatedAt: {
             bsonType: 'date',
           },
+          lastUsedAt: {
+            bsonType: 'date',
+          },
+          usageCount: {
+            bsonType: 'int',
+          },
+          usage: {
+            bsonType: 'array',
+            items: {
+              bsonType: 'object',
+              properties: {
+                lastUsedAt: {
+                  bsonType: 'date',
+                },
+                userId: {
+                  bsonType: 'string',
+                },
+              },
+              additionalProperties: false,
+              required: ['lastUsedAt', 'userId'],
+            },
+          },
           comments: {
             bsonType: 'int',
           },
