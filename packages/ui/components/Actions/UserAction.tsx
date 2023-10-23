@@ -322,7 +322,7 @@ const UserAction = () => {
               </Anchor>
               <Anchor
                 size="xs"
-                href="https://www.nwmap.info/"
+                href="https://influence.th.gl/"
                 title="New World Faction Territory Map"
                 target="_blank"
               >

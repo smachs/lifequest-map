@@ -65,7 +65,7 @@ export const uploadToDiscord = (
   formData.append(
     'payload_json',
     JSON.stringify({
-      username: 'nwmap.info',
+      username: 'influence.th.gl',
       avatar_url: 'https://aeternum-map.gg/icon.png',
       content: message,
     })
