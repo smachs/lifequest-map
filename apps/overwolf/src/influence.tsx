@@ -9,9 +9,11 @@ import {
 import { IconScreenshot, IconUpload, IconX } from '@tabler/icons-react';
 import { StrictMode, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import ResizeBorder from './components/ResizeBorder/ResizeBorder';
 import './globals.css';
 import type { Influence } from './utils/influence';
 import {
+  INFLUENCE_SIZE,
   factions,
   getInfluence,
   regions,
@@ -20,7 +22,7 @@ import {
 } from './utils/influence';
 import { getImageData, loadImage, toBlob } from './utils/media';
 import useCenterWindow from './utils/useCenterWindow';
-import { closeCurrentWindow } from './utils/windows';
+import { closeCurrentWindow, getCurrentWindow } from './utils/windows';
 
 const root = createRoot(document.querySelector('#root')!);
 
@@ -41,21 +43,19 @@ const Influences = () => {
     try {
       setErrorMessage('');
       const canvas = await takeInfluenceScreenshot();
-      canvasRef.current.width = canvas.width;
-      canvasRef.current.height = canvas.height;
+      const currentWindow = await getCurrentWindow();
+      canvasRef.current.width = currentWindow.width;
+      canvasRef.current.height = currentWindow.height;
+
       const imageData = getImageData(canvas);
       const influence = getInfluence(imageData);
       const context = canvasRef.current.getContext('2d')!;
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      const frame = await loadImage('/influences.webp');
-      context.drawImage(frame, 0, 0);
-      context.font = '20px Arial';
-      context.textAlign = 'center';
-      context.shadowColor = 'black';
-      context.shadowBlur = 5;
-      context.shadowOffsetX = 3;
-      context.shadowOffsetY = 3;
-      context.fillStyle = 'white';
+      context.clearRect(
+        0,
+        0,
+        canvasRef.current.width,
+        canvasRef.current.height
+      );
 
       const images: {
         [key: string]: HTMLImageElement;
@@ -65,6 +65,8 @@ const Influences = () => {
         syndicate: await loadImage('/syndicate.webp'),
       };
 
+      const scaleWidth = INFLUENCE_SIZE[0] / canvasRef.current.width;
+      const scaleHeight = INFLUENCE_SIZE[1] / canvasRef.current.height;
       influence.forEach(({ regionName, factionName }) => {
         const region = regions.find((region) => region.name === regionName);
         const faction = factions.find(
@@ -73,7 +75,11 @@ const Influences = () => {
         const image = images[factionName.toLowerCase()];
 
         if (region && faction && image) {
-          context.drawImage(image, region.center[0], region.center[1]);
+          context.drawImage(
+            image,
+            region.center[0] / scaleWidth,
+            region.center[1] / scaleHeight
+          );
         }
       });
       const blob = await toBlob(canvas);
@@ -111,39 +117,36 @@ const Influences = () => {
       sx={{
         width: '100vw',
         height: '100vh',
+        backgroundImage: 'url(/influences.webp)',
         backgroundRepeat: 'no-repeat',
-        background: 'url(/influences.webp)',
+        backgroundSize: 'cover',
         display: 'flex',
         alignItems: 'flex-end',
         flexDirection: 'column',
         position: 'relative',
       }}
     >
-      <Group spacing="xs">
+      <Box sx={{ position: 'absolute', inset: 0, border: '4px solid #000' }} />
+      <Group spacing="xs" m="xs">
         <Tooltip label="Take screenshot">
-          <div>
-            <ActionIcon
-              onClick={handleScreenshot}
-              variant="filled"
-              disabled={!!influence}
-              color="cyan"
-            >
-              <IconScreenshot />
-            </ActionIcon>
-          </div>
+          <ActionIcon
+            onClick={handleScreenshot}
+            variant={influence ? 'subtle' : 'filled'}
+            color="cyan"
+          >
+            <IconScreenshot />
+          </ActionIcon>
         </Tooltip>
         <Tooltip label="Upload influence data">
-          <div>
-            <ActionIcon
-              disabled={!influence || uploaded}
-              onClick={handleUpload}
-              variant="filled"
-              loading={loading}
-              color="cyan"
-            >
-              <IconUpload />
-            </ActionIcon>
-          </div>
+          <ActionIcon
+            disabled={!influence || uploaded}
+            onClick={handleUpload}
+            variant="filled"
+            loading={loading}
+            color="cyan"
+          >
+            <IconUpload />
+          </ActionIcon>
         </Tooltip>
         <Tooltip label="Close overlay">
           <ActionIcon
@@ -179,6 +182,7 @@ const Influences = () => {
           zIndex: -1,
         }}
       />
+      <ResizeBorder square />
     </Box>
   );
 };

@@ -106,7 +106,7 @@
         "block_top_window_navigation": false,
         "desktop_only": false,
         "in_game_only": true,
-        "resizable": false,
+        "resizable": true,
         "transparent": true,
         "size": {
           "width": 642,

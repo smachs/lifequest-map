@@ -382,8 +382,15 @@ export const getInfluence = (imageData: ImageData): Influence => {
       (validationRect.bottom - validationRect.top) *
       (validationRect.right - validationRect.left);
 
-    if (Object.values(factionPoints).some((points) => points / pixels > 0.15)) {
-      throw new Error(`Overlay position is invalid (code-${index})`);
+    const invalidFactionPoints = Object.values(factionPoints).find(
+      (points) => points / pixels > 0.15
+    );
+    if (invalidFactionPoints) {
+      throw new Error(
+        `Overlay position is invalid (code-${index} | ${invalidFactionPoints.toFixed(
+          2
+        )})`
+      );
     }
   });
 
@@ -392,6 +399,7 @@ export const getInfluence = (imageData: ImageData): Influence => {
   return influence;
 };
 
+export const INFLUENCE_SIZE = [642, 640] as const;
 export const takeInfluenceScreenshot = async () => {
   const currentWindow = await getCurrentWindow();
 
@@ -401,6 +409,10 @@ export const takeInfluenceScreenshot = async () => {
       y: currentWindow.top,
       width: currentWindow.width,
       height: currentWindow.height,
+    },
+    rescale: {
+      width: INFLUENCE_SIZE[0],
+      height: INFLUENCE_SIZE[1],
     },
   });
   const canvas = await imageToCanvas(url);
