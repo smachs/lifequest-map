@@ -1,4 +1,4 @@
-import { Anchor, Box, Checkbox, Kbd, Slider, Text } from '@mantine/core';
+import { Anchor, Box, Checkbox, Group, Kbd, Slider, Text } from '@mantine/core';
 import {
   SETUP_MINIMAP,
   SHOW_HIDE_MINIMAP,
@@ -12,9 +12,9 @@ function MinimapSetup() {
   const setupMinimapBinding = useHotkeyBinding(SETUP_MINIMAP);
 
   return (
-    <Box p="xs" maw={300} mx="auto">
-      <Text weight={500} size="sm">
-        Minimap Zoom
+    <Box p="xs" maw={350} w="100%" mx="auto">
+      <Text weight={500} size="xs">
+        Zoom
         <Slider
           value={store.minimapZoom}
           min={0.5}
@@ -24,8 +24,8 @@ function MinimapSetup() {
           onChange={store.setMinimapZoom}
         />
       </Text>
-      <Text weight={500} size="sm">
-        Minimap Border
+      <Text weight={500} size="xs">
+        Border
         <Slider
           value={store.minimapBorderRadius}
           min={0}
@@ -34,8 +34,8 @@ function MinimapSetup() {
           onChange={store.setMinimapBorderRadius}
         />
       </Text>
-      <Text weight={500} size="sm">
-        Minimap Opacity
+      <Text weight={500} size="xs">
+        Opacity
         <Slider
           value={store.minimapOpacity}
           min={20}
@@ -45,27 +45,27 @@ function MinimapSetup() {
         />
       </Text>
       <Checkbox
-        label="Rotate minimap"
+        label="Rotate"
         checked={store.rotateMinimap}
         onMouseDown={(event) => event.stopPropagation()}
         onChange={(event) => store.setRotateMinimap(event.target.checked)}
       />
-      <Text mt="xs">
-        Show/Hide{' '}
-        <Anchor
-          href="overwolf://settings/games-overlay?hotkey=show_hide_minimap&gameId=21816"
-          mx="xs"
-        >
+      <Group position="apart" mt="xs">
+        <Text size="xs" truncate>
+          Show Minimap
+        </Text>
+        <Anchor href="overwolf://settings/games-overlay?hotkey=show_hide_minimap&gameId=21816">
           <Kbd>{showHideMinimapBinding}</Kbd>
         </Anchor>
-        Setup
-        <Anchor
-          href="overwolf://settings/games-overlay?hotkey=setup_minimap&gameId=21816"
-          ml="xs"
-        >
+      </Group>
+      <Group position="apart" mt="xs">
+        <Text size="xs" truncate>
+          Show Settings
+        </Text>
+        <Anchor href="overwolf://settings/games-overlay?hotkey=setup_minimap&gameId=21816">
           <Kbd>{setupMinimapBinding}</Kbd>
         </Anchor>
-      </Text>
+      </Group>
     </Box>
   );
 }
