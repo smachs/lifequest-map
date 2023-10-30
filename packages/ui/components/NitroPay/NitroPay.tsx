@@ -1,6 +1,8 @@
 /*eslint prefer-rest-params: "off"*/
 
+import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
+import { useAccountStore } from '../../utils/account';
 import { useUserStore } from '../../utils/userStore';
 import AdsFallback from './AdsFallback';
 
@@ -27,8 +29,58 @@ window.nitroAds = window.nitroAds || {
 };
 
 const NitroPay = () => {
+  const accountStore = useAccountStore();
   const account = useUserStore((state) => state.account);
   const [showFallback, setShowFallback] = useState(false);
+
+  useEffect(() => {
+    let userId = Cookies.get('userId');
+    const refreshState = async () => {
+      if (!userId) {
+        const state = useAccountStore.getState();
+        if (state.isPatron) {
+          accountStore.setIsPatron(false);
+        }
+        return;
+      }
+
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_PATREON_BASE_URI
+        }/api/patreon?appId=bemfloapmmjpmdmjfjgegnacdlgeapmkcmcmceei`,
+        { credentials: 'include' }
+      );
+      try {
+        const body = await response.json();
+        if (!response.ok) {
+          console.warn(body);
+          accountStore.setIsPatron(false);
+        } else {
+          console.log(`Patreon successfully activated`);
+          accountStore.setIsPatron(true, userId);
+        }
+      } catch (err) {
+        console.error(err);
+        accountStore.setIsPatron(false);
+      }
+    };
+    refreshState();
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        const newUserId = Cookies.get('userId');
+        if (newUserId !== userId) {
+          userId = newUserId;
+          refreshState();
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
 
   useEffect(() => {
     if (
@@ -47,7 +99,7 @@ const NitroPay = () => {
     });
 
     const script = document.createElement('script');
-    script.src = 'https://s.nitropay.com/ads-1042.js';
+    script.src = 'https://s.nitropay.com/ads-1487.js';
     script.setAttribute('data-cfasync', 'false');
     script.setAttribute('data-log-level', 'silent');
     script.async = true;

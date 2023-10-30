@@ -47,8 +47,6 @@ import itemsRouter from './lib/items/router.js';
 import liveRouter from './lib/live/router.js';
 import { initSocket } from './lib/live/socket.js';
 import searchRouter from './lib/search/router.js';
-import { initSupportersCollection } from './lib/supporters/collection.js';
-import supportersRouter from './lib/supporters/router.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -77,6 +75,15 @@ app.set('trust proxy', true);
 
 // Redirects www. traffic
 app.use((req, res, next) => {
+  if (
+    req.headers.host?.endsWith('aeternum-map.gg') ||
+    req.headers.host?.endsWith('new-world.th.gl')
+  ) {
+    return res.redirect(
+      301,
+      req.protocol + '://aeternum-map.th.gl' + req.originalUrl
+    );
+  }
   if (req.headers.host?.slice(0, 4) === 'www.') {
     const newHost = req.headers.host.slice(4);
     return res.redirect(308, req.protocol + '://' + newHost + req.originalUrl);
@@ -149,7 +156,6 @@ async function runServer() {
     app.use('/api/screenshots', screenshotsRouter);
     app.use('/api/search', searchRouter);
     app.use('/api/items', itemsRouter);
-    app.use('/api/supporters', supportersRouter);
     app.use('/api/influences', influencesRouter);
 
     // Static screenshots folder
@@ -301,7 +307,6 @@ async function runServer() {
       initUsersCollection(),
       initScreenshotsCollection(),
       initItemsCollection(),
-      initSupportersCollection(),
       initInfluencesCollection(),
     ]);
     console.log('Collection initialized');

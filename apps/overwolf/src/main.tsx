@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRoot } from 'react-dom/client';
 import FAQ from 'ui/components/FAQ/FAQ';
 import { ThemeProvider } from 'ui/contexts/ThemeProvider';
+import { useAccountStore } from 'ui/utils/account';
 import { initPlausible } from 'ui/utils/stats';
 import { useUserStore } from 'ui/utils/userStore';
 import Ads from './components/Ads/Ads';
@@ -18,8 +19,8 @@ import { closeWindow, getCurrentWindow, WINDOWS } from './utils/windows';
 
 function Sender(): JSX.Element {
   const account = useUserStore((state) => state.account);
+  const isPatron = useAccountStore((state) => state.isPatron);
 
-  const showAds = !account || !account.isSupporter;
   return (
     <div className={styles.container}>
       <ScrollArea type="auto">
@@ -32,7 +33,7 @@ function Sender(): JSX.Element {
           <Settings />
         </Stack>
       </ScrollArea>
-      {showAds && <Ads />}
+      {!isPatron && <Ads />}
     </div>
   );
 }

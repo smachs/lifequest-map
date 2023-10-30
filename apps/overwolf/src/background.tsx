@@ -1,3 +1,4 @@
+import { useAccountStore } from 'ui/utils/account';
 import { useSettingsStore } from 'ui/utils/settingsStore';
 import { initPlausible } from 'ui/utils/stats';
 import { getJSONItem } from 'ui/utils/storage';
@@ -12,11 +13,50 @@ import {
   toggleWindow,
   WINDOWS,
 } from './utils/windows';
-
 console.log('Starting background process');
 
 let triggerGameLaunchEvents = window.location.href.includes('gamelaunchevent');
-async function openApp() {
+async function openApp(event?: overwolf.extensions.AppLaunchTriggeredEvent) {
+  let userId = useAccountStore.getState().userId;
+  if (event?.origin === 'urlscheme') {
+    const matchedUserId = decodeURIComponent(event.parameter).match(
+      'userId=([^&]*)'
+    );
+    const newUserId = matchedUserId ? matchedUserId[1] : null;
+    if (newUserId) {
+      userId = newUserId;
+    }
+  }
+  if (userId) {
+    const accountStore = useAccountStore.getState();
+    const response = await fetch(
+      `${import.meta.env.VITE_PATREON_BASE_URI}/api/patreon/overwolf`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          appId: 'bemfloapmmjpmdmjfjgegnacdlgeapmkcmcmceei',
+          userId,
+        }),
+      }
+    );
+    try {
+      const body = await response.json();
+      if (!response.ok) {
+        console.warn(body);
+        accountStore.setIsPatron(false);
+      } else {
+        console.log(`Patreon successfully activated`);
+        accountStore.setIsPatron(true, userId);
+      }
+    } catch (err) {
+      console.error(err);
+      accountStore.setIsPatron(false);
+    }
+  }
+
   const runningNewWorld = await getRunningNewWorld();
   const preferedWindowName = await getPreferedWindowName();
   console.log(runningNewWorld, preferedWindowName);
@@ -63,10 +103,7 @@ async function handleHotkeyPressed(
 }
 overwolf.settings.hotkeys.onPressed.addListener(handleHotkeyPressed);
 
-async function handleAppLaunch() {
-  openApp();
-}
-overwolf.extensions.onAppLaunchTriggered.addListener(handleAppLaunch);
+overwolf.extensions.onAppLaunchTriggered.addListener(openApp);
 
 overwolf.games.onGameInfoUpdated.addListener(async (event) => {
   if (event.runningChanged && event.gameInfo?.classId === NEW_WORLD_CLASS_ID) {

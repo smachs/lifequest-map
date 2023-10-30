@@ -13,6 +13,7 @@ import {
 } from '@mantine/core';
 import { IconLogout } from '@tabler/icons-react';
 import SupporterInput from 'ui/components/SupporterInput/SupporterInput';
+import { useAccountStore } from 'ui/utils/account';
 import { useSettingsStore } from 'ui/utils/settingsStore';
 import { useUserStore } from 'ui/utils/userStore';
 import { shallow } from 'zustand/shallow';
@@ -47,13 +48,14 @@ function Settings(): JSX.Element {
     SHOW_HIDE_INFLUENCE_OVERLAY
   );
   const [showMinimap, setShowMinimap] = useMinimap();
-  const { account, logoutAccount } = useUserStore(
+  const { logoutAccount } = useUserStore(
     (state) => ({
       account: state.account,
       logoutAccount: state.logoutAccount,
     }),
     shallow
   );
+  const isPatron = useAccountStore((state) => state.isPatron);
 
   return (
     <Paper p="sm">
@@ -73,13 +75,19 @@ function Settings(): JSX.Element {
           />
           <Checkbox
             label="Open Minimized"
-            disabled={!account?.isSupporter}
+            disabled={!isPatron}
             description={
               <>
                 Open this window minimized on game launch. You can still open it
                 with the hotkey.
                 <br />
-                <b>This feature is only available for supporters.</b>
+                <b>
+                  This feature is only available for{' '}
+                  <a href="https://www.th.gl/support-me" target="_blank">
+                    supporters
+                  </a>
+                  .
+                </b>
               </>
             }
             checked={settingsStore.openMinimized ?? false}
@@ -89,12 +97,18 @@ function Settings(): JSX.Element {
           />
           <Checkbox
             label="Open aeternum-map.gg"
-            disabled={!account?.isSupporter}
+            disabled={!isPatron}
             description={
               <>
                 Open aeternum-map.gg on game launch.
                 <br />
-                <b>This feature is only available for supporters.</b>
+                <b>
+                  This feature is only available for{' '}
+                  <a href="https://www.th.gl/support-me" target="_blank">
+                    supporters
+                  </a>
+                  .
+                </b>
               </>
             }
             checked={settingsStore.openAeternumMap ?? false}

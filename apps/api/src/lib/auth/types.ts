@@ -13,5 +13,4 @@ export type AccountDTO = {
     types: string[];
   }[];
   createdAt: Date;
-  isSupporter?: boolean;
 };
