@@ -39,7 +39,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME --build-arg VITE_API_ENDPOINT=${{ secrets.VITE_API_ENDPOINT }} --build-arg VITE_PLAUSIBLE_API_HOST=${{ secrets.VITE_PLAUSIBLE_API_HOST }} --build-arg VITE_PLAUSIBLE_DOMAIN=${{ secrets.VITE_PLAUSIBLE_DOMAIN }} --build-arg VITE_PLAUSIBLE_DOMAIN=${{ secrets.VITE_PLAUSIBLE_DOMAIN }}
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME --build-arg VITE_API_ENDPOINT=${{ secrets.VITE_API_ENDPOINT }} --build-arg VITE_PLAUSIBLE_API_HOST=${{ secrets.VITE_PLAUSIBLE_API_HOST }} --build-arg VITE_PLAUSIBLE_DOMAIN=${{ secrets.VITE_PLAUSIBLE_DOMAIN }} --build-arg VITE_PATREON_BASE_URI=${{ secrets.VITE_PATREON_BASE_URI }}
 
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
