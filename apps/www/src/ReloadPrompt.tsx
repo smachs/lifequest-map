@@ -36,7 +36,7 @@ function ReloadPrompt() {
           <Text size="sm" mb="xs" weight={500}>
             New version available
           </Text>
-          <Button onClick={() => updateServiceWorker(true)}>Update now</Button>
+          <Button onClick={() => updateServiceWorker(true)}>Update now!</Button>
         </Dialog>
       )}
     </>
