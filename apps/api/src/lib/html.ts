@@ -25,6 +25,16 @@ const replaceMeta = (meta: string) => {
   );
 };
 htmlRouter.get('/nodes/:id', async (req, res) => {
+  if (
+    req.headers.host?.endsWith('aeternum-map.gg') ||
+    req.headers.host?.endsWith('new-world.th.gl')
+  ) {
+    return res.redirect(
+      301,
+      req.protocol + '://aeternum-map.th.gl' + req.originalUrl
+    );
+  }
+
   res.setHeader('Content-Type', 'text/html; charset=UTF-8');
 
   const id = req.params.id;
@@ -75,6 +85,16 @@ htmlRouter.get('/nodes/:id', async (req, res) => {
   res.send(html);
 });
 htmlRouter.get('/routes/:id', async (req, res) => {
+  if (
+    req.headers.host?.endsWith('aeternum-map.gg') ||
+    req.headers.host?.endsWith('new-world.th.gl')
+  ) {
+    return res.redirect(
+      301,
+      req.protocol + '://aeternum-map.th.gl' + req.originalUrl
+    );
+  }
+
   res.setHeader('Content-Type', 'text/html; charset=UTF-8');
 
   const id = req.params.id;

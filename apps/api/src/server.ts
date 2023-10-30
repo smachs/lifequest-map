@@ -73,24 +73,6 @@ app.use(express.json());
 // Tell express that it's behind a reverse-proxy
 app.set('trust proxy', true);
 
-// Redirects www. traffic
-app.use((req, res, next) => {
-  if (
-    req.headers.host?.endsWith('aeternum-map.gg') ||
-    req.headers.host?.endsWith('new-world.th.gl')
-  ) {
-    return res.redirect(
-      301,
-      req.protocol + '://aeternum-map.th.gl' + req.originalUrl
-    );
-  }
-  if (req.headers.host?.slice(0, 4) === 'www.') {
-    const newHost = req.headers.host.slice(4);
-    return res.redirect(308, req.protocol + '://' + newHost + req.originalUrl);
-  }
-  next();
-});
-
 async function runServer() {
   if (NO_SOCKET !== 'true') {
     initSocket(server);
@@ -172,7 +154,16 @@ async function runServer() {
     });
 
     // Serve webversion (only on production)
-    app.all('/', (_req, res) => {
+    app.all('/', (req, res) => {
+      if (
+        req.headers.host?.endsWith('aeternum-map.gg') ||
+        req.headers.host?.endsWith('new-world.th.gl')
+      ) {
+        return res.redirect(
+          301,
+          req.protocol + '://aeternum-map.th.gl' + req.originalUrl
+        );
+      }
       res.sendFile(path.join(__dirname, '../../www/dist/index.html'), {
         headers: {
           'Cache-Control': 'public, max-age=0, s-maxage=0, must-revalidate',

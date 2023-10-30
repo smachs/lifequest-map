@@ -1,4 +1,5 @@
 import { Button, Text } from '@mantine/core';
+import Cookies from 'js-cookie';
 import { useAccountStore } from '../../utils/account';
 
 const SupporterInput = () => {
@@ -26,6 +27,7 @@ const SupporterInput = () => {
             color="orange"
             onClick={() => {
               accountStore.setIsPatron(false);
+              Cookies.remove('userId');
             }}
           >
             Disconnect your Patreon account
