@@ -7,7 +7,7 @@ export default function FAQ() {
         <Accordion.Control>How to deactivate ads?</Accordion.Control>
         <Accordion.Panel>
           Become a supporter on{' '}
-          <Anchor href="https://www.patreon.com/devleon" target="_blank">
+          <Anchor href="https://www.th.gl/support-me" target="_blank">
             Patreon
           </Anchor>{' '}
           to disable ads and get the Discord supporter role 🤘
