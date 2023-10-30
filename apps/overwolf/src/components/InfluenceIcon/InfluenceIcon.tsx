@@ -34,8 +34,8 @@ const InfluenceIcon = ({ disabled }: { disabled?: boolean }) => {
           move the influence map to fit the overlay.
           <br />
           The data is used to display the influence per server on{' '}
-          <Anchor href="https://aeternum-map.gg" target="_blank">
-            aeternum-map.gg
+          <Anchor href="https://aeternum-map.th.gl" target="_blank">
+            aeternum-map.th.gl
           </Anchor>
           .
         </Text>

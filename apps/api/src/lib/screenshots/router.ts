@@ -168,7 +168,7 @@ screenshotsRouter.post(
           const response = await uploadToDiscord(
             [screenshotBlob, svgBlob],
             `
-  **Source**: [aeternum-map.gg](<https://aeternum-map.gg/influences/${encodeURIComponent(
+  **Source**: [aeternum-map.th.gl](<https://aeternum-map.th.gl/influences/${encodeURIComponent(
     world.publicName
   )}>)
   **Server**: ${world.publicName}

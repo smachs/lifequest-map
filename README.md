@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://aeternum-map.gg">
+  <a href="https://aeternum-map.th.gl">
     <img src="/media/Big.jpg"
     width="320" height="246">
   </a>
@@ -9,7 +9,7 @@
 
 Get all the locations, farming spots, resources, lore documents, chests, mobs and more!
 
-- [Website](https://aeternum-map.gg)
+- [Website](https://aeternum-map.th.gl)
 - [Download Overwolf app](https://www.overwolf.com/app/Leon_Machens-Aeternum_Map)
 
 ## Contribution

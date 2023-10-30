@@ -66,8 +66,8 @@ function Welcome(): JSX.Element {
         </Title>
         <Text>
           Sign in and connect to{' '}
-          <Anchor href="https://aeternum-map.gg" target="_blank">
-            aeternum-map.gg
+          <Anchor href="https://aeternum-map.th.gl" target="_blank">
+            aeternum-map.th.gl
           </Anchor>
           , an interactive New World map with routes and community managed
           nodes. As alternative, you can use{' '}

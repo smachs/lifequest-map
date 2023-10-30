@@ -80,8 +80,8 @@ async function openApp(event?: overwolf.extensions.AppLaunchTriggeredEvent) {
         overwolf.windows.minimize(windowId);
       }
       if (useSettingsStore.getState().openAeternumMap) {
-        console.log('Open aeternum-map.gg');
-        overwolf.utils.openUrlInDefaultBrowser('https://aeternum-map.gg');
+        console.log('Open aeternum-map.th.gl');
+        overwolf.utils.openUrlInDefaultBrowser('https://aeternum-map.th.gl');
       }
     }
   } else {

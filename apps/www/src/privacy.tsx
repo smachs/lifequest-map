@@ -11,10 +11,10 @@ root.render(
 
     <h2>Details</h2>
     <p>
-      At Aeternum Map, accessible from https://aeternum-map.gg, one of our main
-      priorities is the privacy of our visitors. This Privacy Policy document
-      contains types of information that is collected and recorded by Aeternum
-      Map and how we use it.
+      At Aeternum Map, accessible from https://aeternum-map.th.gl, one of our
+      main priorities is the privacy of our visitors. This Privacy Policy
+      document contains types of information that is collected and recorded by
+      Aeternum Map and how we use it.
     </p>
 
     <p>

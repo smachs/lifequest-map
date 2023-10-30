@@ -61,8 +61,8 @@ export default function FAQ() {
             </List.Item>
             <List.Item>
               Sign in with your Steam account on{' '}
-              <Anchor href="https://aeternum-map.gg/" target="_blank">
-                aeternum-map.gg
+              <Anchor href="https://aeternum-map.th.gl/" target="_blank">
+                aeternum-map.th.gl
               </Anchor>{' '}
               (in any browser or device of your choice)
             </List.Item>
@@ -91,11 +91,11 @@ export default function FAQ() {
               First, we'll add the the Big Map, this is needed so you can change
               all the settings of the (Mini) Map; toggle markers, routes, change
               settings. (can also be done in any browser of your choice) URL:
-              https://aeternum-map.gg/
+              https://aeternum-map.th.gl/
             </List.Item>
             <List.Item>
               And now the Mini Map, click on New Website. URL:
-              https://aeternum-map.gg/minimap.html
+              https://aeternum-map.th.gl/minimap.html
             </List.Item>
             <List.Item>
               Toggle on the Big Map and sign in with your steam account
@@ -133,7 +133,7 @@ export default function FAQ() {
         <Accordion.Control>I want to update my username</Accordion.Control>
         <Accordion.Panel>
           Your username is your Steam Profile Name. If you updated it on Steam,
-          you need to sign-out and sign-in on aeternum-map.gg.
+          you need to sign-out and sign-in on aeternum-map.th.gl.
         </Accordion.Panel>
       </Accordion.Item>
       <Accordion.Item value="I have a different issue!">

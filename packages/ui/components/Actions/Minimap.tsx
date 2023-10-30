@@ -49,7 +49,7 @@ export default function Minimap() {
         </Text>
         <Divider />
         <TextInput
-          value="https://aeternum-map.gg/minimap.html"
+          value="https://aeternum-map.th.gl/minimap.html"
           label="URL"
           readOnly
         />

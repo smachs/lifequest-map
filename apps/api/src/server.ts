@@ -231,7 +231,7 @@ async function runServer() {
       User-agent: *
       Allow: /
   
-      Sitemap: https://aeternum-map.gg/sitemap.xml
+      Sitemap: https://aeternum-map.th.gl/sitemap.xml
       `;
 
       return res.send(robotText);
@@ -239,13 +239,13 @@ async function runServer() {
 
     app.get('/sitemap.xml', async (_req, res) => {
       const urls: string[] = [
-        `<url><loc>https://aeternum-map.gg</loc></url>`,
-        `<url><loc>https://aeternum-map.gg/?realm=ptr</loc></url>`,
+        `<url><loc>https://aeternum-map.th.gl</loc></url>`,
+        `<url><loc>https://aeternum-map.th.gl/?realm=ptr</loc></url>`,
       ];
       mapDetails.forEach((map) => {
         if (map.name !== AETERNUM_MAP.name) {
           urls.push(
-            `<url><loc>https://aeternum-map.gg/${encodeURIComponent(
+            `<url><loc>https://aeternum-map.th.gl/${encodeURIComponent(
               map.title
             )}</loc></url>`
           );
@@ -256,7 +256,7 @@ async function runServer() {
         { projection: { _id: 1 } }
       )) {
         urls.push(
-          `<url><loc>https://aeternum-map.gg/routes/${markerRoute._id.toString()}</loc></url>`
+          `<url><loc>https://aeternum-map.th.gl/routes/${markerRoute._id.toString()}</loc></url>`
         );
       }
 
@@ -265,11 +265,11 @@ async function runServer() {
       lastMarkers.forEach((marker) => {
         if (marker.name) {
           urls.push(
-            `<url><loc>https://aeternum-map.gg/nodes/${marker._id.toString()}</loc></url>`
+            `<url><loc>https://aeternum-map.th.gl/nodes/${marker._id.toString()}</loc></url>`
           );
         } else if (!existingTypes.includes(marker.type)) {
           urls.push(
-            `<url><loc>https://aeternum-map.gg/nodes/${marker._id.toString()}</loc></url>`
+            `<url><loc>https://aeternum-map.th.gl/nodes/${marker._id.toString()}</loc></url>`
           );
           existingTypes.push(marker.type);
         }

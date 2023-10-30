@@ -34,7 +34,7 @@ export const postToDiscord = (
 };
 
 export const getURL = (path: 'routes' | 'nodes', id: string, map?: string) => {
-  let url = 'https://aeternum-map.gg/';
+  let url = 'https://aeternum-map.th.gl/';
   if (map && !mapIsAeternumMap(map)) {
     const mapDetails = findMapDetails(map);
     if (mapDetails) {
@@ -66,7 +66,7 @@ export const uploadToDiscord = (
     'payload_json',
     JSON.stringify({
       username: 'influence.th.gl',
-      avatar_url: 'https://aeternum-map.gg/icon.png',
+      avatar_url: 'https://aeternum-map.th.gl/icon.png',
       content: message,
     })
   );

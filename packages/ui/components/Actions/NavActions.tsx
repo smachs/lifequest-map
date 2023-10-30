@@ -28,7 +28,7 @@ const NavActions = () => {
         <Button
           variant="default"
           component="a"
-          href="https://aeternum-map.gg"
+          href="https://aeternum-map.th.gl"
           target="_blank"
           leftIcon={<IconMap />}
           radius="xl"

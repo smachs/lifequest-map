@@ -39,7 +39,7 @@ destroy();
 
 ## Aeternum Map
 
-Aeternum Map is a New World map companion, available on https://www.overwolf.com/app/Leon_Machens-Aeternum_Map and https://aeternum-map.gg.
+Aeternum Map is a New World map companion, available on https://www.overwolf.com/app/Leon_Machens-Aeternum_Map and https://aeternum-map.th.gl.
 
 ## License
 

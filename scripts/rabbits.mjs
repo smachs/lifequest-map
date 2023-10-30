@@ -10,7 +10,7 @@ dotenv.config();
 const nwmMarkers = await fetch(
   'https://www.newworld-map.com/markers.json'
 ).then((resolve) => resolve.json());
-const amMarkers = await fetch('https://aeternum-map.gg/api/markers').then(
+const amMarkers = await fetch('https://aeternum-map.th.gl/api/markers').then(
   (resolve) => resolve.json()
 );
 const amRabbits = amMarkers.filter((marker) => marker.type === 'rabbit');

@@ -127,7 +127,7 @@ const InfluenceDetails = () => {
         <Button
           variant="default"
           component="a"
-          href={`https://aeternum-map.gg/influences/${publicName}`}
+          href={`https://aeternum-map.th.gl/influences/${publicName}`}
           target="_blank"
           leftIcon={<IconFlag />}
           radius="xl"

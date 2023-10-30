@@ -101,7 +101,7 @@ const UserAction = () => {
   };
 
   const handleShareLink = () => {
-    let url = 'https://aeternum-map.gg';
+    let url = 'https://aeternum-map.th.gl';
     if (map !== AETERNUM_MAP.title) {
       url += `/${map}`;
     }

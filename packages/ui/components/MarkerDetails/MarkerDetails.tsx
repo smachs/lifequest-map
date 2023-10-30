@@ -79,7 +79,7 @@ function MarkerDetails(): JSX.Element {
     if (!nodeId) {
       return <></>;
     }
-    let url = 'https://aeternum-map.gg/';
+    let url = 'https://aeternum-map.th.gl/';
     if (marker?.map) {
       const mapDetails = findMapDetails(marker.map);
       if (mapDetails) {

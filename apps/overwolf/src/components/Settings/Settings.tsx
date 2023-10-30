@@ -96,11 +96,11 @@ function Settings(): JSX.Element {
             }}
           />
           <Checkbox
-            label="Open aeternum-map.gg"
+            label="Open aeternum-map.th.gl"
             disabled={!isPatron}
             description={
               <>
-                Open aeternum-map.gg on game launch.
+                Open aeternum-map.th.gl on game launch.
                 <br />
                 <b>
                   This feature is only available for{' '}

@@ -8,7 +8,7 @@ import { MongoClient, ObjectId } from 'mongodb';
 import regions from '../packages/static/src/regions.json' assert { type: 'json' };
 dotenv.config();
 
-const markers = await fetch('https://aeternum-map.gg/api/markers').then(
+const markers = await fetch('https://aeternum-map.th.gl/api/markers').then(
   (resolve) => resolve.json()
 );
 const region = regions.find((region) => region.name === 'Elysian Wilds');

@@ -169,7 +169,7 @@ const MarkerRouteDetails = () => {
     if (!routeId) {
       return <></>;
     }
-    let url = 'https://aeternum-map.gg/';
+    let url = 'https://aeternum-map.th.gl/';
     if (markerRoute?.map) {
       const mapDetails = findMapDetails(markerRoute.map);
       if (mapDetails) {

@@ -310,7 +310,7 @@ function useLayerGroups({
             }
             url += `nodes/${marker._id}`;
             if (isEmbed) {
-              window.open(`https://aeternum-map.gg${url}`);
+              window.open(`https://aeternum-map.th.gl${url}`);
             } else {
               url += location.search;
               navigate(url);

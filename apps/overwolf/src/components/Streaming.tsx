@@ -10,10 +10,10 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { useEffect } from 'react';
-import CopyIcon from 'ui/components/icons/CopyIcon';
-import RefreshIcon from 'ui/components/icons/RefreshIcon';
 import { patchLiveShareToken } from 'ui/components/ShareLiveStatus/api';
 import useServers from 'ui/components/ShareLiveStatus/useServers';
+import CopyIcon from 'ui/components/icons/CopyIcon';
+import RefreshIcon from 'ui/components/icons/RefreshIcon';
 import { useUserStore } from 'ui/utils/userStore';
 import { v4 as uuid } from 'uuid';
 import { shallow } from 'zustand/shallow';
@@ -70,8 +70,8 @@ function Streaming(): JSX.Element {
         </Title>
         <Text size="xs" color="dimmed">
           Use the token shown below on{' '}
-          <Anchor href="https://aeternum-map.gg" target="_blank">
-            aeternum-map.gg
+          <Anchor href="https://aeternum-map.th.gl" target="_blank">
+            aeternum-map.th.gl
           </Anchor>{' '}
           or{' '}
           <Anchor href="https://newworld-map.com" target="_blank">

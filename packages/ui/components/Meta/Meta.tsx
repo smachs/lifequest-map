@@ -10,7 +10,7 @@ const Meta = (props: MetaProps) => {
 
   const contentTitle = `${props.title}${
     isPTR ? ' - Public Test Realm' : ''
-  } - New World Map - aeternum-map.gg`;
+  } - New World Map - aeternum-map.th.gl`;
   const contentDescription = `${
     props.description ? ` ${props.description} ` : ''
   }Maximize your New World gameplay with Aeternum Map${
