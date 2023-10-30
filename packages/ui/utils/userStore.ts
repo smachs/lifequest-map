@@ -26,7 +26,6 @@ export type AccountDTO = {
   liveShareServerUrl?: string;
   presets?: Preset[];
   createdAt: Date;
-  isSupporter?: boolean;
 };
 
 type Store = {

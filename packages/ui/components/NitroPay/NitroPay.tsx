@@ -3,7 +3,6 @@
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { useAccountStore } from '../../utils/account';
-import { useUserStore } from '../../utils/userStore';
 import AdsFallback from './AdsFallback';
 
 type NitroAd = {
@@ -30,7 +29,6 @@ window.nitroAds = window.nitroAds || {
 
 const NitroPay = () => {
   const accountStore = useAccountStore();
-  const account = useUserStore((state) => state.account);
   const [showFallback, setShowFallback] = useState(false);
 
   useEffect(() => {
@@ -85,7 +83,7 @@ const NitroPay = () => {
   useEffect(() => {
     if (
       navigator.userAgent.includes('Overwolf') ||
-      account?.isSupporter ||
+      accountStore.isPatron ||
       location.href === 'http://localhost:3001/'
     ) {
       return;
@@ -121,7 +119,7 @@ const NitroPay = () => {
     };
   }, []);
 
-  if (account?.isSupporter) {
+  if (accountStore.isPatron) {
     return <></>;
   }
 
