@@ -67,9 +67,6 @@ function Ads(): JSX.Element {
         ref={containerRef}
         className={classes.ads}
         style={isPlaying ? {} : { pointerEvents: 'none' }}
-        onClick={(event) => {
-          console.log(event);
-        }}
       />
     </aside>
   );
