@@ -1175,17 +1175,23 @@ export const mapFilters: FilterItem[] = [
     title: 'Spore Pod Generic',
     iconUrl: '/pois/sporeplant_compass.webp',
   },
+  // {
+  //   category: 'events',
+  //   type: 'baalphazu',
+  //   title: 'Baalphazu',
+  //   iconUrl: '/pois/baalphazu.webp?v=2',
+  // },
+  // {
+  //   category: 'events',
+  //   type: 'treats',
+  //   title: 'Treats',
+  //   iconUrl: '/pois/halloween_treats.webp',
+  // },
   {
     category: 'events',
-    type: 'baalphazu',
-    title: 'Baalphazu',
-    iconUrl: '/pois/baalphazu.webp?v=2',
-  },
-  {
-    category: 'events',
-    type: 'treats',
-    title: 'Treats',
-    iconUrl: '/pois/halloween_treats.webp',
+    type: 'turkulon',
+    title: 'Turkulon',
+    iconUrl: '/pois/turkulon.webp',
   },
 ];
 

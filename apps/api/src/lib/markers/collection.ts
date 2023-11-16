@@ -12,6 +12,7 @@ function ensureMarkersIndexes() {
       unique: true,
     }),
     getMarkersCollection().createIndexes([{ key: { isPrivate: 1 } }]),
+    getMarkersCollection().createIndexes([{ key: { isPrivate: 1, type: 1 } }]),
     getMarkersCollection().createIndexes([
       { key: { isPrivate: 1, userId: 1 } },
     ]),

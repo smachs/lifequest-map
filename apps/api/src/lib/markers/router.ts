@@ -22,11 +22,13 @@ export let lastMarkers: WithId<MarkerDTO>[] = [];
 let lastMarkersJSON = '[]';
 let lastETag = '';
 
+const types = mapFilters.map((filter) => filter.type);
 export const refreshMarkers = async () => {
   lastMarkers = await getMarkersCollection()
     .find(
       {
         isPrivate: { $ne: true },
+        type: { $in: types },
       },
       {
         projection: {
