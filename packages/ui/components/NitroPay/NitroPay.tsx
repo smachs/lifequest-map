@@ -43,9 +43,7 @@ const NitroPay = () => {
       }
 
       const response = await fetch(
-        `${
-          import.meta.env.VITE_PATREON_BASE_URI
-        }/api/patreon?appId=bemfloapmmjpmdmjfjgegnacdlgeapmkcmcmceei`,
+        `https://www.th.gl/api/patreon?appId=bemfloapmmjpmdmjfjgegnacdlgeapmkcmcmceei`,
         { credentials: 'include' }
       );
       try {

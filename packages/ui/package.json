@@ -34,6 +34,7 @@
     "realtime": "*",
     "socket.io-client": "4.6.1",
     "static": "*",
+    "swr": "2.2.4",
     "zustand": "4.3.8"
   }
 }

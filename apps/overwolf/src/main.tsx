@@ -10,6 +10,7 @@ import { useAccountStore } from 'ui/utils/account';
 import { initPlausible } from 'ui/utils/stats';
 import { useUserStore } from 'ui/utils/userStore';
 import Ads from './components/Ads/Ads';
+import Channels from './components/channels';
 import InfluenceIcon from './components/InfluenceIcon/InfluenceIcon';
 import Settings from './components/Settings/Settings';
 import Streaming from './components/Streaming';
@@ -25,6 +26,7 @@ function Sender(): JSX.Element {
     <div className={styles.container}>
       <ScrollArea type="auto">
         <Stack p="xs">
+          <Channels />
           <Paper p="sm">
             <InfluenceIcon />
           </Paper>
