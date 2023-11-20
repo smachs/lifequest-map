@@ -3,7 +3,7 @@ name: Build Overwolf Preview App CI
 on:
   push:
     paths:
-      - 'overwolf/manifest.json'
+      - 'apps/overwolf/manifest.json'
   workflow_dispatch:
 
 jobs:
