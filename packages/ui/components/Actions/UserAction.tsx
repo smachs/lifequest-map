@@ -322,6 +322,14 @@ const UserAction = () => {
               </Anchor>
               <Anchor
                 size="xs"
+                href="https://mutation-cycle.th.gl/"
+                title="Mutation Cycle"
+                target="_blank"
+              >
+                Mutation Cycle
+              </Anchor>
+              <Anchor
+                size="xs"
                 href="https://influence.th.gl/"
                 title="New World Faction Territory Map"
                 target="_blank"
