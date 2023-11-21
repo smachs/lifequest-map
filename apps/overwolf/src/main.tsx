@@ -26,12 +26,12 @@ function Sender(): JSX.Element {
     <div className={styles.container}>
       <ScrollArea type="auto">
         <Stack p="xs">
-          <Channels />
           <Paper p="sm">
             <InfluenceIcon />
           </Paper>
           {account ? <Streaming /> : <Welcome />}
           <SyncStatusSender />
+          <Channels />
           <Settings />
         </Stack>
       </ScrollArea>
