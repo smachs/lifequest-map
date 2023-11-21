@@ -39,7 +39,7 @@ const createCanvasLayer = (
       }
       return `${VITE_API_ENDPOINT}/assets/${isPTR ? 'ptr/' : ''}${
         mapDetail.folder
-      }/map_l${zoom}_y${toThreeDigits(y)}_x${toThreeDigits(x)}.webp?v=3`;
+      }/map_l${zoom}_y${toThreeDigits(y)}_x${toThreeDigits(x)}.webp?v=4`;
     },
     getTileSize() {
       return { x: 1024, y: 1024 };
