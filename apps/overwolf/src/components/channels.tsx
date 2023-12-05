@@ -67,9 +67,16 @@ export default function Channels() {
         </Text>
         <Text>
           Version{' '}
-          <Text component="span" color="blue" weight="bold">
+          <Text component="span" color="green" weight="bold">
             v{version}
           </Text>
+          <Anchor
+            href="https://www.th.gl/apps/Aeternum%20Map/release-notes"
+            target="_blank"
+            ml="md"
+          >
+            Release Notes
+          </Anchor>
         </Text>
 
         <Text size="xs" color="dimmed">

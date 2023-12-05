@@ -1,5 +1,12 @@
 import type { ReactNode } from 'react';
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   AETERNUM_MAP,
   findLocation,
@@ -8,7 +15,10 @@ import {
   mapIsAeternumMap,
 } from 'static';
 import { useSettingsStore } from 'ui/utils/settingsStore';
+import { promisifyOverwolf } from 'ui/utils/wrapper';
 import { useNewWorldGameInfo } from '../components/store';
+import type { DiscordRPCPlugin } from '../utils/discord-rpc';
+import { loadDiscordRPCPlugin } from '../utils/discord-rpc';
 import { getGameInfo } from '../utils/games';
 import type { MOVEMENT } from '../utils/inputTracking';
 import { listenToMovement } from '../utils/inputTracking';
@@ -277,6 +287,57 @@ export function PositionProvider({
       stopListenToKeysDown();
     };
   }, [newWorldGameInfo?.isRunning, settingsStore.extrapolatePlayerPosition]);
+
+  const discordRPCPlugin = useRef<DiscordRPCPlugin | null>(null);
+  useEffect(() => {
+    if (discordRPCPlugin.current) return;
+
+    loadDiscordRPCPlugin('930068687380168765').then((result) => {
+      discordRPCPlugin.current = result;
+      discordRPCPlugin.current.onLogLine.addListener((message) => {
+        console.log(`DISCORD RPC - ${message.level} - ${message.message}`);
+
+        if (message.message == 'Failed to connect for some reason.') {
+          console.log(
+            'Shutting down Discord RPC because of too many connections errors'
+          );
+          discordRPCPlugin.current = null;
+          promisifyOverwolf(result.dispose)();
+        }
+
+        if (
+          message.message ==
+          'We have been told to terminate by discord: (4000) Invalid Client ID'
+        ) {
+          console.log(
+            'Shutting down Discord RPC because of too many connections errors'
+          );
+          discordRPCPlugin.current = null;
+          promisifyOverwolf(result.dispose)();
+        }
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (discordRPCPlugin.current && username && region) {
+      discordRPCPlugin.current.updatePresence(
+        username,
+        region,
+        'new-world',
+        'New World',
+        'aeternum-map',
+        'Aeternum Map App',
+        true,
+        0,
+        'Open Map',
+        'https://aeternum-map.th.gl/',
+        '',
+        '',
+        () => null
+      );
+    }
+  }, [username, worldName, region]);
 
   return (
     <PositionContext.Provider

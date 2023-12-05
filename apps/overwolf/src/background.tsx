@@ -2,6 +2,8 @@ import { useAccountStore } from 'ui/utils/account';
 import { useSettingsStore } from 'ui/utils/settingsStore';
 import { initPlausible } from 'ui/utils/stats';
 import { getJSONItem } from 'ui/utils/storage';
+import { promisifyOverwolf } from 'ui/utils/wrapper';
+import { loadDiscordRPCPlugin } from './utils/discord-rpc';
 import { getRunningNewWorld, NEW_WORLD_CLASS_ID } from './utils/games';
 import { SHOW_HIDE_APP, SHOW_HIDE_INFLUENCE_OVERLAY } from './utils/hotkeys';
 import {
@@ -101,6 +103,7 @@ async function handleHotkeyPressed(
 overwolf.settings.hotkeys.onPressed.addListener(handleHotkeyPressed);
 
 overwolf.extensions.onAppLaunchTriggered.addListener(openApp);
+const discordRPCPlugin = await loadDiscordRPCPlugin('930068687380168765');
 
 overwolf.games.onGameInfoUpdated.addListener(async (event) => {
   if (event.runningChanged && event.gameInfo?.classId === NEW_WORLD_CLASS_ID) {
@@ -120,8 +123,11 @@ overwolf.games.onGameInfoUpdated.addListener(async (event) => {
       if (getJSONItem('showMinimap', false)) {
         restoreWindow(WINDOWS.MINIMAP);
       }
-    } else if (preferedWindowName === WINDOWS.OVERLAY) {
-      closeMainWindow();
+    } else {
+      await promisifyOverwolf(discordRPCPlugin.dispose)();
+      if (preferedWindowName === WINDOWS.OVERLAY) {
+        closeMainWindow();
+      }
     }
   }
 });

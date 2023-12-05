@@ -4,7 +4,7 @@
   "meta": {
     "name": "Aeternum Map-DEV",
     "author": "Leon Machens",
-    "version": "3.17.2",
+    "version": "3.18.0",
     "minimum-overwolf-version": "0.169.0",
     "description": "New World Interactive Map",
     "dock_button_title": "Aeternum Map",
@@ -203,6 +203,12 @@
       "enable_auto_refresh": true,
       "reload_delay": 1000,
       "filter": "*.*"
+    },
+    "extra-objects": {
+      "discord": {
+        "file": "plugins/DiscordRPCPlugin.dll",
+        "class": "overwolf.plugins.DiscordRPCPlugin"
+      }
     }
   }
 }
