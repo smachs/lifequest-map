@@ -330,8 +330,8 @@ export function PositionProvider({
         'Aeternum Map・The Hidden Gaming Lair',
         true,
         0,
-        'Open Aeternum Map',
-        'https://aeternum-map.th.gl/',
+        'Get The App',
+        'https://www.th.gl/apps/Aeternum%20Map?ref=discordrpc',
         '',
         '',
         () => null
