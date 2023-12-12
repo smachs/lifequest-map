@@ -53,14 +53,14 @@ input {
   background-color: black;
   align-items: center;
   border-bottom: 1px solid #27272a;
+  font-family: monospace;
+  color: rgb(199 199 199);
 }
 
-.version {
+.app-header h1 {
   font-size: 1rem;
-  margin: 0;
-  margin-left: 12px;
+  margin: 0 12px;
   color: rgb(199 199 199);
-  font-family: monospace;
 }
 
 .discord {

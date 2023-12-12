@@ -14,6 +14,7 @@ import {
 import { useClipboard } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import {
+  IconExternalLink,
   IconHelp,
   IconLogout,
   IconSettings,
@@ -235,7 +236,13 @@ const UserAction = () => {
               </>
             )}
             <Divider />
-
+            <Anchor
+              href="https://www.th.gl/apps/Aeternum%20Map/release-notes"
+              target="_blank"
+              align="center"
+            >
+              Release Notes <IconExternalLink size={14} />
+            </Anchor>
             <Group spacing="xs" position="center">
               <Tooltip label="Share link">
                 <ActionIcon
