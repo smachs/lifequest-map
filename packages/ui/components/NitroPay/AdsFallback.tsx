@@ -8,75 +8,29 @@ declare global {
   }
 }
 
-const TWITCH_CHANNELS: string[] = ['thehiddengaminglair'];
+const CHANNEL = 'thehiddengaminglair';
 
 const AdsFallback = ({ onClose }: { onClose: () => void }) => {
   useEffect(() => {
-    let channels = [...TWITCH_CHANNELS];
     const script = loadTwitch();
 
     script.onload = () => {
-      const channel = getRandom(channels);
-      channels = channels.filter((c) => c !== channel);
-      const twitchEmbed = new window.Twitch.Embed('player', {
-        width: '100%',
-        height: '100%',
-        channel,
-        layout: 'video',
-        autoplay: true,
+      const twitchEmbed = new window.Twitch.Player('player', {
+        channel: CHANNEL,
+        width: 320,
+        height: 180,
         muted: true,
+        autoplay: true,
+        showMature: false,
         quality: '160p30',
-        parent: ['aeternum-map.gg', 'aeternum-map.th.gl', 'influence.th.gl'],
         controls: false,
-      });
-
-      twitchEmbed.addEventListener(window.Twitch.Player.OFFLINE, () => {
-        if (channels.length > 0) {
-          twitchEmbed.setChannel(getRandom(channels));
-        }
+        parent: ['aeternum-map.th.gl', 'influence.th.gl'],
       });
 
       twitchEmbed.addEventListener(window.Twitch.Player.ONLINE, () => {
         trackEvent('Ad Fallback: Twitch', {
-          props: { url: `https://www.twitch.tv/${channel}` },
+          props: { url: `https://www.twitch.tv/${CHANNEL}` },
         });
-      });
-
-      const REFRESH_INTERVAL = 1000 * 60;
-      let lastUpdate = Date.now();
-      let timeout = setTimeout(refreshTwitchEmbed, REFRESH_INTERVAL);
-      function refreshTwitchEmbed() {
-        lastUpdate = Date.now();
-        if (
-          !(
-            twitchEmbed.getPlayerState()?.playback === 'Playing' &&
-            twitchEmbed.getDuration() === 0
-          )
-        ) {
-          twitchEmbed.setChannel(
-            [...twitchEmbed.getChannel()]
-              ?.map((char) =>
-                char === char.toUpperCase()
-                  ? char.toLowerCase()
-                  : char.toUpperCase()
-              )
-              .join('')
-          );
-        }
-        timeout = setTimeout(refreshTwitchEmbed, REFRESH_INTERVAL);
-      }
-
-      window.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-          const timeLeft = REFRESH_INTERVAL - (Date.now() - lastUpdate);
-          if (timeLeft < 0) {
-            refreshTwitchEmbed();
-          } else {
-            timeout = setTimeout(refreshTwitchEmbed, timeLeft);
-          }
-        } else {
-          clearTimeout(timeout);
-        }
       });
     };
     document.body.append(script);
@@ -144,10 +98,6 @@ const AdsFallback = ({ onClose }: { onClose: () => void }) => {
 };
 
 export default AdsFallback;
-
-function getRandom(arr: string[]) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
 
 function loadTwitch() {
   const script = document.createElement('script');
