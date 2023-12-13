@@ -49,7 +49,7 @@ function SelectGlyphType({
       }}
       data={glyphs.map((glyph) => ({
         value: glyph.id.toString(),
-        image: `${VITE_API_ENDPOINT}/assets${glyph.iconUrl}?v=3`,
+        image: `${VITE_API_ENDPOINT}/assets${glyph.iconUrl}?v=4`,
         label: glyph.name,
       }))}
     />

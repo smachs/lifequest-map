@@ -276,7 +276,7 @@ function useLayerGroups({
             markerId: marker._id,
             type: marker.type,
             markerSize: marker.size,
-            src: `${VITE_API_ENDPOINT}/assets${mapFilter.iconUrl}?v=3`,
+            src: `${VITE_API_ENDPOINT}/assets${mapFilter.iconUrl}?v=4`,
             showBackground: markerShowBackground,
             borderColor: filterCategory.borderColor,
             highlight: isHighlighted,

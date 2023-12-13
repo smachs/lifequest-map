@@ -91,7 +91,7 @@ const MapCard = ({ mapDetail, onClick, to }: MapCardProps) => {
       <div
         className={classes.image}
         style={{
-          backgroundImage: `url(/maps/${mapDetail.name.toLowerCase()}.webp?v=3)`,
+          backgroundImage: `url(/maps/${mapDetail.name.toLowerCase()}.webp?v=4)`,
         }}
       />
       <div className={classes.overlay} />
@@ -137,12 +137,13 @@ const MapAction = () => {
         opened={opened}
         onClose={() => setOpened(false)}
         keepMounted
+        size="lg"
       >
         <Grid gutter="xs" justify="space-around">
           {mapDetails.map((mapDetail, index) => (
             <Grid.Col
               key={mapDetail.name}
-              span={index === 0 ? 12 : 4}
+              span={index === 0 ? 12 : 3}
               sx={{
                 textAlign: 'center',
               }}

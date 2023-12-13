@@ -22,7 +22,7 @@ function SelectPosition({
   useGeoman({
     details,
     leafletMap: latestLeafletMap!,
-    iconUrl: `${VITE_API_ENDPOINT}/assets${filter?.iconUrl}?v=3`,
+    iconUrl: `${VITE_API_ENDPOINT}/assets${filter?.iconUrl}?v=4`,
     filter,
     x: location[0],
     y: location[1],
