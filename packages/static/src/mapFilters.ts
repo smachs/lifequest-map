@@ -1187,11 +1187,43 @@ export const mapFilters: FilterItem[] = [
   //   title: 'Treats',
   //   iconUrl: '/pois/halloween_treats.webp',
   // },
+  // {
+  //   category: 'events',
+  //   type: 'turkulon',
+  //   title: 'Turkulon',
+  //   iconUrl: '/pois/turkulon.webp',
+  // },
   {
     category: 'events',
-    type: 'turkulon',
-    title: 'Turkulon',
-    iconUrl: '/pois/turkulon.webp',
+    type: 'gleamite',
+    title: 'Gleamite',
+    iconUrl: '/pois/gleamite.webp',
+  },
+  {
+    category: 'events',
+    type: 'lostPresent',
+    title: 'Lost present',
+    iconUrl: '/pois/lostPresent.webp',
+  },
+  {
+    category: 'events',
+    type: 'floatingPresent',
+    title: 'Floating present',
+    iconUrl: '/pois/floatingPresent.webp',
+  },
+  {
+    category: 'events',
+    type: 'winterVillage',
+    title: 'Winter Village',
+    iconUrl: '/pois/winterVillage.webp',
+  },
+  {
+    category: 'events',
+    type: 'winterWarrior',
+    title: 'Winter Warrior',
+    iconUrl: '/pois/winterWarrior.webp',
+    hasLevel: true,
+    hasHP: true,
   },
 ];
 
