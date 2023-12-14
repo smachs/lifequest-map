@@ -386,10 +386,11 @@ export const getInfluence = (imageData: ImageData): Influence => {
       (points) => points / pixels > 0.15
     );
     if (invalidFactionPoints) {
-      throw new Error(
+      console.warn(
         `Overlay position is invalid (code-${index} | ${invalidFactionPoints.toFixed(
           2
-        )})`
+        )})`,
+        validationResults
       );
     }
   });
