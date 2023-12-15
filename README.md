@@ -1,23 +1,13 @@
-<p align="center">
-  <a href="https://aeternum-map.th.gl">
-    <img src="/media/Big.jpg"
-    width="320" height="246">
-  </a>
-</p>
+# Life Quest
+Your comprehensive companion for conquering real-world territories! Explore with confidence, utilizing a robust toolkit featuring location insights, real-time tracking, optimized productivity routes, and seamless group coordination.
 
-# Aeternum Map - Interactive map for New World
-
-Get all the locations, farming spots, resources, lore documents, chests, mobs and more!
-
-- [Website](https://aeternum-map.th.gl)
-- [Download Overwolf app](https://www.overwolf.com/app/Leon_Machens-Aeternum_Map)
+- [Website](https://lifequest.gg
 
 ## Contribution
-
 This app is Open Source. Contributors are highly welcome!
-Join the [Discord](https://discord.com/invite/NTZu8Px).
+Join the [Discord](https://discord.gg/M9w4Wm8Q8E).
 
-Please add issues and feature requests on the Discord channel #suggestions.
+Add issues and feature requests on the Discord channel #suggestions.
 
 ### Install dependencies
 
