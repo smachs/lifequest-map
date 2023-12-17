@@ -32,6 +32,43 @@ const AdsFallback = ({ onClose }: { onClose: () => void }) => {
           props: { url: `https://www.twitch.tv/${CHANNEL}` },
         });
       });
+
+      const REFRESH_INTERVAL = 1000 * 60;
+      let lastUpdate = Date.now();
+      let timeout = setTimeout(refreshTwitchEmbed, REFRESH_INTERVAL);
+      function refreshTwitchEmbed() {
+        lastUpdate = Date.now();
+        if (
+          !(
+            twitchEmbed.getPlayerState()?.playback === 'Playing' &&
+            twitchEmbed.getDuration() === 0
+          )
+        ) {
+          twitchEmbed.setChannel(
+            [...twitchEmbed.getChannel()]
+              ?.map((char) =>
+                char === char.toUpperCase()
+                  ? char.toLowerCase()
+                  : char.toUpperCase()
+              )
+              .join('')
+          );
+        }
+        timeout = setTimeout(refreshTwitchEmbed, REFRESH_INTERVAL);
+      }
+
+      window.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          const timeLeft = REFRESH_INTERVAL - (Date.now() - lastUpdate);
+          if (timeLeft < 0) {
+            refreshTwitchEmbed();
+          } else {
+            timeout = setTimeout(refreshTwitchEmbed, timeLeft);
+          }
+        } else {
+          clearTimeout(timeout);
+        }
+      });
     };
     document.body.append(script);
 
