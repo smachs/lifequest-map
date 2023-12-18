@@ -143,6 +143,39 @@
     ]
   },
   {
+    "name": "NW_Trial_Season_04",
+    "title": "The Winter Rune Forge",
+    "folder": "nw_trial_season_04",
+    "maxZoom": 6,
+    "minZoom": 3,
+    "maxBounds": [
+      [0, 120],
+      [430, 380]
+    ]
+  },
+  {
+    "name": "NW_Trial_Season_04_DaichiDojo",
+    "title": "Daichi Saito",
+    "folder": "nw_trial_season_04_daichidojo",
+    "maxZoom": 6,
+    "minZoom": 3,
+    "maxBounds": [
+      [340, 240],
+      [470, 370]
+    ]
+  },
+  {
+    "name": "NW_Trial_Season_04_DeviceRoom",
+    "title": "Eternal Frost",
+    "folder": "nw_trial_season_04_deviceroom",
+    "maxZoom": 6,
+    "minZoom": 3,
+    "maxBounds": [
+      [150, 90],
+      [350, 360]
+    ]
+  },
+  {
     "name": "NW_Ori_Eg_QuestMotherwell",
     "title": "Quest Motherwell",
     "folder": "nw_ori_eg_questmotherwell",
