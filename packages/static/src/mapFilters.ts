@@ -1077,14 +1077,20 @@ export const mapFilters: FilterItem[] = [
   {
     category: 'service',
     type: 'service_territory_board',
-    title: 'Territory Board',
+    title: 'Territory Planning Board',
     iconUrl: '/pois/service_territory_board.webp',
   },
   {
     category: 'service',
     type: 'service_town_board',
-    title: 'Town Board',
+    title: 'Town Project Board',
     iconUrl: '/pois/service_town_board.webp',
+  },
+  {
+    category: 'service',
+    type: 'service_govenors_desk',
+    title: "Govenor's Desk",
+    iconUrl: '/pois/worldmap_governorsdesk.webp',
   },
   {
     category: 'service',
