@@ -128,7 +128,9 @@ function MarkerDetails(): JSX.Element {
             {marker.chestType
               ? `${
                   filterItem.type.includes('Supplies')
-                    ? `${marker.chestType} ${filterItem.title.split(' ').pop()}`
+                    ? `${filterItem.title.includes('Elite') ? 'Elite ' : ''}${
+                        marker.chestType
+                      } ${filterItem.title.split(' ').pop()}`
                     : filterItem.title
                 } T${marker.tier}`
               : marker.name || filterItem.title}

@@ -41,8 +41,9 @@ export function getTooltipContent(
       mapFilter.category === 'chests' &&
       mapFilter.type.includes('Supplies')
     ) {
+      const isElite = mapFilter.title.includes('Elite');
       const chestname = mapFilter.title.split(' ').pop();
-      let content = `${
+      let content = `${isElite ? 'Elite ' : ''}${
         markerOrDetails.chestType ||
         mapFilter.title.split(' ').slice(0, -1).join(' ')
       } ${chestname}`;
