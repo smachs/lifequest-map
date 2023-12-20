@@ -1028,6 +1028,12 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'service',
+    type: 'service_govenors_desk',
+    title: "Govenor's Desk",
+    iconUrl: '/pois/worldmap_governorsdesk.webp',
+  },
+  {
+    category: 'service',
     type: 'service_gypsum_kiln',
     title: 'Gypsum Kiln',
     iconUrl: '/pois/service_gypsum_kiln.webp',
@@ -1088,9 +1094,9 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'service',
-    type: 'service_govenors_desk',
-    title: "Govenor's Desk",
-    iconUrl: '/pois/worldmap_governorsdesk.webp',
+    type: 'service_stylemancer',
+    title: 'Stylemancer',
+    iconUrl: '/pois/icon_transmogstation.webp',
   },
   {
     category: 'service',
