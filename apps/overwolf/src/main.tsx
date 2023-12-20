@@ -65,7 +65,7 @@ root.render(
   </QueryClientProvider>
 );
 
-initPlausible();
+initPlausible('-app');
 
 async function initAppHeader() {
   const currentWindow = await getCurrentWindow();

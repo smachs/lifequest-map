@@ -132,4 +132,4 @@ overwolf.games.onGameInfoUpdated.addListener(async (event) => {
   }
 });
 
-initPlausible();
+initPlausible('-app');
