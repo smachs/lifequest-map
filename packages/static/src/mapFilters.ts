@@ -1214,13 +1214,13 @@ export const mapFilters: FilterItem[] = [
   {
     category: 'events',
     type: 'lostPresent',
-    title: 'Lost present',
+    title: 'Lost Present',
     iconUrl: '/pois/lostPresent.webp',
   },
   {
     category: 'events',
     type: 'floatingPresent',
-    title: 'Floating present',
+    title: 'Floating Present',
     iconUrl: '/pois/floatingPresent.webp',
   },
   {
