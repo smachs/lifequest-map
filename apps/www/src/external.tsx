@@ -110,7 +110,6 @@ export default function External() {
                 fillOpacity: 1,
               }),
             onEachFeature: (feature, layer) => {
-              console.log(layer);
               layer.on('click', () => {
                 postMessageToParent('click', feature);
               });
