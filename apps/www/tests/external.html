@@ -20,6 +20,7 @@
       <button id="zoom-out">-</button>
       <button id="center">Center</button>
       <button id="view">View</button>
+      <button id="fit-bounds">Fit Bounds</button>
     </div>
     <script>
       const external = document.querySelector('#external');
@@ -28,376 +29,387 @@
       const zoomOut = document.querySelector('#zoom-out');
       const center = document.querySelector('#center');
       const view = document.querySelector('#view');
+      const fitBounds = document.querySelector('#fit-bounds');
 
       window.addEventListener('message', (event) => {
         console.log('message', event.data);
-        if (event.data?.type === 'ready') {
-          external.contentWindow.postMessage(
-            {
-              type: 'SET_EXTERNAL_DATA',
-              payload: [
-                {
-                  type: 'Feature',
-                  properties: {
-                    'fill-color': '#52b874',
-                    'fill-outline-color': '#000',
-                    'fill-opacity': 0.25,
-                  },
-                  geometry: {
-                    coordinates: [
-                      [
-                        [9155, 9290],
-                        [9123, 9321],
-                        [9112, 9347],
-                        [9030, 9360],
-                        [8942, 9372],
-                        [8891, 9391],
-                        [8794, 9406],
-                        [8637, 9443],
-                        [8648, 9333],
-                        [8617, 9176],
-                        [8592, 9045],
-                        [8723, 9010],
-                        [8871, 8994],
-                        [9004, 9019],
-                        [9107, 9092],
-                        [9138, 9168],
+        switch (event.data?.type) {
+          case 'ready':
+            external.contentWindow.postMessage(
+              {
+                type: 'SET_EXTERNAL_DATA',
+                payload: [
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'fill-color': '#52b874',
+                      'fill-outline-color': '#000',
+                      'fill-opacity': 0.25,
+                      interactive: true,
+                      title: 'This is a zone',
+                    },
+                    geometry: {
+                      coordinates: [
+                        [
+                          [10105, 8378],
+                          [10304, 8421],
+                          [10543, 8713],
+                          [10724, 8777],
+                          [10998, 8884],
+                          [10992, 8967],
+                          [11007, 9149],
+                          [11052, 9252],
+                          [10800, 9274],
+                          [10742, 9389],
+                          [10770, 9592],
+                          [10805, 9866],
+                          [10754, 10030],
+                          [10453, 10105],
+                          [10271, 9973],
+                          [10073, 9877],
+                          [9924, 9805],
+                          [9725, 9887],
+                          [9553, 9896],
+                          [9392, 9755],
+                          [9259, 9746],
+                          [9222, 9744],
+                          [9084, 9842],
+                          [8904, 9892],
+                          [8706, 9758],
+                          [8626, 9549],
+                          [8648, 9333],
+                          [8617, 9176],
+                          [8572, 8943],
+                          [8392, 8801],
+                          [8296, 8671],
+                          [8734, 8671],
+                          [9028, 8596],
+                          [9081, 8551],
+                          [9448, 8501],
+                          [9567, 8500],
+                          [9796, 8476],
+                        ],
                       ],
-                    ],
-                    type: 'Polygon',
+                      type: 'Polygon',
+                    },
                   },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'fill-color': '#52b874',
-                    'fill-outline-color': '#000',
-                    'fill-opacity': 0.25,
-                  },
-                  geometry: {
-                    coordinates: [
-                      [
-                        [10105, 8378],
-                        [10304, 8421],
-                        [10543, 8713],
-                        [10724, 8777],
-                        [10998, 8884],
-                        [10992, 8967],
-                        [11007, 9149],
-                        [11052, 9252],
-                        [10800, 9274],
-                        [10742, 9389],
-                        [10770, 9592],
-                        [10805, 9866],
-                        [10754, 10030],
-                        [10453, 10105],
-                        [10271, 9973],
-                        [10073, 9877],
-                        [9924, 9805],
-                        [9725, 9887],
-                        [9553, 9896],
-                        [9392, 9755],
-                        [9259, 9746],
-                        [9222, 9744],
-                        [9084, 9842],
-                        [8904, 9892],
-                        [8706, 9758],
-                        [8626, 9549],
-                        [8648, 9333],
-                        [8617, 9176],
-                        [8572, 8943],
-                        [8392, 8801],
-                        [8296, 8671],
-                        [8734, 8671],
-                        [9028, 8596],
-                        [9081, 8551],
-                        [9448, 8501],
-                        [9567, 8500],
-                        [9796, 8476],
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'fill-color': '#52b874',
+                      'fill-outline-color': '#000',
+                      'fill-opacity': 0.25,
+                      interactive: false,
+                      // title: 'This is a zone',
+                    },
+                    geometry: {
+                      coordinates: [
+                        [
+                          [9155, 9290],
+                          [9123, 9321],
+                          [9112, 9347],
+                          [9030, 9360],
+                          [8942, 9372],
+                          [8891, 9391],
+                          [8794, 9406],
+                          [8637, 9443],
+                          [8648, 9333],
+                          [8617, 9176],
+                          [8592, 9045],
+                          [8723, 9010],
+                          [8871, 8994],
+                          [9004, 9019],
+                          [9107, 9092],
+                          [9138, 9168],
+                        ],
                       ],
-                    ],
-                    type: 'Polygon',
+                      type: 'Polygon',
+                    },
                   },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'circle-color': '#52b874',
-                    'circle-stroke-color': '#121212',
-                    'circle-stroke-width': 1,
-                    'circle-radius': 10,
-                    'circle-opacity': 1,
-                    title:
-                      'Name: Scorchvein Supply Guard<br>Level: 63<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Inferior<br>Coordinates: x: 8968, y: 9092, z: 617',
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'circle-color': '#52b874',
+                      'circle-stroke-color': '#121212',
+                      'circle-stroke-width': 1,
+                      'circle-radius': 10,
+                      'circle-opacity': 1,
+                      title:
+                        'Name: Scorchvein Supply Guard<br>Level: 63<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Inferior<br>Coordinates: x: 8968, y: 9092, z: 617',
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [8968, 9092, 617],
+                    },
                   },
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [8968, 9092, 617],
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'circle-color': '#52b874',
+                      'circle-stroke-color': '#121212',
+                      'circle-stroke-width': 1,
+                      'circle-radius': 10,
+                      'circle-opacity': 1,
+                      title:
+                        'Name: Scorchvein Supply Guard<br>Level: 63<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Inferior<br>Coordinates: x: 9030, y: 9131, z: 609',
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [9030, 9131, 609],
+                    },
                   },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'circle-color': '#52b874',
-                    'circle-stroke-color': '#121212',
-                    'circle-stroke-width': 1,
-                    'circle-radius': 10,
-                    'circle-opacity': 1,
-                    title:
-                      'Name: Scorchvein Supply Guard<br>Level: 63<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Inferior<br>Coordinates: x: 9030, y: 9131, z: 609',
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'circle-color': '#52b874',
+                      'circle-stroke-color': '#121212',
+                      'circle-stroke-width': 1,
+                      'circle-radius': 10,
+                      'circle-opacity': 1,
+                      title:
+                        'Name: Scorchvein Supply Guard<br>Level: 63<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Inferior<br>Coordinates: x: 8972, y: 9306, z: 579',
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [8972, 9306, 579],
+                    },
                   },
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [9030, 9131, 609],
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'circle-color': '#52b874',
+                      'circle-stroke-color': '#121212',
+                      'circle-stroke-width': 1,
+                      'circle-radius': 10,
+                      'circle-opacity': 1,
+                      title:
+                        'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8819, y: 9354, z: 634',
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [8819, 9354, 634],
+                    },
                   },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'circle-color': '#52b874',
-                    'circle-stroke-color': '#121212',
-                    'circle-stroke-width': 1,
-                    'circle-radius': 10,
-                    'circle-opacity': 1,
-                    title:
-                      'Name: Scorchvein Supply Guard<br>Level: 63<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Inferior<br>Coordinates: x: 8972, y: 9306, z: 579',
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'circle-color': '#52b874',
+                      'circle-stroke-color': '#121212',
+                      'circle-stroke-width': 1,
+                      'circle-radius': 10,
+                      'circle-opacity': 1,
+                      title:
+                        'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8886, y: 9314, z: 615',
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [8886, 9314, 615],
+                    },
                   },
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [8972, 9306, 579],
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'circle-color': '#52b874',
+                      'circle-stroke-color': '#121212',
+                      'circle-stroke-width': 1,
+                      'circle-radius': 10,
+                      'circle-opacity': 1,
+                      title:
+                        'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8839, y: 9275, z: 639',
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [8839, 9275, 639],
+                    },
                   },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'circle-color': '#52b874',
-                    'circle-stroke-color': '#121212',
-                    'circle-stroke-width': 1,
-                    'circle-radius': 10,
-                    'circle-opacity': 1,
-                    title:
-                      'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8819, y: 9354, z: 634',
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'circle-color': '#52b874',
+                      'circle-stroke-color': '#121212',
+                      'circle-stroke-width': 1,
+                      'circle-radius': 10,
+                      'circle-opacity': 1,
+                      title:
+                        'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8799, y: 9314, z: 639',
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [8799, 9314, 639],
+                    },
                   },
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [8819, 9354, 634],
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'circle-color': '#52b874',
+                      'circle-stroke-color': '#121212',
+                      'circle-stroke-width': 1,
+                      'circle-radius': 10,
+                      'circle-opacity': 1,
+                      title:
+                        'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8821, y: 9248, z: 663',
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [8821, 9248, 663],
+                    },
                   },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'circle-color': '#52b874',
-                    'circle-stroke-color': '#121212',
-                    'circle-stroke-width': 1,
-                    'circle-radius': 10,
-                    'circle-opacity': 1,
-                    title:
-                      'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8886, y: 9314, z: 615',
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'circle-color': '#52b874',
+                      'circle-stroke-color': '#121212',
+                      'circle-stroke-width': 1,
+                      'circle-radius': 10,
+                      'circle-opacity': 1,
+                      title:
+                        'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8794, y: 9307, z: 641',
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [8794, 9307, 641],
+                    },
                   },
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [8886, 9314, 615],
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'circle-color': '#52b874',
+                      'circle-stroke-color': '#121212',
+                      'circle-stroke-width': 1,
+                      'circle-radius': 10,
+                      'circle-opacity': 1,
+                      title:
+                        'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8813, y: 9262, z: 640',
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [8813, 9262, 640],
+                    },
                   },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'circle-color': '#52b874',
-                    'circle-stroke-color': '#121212',
-                    'circle-stroke-width': 1,
-                    'circle-radius': 10,
-                    'circle-opacity': 1,
-                    title:
-                      'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8839, y: 9275, z: 639',
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'circle-color': '#52b874',
+                      'circle-stroke-color': '#121212',
+                      'circle-stroke-width': 1,
+                      'circle-radius': 10,
+                      'circle-opacity': 1,
+                      title:
+                        'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8816, y: 9244, z: 663',
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [8816, 9244, 663],
+                    },
                   },
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [8839, 9275, 639],
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'circle-color': '#52b874',
+                      'circle-stroke-color': '#121212',
+                      'circle-stroke-width': 1,
+                      'circle-radius': 10,
+                      'circle-opacity': 1,
+                      title:
+                        'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8819, y: 9354, z: 634',
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [8819, 9354, 634],
+                    },
                   },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'circle-color': '#52b874',
-                    'circle-stroke-color': '#121212',
-                    'circle-stroke-width': 1,
-                    'circle-radius': 10,
-                    'circle-opacity': 1,
-                    title:
-                      'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8799, y: 9314, z: 639',
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'circle-color': '#52b874',
+                      'circle-stroke-color': '#121212',
+                      'circle-stroke-width': 1,
+                      'circle-radius': 10,
+                      'circle-opacity': 1,
+                      title:
+                        'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8886, y: 9313, z: 615',
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [8886, 9313, 615],
+                    },
                   },
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [8799, 9314, 639],
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'circle-color': '#52b874',
+                      'circle-stroke-color': '#121212',
+                      'circle-stroke-width': 1,
+                      'circle-radius': 10,
+                      'circle-opacity': 1,
+                      title:
+                        'Name: Scorchvein Supply Guard<br>Level: 63<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Inferior<br>Coordinates: x: 8968, y: 9090, z: 616',
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [8968, 9090, 616],
+                    },
                   },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'circle-color': '#52b874',
-                    'circle-stroke-color': '#121212',
-                    'circle-stroke-width': 1,
-                    'circle-radius': 10,
-                    'circle-opacity': 1,
-                    title:
-                      'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8821, y: 9248, z: 663',
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'circle-color': '#52b874',
+                      'circle-stroke-color': '#121212',
+                      'circle-stroke-width': 1,
+                      'circle-radius': 10,
+                      'circle-opacity': 1,
+                      title:
+                        'Name: Scorchvein Supply Guard<br>Level: 63<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Inferior<br>Coordinates: x: 8975, y: 9306, z: 579',
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [8975, 9306, 579],
+                    },
                   },
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [8821, 9248, 663],
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'circle-color': '#52b874',
+                      'circle-stroke-color': '#121212',
+                      'circle-stroke-width': 1,
+                      'circle-radius': 10,
+                      'circle-opacity': 1,
+                      title:
+                        'Name: Scorchvein Supply Guard<br>Level: 63<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Inferior<br>Coordinates: x: 8977, y: 9142, z: 622',
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [8977, 9142, 622],
+                    },
                   },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'circle-color': '#52b874',
-                    'circle-stroke-color': '#121212',
-                    'circle-stroke-width': 1,
-                    'circle-radius': 10,
-                    'circle-opacity': 1,
-                    title:
-                      'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8794, y: 9307, z: 641',
+                  {
+                    type: 'Feature',
+                    properties: {
+                      'circle-color': '#52b874',
+                      'circle-stroke-color': '#121212',
+                      'circle-stroke-width': 1,
+                      'circle-radius': 10,
+                      'circle-opacity': 1,
+                      title:
+                        'Name: Scorchvein Supply Guard<br>Level: 63<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Inferior<br>Coordinates: x: 9032, y: 9131, z: 609',
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [9032, 9131, 609],
+                    },
                   },
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [8794, 9307, 641],
-                  },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'circle-color': '#52b874',
-                    'circle-stroke-color': '#121212',
-                    'circle-stroke-width': 1,
-                    'circle-radius': 10,
-                    'circle-opacity': 1,
-                    title:
-                      'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8813, y: 9262, z: 640',
-                  },
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [8813, 9262, 640],
-                  },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'circle-color': '#52b874',
-                    'circle-stroke-color': '#121212',
-                    'circle-stroke-width': 1,
-                    'circle-radius': 10,
-                    'circle-opacity': 1,
-                    title:
-                      'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8816, y: 9244, z: 663',
-                  },
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [8816, 9244, 663],
-                  },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'circle-color': '#52b874',
-                    'circle-stroke-color': '#121212',
-                    'circle-stroke-width': 1,
-                    'circle-radius': 10,
-                    'circle-opacity': 1,
-                    title:
-                      'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8819, y: 9354, z: 634',
-                  },
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [8819, 9354, 634],
-                  },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'circle-color': '#52b874',
-                    'circle-stroke-color': '#121212',
-                    'circle-stroke-width': 1,
-                    'circle-radius': 10,
-                    'circle-opacity': 1,
-                    title:
-                      'Name: Scorchvein Supply Guard<br>Level: 65<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Superior<br>Coordinates: x: 8886, y: 9313, z: 615',
-                  },
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [8886, 9313, 615],
-                  },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'circle-color': '#52b874',
-                    'circle-stroke-color': '#121212',
-                    'circle-stroke-width': 1,
-                    'circle-radius': 10,
-                    'circle-opacity': 1,
-                    title:
-                      'Name: Scorchvein Supply Guard<br>Level: 63<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Inferior<br>Coordinates: x: 8968, y: 9090, z: 616',
-                  },
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [8968, 9090, 616],
-                  },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'circle-color': '#52b874',
-                    'circle-stroke-color': '#121212',
-                    'circle-stroke-width': 1,
-                    'circle-radius': 10,
-                    'circle-opacity': 1,
-                    title:
-                      'Name: Scorchvein Supply Guard<br>Level: 63<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Inferior<br>Coordinates: x: 8975, y: 9306, z: 579',
-                  },
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [8975, 9306, 579],
-                  },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'circle-color': '#52b874',
-                    'circle-stroke-color': '#121212',
-                    'circle-stroke-width': 1,
-                    'circle-radius': 10,
-                    'circle-opacity': 1,
-                    title:
-                      'Name: Scorchvein Supply Guard<br>Level: 63<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Inferior<br>Coordinates: x: 8977, y: 9142, z: 622',
-                  },
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [8977, 9142, 622],
-                  },
-                },
-                {
-                  type: 'Feature',
-                  properties: {
-                    'circle-color': '#52b874',
-                    'circle-stroke-color': '#121212',
-                    'circle-stroke-width': 1,
-                    'circle-radius': 10,
-                    'circle-opacity': 1,
-                    title:
-                      'Name: Scorchvein Supply Guard<br>Level: 63<br>Zone: Shattered Mountain → Scorched Mines → Ambusti Inferior<br>Coordinates: x: 9032, y: 9131, z: 609',
-                  },
-                  geometry: {
-                    type: 'Point',
-                    coordinates: [9032, 9131, 609],
-                  },
-                },
-              ],
-              reproject: true,
-            },
-            '*'
-          );
-        } else if (event.data?.type === 'zoom') {
-          zoom.value = event.data.payload.toString();
+                ],
+                reproject: true,
+              },
+              '*'
+            );
+            break;
+          case 'zoom':
+            zoom.value = event.data.payload.toString();
+            break;
+          case 'click':
+            alert(`Clicked ${JSON.stringify(event.data.payload)}`);
+            break;
         }
       });
 
@@ -438,6 +450,19 @@
               zoom: 2,
               center: [6000.22, 8000.34],
             },
+          },
+          '*'
+        );
+      };
+
+      fitBounds.onclick = () => {
+        external.contentWindow.postMessage(
+          {
+            type: 'FIT_BOUNDS',
+            payload: [
+              [1000, 1000],
+              [10000, 10000],
+            ],
           },
           '*'
         );
