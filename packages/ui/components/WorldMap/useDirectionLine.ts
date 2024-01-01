@@ -1,6 +1,6 @@
+import type { Player } from 'aeternum-map-realtime/types';
 import leaflet from 'leaflet';
 import { useEffect, useMemo, useState } from 'react';
-import type { Player } from 'realtime/types';
 import { useSettingsStore } from '../../utils/settingsStore';
 import useEventListener from '../../utils/useEventListener';
 import { latestLeafletMap } from './useWorldMap';

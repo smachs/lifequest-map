@@ -16,3 +16,4 @@ dev-dist
 .next
 .vercel
 .vscode
+*.json

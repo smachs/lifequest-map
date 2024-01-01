@@ -85,7 +85,7 @@ usersRouter.post('/', async (req, res, next) => {
       {
         $setOnInsert: setOnInsert,
       },
-      { upsert: true, returnDocument: 'after' }
+      { upsert: true, returnDocument: 'after', includeResultMetadata: true }
     );
     const user = result.value;
     if (user) {

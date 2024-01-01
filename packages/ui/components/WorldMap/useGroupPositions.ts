@@ -1,12 +1,12 @@
+import type { Group } from 'aeternum-map-realtime/types';
 import ColorHash from 'color-hash';
 import { useEffect, useState } from 'react';
-import type { Group } from 'realtime/types';
 import { findMapDetails } from 'static';
 import { useMap } from 'ui/utils/routes';
 import { shallow } from 'zustand/shallow';
 import { useSettingsStore } from '../../utils/settingsStore';
-import { createPlayerIcon } from './playerIcon';
 import PositionMarker from './PositionMarker';
+import { createPlayerIcon } from './playerIcon';
 import { latestLeafletMap } from './useWorldMap';
 
 const colorHash = new ColorHash();

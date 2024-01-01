@@ -1,7 +1,7 @@
+import type { Position } from 'aeternum-map-realtime/types';
 import leaflet from 'leaflet';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Position } from 'realtime/types';
 import { findMapDetails, mapIsAeternumMap } from 'static';
 import PositionMarker from 'ui/components/WorldMap//PositionMarker';
 import { createPlayerIcon } from 'ui/components/WorldMap//playerIcon';

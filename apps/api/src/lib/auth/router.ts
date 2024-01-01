@@ -135,7 +135,7 @@ authRouter.get(
             createdAt: new Date(),
           },
         },
-        { upsert: true }
+        { upsert: true, includeResultMetadata: true }
       );
       if (!result.ok) {
         res.status(500).send(failedHTML);
@@ -256,7 +256,7 @@ authRouter.patch('/account', ensureAuthenticated, async (req, res, next) => {
           presets: presets,
         },
       },
-      { returnDocument: 'after' }
+      { returnDocument: 'after', includeResultMetadata: true }
     );
     if (!updatedAccount.ok || !updatedAccount.value) {
       res.status(404).end('Account not changed');

@@ -1,5 +1,5 @@
+import type { Player } from 'aeternum-map-realtime/types';
 import { useEffect, useRef } from 'react';
-import type { Player } from 'realtime/types';
 import { useSettingsStore } from '../../utils/settingsStore';
 import { usePersistentState } from '../../utils/storage';
 import { latestLeafletMap } from './useWorldMap';

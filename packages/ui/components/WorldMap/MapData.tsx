@@ -1,6 +1,6 @@
+import type { Group, Player } from 'aeternum-map-realtime/types';
 import type { Map } from 'leaflet';
 import { Suspense, lazy, useEffect, useState } from 'react';
-import type { Group, Player } from 'realtime/types';
 import type { Socket } from 'socket.io-client';
 import { shallow } from 'zustand/shallow';
 import { usePlayerStore } from '../../utils/playerStore';

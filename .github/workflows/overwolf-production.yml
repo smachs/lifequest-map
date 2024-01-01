@@ -7,18 +7,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - run: npm install
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - run: bun install
       - name: Build Overwolf app
         env:
           VITE_API_ENDPOINT: ${{ secrets.VITE_API_ENDPOINT }}
           VITE_PLAUSIBLE_API_HOST: 'https://apps.machens.dev'
-        run: npm run build -- --filter=overwolf
+        run: bun run build -- --filter=overwolf
       - name: Release Overwolf app
         env:
           OW_CLI_EMAIL: ${{ secrets.OW_CLI_EMAIL }}
           OW_CLI_API_KEY: ${{ secrets.OW_CLI_API_KEY }}
-        run: npm run release
+        run: bun run release

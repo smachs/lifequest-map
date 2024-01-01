@@ -1,4 +1,4 @@
-import type { Player } from 'realtime/types';
+import type { Player } from 'aeternum-map-realtime/types';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 

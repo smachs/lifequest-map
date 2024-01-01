@@ -7,4 +7,4 @@ dev-dist
 .eslintcache
 /data
 .next
-packages/realtime/*.d.ts
+packages/aeternum-map-realtime/*.d.ts

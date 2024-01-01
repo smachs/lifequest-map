@@ -2,16 +2,12 @@
   "name": "aeternum-map",
   "private": true,
   "type": "module",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "prepare": "husky install",
-    "test": "prettier --check . && eslint . && stylelint \"**/*.css\" && cd apps/api && npm run lint && cd ../www && npm run lint",
-    "start": "cd apps/api && npm start",
+    "test": "prettier --check . && eslint . && stylelint \"**/*.css\" && cd apps/api && bun run lint && cd ../www && bun run lint",
+    "start": "cd apps/api && bun start",
     "release": "node scripts/release-overwolf.mjs"
   },
   "devDependencies": {
@@ -26,11 +22,15 @@
     "reflect-metadata": "0.1.13",
     "stylelint": "15.6.1",
     "stylelint-config-standard": "33.0.0",
-    "turbo": "1.9.3",
+    "turbo": "1.11.2",
     "typescript": "5.0.4"
   },
   "engines": {
-    "npm": ">= 8.0.0",
-    "node": ">= 16.0.0"
-  }
+    "node": ">=18"
+  },
+  "packageManager": "bun@1.0.16",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }

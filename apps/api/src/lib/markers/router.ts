@@ -240,7 +240,7 @@ markersRouter.patch(
           $set: marker,
           $unset: unset,
         },
-        { returnDocument: 'after' }
+        { returnDocument: 'after', includeResultMetadata: true }
       );
       if (!result.ok || !result.value) {
         res.status(404).end(`No marker updated for id ${markerId}`);
