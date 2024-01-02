@@ -1,7 +1,5 @@
 {
-  "name": "aeternum-map",
   "private": true,
-  "type": "module",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",

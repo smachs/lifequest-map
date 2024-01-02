@@ -16,6 +16,7 @@ jobs:
       - name: Build Overwolf app
         env:
           VITE_API_ENDPOINT: ${{ secrets.VITE_API_ENDPOINT }}
+          VITE_PLAUSIBLE_DOMAIN: ${{ secrets.VITE_PLAUSIBLE_DOMAIN }}
           VITE_PLAUSIBLE_API_HOST: 'https://apps.machens.dev'
         run: bun run build -- --filter=overwolf
       - name: Release Overwolf app
