@@ -67,8 +67,12 @@ input {
   --social-color: #7289da;
 }
 
-.github {
+.p-6 {
   padding: 6px;
+}
+
+.p-4 {
+  padding: 4px;
 }
 
 .icon {
@@ -98,11 +102,19 @@ input {
   opacity: 0;
 }
 
-.maximized .toggle-icons svg:nth-of-type(1) {
+.hide-sidebar .respect-hide-sidebar svg:nth-of-type(1) {
   opacity: 0;
 }
 
-.maximized .toggle-icons svg:nth-of-type(2) {
+.hide-sidebar .respect-hide-sidebar svg:nth-of-type(2) {
+  opacity: 1;
+}
+
+.maximized .respect-maximized svg:nth-of-type(1) {
+  opacity: 0;
+}
+
+.maximized .respect-maximized svg:nth-of-type(2) {
   opacity: 1;
 }
 
@@ -228,6 +240,11 @@ input {
   display: flex;
   flex-direction: column;
   border-left: 1px solid #27272a;
+}
+
+.hide-sidebar .status {
+  position: absolute;
+  right: -100%;
 }
 
 .sidebar .faq {

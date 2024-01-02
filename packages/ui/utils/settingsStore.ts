@@ -53,6 +53,8 @@ type Store = {
   setOpenMinimized: (openMinimized: boolean) => void;
   openAeternumMap: boolean;
   setOpenAeternumMap: (openAeternumMap: boolean) => void;
+  hideSidebar: boolean;
+  setHideSidebar: (hideSidebar: boolean) => void;
 };
 
 export const useSettingsStore = create(
@@ -121,6 +123,8 @@ export const useSettingsStore = create(
         setOpenMinimized: (openMinimized) => set({ openMinimized }),
         openAeternumMap: false,
         setOpenAeternumMap: (openAeternumMap) => set({ openAeternumMap }),
+        hideSidebar: false,
+        setHideSidebar: (hideSidebar) => set({ hideSidebar }),
       }),
       {
         name: 'settings-store',

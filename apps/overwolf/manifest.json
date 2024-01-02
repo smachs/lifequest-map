@@ -4,7 +4,7 @@
   "meta": {
     "name": "Aeternum Map-DEV",
     "author": "Leon Machens",
-    "version": "3.20.2",
+    "version": "3.21.0",
     "minimum-overwolf-version": "0.169.0",
     "description": "New World Interactive Map",
     "dock_button_title": "Aeternum Map",
@@ -126,14 +126,20 @@
     },
     "game_targeting": {
       "type": "dedicated",
-      "game_ids": [21816]
+      "game_ids": [
+        21816
+      ]
     },
-    "game_events": [21816],
+    "game_events": [
+      21816
+    ],
     "launch_events": [
       {
         "event": "GameLaunch",
         "event_data": {
-          "game_ids": [21816]
+          "game_ids": [
+            21816
+          ]
         },
         "start_minimized": false
       }
