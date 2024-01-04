@@ -18,6 +18,7 @@ function getRegions() {
       fill: false,
       weight: 1.2,
       interactive: false,
+      // @ts-ignore
       pmIgnore: true,
     })
   );
@@ -82,6 +83,7 @@ export default function External() {
     const isPTR = searchParams.get('realm') === 'ptr';
     const CanvasLayer = createCanvasLayer(mapDetail, isPTR);
     const worldTiles = new CanvasLayer();
+    // @ts-ignore
     worldTiles.addTo(map);
 
     let regions: leaflet.Polygon<any>[] = [];

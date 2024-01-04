@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@emotion/react": "11.11.0",
+    "@geoman-io/leaflet-geoman-free": "2.14.2",
     "@mantine/core": "6.0.10",
     "@mantine/notifications": "6.0.10",
     "@tanstack/query-broadcast-client-experimental": "4.29.5",
