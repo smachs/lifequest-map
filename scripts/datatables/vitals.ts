@@ -5,11 +5,29 @@ import { findMapDetails, mapFilters, mapIsAeternumMap } from 'static';
 dotenv.config();
 
 function vitalsIDToType(vitalsID: string) {
-  if (vitalsID.startsWith('alligator')) {
-    return 'alligator';
+  // if (vitalsID.startsWith('alligator')) {
+  //   return 'alligator';
+  // }
+  // if (vitalsID.startsWith('armadillo')) {
+  //   return 'armadillo';
+  // }
+  // if (vitalsID.startsWith('bear')) {
+  //   return 'bear';
+  // }
+  if (vitalsID.startsWith('bison')) {
+    return 'bison';
   }
-  if (vitalsID.startsWith('armadillo')) {
-    return 'armadillo';
+  if (vitalsID.startsWith('boar')) {
+    return 'boar';
+  }
+  if (vitalsID.startsWith('cow')) {
+    return 'cow';
+  }
+  if (vitalsID.startsWith('elk')) {
+    return 'elk';
+  }
+  if (vitalsID.startsWith('goat')) {
+    return 'goat';
   }
   return null;
 }

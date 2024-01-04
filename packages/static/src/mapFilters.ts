@@ -247,24 +247,28 @@ export const mapFilters: FilterItem[] = [
     type: 'bear',
     title: 'Bear',
     iconUrl: '/pois/bear.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
     type: 'bison',
     title: 'Bison',
     iconUrl: '/pois/bison.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
     type: 'boar',
     title: 'Boar',
     iconUrl: '/pois/boar.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
     type: 'cow',
     title: 'Cow',
     iconUrl: '/pois/cow.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
@@ -283,6 +287,7 @@ export const mapFilters: FilterItem[] = [
     type: 'elk',
     title: 'Elk',
     iconUrl: '/pois/elk.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
@@ -307,6 +312,7 @@ export const mapFilters: FilterItem[] = [
     type: 'goat',
     title: 'Goat',
     iconUrl: '/pois/sheep.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
