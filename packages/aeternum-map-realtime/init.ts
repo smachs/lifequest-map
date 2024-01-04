@@ -44,7 +44,7 @@ export const init = ({
       peer.destroy();
     }
     if (peerToPeer) {
-      peer = new Peer(socket.id.replace(/[^a-zA-Z ]/g, ''), {
+      peer = new Peer(socket.id!.replace(/[^a-zA-Z ]/g, ''), {
         debug: 2,
       });
       peer.on('error', (error) => {

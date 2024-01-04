@@ -23,7 +23,7 @@
     "passport-steam": "1.0.18",
     "plausible-tracker": "0.3.8",
     "sharp": "0.33.1",
-    "socket.io": "4.7.2",
+    "socket.io": "4.7.3",
     "static": "*",
     "uuid": "9.0.1"
   },
