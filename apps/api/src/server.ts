@@ -2,6 +2,7 @@ import compression from 'compression';
 import cors from 'cors';
 import express from 'express';
 import session from 'express-session';
+import memorystore from 'memorystore';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -81,10 +82,15 @@ async function runServer() {
   }
 
   if (NO_API !== 'true') {
+    const MemoryStore = memorystore(session);
+
     app.use(
       session({
         secret: SESSION_SECRET!,
         name: 'sessionId',
+        store: new MemoryStore({
+          checkPeriod: 86400000, // prune expired entries every 24h
+        }),
         resave: true,
         saveUninitialized: true,
       })
