@@ -3,6 +3,8 @@
 FROM oven/bun:1 as base
 WORKDIR /usr/src/app
 
+USER bun
+
 RUN chown -R bun:bun /usr/src/app
 
 COPY . .
@@ -15,6 +17,6 @@ ARG VITE_PLAUSIBLE_DOMAIN=
 RUN bun run build
 
 # run the app
-USER bun
+
 EXPOSE 3001/tcp
 ENTRYPOINT [ "bun", "start" ]
