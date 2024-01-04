@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "bun --hot run src/server.ts",
     "lint": "tsc",
-    "start": "bun run src/index.ts"
+    "start": "bun run src/server.ts"
   },
   "dependencies": {
     "compression": "1.7.4",
