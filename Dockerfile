@@ -3,6 +3,8 @@
 FROM oven/bun:1 as base
 WORKDIR /usr/src/app
 
+RUN chown -R bun:bun /usr/src/app
+
 COPY . .
 RUN bun install --frozen-lockfile --ignore-scripts 
 
