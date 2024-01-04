@@ -8,6 +8,9 @@ function vitalsIDToType(vitalsID: string) {
   if (vitalsID.startsWith('alligator')) {
     return 'alligator';
   }
+  if (vitalsID.startsWith('armadillo')) {
+    return 'armadillo';
+  }
   return null;
 }
 

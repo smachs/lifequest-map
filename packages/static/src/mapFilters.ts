@@ -240,6 +240,7 @@ export const mapFilters: FilterItem[] = [
     type: 'armadillo',
     title: 'Armadillo',
     iconUrl: '/pois/armadillo.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
