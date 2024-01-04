@@ -28,5 +28,8 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "overrides": {
+    "@rollup/plugin-node-resolve": "15.2.3"
+  }
 }

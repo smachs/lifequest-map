@@ -33,8 +33,5 @@
     "react-router-dom": "6.11.1",
     "static": "*",
     "ui": "*"
-  },
-  "overrides": {
-    "@rollup/plugin-node-resolve": "15.2.3"
   }
 }
