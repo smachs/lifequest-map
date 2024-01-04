@@ -27,6 +27,7 @@ await signOpkCmd.handler({
   filePath: `${FILE_NAME}.opk`,
   outputFile: `${FILE_NAME}.signed.opk`,
 });
+console.log('Signed OPK');
 if (PREVIEW_ACCESS_CHANNEL_ID) {
   const versionId = await uploadOpkCmd.handler({
     filePath: `${FILE_NAME}.signed.opk`,
