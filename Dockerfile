@@ -1,20 +1,16 @@
-# use the official Bun image
-# see all versions at https://hub.docker.com/r/oven/bun/tags
-FROM oven/bun:1 as base
-WORKDIR /usr/src/app
+FROM node:lts-alpine
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
 
 COPY . .
-RUN bun install --frozen-lockfile --ignore-scripts 
-
-ENV NODE_ENV=production
+RUN npm ci
 ARG VITE_API_ENDPOINT=
 ARG VITE_PLAUSIBLE_API_HOST=
 ARG VITE_PLAUSIBLE_DOMAIN=
-RUN bun run build
+RUN npm run build
 
-RUN chown -R bun:bun /usr/src/app
+ENV NODE_ENV production
 
-# run the app
-USER bun
-EXPOSE 3001/tcp
-ENTRYPOINT [ "bun", "start" ]
+EXPOSE 3001
+CMD ["npm", "start"]

@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "bun --hot run src/server.ts",
+    "build": "tsc --noEmit false",
     "lint": "tsc",
-    "start": "bun run src/server.ts"
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "compression": "1.7.4",
