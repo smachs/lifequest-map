@@ -3,12 +3,14 @@ import { fetchJSON } from '../../utils/api';
 import type { Comment } from '../Comment/api';
 
 export type MarkerFull = {
+  vitalsID?: string;
   type: string;
   position: [number, number, number];
   name?: string;
   map?: string;
   realm?: string;
   level?: number;
+  levels?: number[];
   hp?: number;
   description?: string;
   screenshotFilename?: string;

@@ -1,4 +1,5 @@
 import {
+  Anchor,
   Avatar,
   Badge,
   Button,
@@ -153,6 +154,9 @@ function MarkerDetails(): JSX.Element {
               </Badge>
             )}
             {marker.level && <Badge size="sm">Level {marker.level}</Badge>}
+            {marker.levels && (
+              <Badge size="sm">Level {marker.levels.join(', ')}</Badge>
+            )}
             {marker.hp && (
               <Badge size="sm" color="orange">
                 {marker.hp.toLocaleString('en')} HP
@@ -197,6 +201,15 @@ function MarkerDetails(): JSX.Element {
             Added {marker && toTimeAgo(new Date(marker.createdAt))}{' '}
             {marker.username && <Credit username={marker.username} />}
           </Text>
+          {marker.vitalsID && (
+            <Anchor
+              href={`https://nwdb.info/db/creature/${marker.vitalsID}`}
+              target="_blank"
+              size="sm"
+            >
+              More details on NWDB.info
+            </Anchor>
+          )}
           {marker.description && (
             <Text
               italic

@@ -16,6 +16,7 @@ import { usePersistentState } from '../utils/storage';
 import { useUserStore } from '../utils/userStore';
 
 export type MarkerBasic = {
+  vitalsID?: string;
   type: string;
   map?: string;
   realm?: string;
@@ -24,6 +25,7 @@ export type MarkerBasic = {
   chestType?: string;
   tier?: number;
   level?: number;
+  levels?: number[];
   comments?: number;
   size?: MarkerSize;
   issues?: number;

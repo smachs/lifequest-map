@@ -20,9 +20,11 @@ import type { MarkerDTO } from './api';
 import { patchMarker, postMarker, uploadScreenshot } from './api';
 
 export type Details = {
+  vitalsID?: string;
   description?: string;
   name?: string;
   level?: number;
+  levels?: number[];
   chestType?: string;
   tier?: number;
   size?: MarkerSize;

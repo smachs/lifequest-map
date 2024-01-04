@@ -36,6 +36,9 @@ function ensureMarkersSchema(): Promise<Document> {
           _id: {
             bsonType: 'objectId',
           },
+          vitalsID: {
+            bsonType: 'string',
+          },
           type: {
             bsonType: 'string',
           },
@@ -56,6 +59,12 @@ function ensureMarkersSchema(): Promise<Document> {
           },
           level: {
             bsonType: 'int',
+          },
+          levels: {
+            bsonType: 'array',
+            items: {
+              bsonType: 'int',
+            },
           },
           chestType: {
             bsonType: 'string',

@@ -2,12 +2,14 @@ import type { Double } from 'mongodb';
 
 export type MarkerSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | '?';
 export type MarkerDTO = {
+  vitalsID?: string;
   type: string;
   map?: string;
   realm?: string;
-  position: [Double, Double, Double];
+  position: [Double, Double];
   name?: string;
   level?: number;
+  levels?: number[];
   chestType?: string;
   tier?: number;
   size?: MarkerSize;

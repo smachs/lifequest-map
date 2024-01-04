@@ -1,0 +1,14 @@
+{
+  "name": "scripts",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "dependencies": {
+    "dotenv": "16.0.3",
+    "mongodb": "4.11.0",
+    "static": "*"
+  },
+  "devDependencies": {
+    "bun-types": "1.0.21"
+  }
+}

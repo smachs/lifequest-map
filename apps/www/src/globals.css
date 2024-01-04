@@ -246,3 +246,7 @@ hr {
 .action-cancel {
   background: #a50000 !important;
 }
+
+iframe[src*='nwdb.info'] {
+  z-index: 9999999 !important;
+}

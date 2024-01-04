@@ -233,6 +233,7 @@ export const mapFilters: FilterItem[] = [
     type: 'alligator',
     title: 'Alligator',
     iconUrl: '/pois/alligator.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',

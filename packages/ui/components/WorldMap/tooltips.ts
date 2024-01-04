@@ -71,6 +71,9 @@ export function getTooltipContent(
     if (markerOrDetails.level) {
       tooltipContent += `<br/>Level ${markerOrDetails.level}`;
     }
+    if (markerOrDetails.levels) {
+      tooltipContent += `<br/>Level ${markerOrDetails.levels.join(', ')}`;
+    }
     tooltipContent += additionalContent;
     return tooltipContent;
   };
