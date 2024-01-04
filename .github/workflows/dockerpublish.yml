@@ -1,10 +1,7 @@
 name: Docker
 
 on:
-  push:
-    # Publish `v1.2.3` tags as releases.
-    tags:
-      - v*-web
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: aeternum-map
