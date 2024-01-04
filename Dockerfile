@@ -3,7 +3,7 @@ FROM oven/bun:1
 WORKDIR /app
 
 COPY . .
-RUN bun i
+RUN bun install --frozen-lockfile --ignore-scripts 
 ARG VITE_API_ENDPOINT=
 ARG VITE_PLAUSIBLE_API_HOST=
 ARG VITE_PLAUSIBLE_DOMAIN=
