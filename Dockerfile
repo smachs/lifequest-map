@@ -1,16 +1,16 @@
-FROM node:lts-alpine
+FROM oven/bun:1
 RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
 COPY . .
-RUN npm ci
+RUN bun i
 ARG VITE_API_ENDPOINT=
 ARG VITE_PLAUSIBLE_API_HOST=
 ARG VITE_PLAUSIBLE_DOMAIN=
-RUN npm run build
+RUN bun run build
 
 ENV NODE_ENV production
 
 EXPOSE 3001
-CMD ["npm", "start"]
+CMD ["bun", "start"]
