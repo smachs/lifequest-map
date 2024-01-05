@@ -5,7 +5,7 @@
     "dev": "turbo run dev --parallel",
     "prepare": "husky install",
     "test": "prettier --check . && eslint . && stylelint \"**/*.css\" && cd apps/api && bun run lint && cd ../www && bun run lint",
-    "start": "cd apps/api && bun start",
+    "start": "cd apps/api && npm start",
     "release": "node scripts/release-overwolf.mjs"
   },
   "devDependencies": {
