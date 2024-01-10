@@ -1,35 +1,54 @@
 import dotenv from 'dotenv';
-import { Double, MongoClient } from 'mongodb';
+import { Double, MongoClient, ObjectId } from 'mongodb';
 import type { MarkerDTO } from 'static';
 import { findMapDetails, mapFilters, mapIsAeternumMap } from 'static';
 dotenv.config();
 
+if (!process.env.MONGODB_URI) {
+  throw new Error('Missing MONGODB_URI environment variable');
+}
+const client = new MongoClient(process.env.MONGODB_URI);
+await client.connect();
+const markersCollection = client.db().collection<MarkerDTO>('markers');
+const commentsCollection = client.db().collection('comments');
+
+const amMarkers = await markersCollection.find({}).toArray();
+
 function vitalsIDToType(vitalsID: string) {
-  // if (vitalsID.startsWith('alligator')) {
-  //   return 'alligator';
-  // }
-  // if (vitalsID.startsWith('armadillo')) {
-  //   return 'armadillo';
-  // }
-  // if (vitalsID.startsWith('bear')) {
-  //   return 'bear';
-  // }
-  // if (vitalsID.startsWith('bison')) {
-  //   return 'bison';
-  // }
-  // if (vitalsID.startsWith('boar')) {
-  //   return 'boar';
-  // }
-  // if (vitalsID.startsWith('cow')) {
-  //   return 'cow';
-  // }
-  // if (vitalsID.startsWith('elk')) {
-  //   return 'elk';
-  // }
-  // if (vitalsID.startsWith('goat')) {
-  //   return 'goat';
-  // }
-  if (vitalsID.startsWith('corruptedlegion_cyclops_loc_boss_00')) {
+  if (vitalsID.includes('_dt')) {
+    return null;
+  }
+  if (vitalsID.startsWith('alligator')) {
+    return 'alligator';
+  }
+  if (vitalsID.startsWith('armadillo')) {
+    return 'armadillo';
+  }
+  if (vitalsID.startsWith('bear')) {
+    return 'bear';
+  }
+  if (vitalsID.startsWith('bison')) {
+    return 'bison';
+  }
+  if (vitalsID.startsWith('boar')) {
+    return 'boar';
+  }
+  if (vitalsID.startsWith('cow')) {
+    return 'cow';
+  }
+  if (vitalsID.startsWith('elk')) {
+    return 'elk';
+  }
+  if (vitalsID.startsWith('goat')) {
+    return 'goat';
+  }
+  if (vitalsID.includes('_chameleon')) {
+    return 'chameleon';
+  }
+  if (vitalsID.includes('_dragon')) {
+    return 'drake';
+  }
+  if (vitalsID.startsWith('legion_signifer_loc_boss')) {
     return 'signiferNerva';
   }
   return null;
@@ -42,6 +61,7 @@ const data = (await response.json()) as VitalsMetadata;
 const vitalsIDs = data.flatMap((vitals) => vitals.vitalsID);
 const remainingVitalsIDs = vitalsIDs.slice(0);
 
+const deprecatedMarkers: Record<string, typeof amMarkers> = {};
 const now = new Date();
 const markers = data.flatMap((vitals) => {
   const type = vitalsIDToType(vitals.vitalsID);
@@ -56,12 +76,28 @@ const markers = data.flatMap((vitals) => {
   if (!mapFilter.hasLevel) {
     throw new Error(`Map filter ${type} has no level`);
   }
+  if (!(type in deprecatedMarkers)) {
+    deprecatedMarkers[mapFilter.type] = amMarkers.filter((amMarker) => {
+      return amMarker.type === mapFilter.type;
+    });
+    console.log(
+      `Found ${deprecatedMarkers[mapFilter.type].length} markers for ${type}`
+    );
+  }
 
-  return vitals.mapIDs.flatMap((mapID) => {
+  const getIndex = (marker: MarkerDTO) => {
+    return deprecatedMarkers[mapFilter.type].findIndex((amMarker) => {
+      return (
+        Number(amMarker.position[0]) === Number(marker.position[0]) &&
+        Number(amMarker.position[1]) === Number(marker.position[1])
+      );
+    });
+  };
+  const newMarkers = vitals.mapIDs.flatMap((mapID) => {
     return vitals.lvlSpanws[mapID]!.flatMap((lvlSpanw) => {
       const marker: MarkerDTO = {
         vitalsID: vitals.vitalsID,
-        type: mapFilter.type,
+        type: type,
         position: [new Double(lvlSpanw.p[0]), new Double(lvlSpanw.p[1])],
         username: 'system',
         levels: lvlSpanw.l,
@@ -74,20 +110,62 @@ const markers = data.flatMap((vitals) => {
       if (!mapIsAeternumMap(map.name)) {
         marker.map = map.name;
       }
-
+      const existingIndex = getIndex(marker);
+      if (existingIndex !== -1) {
+        // console.log(`Skipping ${marker.type} ${marker.vitalsID}`);
+        deprecatedMarkers[mapFilter.type].splice(existingIndex, 1);
+        return [];
+      }
       return marker;
     });
   });
+  return newMarkers;
 });
+const markersByType = markers.reduce((acc, marker) => {
+  acc[marker.type] = (acc[marker.type] || 0) + 1;
+  return acc;
+}, {} as Record<string, number>);
+console.log(`${markers.length} new markers`, markersByType);
+
+const deprecatedMarkersByType = Object.entries(deprecatedMarkers).reduce(
+  (acc, [type, markers]) => {
+    acc[type] = markers.length;
+    return acc;
+  },
+  {} as Record<string, number>
+);
+const totalDeprecatedMarkers = Object.values(deprecatedMarkersByType).reduce(
+  (acc, count) => acc + count,
+  0
+);
+
+console.log(
+  `${totalDeprecatedMarkers} deprecated markers`,
+  deprecatedMarkersByType
+);
 
 await writeVitalsIDs();
 
-if (!process.env.MONGODB_URI) {
-  throw new Error('Missing MONGODB_URI environment variable');
+for (const [type, markers] of Object.entries(deprecatedMarkers)) {
+  const removableMarkerIDs = markers.map((marker) => new ObjectId(marker._id));
+  if (removableMarkerIDs.length === 0) {
+    continue;
+  }
+  const markersDeleteResult = await markersCollection.deleteMany({
+    _id: {
+      $in: removableMarkerIDs,
+    },
+  });
+  const commentsDeleteResult = await commentsCollection.deleteMany({
+    markerId: {
+      $in: removableMarkerIDs,
+    },
+  });
+  console.log(`Removed ${markersDeleteResult.deletedCount} markers of ${type}`);
+  console.log(
+    `Removed ${commentsDeleteResult.deletedCount} commends of ${type}`
+  );
 }
-const client = new MongoClient(process.env.MONGODB_URI);
-await client.connect();
-const markersCollection = client.db().collection('markers');
 
 const insertedByType = {} as Record<string, number>;
 for (const marker of markers) {

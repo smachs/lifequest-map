@@ -275,12 +275,14 @@ export const mapFilters: FilterItem[] = [
     type: 'chameleon',
     title: 'Chameleon',
     iconUrl: '/pois/chameleon.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
     type: 'drake',
     title: 'Drake',
     iconUrl: '/pois/drake.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',

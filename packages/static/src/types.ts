@@ -42,3 +42,27 @@ export type ItemDTO = {
   updatedAt?: Date;
   createdAt: Date;
 };
+
+export type MarkerFull = {
+  vitalsID?: string;
+  type: string;
+  position: [number, number, number];
+  name?: string;
+  map?: string;
+  realm?: string;
+  level?: number;
+  levels?: number[];
+  hp?: number;
+  description?: string;
+  screenshotFilename?: string;
+  createdAt: string;
+  userId?: string;
+  username?: string;
+  comments?: number;
+  chestType?: string;
+  tier?: number;
+  requiredGlyphId?: number;
+  isTemporary?: boolean;
+  customRespawnTimer?: number;
+  _id: string;
+};
