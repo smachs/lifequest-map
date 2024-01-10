@@ -21,10 +21,10 @@ Please add issues and feature requests on the Discord channel #suggestions.
 
 ### Install dependencies
 
-This project is using [Bun](https://bun.sh/) as runtime. Make sure you have it installed before installing the dependencies with:
+This project is based on [Node.js](https://nodejs.org/). Make sure you have Node.js installed before installing the dependencies with:
 
 ```
-bun install
+npm install
 ```
 
 Please take a look at the README files in the apps subfolders to setup the environment variables.
@@ -32,7 +32,7 @@ Please take a look at the README files in the apps subfolders to setup the envir
 ### Run development
 
 ```
-bun run dev
+npm run dev
 ```
 
 This will run all apps in this project in development mode.
@@ -42,7 +42,7 @@ This will run all apps in this project in development mode.
 You can build a production version of the server and client with:
 
 ```
-bun run build
+npm run build
 ```
 
 It is required to call this at least once before you can run this app in development mode.

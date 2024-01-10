@@ -1,0 +1,9 @@
+{
+    "watch": [
+        "src",
+        "../../packages/lib"
+    ],
+    "execMap": {
+        "ts": "tsx"
+    }
+}
