@@ -1,5 +1,5 @@
 import type { MarkerSize } from './types.js';
-
+import generatedDict from './dict.json' assert { type: 'json' };
 export const defaultSizes: MarkerSize[] = ['?', 'S', 'M', 'L'];
 export const treeSizes: MarkerSize[] = ['?', 'XS', 'S', 'M', 'L', 'XL'];
 export type MarkerGlyph = { isRequired: boolean };
@@ -16,7 +16,10 @@ export type FilterItem = {
   glyph?: MarkerGlyph;
   sizes?: MarkerSize[];
 };
-
+const dict = generatedDict as Record<string, string>;
+export const getTerm = (catIDs: string[]) => {
+  return catIDs.map((catID) => dict[catID]).join(',');
+};
 export const lootableMapFilters = [
   'boss',
   'bossElite',

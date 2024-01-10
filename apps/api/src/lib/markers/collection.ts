@@ -39,6 +39,12 @@ function ensureMarkersSchema(): Promise<Document> {
           vitalsID: {
             bsonType: 'string',
           },
+          catIDs: {
+            bsonType: 'array',
+            items: {
+              bsonType: 'string',
+            },
+          },
           type: {
             bsonType: 'string',
           },

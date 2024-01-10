@@ -1,4 +1,5 @@
 import type { FilterItem } from 'static';
+import { getTerm } from 'static';
 import type { MarkerBasic } from '../../contexts/MarkersContext';
 import type { Details } from '../AddResources/AddResources';
 
@@ -61,8 +62,11 @@ export function getTooltipContent(
       content += additionalContent;
       return content;
     }
-    let tooltipContent = markerOrDetails.name
-      ? `${escapeHtml(markerOrDetails.name)} (${mapFilter.title})`
+    const name =
+      markerOrDetails.name ||
+      (markerOrDetails.catIDs && getTerm(markerOrDetails.catIDs));
+    let tooltipContent = name
+      ? `${escapeHtml(name)} (${mapFilter.title})`
       : mapFilter.title;
     if (markerOrDetails.size) {
       tooltipContent += ` (${markerOrDetails.size})`;

@@ -54,16 +54,23 @@ function vitalsIDToType(vitalsID: string) {
   return null;
 }
 
-const response = await fetch(
+const vitalsData = (await fetch(
   'https://raw.githubusercontent.com/giniedp/nw-buddy-data/main/live/datatables/generated_vitals_metadata.json'
-);
-const data = (await response.json()) as VitalsMetadata;
-const vitalsIDs = data.flatMap((vitals) => vitals.vitalsID);
-const remainingVitalsIDs = vitalsIDs.slice(0);
+).then((response) => response.json())) as VitalsMetadata;
+const vitalsCategories = (await fetch(
+  'https://raw.githubusercontent.com/giniedp/nw-buddy-data/main/live/datatables/javelindata_vitalscategories.json'
+).then((response) => response.json())) as VitalsCategories;
+const enLocalizationData = (await fetch(
+  'https://raw.githubusercontent.com/giniedp/nw-buddy-data/main/live/localization/en-us.json'
+).then((response) => response.json())) as Record<string, string>;
 
+const vitalsIDs = vitalsData.flatMap((vitals) => vitals.vitalsID);
+const remainingVitalsIDs = vitalsIDs.slice(0);
+const dict: Record<string, string> = {};
+const updatedMarkers: Record<string, MarkerDTO> = {};
 const deprecatedMarkers: Record<string, typeof amMarkers> = {};
 const now = new Date();
-const markers = data.flatMap((vitals) => {
+const markers = vitalsData.flatMap((vitals) => {
   const type = vitalsIDToType(vitals.vitalsID);
   if (!type) {
     return [];
@@ -76,6 +83,7 @@ const markers = data.flatMap((vitals) => {
   if (!mapFilter.hasLevel) {
     throw new Error(`Map filter ${type} has no level`);
   }
+
   if (!(type in deprecatedMarkers)) {
     deprecatedMarkers[mapFilter.type] = amMarkers.filter((amMarker) => {
       return amMarker.type === mapFilter.type;
@@ -85,7 +93,7 @@ const markers = data.flatMap((vitals) => {
     );
   }
 
-  const getIndex = (marker: MarkerDTO) => {
+  const getExistingMarkerIndex = (marker: MarkerDTO) => {
     return deprecatedMarkers[mapFilter.type].findIndex((amMarker) => {
       return (
         Number(amMarker.position[0]) === Number(marker.position[0]) &&
@@ -93,10 +101,12 @@ const markers = data.flatMap((vitals) => {
       );
     });
   };
+
   const newMarkers = vitals.mapIDs.flatMap((mapID) => {
     return vitals.lvlSpanws[mapID]!.flatMap((lvlSpanw) => {
       const marker: MarkerDTO = {
         vitalsID: vitals.vitalsID,
+        catIDs: lvlSpanw.c,
         type: type,
         position: [new Double(lvlSpanw.p[0]), new Double(lvlSpanw.p[1])],
         username: 'system',
@@ -110,10 +120,44 @@ const markers = data.flatMap((vitals) => {
       if (!mapIsAeternumMap(map.name)) {
         marker.map = map.name;
       }
-      const existingIndex = getIndex(marker);
+      lvlSpanw.c.forEach((catID) => {
+        if (!(catID in dict)) {
+          const vitalsCategory = vitalsCategories.find(
+            (vitalsCategory) =>
+              vitalsCategory.VitalsCategoryID.toLowerCase() === catID
+          );
+          if (!vitalsCategory) {
+            console.warn(`Cannot find vitals category ${catID}`);
+            if (!enLocalizationData[`${vitals.vitalsID}_vitalsname`]) {
+              throw new Error(`Vitals ${vitals.vitalsID} has no vitals name`);
+            }
+            dict[catID] = enLocalizationData[`${vitals.vitalsID}_vitalsname`];
+            return;
+          }
+          if (!vitalsCategory.DisplayName) {
+            throw new Error(`Vitals category ${catID} has no display name`);
+          }
+          if (!enLocalizationData[vitalsCategory.DisplayName.toLowerCase()]) {
+            throw new Error(
+              `Vitals category ${catID} display name ${vitalsCategory.DisplayName} has no localization`
+            );
+          }
+          dict[catID] =
+            enLocalizationData[vitalsCategory.DisplayName.toLowerCase()];
+        }
+      });
+
+      const existingIndex = getExistingMarkerIndex(marker);
       if (existingIndex !== -1) {
-        // console.log(`Skipping ${marker.type} ${marker.vitalsID}`);
+        const existingMarker = deprecatedMarkers[mapFilter.type][existingIndex];
+        if (
+          existingMarker.catIDs !== marker.catIDs ||
+          existingMarker.levels !== marker.levels
+        ) {
+          updatedMarkers[existingMarker._id.toString()] = marker;
+        }
         deprecatedMarkers[mapFilter.type].splice(existingIndex, 1);
+
         return [];
       }
       return marker;
@@ -143,6 +187,24 @@ console.log(
   `${totalDeprecatedMarkers} deprecated markers`,
   deprecatedMarkersByType
 );
+
+const totalUpdatedMarkers = Object.values(updatedMarkers).length;
+console.log(`${totalUpdatedMarkers} updated markers`, totalUpdatedMarkers);
+
+for (const [id, marker] of Object.entries(updatedMarkers)) {
+  await markersCollection.updateOne(
+    {
+      _id: new ObjectId(id),
+    },
+    {
+      $set: {
+        catIDs: marker.catIDs,
+        levels: marker.levels,
+        updatedAt: now,
+      },
+    }
+  );
+}
 
 await writeVitalsIDs();
 
@@ -236,4 +298,17 @@ type VitalsMetadata = Array<{
     nw_trial_season_04_daichidojo?: Array<Spawn>;
     nw_trial_season_04_deviceroom?: Array<Spawn>;
   };
+}>;
+
+export type VitalsCategories = Array<{
+  VitalsCategoryID: string;
+  DisplayName?: string;
+  GroupVitalsCategoryId?: string;
+  IsNamed: boolean;
+  IsDynamicPoiTarget: boolean;
+  LootDropChanceOverride: number;
+  MtlOverride?: string;
+  Icon?: string;
+  FemaleMtlOverride?: string;
+  LocationHint?: string;
 }>;

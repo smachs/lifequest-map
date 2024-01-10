@@ -3,6 +3,7 @@ import type { Double } from 'mongodb';
 export type MarkerSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | '?';
 export type MarkerDTO = {
   vitalsID?: string;
+  catIDs?: string[];
   type: string;
   map?: string;
   realm?: string;
@@ -45,6 +46,7 @@ export type ItemDTO = {
 
 export type MarkerFull = {
   vitalsID?: string;
+  catIDs?: string[];
   type: string;
   position: [number, number, number];
   name?: string;

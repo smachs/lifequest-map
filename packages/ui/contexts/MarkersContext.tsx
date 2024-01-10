@@ -17,6 +17,7 @@ import { useUserStore } from '../utils/userStore';
 
 export type MarkerBasic = {
   vitalsID?: string;
+  catIDs?: string[];
   type: string;
   map?: string;
   realm?: string;

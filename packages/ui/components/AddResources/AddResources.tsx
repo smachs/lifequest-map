@@ -21,6 +21,7 @@ import { patchMarker, postMarker, uploadScreenshot } from './api';
 
 export type Details = {
   vitalsID?: string;
+  catIDs?: string[];
   description?: string;
   name?: string;
   level?: number;

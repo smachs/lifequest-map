@@ -18,6 +18,7 @@ import type { Glyph } from 'static';
 import {
   findMapDetails,
   getNodeMeta,
+  getTerm,
   glyphs,
   lootableMapFilters,
   mapFilters,
@@ -134,7 +135,9 @@ function MarkerDetails(): JSX.Element {
                       } ${filterItem.title.split(' ').pop()}`
                     : filterItem.title
                 } T${marker.tier}`
-              : marker.name || filterItem.title}
+              : marker.name ||
+                (marker.catIDs && getTerm(marker.catIDs)) ||
+                filterItem.title}
           </Group>
         ) : (
           <Skeleton height={20} width={120} />
