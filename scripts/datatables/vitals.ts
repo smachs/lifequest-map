@@ -14,20 +14,23 @@ function vitalsIDToType(vitalsID: string) {
   // if (vitalsID.startsWith('bear')) {
   //   return 'bear';
   // }
-  if (vitalsID.startsWith('bison')) {
-    return 'bison';
-  }
-  if (vitalsID.startsWith('boar')) {
-    return 'boar';
-  }
-  if (vitalsID.startsWith('cow')) {
-    return 'cow';
-  }
-  if (vitalsID.startsWith('elk')) {
-    return 'elk';
-  }
-  if (vitalsID.startsWith('goat')) {
-    return 'goat';
+  // if (vitalsID.startsWith('bison')) {
+  //   return 'bison';
+  // }
+  // if (vitalsID.startsWith('boar')) {
+  //   return 'boar';
+  // }
+  // if (vitalsID.startsWith('cow')) {
+  //   return 'cow';
+  // }
+  // if (vitalsID.startsWith('elk')) {
+  //   return 'elk';
+  // }
+  // if (vitalsID.startsWith('goat')) {
+  //   return 'goat';
+  // }
+  if (vitalsID.startsWith('corruptedlegion_cyclops_loc_boss_00')) {
+    return 'signiferNerva';
   }
   return null;
 }
