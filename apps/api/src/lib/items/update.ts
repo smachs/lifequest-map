@@ -1,5 +1,3 @@
-import type { Response } from 'node-fetch';
-import fetch from 'node-fetch';
 import { getMarkersCollection } from '../markers/collection.js';
 import { getItemsCollection } from './collection.js';
 

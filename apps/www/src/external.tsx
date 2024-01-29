@@ -18,6 +18,7 @@ function getRegions() {
       fill: false,
       weight: 1.2,
       interactive: false,
+      // @ts-ignore
       pmIgnore: true,
     })
   );
@@ -82,6 +83,7 @@ export default function External() {
     const isPTR = searchParams.get('realm') === 'ptr';
     const CanvasLayer = createCanvasLayer(mapDetail, isPTR);
     const worldTiles = new CanvasLayer();
+    // @ts-ignore
     worldTiles.addTo(map);
 
     let regions: leaflet.Polygon<any>[] = [];
@@ -109,6 +111,14 @@ export default function External() {
                 opacity: feature.properties['circle-opacity'],
                 fillOpacity: 1,
               }),
+            onEachFeature: (feature, layer) => {
+              layer.on('click', () => {
+                postMessageToParent('click', feature);
+              });
+              if (feature.properties.title) {
+                layer.bindTooltip(() => feature.properties.title);
+              }
+            },
             style: (feature: any) => ({
               stroke: true,
               color: feature.properties['fill-outline-color'],
@@ -116,10 +126,11 @@ export default function External() {
               opacity: 1,
               fillOpacity: feature.properties['fill-opacity'],
               weight: 1,
-              interactive: feature.geometry.type === 'Point',
+              interactive:
+                feature.properties.interactive ??
+                feature.geometry.type === 'Point',
             }),
           });
-          geoJSON.bindTooltip((layer: any) => layer.feature.properties.title);
           geoJSON.addTo(map);
           if (fit) {
             map.fitBounds(geoJSON.getBounds(), {
@@ -128,6 +139,11 @@ export default function External() {
               padding: [5, 5],
             });
           }
+          break;
+        case 'FIT_BOUNDS':
+          map.fitBounds(data.payload, {
+            padding: [5, 5],
+          });
           break;
         case 'SET_EXTERNAL_ZOOM':
           map.setZoom(data.payload);

@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import fs from 'fs/promises';
 import multer from 'multer';
-import { Blob } from 'node-fetch';
 import sharp from 'sharp';
 import type { Faction } from 'static';
 import { ICONS, validateInfluence, worlds } from 'static';

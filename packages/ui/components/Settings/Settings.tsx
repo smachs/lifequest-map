@@ -25,7 +25,7 @@ export default function Settings() {
   return (
     <>
       <Title order={4}>Map</Title>
-      <ScrollArea.Autosize mah="80vh" offsetScrollbars>
+      <ScrollArea.Autosize mah="80vh" offsetScrollbars placeholder="">
         <Stack>
           <Text weight={500} size="sm">
             Node size

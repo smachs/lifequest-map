@@ -1,5 +1,7 @@
-import { Helmet } from 'react-helmet-async';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { useRealmStore } from '../../utils/realmStore';
+
+const helmetContext = {};
 
 type MetaProps = {
   title: string;
@@ -19,22 +21,24 @@ const Meta = (props: MetaProps) => {
 
   const url = location.origin + location.pathname;
   return (
-    <Helmet prioritizeSeoTags>
-      <link rel="canonical" href={url} />
+    <HelmetProvider context={helmetContext}>
+      <Helmet prioritizeSeoTags>
+        <link rel="canonical" href={url} />
 
-      <title>{contentTitle}</title>
-      <meta name="description" content={contentDescription} />
+        <title>{contentTitle}</title>
+        <meta name="description" content={contentDescription} />
 
-      <meta property="og:type" content="website" />
-      <meta property="og:url" content={url} />
-      <meta property="og:title" content={contentTitle} />
-      <meta property="og:description" content={contentDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={url} />
+        <meta property="og:title" content={contentTitle} />
+        <meta property="og:description" content={contentDescription} />
 
-      <meta property="twitter:card" content="summary" />
-      <meta property="twitter:url" content={url} />
-      <meta property="twitter:title" content={contentTitle} />
-      <meta property="twitter:description" content={contentDescription} />
-    </Helmet>
+        <meta property="twitter:card" content="summary" />
+        <meta property="twitter:url" content={url} />
+        <meta property="twitter:title" content={contentTitle} />
+        <meta property="twitter:description" content={contentDescription} />
+      </Helmet>
+    </HelmetProvider>
   );
 };
 

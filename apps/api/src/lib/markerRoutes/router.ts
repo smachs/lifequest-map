@@ -323,9 +323,15 @@ markerRoutesRouter.patch(
         markerRoute.markersByType = markersByType;
       }
 
-      const result = await getMarkerRoutesCollection().findOneAndUpdate(query, {
-        $set: markerRoute,
-      });
+      const result = await getMarkerRoutesCollection().findOneAndUpdate(
+        query,
+        {
+          $set: markerRoute,
+        },
+        {
+          includeResultMetadata: true,
+        }
+      );
 
       if (!result.ok || !result.value) {
         res.status(404).end(`No marker route found for id ${id}`);

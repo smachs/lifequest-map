@@ -7,6 +7,7 @@ import { createRoot } from 'react-dom/client';
 import FAQ from 'ui/components/FAQ/FAQ';
 import { ThemeProvider } from 'ui/contexts/ThemeProvider';
 import { useAccountStore } from 'ui/utils/account';
+import { useSettingsStore } from 'ui/utils/settingsStore';
 import { initPlausible } from 'ui/utils/stats';
 import { useUserStore } from 'ui/utils/userStore';
 import Ads from './components/Ads/Ads';
@@ -65,7 +66,7 @@ root.render(
   </QueryClientProvider>
 );
 
-initPlausible();
+initPlausible('-app');
 
 async function initAppHeader() {
   const currentWindow = await getCurrentWindow();
@@ -102,6 +103,29 @@ async function initAppHeader() {
   const close = document.querySelector<HTMLButtonElement>('#close')!;
   close.onclick = async () => {
     closeWindow(WINDOWS.BACKGROUND);
+  };
+
+  const isPatron = useAccountStore.getState().isPatron;
+  const hideSidebar = useSettingsStore.getState().hideSidebar;
+  if (hideSidebar && isPatron) {
+    document.body.classList.add('hide-sidebar');
+  } else {
+    document.body.classList.remove('hide-sidebar');
+  }
+  const toggleSidebar =
+    document.querySelector<HTMLButtonElement>('#toggle-sidebar')!;
+  toggleSidebar.onclick = async () => {
+    const isPatron = useAccountStore.getState().isPatron;
+    if (!isPatron) {
+      alert('You need to be a supporter to hide the sidebar.');
+      return;
+    }
+    document.body.classList.toggle('hide-sidebar');
+    useSettingsStore.setState({ hideSidebar: !hideSidebar });
+  };
+  toggleSidebar.ondblclick = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
   };
 }
 

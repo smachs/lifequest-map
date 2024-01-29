@@ -169,4 +169,4 @@ root.render(
   </StrictMode>
 );
 
-initPlausible();
+initPlausible('-app');

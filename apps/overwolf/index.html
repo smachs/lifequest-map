@@ -93,6 +93,38 @@
           <path d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4"></path>
         </g>
       </symbol>
+      <symbol
+        id="icon-tabler-layout-sidebar-left-expand"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        fill="none"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path
+          d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"
+        />
+        <path d="M9 4v16" />
+        <path d="M14 10l2 2l-2 2" />
+      </symbol>
+      <symbol
+        id="icon-tabler-layout-sidebar-left-collapse"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        fill="none"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path
+          d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"
+        />
+        <path d="M9 4v16" />
+        <path d="M15 10l-2 2l2 2" />
+      </symbol>
     </svg>
     <header class="app-header">
       <h1>Aeternum Map</h1>
@@ -102,8 +134,19 @@
         target="_blank"
       ></a>
       <div class="window-controls-group">
+        <button
+          class="icon toggle-icons window-control respect-hide-sidebar"
+          id="toggle-sidebar"
+        >
+          <svg class="p-4">
+            <use xlink:href="#icon-tabler-layout-sidebar-left-expand" />
+          </svg>
+          <svg class="p-4">
+            <use xlink:href="#icon-tabler-layout-sidebar-left-collapse" />
+          </svg>
+        </button>
         <a
-          class="icon window-control github"
+          class="icon window-control p-6"
           href="https://github.com/lmachens/aeternum-map"
           target="_blank"
           title="Open Source on GitHub"
@@ -127,7 +170,10 @@
             <use xlink:href="#window-control_minimize" />
           </svg>
         </button>
-        <button class="icon toggle-icons window-control" id="maximize">
+        <button
+          class="icon toggle-icons respect-maximized window-control"
+          id="maximize"
+        >
           <svg>
             <use xlink:href="#window-control_maximize" />
           </svg>
@@ -211,7 +257,6 @@
             title="The Hidden Gaming Lair"
           >
             <img
-              class="contrast"
               src="/the-hidden-gaming-lair.png"
               alt="The Hidden Gaming Lair"
             />

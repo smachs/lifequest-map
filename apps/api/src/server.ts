@@ -2,10 +2,11 @@ import compression from 'compression';
 import cors from 'cors';
 import express from 'express';
 import session from 'express-session';
-import http from 'http';
+import memorystore from 'memorystore';
+import http from 'node:http';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import passport from 'passport';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import authRouter from './lib/auth/router.js';
 import { initCommentsCollection } from './lib/comments/collection.js';
 import commentsRouter from './lib/comments/router.js';
@@ -47,6 +48,7 @@ import itemsRouter from './lib/items/router.js';
 import liveRouter from './lib/live/router.js';
 import { initSocket } from './lib/live/socket.js';
 import searchRouter from './lib/search/router.js';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -74,6 +76,13 @@ app.use(express.json());
 app.set('trust proxy', true);
 
 async function runServer() {
+  app.get('/dev', (_req, res) => {
+    fs.readdir('/proc/self/fd', function (err, list) {
+      if (err) throw err;
+      res.send(list.length.toString());
+    });
+  });
+
   if (NO_SOCKET !== 'true') {
     initSocket(server);
     app.use('/api/live', liveRouter);
@@ -81,10 +90,15 @@ async function runServer() {
   }
 
   if (NO_API !== 'true') {
+    const MemoryStore = memorystore(session);
+
     app.use(
       session({
         secret: SESSION_SECRET!,
         name: 'sessionId',
+        store: new MemoryStore({
+          checkPeriod: 86400000, // prune expired entries every 24h
+        }),
         resave: true,
         saveUninitialized: true,
       })

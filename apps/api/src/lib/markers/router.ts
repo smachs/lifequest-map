@@ -192,6 +192,7 @@ markersRouter.patch(
       }
       if (!mapFilter.hasLevel) {
         unset.level = 1;
+        unset.levels = 1;
       }
       if (!mapFilter.hasName) {
         unset.name = 1;
@@ -240,7 +241,7 @@ markersRouter.patch(
           $set: marker,
           $unset: unset,
         },
-        { returnDocument: 'after' }
+        { returnDocument: 'after', includeResultMetadata: true }
       );
       if (!result.ok || !result.value) {
         res.status(404).end(`No marker updated for id ${markerId}`);
@@ -434,6 +435,7 @@ async function bodyToMarker(
     position,
     name,
     level,
+    levels,
     chestType,
     tier,
     size,
@@ -467,7 +469,7 @@ async function bodyToMarker(
   if (Array.isArray(position) && position.length >= 2) {
     marker.position = position.map(
       (part: number) => new Double(part ? +part.toFixed(2) : 0)
-    ) as [Double, Double, Double];
+    ) as [Double, Double];
   }
 
   if (name) {
@@ -475,6 +477,9 @@ async function bodyToMarker(
   }
   if (level) {
     marker.level = level;
+  }
+  if (levels) {
+    marker.levels = levels;
   }
   if (chestType) {
     marker.chestType = chestType;

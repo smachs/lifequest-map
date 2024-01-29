@@ -1,6 +1,4 @@
 import { FormData } from 'formdata-node';
-import type { Response } from 'node-fetch';
-import fetch from 'node-fetch';
 import { findMapDetails, mapIsAeternumMap } from 'static';
 import {
   DISCORD_PRIVATE_WEBHOOK_URL,

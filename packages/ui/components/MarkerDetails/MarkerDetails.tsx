@@ -1,4 +1,5 @@
 import {
+  Anchor,
   Avatar,
   Badge,
   Button,
@@ -17,6 +18,7 @@ import type { Glyph } from 'static';
 import {
   findMapDetails,
   getNodeMeta,
+  getTerm,
   glyphs,
   lootableMapFilters,
   mapFilters,
@@ -128,10 +130,14 @@ function MarkerDetails(): JSX.Element {
             {marker.chestType
               ? `${
                   filterItem.type.includes('Supplies')
-                    ? `${marker.chestType} ${filterItem.title.split(' ').pop()}`
+                    ? `${filterItem.title.includes('Elite') ? 'Elite ' : ''}${
+                        marker.chestType
+                      } ${filterItem.title.split(' ').pop()}`
                     : filterItem.title
                 } T${marker.tier}`
-              : marker.name || filterItem.title}
+              : marker.name ||
+                (marker.catIDs && getTerm(marker.catIDs)) ||
+                filterItem.title}
           </Group>
         ) : (
           <Skeleton height={20} width={120} />
@@ -151,6 +157,9 @@ function MarkerDetails(): JSX.Element {
               </Badge>
             )}
             {marker.level && <Badge size="sm">Level {marker.level}</Badge>}
+            {marker.levels && (
+              <Badge size="sm">Level {marker.levels.join(', ')}</Badge>
+            )}
             {marker.hp && (
               <Badge size="sm" color="orange">
                 {marker.hp.toLocaleString('en')} HP
@@ -195,6 +204,15 @@ function MarkerDetails(): JSX.Element {
             Added {marker && toTimeAgo(new Date(marker.createdAt))}{' '}
             {marker.username && <Credit username={marker.username} />}
           </Text>
+          {marker.vitalsID && (
+            <Anchor
+              href={`https://nwdb.info/db/creature/${marker.vitalsID}`}
+              target="_blank"
+              size="sm"
+            >
+              More details on NWDB.info
+            </Anchor>
+          )}
           {marker.description && (
             <Text
               italic

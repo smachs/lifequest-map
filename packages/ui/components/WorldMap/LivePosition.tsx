@@ -1,6 +1,6 @@
+import { init } from 'aeternum-map-realtime';
+import type { Group, Player } from 'aeternum-map-realtime/types';
 import { useEffect } from 'react';
-import { init } from 'realtime';
-import type { Group, Player } from 'realtime/types';
 import type { Socket } from 'socket.io-client';
 
 export default function LivePosition({

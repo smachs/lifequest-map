@@ -1,4 +1,4 @@
-import { servers } from 'realtime/servers';
+import { servers } from 'aeternum-map-realtime/servers';
 
 export type LiveServer = {
   name: string;

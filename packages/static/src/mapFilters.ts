@@ -1,5 +1,5 @@
 import type { MarkerSize } from './types.js';
-
+import generatedDict from './dict.json' assert { type: 'json' };
 export const defaultSizes: MarkerSize[] = ['?', 'S', 'M', 'L'];
 export const treeSizes: MarkerSize[] = ['?', 'XS', 'S', 'M', 'L', 'XL'];
 export type MarkerGlyph = { isRequired: boolean };
@@ -16,7 +16,10 @@ export type FilterItem = {
   glyph?: MarkerGlyph;
   sizes?: MarkerSize[];
 };
-
+const dict = generatedDict as Record<string, string>;
+export const getTerm = (catIDs: string[]) => {
+  return catIDs.map((catID) => dict[catID]).join(',');
+};
 export const lootableMapFilters = [
   'boss',
   'bossElite',
@@ -233,54 +236,63 @@ export const mapFilters: FilterItem[] = [
     type: 'alligator',
     title: 'Alligator',
     iconUrl: '/pois/alligator.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
     type: 'armadillo',
     title: 'Armadillo',
     iconUrl: '/pois/armadillo.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
     type: 'bear',
     title: 'Bear',
     iconUrl: '/pois/bear.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
     type: 'bison',
     title: 'Bison',
     iconUrl: '/pois/bison.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
     type: 'boar',
     title: 'Boar',
     iconUrl: '/pois/boar.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
     type: 'cow',
     title: 'Cow',
     iconUrl: '/pois/cow.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
     type: 'chameleon',
     title: 'Chameleon',
     iconUrl: '/pois/chameleon.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
     type: 'drake',
     title: 'Drake',
     iconUrl: '/pois/drake.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
     type: 'elk',
     title: 'Elk',
     iconUrl: '/pois/elk.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
@@ -305,6 +317,7 @@ export const mapFilters: FilterItem[] = [
     type: 'goat',
     title: 'Goat',
     iconUrl: '/pois/sheep.webp',
+    hasLevel: true,
   },
   {
     category: 'skinning',
@@ -1028,6 +1041,12 @@ export const mapFilters: FilterItem[] = [
   },
   {
     category: 'service',
+    type: 'service_govenors_desk',
+    title: "Govenor's Desk",
+    iconUrl: '/pois/worldmap_governorsdesk.webp',
+  },
+  {
+    category: 'service',
     type: 'service_gypsum_kiln',
     title: 'Gypsum Kiln',
     iconUrl: '/pois/service_gypsum_kiln.webp',
@@ -1077,14 +1096,20 @@ export const mapFilters: FilterItem[] = [
   {
     category: 'service',
     type: 'service_territory_board',
-    title: 'Territory Board',
+    title: 'Territory Planning Board',
     iconUrl: '/pois/service_territory_board.webp',
   },
   {
     category: 'service',
     type: 'service_town_board',
-    title: 'Town Board',
+    title: 'Town Project Board',
     iconUrl: '/pois/service_town_board.webp',
+  },
+  {
+    category: 'service',
+    type: 'service_stylemancer',
+    title: 'Stylemancer',
+    iconUrl: '/pois/icon_transmogstation.webp',
   },
   {
     category: 'service',
@@ -1193,35 +1218,43 @@ export const mapFilters: FilterItem[] = [
   //   title: 'Turkulon',
   //   iconUrl: '/pois/turkulon.webp',
   // },
+  // {
+  //   category: 'events',
+  //   type: 'gleamite',
+  //   title: 'Gleamite',
+  //   iconUrl: '/pois/gleamite.webp',
+  // },
+  // {
+  //   category: 'events',
+  //   type: 'lostPresent',
+  //   title: 'Lost Present',
+  //   iconUrl: '/pois/lostPresent.webp',
+  // },
+  // {
+  //   category: 'events',
+  //   type: 'floatingPresent',
+  //   title: 'Floating Present',
+  //   iconUrl: '/pois/floatingPresent.webp',
+  // },
+  // {
+  //   category: 'events',
+  //   type: 'winterVillage',
+  //   title: 'Winter Village',
+  //   iconUrl: '/pois/winterVillage.webp',
+  // },
+  // {
+  //   category: 'events',
+  //   type: 'winterWarrior',
+  //   title: 'Winter Warrior',
+  //   iconUrl: '/pois/winterWarrior.webp',
+  //   hasLevel: true,
+  //   hasHP: true,
+  // },
   {
     category: 'events',
-    type: 'gleamite',
-    title: 'Gleamite',
-    iconUrl: '/pois/gleamite.webp',
-  },
-  {
-    category: 'events',
-    type: 'lostPresent',
-    title: 'Lost present',
-    iconUrl: '/pois/lostPresent.webp',
-  },
-  {
-    category: 'events',
-    type: 'floatingPresent',
-    title: 'Floating present',
-    iconUrl: '/pois/floatingPresent.webp',
-  },
-  {
-    category: 'events',
-    type: 'winterVillage',
-    title: 'Winter Village',
-    iconUrl: '/pois/winterVillage.webp',
-  },
-  {
-    category: 'events',
-    type: 'winterWarrior',
-    title: 'Winter Warrior',
-    iconUrl: '/pois/winterWarrior.webp',
+    type: 'signiferNerva',
+    title: 'Signifer Nerva',
+    iconUrl: '/pois/signiferNerva.webp',
     hasLevel: true,
     hasHP: true,
   },

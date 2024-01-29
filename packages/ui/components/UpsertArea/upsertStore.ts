@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import type { MarkerFull } from '../MarkerDetails/useMarker';
 import type { MarkerRouteItem } from '../MarkerRoutes/MarkerRoutes';
+import type { MarkerFull } from 'static';
 
 type Store = {
   marker: MarkerFull | true | undefined;

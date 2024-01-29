@@ -1,7 +1,7 @@
+import type { Group } from 'aeternum-map-realtime/types';
 import type { DataConnection } from 'peerjs';
 import Peer from 'peerjs';
 import { useEffect, useState } from 'react';
-import type { Group } from 'realtime/types';
 import type { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
 import type { DefaultEventsMap } from 'socket.io/dist/typed-events';

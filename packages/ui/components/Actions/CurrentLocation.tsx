@@ -8,7 +8,7 @@ import {
   Text,
 } from '@mantine/core';
 import { IconKey, IconServer } from '@tabler/icons-react';
-import { servers } from 'realtime';
+import { servers } from 'aeternum-map-realtime';
 import { getWorld, getZone } from 'static';
 import { shallow } from 'zustand/shallow';
 import { usePlayerStore } from '../../utils/playerStore';

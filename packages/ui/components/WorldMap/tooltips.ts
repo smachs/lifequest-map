@@ -1,4 +1,5 @@
 import type { FilterItem } from 'static';
+import { getTerm } from 'static';
 import type { MarkerBasic } from '../../contexts/MarkersContext';
 import type { Details } from '../AddResources/AddResources';
 
@@ -41,8 +42,9 @@ export function getTooltipContent(
       mapFilter.category === 'chests' &&
       mapFilter.type.includes('Supplies')
     ) {
+      const isElite = mapFilter.title.includes('Elite');
       const chestname = mapFilter.title.split(' ').pop();
-      let content = `${
+      let content = `${isElite ? 'Elite ' : ''}${
         markerOrDetails.chestType ||
         mapFilter.title.split(' ').slice(0, -1).join(' ')
       } ${chestname}`;
@@ -60,8 +62,11 @@ export function getTooltipContent(
       content += additionalContent;
       return content;
     }
-    let tooltipContent = markerOrDetails.name
-      ? `${escapeHtml(markerOrDetails.name)} (${mapFilter.title})`
+    const name =
+      markerOrDetails.name ||
+      (markerOrDetails.catIDs && getTerm(markerOrDetails.catIDs));
+    let tooltipContent = name
+      ? `${escapeHtml(name)} (${mapFilter.title})`
       : mapFilter.title;
     if (markerOrDetails.size) {
       tooltipContent += ` (${markerOrDetails.size})`;
@@ -69,6 +74,9 @@ export function getTooltipContent(
 
     if (markerOrDetails.level) {
       tooltipContent += `<br/>Level ${markerOrDetails.level}`;
+    }
+    if (markerOrDetails.levels) {
+      tooltipContent += `<br/>Level ${markerOrDetails.levels.join(', ')}`;
     }
     tooltipContent += additionalContent;
     return tooltipContent;
