@@ -158,11 +158,11 @@ function AddResources({ marker, onClose }: AddResourcesProps): JSX.Element {
 
       if (marker) {
         await notify(patchMarker(marker._id!, newMarker), {
-          success: 'Node edited 👌',
+          success: 'Node edited',
         });
       } else {
         await notify(postMarker(newMarker), {
-          success: 'Node added 👌',
+          success: 'Node added',
         });
       }
       queryClient.invalidateQueries(['markers']);

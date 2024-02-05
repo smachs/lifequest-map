@@ -24,7 +24,7 @@ export default function Settings() {
 
   return (
     <>
-      <Title order={4}>Map</Title>
+      <Title order={4}>Map Settings</Title>
       <ScrollArea.Autosize mah="80vh" offsetScrollbars placeholder="">
         <Stack>
           <Text weight={500} size="sm">
@@ -114,8 +114,6 @@ export default function Settings() {
             description="Fades out the control elements of this window if it's inactive."
             onChange={() => settingsStore.toggleAutoFade()}
           />
-          <Title order={4}>Hotkeys</Title>
-          <Text fs="italic">Hotkeys are configured in the Overwolf app</Text>
           <Title order={4}>GDPR</Title>
           <span id="ncmp-consent-link" />
         </Stack>

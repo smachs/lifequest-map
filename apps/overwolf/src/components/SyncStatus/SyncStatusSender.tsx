@@ -135,7 +135,7 @@ function SyncStatusSender() {
         <Text color={hasIssue ? 'orange' : 'dimmed'} size="sm" align="center">
           {hasIssue
             ? 'Start this app before starting New World'
-            : 'Everything works fine 🤘'}
+            : 'Everything works fine'}
         </Text>
       </Stack>
     </Paper>

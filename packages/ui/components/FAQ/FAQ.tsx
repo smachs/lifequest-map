@@ -10,7 +10,7 @@ export default function FAQ() {
           <Anchor href="https://www.th.gl/support-me" target="_blank">
             Patreon
           </Anchor>{' '}
-          to disable ads and get the Discord supporter role 🤘
+          to disable ads and get the Discord supporter role 🗺️
         </Accordion.Panel>
       </Accordion.Item>
 
@@ -140,7 +140,7 @@ export default function FAQ() {
         <Accordion.Control>I have a different issue!</Accordion.Control>
         <Accordion.Panel>
           Please join the{' '}
-          <Anchor href="https://discord.gg/NTZu8Px" target="_blank">
+          <Anchor href="https://discord.gg/2P8hqtDcKZ" target="_blank">
             Discord
           </Anchor>{' '}
           for more support.

@@ -111,7 +111,7 @@ function Streaming(): JSX.Element {
           placeholder="Use this token to access your live status..."
           label="Token"
           description="This token is used to identify you on the map. You can use the
-        same token in your group to see each other 🤘."
+        same token in your group to see each other."
           onChange={(value) => updateAccount(value, account.liveShareServerUrl)}
           styles={{
             rightSection: {

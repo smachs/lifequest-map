@@ -41,7 +41,7 @@ class ErrorBoundary extends Component<MyProps, MyState> {
           >
             {({ copied, copy }) => (
               <Button color={copied ? 'teal' : 'blue'} onClick={copy}>
-                {copied ? 'Copied 🤘' : 'Copy error message'}
+                {copied ? 'Copied ✅' : 'Copy error message'}
               </Button>
             )}
           </CopyButton>

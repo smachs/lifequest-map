@@ -79,7 +79,7 @@ const WorldZone = ({ zone, influences, publicName }: ZoneProps) => {
           {influence
             ? `Updated ${toTimeAgo(new Date(influence.createdAt))} by ${
                 influence.username
-              } ❤️`
+              }`
             : 'Never updated'}
         </Text>
       </UnstyledButton>

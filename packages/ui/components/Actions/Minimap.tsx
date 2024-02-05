@@ -43,9 +43,8 @@ export default function Minimap() {
           >
             Skeleton
           </Anchor>{' '}
-          to display a minimap as overlay 🤘 if location sharing is active. Keep
-          in mind, that this is definitly in the grey area of AGS ToS. Use at
-          own risk 💀!
+          to display a minimap as overlay 🏕️ if location sharing is active. Keep
+          in mind, that this is definitly in the grey area of AGS ToS.
         </Text>
         <Divider />
         <TextInput

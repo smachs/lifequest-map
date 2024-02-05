@@ -3,7 +3,7 @@ function ShareFromWebsite(): JSX.Element {
     <>
       <p>
         You can read the live status of New World including position and
-        character name 🤘.
+        character name.
       </p>
       <p>
         Install{' '}

@@ -170,7 +170,7 @@ const Influences = () => {
       )}
       {uploaded && (
         <Notification color="teal" mt="xs" withCloseButton={false}>
-          You are awesome 🤘
+          You are awesome ✨
         </Notification>
       )}
       <canvas

@@ -8,7 +8,7 @@ declare global {
   }
 }
 
-const CHANNEL = 'thehiddengaminglair';
+const CHANNEL = 'hiroomirash';
 
 const AdsFallback = ({ onClose }: { onClose: () => void }) => {
   useEffect(() => {
@@ -24,7 +24,7 @@ const AdsFallback = ({ onClose }: { onClose: () => void }) => {
         showMature: false,
         quality: '160p30',
         controls: false,
-        parent: ['aeternum-map.th.gl', 'influence.th.gl'],
+        // parent: ['aeternum-map.th.gl', 'influence.th.gl'],
       });
 
       twitchEmbed.addEventListener(window.Twitch.Player.ONLINE, () => {
@@ -118,14 +118,15 @@ const AdsFallback = ({ onClose }: { onClose: () => void }) => {
           }}
         >
           <span>
-            Watching{' '}
+            Hosting{' '}
             <Anchor
               weight="bold"
-              href="https://www.twitch.tv/thehiddengaminglair?tt_content=channel_name&tt_medium=embed"
+              href="https://www.twitch.tv/hiroomirash?tt_content=channel_name&tt_medium=embed"
               target="_blank"
             >
-              The Hidden Gaming Lair
-            </Anchor>
+              Kode Hiro
+            </Anchor>{' '}
+            in São Paulo, Brazil.
           </span>
           <CloseButton onClick={onClose} />
         </Box>

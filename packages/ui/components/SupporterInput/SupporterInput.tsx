@@ -10,7 +10,7 @@ const SupporterInput = () => {
       {!accountStore.isPatron ? (
         <>
           <Text italic align="center">
-            Get rid of ads and support me on Patreon
+            Join us in creating an ad-free haven for our community.
           </Text>
           <Button
             component="a"

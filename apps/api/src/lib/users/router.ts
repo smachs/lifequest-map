@@ -90,7 +90,7 @@ usersRouter.post('/', async (req, res, next) => {
     const user = result.value;
     if (user) {
       res.status(200).json(user);
-      postToDiscord(`🤘 ${user.username} is using Aeternum Map`, false);
+      postToDiscord(`🏕️ ${user.username} is using Life Quest Map`, false);
     } else {
       throw new Error('Could not create user');
     }

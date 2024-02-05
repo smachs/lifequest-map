@@ -129,18 +129,6 @@ const UserAction = () => {
   return (
     <Group spacing="xs">
       <FAQModal opened={showFAQ} onClose={() => setShowFAQ(false)} />
-      <SegmentedControl
-        data={[
-          { label: 'LIVE', value: 'live' },
-          { label: 'PTR', value: 'ptr' },
-        ]}
-        size="xs"
-        radius="xl"
-        value={realmStore.isPTR ? 'ptr' : 'live'}
-        onChange={(value) => {
-          realmStore.setIsPTR(value === 'ptr');
-        }}
-      />
       <ServerStatus />
       <Tooltip label="Settings">
         <ActionIcon
@@ -273,11 +261,11 @@ const UserAction = () => {
                   component="a"
                   color="dark"
                   variant="filled"
-                  href="https://github.com/lmachens/aeternum-map"
+                  href="https://github.com/smachs/lifequest-map"
                   target="_blank"
                   onClick={() =>
                     trackOutboundLinkClick(
-                      'https://github.com/lmachens/aeternum-map'
+                      'https://github.com/smachs/lifequest-map'
                     )
                   }
                   size="xl"
@@ -290,10 +278,10 @@ const UserAction = () => {
               <Tooltip label="Join Discord Community">
                 <ActionIcon
                   component="a"
-                  href="https://discord.gg/NTZu8Px"
+                  href="https://discord.gg/2P8hqtDcKZ"
                   target="_blank"
                   onClick={() =>
-                    trackOutboundLinkClick('https://discord.gg/NTZu8Px')
+                    trackOutboundLinkClick('https://discord.gg/2P8hqtDcKZ')
                   }
                   sx={{
                     backgroundColor: 'rgb(88, 101, 242)',
@@ -313,91 +301,11 @@ const UserAction = () => {
             <Group spacing="xs" position="center">
               <Anchor
                 size="xs"
-                href="https://www.overwolf.com/app/Leon_Machens-Aeternum_Map"
-                title="Aeternum Map Companion"
-                target="_blank"
-              >
-                Overwolf App
-              </Anchor>
-              <Anchor
-                size="xs"
-                href="https://aeternum-tracker.th.gl/"
-                title="Aeternum Tracker"
-                target="_blank"
-              >
-                Aeternum Tracker
-              </Anchor>
-              <Anchor
-                size="xs"
-                href="https://mutation-cycle.th.gl/"
-                title="Mutation Cycle"
-                target="_blank"
-              >
-                Mutation Cycle
-              </Anchor>
-              <Anchor
-                size="xs"
-                href="https://influence.th.gl/"
-                title="New World Faction Territory Map"
-                target="_blank"
-              >
-                New World Territory Map
-              </Anchor>
-              <Anchor
-                size="xs"
                 href="https://www.th.gl/"
                 title="The Hidden Gaming Lair"
                 target="_blank"
               >
-                More Gaming Apps & Tools
-              </Anchor>
-              <Anchor
-                size="xs"
-                href="https://palia.th.gl/"
-                title="Palia Map"
-                target="_blank"
-              >
-                Palia Map
-              </Anchor>
-              <Anchor
-                size="xs"
-                href="https://sotf.th.gl/"
-                title="Sons Of The Forest"
-                target="_blank"
-              >
-                Sons Of The Forest
-              </Anchor>
-              <Anchor
-                size="xs"
-                href="https://www.hogwarts.gg/"
-                title="Hogwarts Legacy fansite"
-                target="_blank"
-              >
-                Hogwarts Legacy
-              </Anchor>
-              <Anchor
-                size="xs"
-                href="https://www.arkesia.gg/"
-                title="Interactive map for Lost Ark"
-                target="_blank"
-              >
-                Lost Ark
-              </Anchor>
-              <Anchor
-                size="xs"
-                href="https://lol.th.gl/"
-                title="Trophies app for League of Legends"
-                target="_blank"
-              >
-                League of Legends
-              </Anchor>
-              <Anchor
-                size="xs"
-                href="https://www.soc.gg/"
-                title="A Songs of Conquest fansite"
-                target="_blank"
-              >
-                Songs of Conquest
+                Download Mobile Geolocation Sync
               </Anchor>
               <Anchor
                 size="xs"
@@ -406,14 +314,6 @@ const UserAction = () => {
                 target="_blank"
               >
                 Customizable Overlays
-              </Anchor>
-              <Anchor
-                size="xs"
-                href="https://gaming.tools/newworld/"
-                title="New World Trade Skill Leveling Guides and Crafting Calculators"
-                target="_blank"
-              >
-                Crafting Guides
               </Anchor>
               <Anchor size="xs" href="/privacy.html" target="_blank">
                 Privacy Policy

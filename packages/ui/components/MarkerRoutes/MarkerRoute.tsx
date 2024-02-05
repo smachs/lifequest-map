@@ -54,7 +54,7 @@ function MarkerRoute({
         <Badge size="sm" color={markerRoute.isPublic ? 'lime' : 'teal'}>
           {markerRoute.isPublic ? 'Public' : 'Private'}
         </Badge>
-        <Badge leftSection="🤘" size="sm" color="orange">
+        <Badge leftSection="⭐" size="sm" color="orange">
           {markerRoute.favorites || 0}
         </Badge>
         <Badge
