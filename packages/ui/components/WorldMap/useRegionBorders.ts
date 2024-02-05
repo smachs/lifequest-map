@@ -1,22 +1,25 @@
 import leaflet from 'leaflet';
 import { useEffect } from 'react';
 import { regions } from 'static';
+import { countriesBoundaries } from './geoJson';
 import { useSettingsStore } from '../../utils/settingsStore';
 
-const COLOR = 'rgb(200 200 200)';
+const COLOR = 'rgb(54, 53, 53)';
 
-function getRegions() {
-  return regions.map((region) => ({
-    name: region.name,
-    polygons: leaflet.polygon(region.coordinates as [number, number][], {
-      color: COLOR,
-      fill: false,
-      weight: 1.2,
-      interactive: false,
-      pmIgnore: true,
-    }),
-  }));
-}
+// function getRegions() {
+//   return regions.map((region) => ({
+//     name: region.name,
+//     polygons: leaflet.polygon(region.coordinates as [number, number][], {
+//       color: COLOR,
+//       fill: false,
+//       weight: 2.0,
+//       interactive: false,
+//       pmIgnore: true,
+//       dashArray: '15, 15',
+//       dashOffset: '0',
+//     }),
+//   }));
+// }
 function useRegionBorders(leafletMap: leaflet.Map | null, show: boolean) {
   const showRegionNames = useSettingsStore((state) => state.showRegionNames);
 
@@ -24,27 +27,29 @@ function useRegionBorders(leafletMap: leaflet.Map | null, show: boolean) {
     if (!leafletMap || !show) {
       return;
     }
-    const regionsGroup = new leaflet.FeatureGroup();
-    regionsGroup.addTo(leafletMap);
-
-    const regions = getRegions();
-
-    regions.forEach((region) => {
-      region.polygons.addTo(regionsGroup);
-      if (showRegionNames) {
-        const textLabel = leaflet.marker(region.polygons.getCenter(), {
-          icon: leaflet.divIcon({
-            className: 'leaflet-polygon-text',
-            html: `<div class="leaflet-area-text">${region.name}</div>`,
-          }),
+    leaflet
+      .geoJson(countriesBoundaries, {
+        style: {
+          color: COLOR,
+          fill: false,
+          weight: 1.5,
+          dashArray: '20, 20',
+          dashOffset: '0',
           interactive: false,
-        });
-        textLabel.addTo(regionsGroup);
-      }
-    });
-    return () => {
-      regionsGroup.removeFrom(leafletMap);
-    };
+        },
+        pmIgnore: true,
+        onEachFeature: function (feature, layer) {
+          layer.bindTooltip(feature.properties.name, {
+            permanent: true,
+            direction: 'center',
+            className: 'leaflet-area-text leaflet-polygon-text',
+            interactive: false,
+          });
+        },
+      })
+      .addTo(leafletMap);
+    // center map in coord
+    leafletMap.setView([-23.858882115464976, -46.137723291145029], 6);
   }, [leafletMap, showRegionNames, show]);
 }
 

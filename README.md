@@ -1,9 +1,11 @@
 # Life Quest
+
 Your comprehensive companion for conquering real-world territories! Explore with confidence, utilizing a robust toolkit featuring location insights, real-time tracking, optimized productivity routes, and seamless group coordination.
 
 - [Website](https://lifequest.gg
 
 ## Contribution
+
 This app is Open Source. Contributors are highly welcome!
 Join the [Discord](https://discord.gg/M9w4Wm8Q8E).
 

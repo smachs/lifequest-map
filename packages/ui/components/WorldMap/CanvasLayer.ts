@@ -24,25 +24,18 @@ const createCanvasLayer = (
     _delays: {},
     _delaysForZoom: null,
     options: {
-      minNativeZoom: mapDetail.minZoom,
-      minZoom: -2,
-      maxNativeZoom: mapDetail.maxZoom,
-      maxZoom: mapDetail.maxZoom + 2,
+      minZoom: 1,
+      maxZoom: mapDetail.maxZoom,
+      noWrap: true,
     },
     getTileUrl(coords: Coords) {
-      const zoom = 8 - coords.z - 1;
-      const multiplicators = [1, 2, 4, 8, 16, 32, 64];
-      const x = coords.x * multiplicators[zoom - 1];
-      const y = (-coords.y - 1) * multiplicators[zoom - 1];
-      if (x < 0 || y < 0 || y >= 64 || x >= 64) {
-        return 'data:,';
-      }
-      return `${VITE_API_ENDPOINT}/assets/${isPTR ? 'ptr/' : ''}${
-        mapDetail.folder
-      }/map_l${zoom}_y${toThreeDigits(y)}_x${toThreeDigits(x)}.webp?v=4`;
+      const style = 'smachs/clpwjgjg100ww01p448s68cs5'; // streets
+      const key =
+        'pk.eyJ1Ijoic21hY2hzIiwiYSI6ImNqY2N2MmVkZjFiN2QzMmxsNDkyZWdtMHQifQ.rjpy2ydaboWELy4S_OIduw';
+      return `https://api.mapbox.com/styles/v1/${style}/tiles/256/${coords.z}/${coords.x}/${coords.y}?access_token=${key}`;
     },
     getTileSize() {
-      return { x: 1024, y: 1024 };
+      return { x: 256, y: 256 };
     },
     createCanvas: function (
       tile: Tile,
@@ -51,11 +44,9 @@ const createCanvasLayer = (
     ) {
       let err: unknown;
       const ctx = tile.getContext('2d')!;
-      const { doubleSize } = this.options;
-
       const { x: width, y: height } = this.getTileSize();
-      tile.width = doubleSize ? width * 2 : width;
-      tile.height = doubleSize ? height * 2 : height;
+      tile.width = width;
+      tile.height = height;
 
       const img = new Image();
       img.onload = () => {

@@ -9,10 +9,6 @@ import { initOtherPlayers } from './otherPlayers';
 import { coordinates as playerCoordinates } from './usePlayerPosition';
 import useRegionBorders from './useRegionBorders';
 
-const worldCRS = leaflet.extend({}, leaflet.CRS.Simple, {
-  transformation: new leaflet.Transformation(1 / 16, 0, -1 / 16, 0),
-});
-
 type UseWorldMapProps = {
   hideControls?: boolean;
   initialZoom?: number;
@@ -75,10 +71,17 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
             [+match[2], +match[1]],
             [+match[4], +match[3]],
           ];
-          leafletMap.fitBounds(initialBounds, {
-            animate: false,
-            noMoveStart: true,
-          });
+          // leafletMap.fitBounds(initialBounds)
+          leafletMap.fitBounds(
+            [
+              [-90, -180],
+              [90, 180],
+            ],
+            {
+              animate: false,
+              noMoveStart: true,
+            }
+          );
           return;
         }
       } catch (error) {
@@ -110,13 +113,10 @@ function useWorldMap({ hideControls, initialZoom }: UseWorldMapProps): {
 
     latestLeafletMap = leaflet.map(mapElement, {
       preferCanvas: true,
-      crs: worldCRS,
+      worldCopyJump: false,
       attributionControl: false,
       zoomControl: false,
       zoom: initialZoom || 4,
-      zoomSnap: 0.5,
-      zoomDelta: 0.5,
-      wheelPxPerZoomLevel: 120,
     });
 
     latestLeafletMap.on('contextmenu', () => {

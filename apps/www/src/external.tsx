@@ -12,7 +12,7 @@ import { initPlausible } from 'ui/utils/stats';
 const COLOR = 'rgb(200 200 200)';
 
 function getRegions() {
-  return regions.map((region) =>
+  return regions.map((region: any) =>
     leaflet.polygon(region.coordinates as [number, number][], {
       color: COLOR,
       fill: false,
@@ -59,7 +59,7 @@ export default function External() {
       wheelPxPerZoomLevel: 120,
       minZoom: -2,
       maxZoom: mapDetail.maxZoom + 2,
-      center: latLngBounds.getCenter(),
+      center: [0, 0, 0],
     });
 
     map.on('contextmenu', () => {
@@ -194,7 +194,7 @@ export default function External() {
               leftIcon={<IconMap />}
               radius="xl"
             >
-              Aeternum Map
+              Life Quest Map
             </Button>
           </Box>
           <Box
