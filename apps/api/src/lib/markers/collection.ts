@@ -18,7 +18,7 @@ function ensureMarkersIndexes() {
     ]),
     getMarkersCollection().createIndexes([{ key: { createdAt: -1 } }]),
     getMarkersCollection().createIndexes([
-      { key: { position: '2d' }, min: 0, max: 14336 },
+      { key: { position: '2d' }, min: -180, max: 180 },
     ]),
     getMarkersCollection().createIndexes([{ key: { username: 1 } }]),
     getMarkersCollection().createIndexes([{ key: { name: 1 } }]),

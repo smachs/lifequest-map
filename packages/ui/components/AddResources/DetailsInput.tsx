@@ -140,7 +140,6 @@ function DetailsInput({
         data={[
           { label: 'All Realms', value: '' },
           { label: 'Live Only', value: 'live' },
-          { label: 'PTR Only', value: 'ptr' },
         ]}
       />
       <Textarea

@@ -38,9 +38,9 @@ function SelectPosition({
         <input
           className={styles.input}
           type="number"
-          placeholder="e.g. 9015.32"
-          min={0}
-          max={14336}
+          placeholder="e.g. -81.76"
+          min={-180}
+          max={180}
           step={0.001}
           value={location[0]}
           onChange={(event) =>
@@ -56,9 +56,9 @@ function SelectPosition({
         <input
           className={styles.input}
           type="number"
-          placeholder="e.g. 5015.12"
-          min={0}
-          max={14336}
+          placeholder="e.g. 27.99"
+          min={-90}
+          max={90}
           step={0.001}
           value={location[1]}
           onChange={(event) =>
