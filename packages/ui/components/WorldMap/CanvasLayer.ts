@@ -6,16 +6,6 @@ const { VITE_API_ENDPOINT = '' } = import.meta.env;
 
 type Tile = HTMLCanvasElement & { complete: boolean };
 
-function toThreeDigits(number: number): string {
-  if (number < 10) {
-    return `00${number}`;
-  }
-  if (number < 100) {
-    return `0${number}`;
-  }
-  return `${number}`;
-}
-
 const createCanvasLayer = (
   mapDetail: Map,
   isPTR: boolean
@@ -26,7 +16,6 @@ const createCanvasLayer = (
     options: {
       minZoom: 1,
       maxZoom: mapDetail.maxZoom,
-      noWrap: true,
     },
     getTileUrl(coords: Coords) {
       const style = 'smachs/clpwjgjg100ww01p448s68cs5'; // streets
