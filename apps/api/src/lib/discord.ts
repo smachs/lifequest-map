@@ -25,14 +25,15 @@ export const postToDiscord = (
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      username: 'BottyMcBotface',
+      username: 'Spike',
+      avatar_url: 'https://cdn.discordapp.com/attachments/1204979676691562567/1204979731443879936/NemoAvatar.png',
       content: message,
     }),
   });
 };
 
 export const getURL = (path: 'routes' | 'nodes', id: string, map?: string) => {
-  let url = 'https://aeternum-map.th.gl/';
+  let url = 'https://lifequestmap.gg/';
   if (map && !mapIsAeternumMap(map)) {
     const mapDetails = findMapDetails(map);
     if (mapDetails) {
