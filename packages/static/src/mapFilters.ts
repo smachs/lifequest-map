@@ -29,7 +29,7 @@ export const lootableMapFilters = [
 export const mapFilters: FilterItem[] = [
   {
     category: 'places',
-    type: 'places',
+    type: 'beach',
     title: 'Beach',
     iconUrl: '/pois/beach.webp',
     hasName: true,
