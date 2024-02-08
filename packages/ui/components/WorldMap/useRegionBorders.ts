@@ -1,25 +1,10 @@
 import leaflet from 'leaflet';
 import { useEffect } from 'react';
-import { regions } from 'static';
 import { countriesBoundaries } from './geoJson';
 import { useSettingsStore } from '../../utils/settingsStore';
 
 const COLOR = 'rgb(54, 53, 53)';
 
-// function getRegions() {
-//   return regions.map((region) => ({
-//     name: region.name,
-//     polygons: leaflet.polygon(region.coordinates as [number, number][], {
-//       color: COLOR,
-//       fill: false,
-//       weight: 2.0,
-//       interactive: false,
-//       pmIgnore: true,
-//       dashArray: '15, 15',
-//       dashOffset: '0',
-//     }),
-//   }));
-// }
 function useRegionBorders(leafletMap: leaflet.Map | null, show: boolean) {
   const showRegionNames = useSettingsStore((state) => state.showRegionNames);
 
