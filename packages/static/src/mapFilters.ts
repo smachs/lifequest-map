@@ -148,6 +148,20 @@ export const mapFilters: FilterItem[] = [
     iconUrl: '/pois/afterparty.webp',
     hasName: true,
   },
+  {
+    category: 'social',
+    type: 'lounge',
+    title: 'Lounge',
+    iconUrl: '/pois/lounge.webp',
+    hasName: true,
+  },
+  {
+    category: 'social',
+    type: 'rooftop',
+    title: 'Rooftop',
+    iconUrl: '/pois/rooftop.webp',
+    hasName: true,
+  },
 
   {
     category: 'activities',
