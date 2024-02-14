@@ -3,13 +3,13 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from datetime import datetime
 
-uri = "mongodb+srv://proton:hDvwUKwJFf6OUIse@guardian.6sl67qu.mongodb.net/?retryWrites=true&w=majority"
+uri = "mongodb+srv://user:pass@guardian.6sl67qu.mongodb.net/?retryWrites=true&w=majority"
 client = MongoClient(uri, server_api=ServerApi('1'))
 db = client['test']
 collection = db['markers']
 
 # marker options
-catType = "restaurants"
+catType = "gym"
 createdBy = "SABOTAGE"
 createdById = "76561198131135154"
 
